@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>68359470-9da9-4ccd-bb5d-c5d63e431063</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sme.gclass.apli.ioc\SME.GoogleClassroom.IoC.csproj" />
+    <ProjectReference Include="..\sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "HI37SG2LpWWIaAuDhUdtBmrgsio+L2rp2X9OdmP1kbHkUMtTg7sYXREDop5yboSihIrwDwKTsmH77Ir42E1AeQ==",
+  "success": true,
+  "projectFilePath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jef_m\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj": {}
+  },
+  "projects": {
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj",
+        "projectName": "SME.GoogleClassroom.Dominio",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

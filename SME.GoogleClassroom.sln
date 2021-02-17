@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Api", "sme.gclass.api\SME.GoogleClassroom.Api.csproj", "{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Infra", "sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj", "{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Aplicacao", "sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj", "{D541C94A-C7AE-4FF9-8F23-B65B384092BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Worker.Rabbit", "sme.gclass.api.worker.rabbit\SME.GoogleClassroom.Worker.Rabbit.csproj", "{C9D4FB4F-5080-417D-91DF-FDBB32716F71}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.IoC", "sme.gclass.apli.ioc\SME.GoogleClassroom.IoC.csproj", "{7253C2DB-5DD2-405A-9772-71867B014958}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dominio", "sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj", "{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassrom.Dados", "sme.gclass.api.dados\SME.GoogleClassrom.Dados.csproj", "{37B78C0F-0292-4EC2-A984-C20FB00730FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D541C94A-C7AE-4FF9-8F23-B65B384092BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D541C94A-C7AE-4FF9-8F23-B65B384092BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D541C94A-C7AE-4FF9-8F23-B65B384092BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D541C94A-C7AE-4FF9-8F23-B65B384092BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7253C2DB-5DD2-405A-9772-71867B014958}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7253C2DB-5DD2-405A-9772-71867B014958}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7253C2DB-5DD2-405A-9772-71867B014958}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7253C2DB-5DD2-405A-9772-71867B014958}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D4C2E235-3002-4624-AD09-F4623EA89DC6}
+	EndGlobalSection
+EndGlobal

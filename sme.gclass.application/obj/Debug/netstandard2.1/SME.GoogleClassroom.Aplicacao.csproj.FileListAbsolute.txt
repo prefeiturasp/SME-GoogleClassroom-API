@@ -1,0 +1,16 @@
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.deps.json
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.dll
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.pdb
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassrom.Dados.dll
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.dll
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Infra.dll
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassrom.Dados.pdb
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.pdb
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\bin\Debug\netstandard2.1\SME.GoogleClassroom.Infra.pdb
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.csprojAssemblyReference.cache
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.AssemblyInfoInputs.cache
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.AssemblyInfo.cs
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.csproj.CoreCompileInputs.cache
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.csproj.CopyComplete
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.dll
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.application\obj\Debug\netstandard2.1\SME.GoogleClassroom.Aplicacao.pdb

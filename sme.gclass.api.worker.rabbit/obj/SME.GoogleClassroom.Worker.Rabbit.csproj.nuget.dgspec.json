@@ -1,0 +1,536 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.worker.rabbit\\SME.GoogleClassroom.Worker.Rabbit.csproj": {}
+  },
+  "projects": {
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj",
+        "projectName": "SME.GoogleClassrom.Dados",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Dapper.FluentMap": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[5.0.3, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj",
+        "projectName": "SME.GoogleClassroom.Dominio",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj",
+        "projectName": "SME.GoogleClassroom.Infra",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[9.5.0, )"
+            },
+            "Microsoft.CSharp": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "Sentry": {
+              "target": "Package",
+              "version": "[3.0.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.worker.rabbit\\SME.GoogleClassroom.Worker.Rabbit.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.worker.rabbit\\SME.GoogleClassroom.Worker.Rabbit.csproj",
+        "projectName": "SME.GoogleClassroom.Worker.Rabbit",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.worker.rabbit\\SME.GoogleClassroom.Worker.Rabbit.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.worker.rabbit\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.apli.ioc\\SME.GoogleClassroom.IoC.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.apli.ioc\\SME.GoogleClassroom.IoC.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.ApplicationInsights": {
+              "target": "Package",
+              "version": "[2.16.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.2.1, )"
+            },
+            "Sentry": {
+              "target": "Package",
+              "version": "[3.0.6, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.0.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.apli.ioc\\SME.GoogleClassroom.IoC.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.apli.ioc\\SME.GoogleClassroom.IoC.csproj",
+        "projectName": "SME.GoogleClassroom.IoC",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.apli.ioc\\SME.GoogleClassroom.IoC.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.apli.ioc\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "MediatR": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "MediatR.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.Extensions.Http.Polly": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[7.2.1, )"
+            },
+            "Polly.Extensions.Http": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.2.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj",
+        "projectName": "SME.GoogleClassroom.Aplicacao",
+        "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\SME.GoogleClassroom.Aplicacao.csproj",
+        "packagesPath": "C:\\Users\\jef_m\\.nuget\\packages\\",
+        "outputPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jef_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.dados\\SME.GoogleClassrom.Dados.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.domain\\SME.GoogleClassroom.Dominio.csproj"
+              },
+              "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj": {
+                "projectPath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.infra\\SME.GoogleClassroom.Infra.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[9.5.1, )"
+            },
+            "Google.Apis.Admin.Directory.directory_v1": {
+              "target": "Package",
+              "version": "[1.49.0.1982, )"
+            },
+            "Google.Apis.Classroom.v1": {
+              "target": "Package",
+              "version": "[1.50.0.2223, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[7.2.1, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.2.1, )"
+            },
+            "Sentry": {
+              "target": "Package",
+              "version": "[3.0.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

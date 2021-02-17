@@ -1,0 +1,4 @@
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.infra\obj\Debug\netstandard2.0\sme.gclass.api.infra.csprojAssemblyReference.cache
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.infra\obj\Debug\netstandard2.0\sme.gclass.api.infra.AssemblyInfoInputs.cache
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.infra\obj\Debug\netstandard2.0\sme.gclass.api.infra.AssemblyInfo.cs
+C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.infra\obj\Debug\netstandard2.0\sme.gclass.api.infra.csproj.CoreCompileInputs.cache
