@@ -3,7 +3,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-   public class ObterAcessoRandomicoQuery : IRequest<AcessoGoogleDto>
+    public class ObterAcessoRandomicoQuery : IRequest<AcessoGoogleDto>
     {
     }
 }

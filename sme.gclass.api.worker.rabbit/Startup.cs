@@ -56,6 +56,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
             }
 
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("WorkerRabbitMQ!");
