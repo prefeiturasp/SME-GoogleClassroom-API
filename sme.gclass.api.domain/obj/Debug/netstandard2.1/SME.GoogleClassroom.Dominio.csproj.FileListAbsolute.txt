@@ -1,9 +1,0 @@
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\bin\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.deps.json
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\bin\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.dll
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\bin\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.pdb
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\obj\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.csprojAssemblyReference.cache
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\obj\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.AssemblyInfoInputs.cache
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\obj\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.AssemblyInfo.cs
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\obj\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.csproj.CoreCompileInputs.cache
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\obj\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.dll
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.api.domain\obj\Debug\netstandard2.1\SME.GoogleClassroom.Dominio.pdb

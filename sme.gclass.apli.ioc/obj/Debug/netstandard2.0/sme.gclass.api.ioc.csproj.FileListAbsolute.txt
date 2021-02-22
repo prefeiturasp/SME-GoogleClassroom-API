@@ -1,7 +1,0 @@
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\bin\Debug\netstandard2.0\sme.gclass.api.infra.dll
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\obj\Debug\netstandard2.0\sme.gclass.api.ioc.csprojAssemblyReference.cache
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\obj\Debug\netstandard2.0\sme.gclass.api.ioc.AssemblyInfoInputs.cache
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\obj\Debug\netstandard2.0\sme.gclass.api.ioc.AssemblyInfo.cs
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\bin\Debug\netstandard2.0\sme.gclass.api.application.dll
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\bin\Debug\netstandard2.0\sme.gclass.api.dados.dll
-C:\Users\jef_m\source\repos\sme.gclass.api\sme.gclass.apli.ioc\bin\Debug\netstandard2.0\sme.gclass.api.domain.dll
