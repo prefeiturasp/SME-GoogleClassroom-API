@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>187877ae-af63-4bac-9b63-a523da80e8f3</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.16.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    <PackageReference Include="Sentry" Version="3.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
+    <ProjectReference Include="..\sme.gclass.apli.ioc\SME.GoogleClassroom.IoC.csproj" />
+    <ProjectReference Include="..\sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj" />
+  </ItemGroup>
+
+</Project>
