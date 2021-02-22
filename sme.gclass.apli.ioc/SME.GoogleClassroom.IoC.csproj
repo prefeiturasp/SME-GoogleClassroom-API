@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassrom.Dados.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj" />
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
     <ProjectReference Include="..\sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj" />
   </ItemGroup>

@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.IoC", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dominio", "sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj", "{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassrom.Dados", "sme.gclass.api.dados\SME.GoogleClassrom.Dados.csproj", "{37B78C0F-0292-4EC2-A984-C20FB00730FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dados", "sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj", "{37B78C0F-0292-4EC2-A984-C20FB00730FA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Testes.Unitario", "SME.GoogleClassroom.Testes.Unitario\SME.GoogleClassroom.Testes.Unitario.csproj", "{42112A05-86D8-41DA-857D-A3BC01DF6F63}"
 EndProject
