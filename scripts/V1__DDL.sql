@@ -78,7 +78,7 @@ CREATE TABLE public.cursos (
 	componente_curricular_id int NOT NULL,
 	data_inclusao date NOT NULL,
 	data_atualizacao date NULL,
-	CONSTRAINT cursos_pk PRIMARY KEY (id_google),
+	CONSTRAINT cursos_pk PRIMARY KEY (id),
 	CONSTRAINT cursos_unique UNIQUE (turma_id, componente_curricular_id)
 );
 
@@ -110,8 +110,7 @@ CREATE TABLE public.cursos_erro (
 	execucao_tipo int NOT NULL,
 	curso_id int8 NULL,
 	data_inclusao date NOT NULL,
-	CONSTRAINT cursos_pk PRIMARY KEY (id),
-	CONSTRAINT cursos_unique UNIQUE (turma_id, componente_curricular_id)
+	CONSTRAINT cursos_erro_pk PRIMARY KEY (id)
 );
 
 ALTER TABLE public.cursos_erro ADD constraint cursos_erro_curso_fk FOREIGN KEY (curso_id) REFERENCES cursos(id);
