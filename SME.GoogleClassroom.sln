@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Api", "sme.gclass.api\SME.GoogleClassroom.Api.csproj", "{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Infra", "sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj", "{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Aplicacao", "sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj", "{D541C94A-C7AE-4FF9-8F23-B65B384092BB}"
@@ -17,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dominio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassrom.Dados", "sme.gclass.api.dados\SME.GoogleClassrom.Dados.csproj", "{37B78C0F-0292-4EC2-A984-C20FB00730FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.GoogleClassroom.Testes.Unitario", "SME.GoogleClassroom.Testes.Unitario\SME.GoogleClassroom.Testes.Unitario.csproj", "{42112A05-86D8-41DA-857D-A3BC01DF6F63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Testes.Unitario", "SME.GoogleClassroom.Testes.Unitario\SME.GoogleClassroom.Testes.Unitario.csproj", "{42112A05-86D8-41DA-857D-A3BC01DF6F63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF1A5A80-C1E0-421C-8BB8-1706966FA8B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C8BEDA4-6B9F-4E89-928E-CC9F6E468E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
