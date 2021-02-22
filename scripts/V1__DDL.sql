@@ -127,6 +127,6 @@ CREATE TABLE public.acessos_google (
 	aplicacao_nome varchar(100) NOT NULL,
 	email_conta_servico varchar(200) NOT NULL,
 	email_admin varchar(200) NOT NULL,
-	private_key varchar(200) NOT NULL,
+	private_key varchar(2000) NOT NULL,
 	CONSTRAINT acessos_google_pk PRIMARY KEY (id)
 );
