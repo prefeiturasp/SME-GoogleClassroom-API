@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dominio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassrom.Dados", "sme.gclass.api.dados\SME.GoogleClassrom.Dados.csproj", "{37B78C0F-0292-4EC2-A984-C20FB00730FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.GoogleClassroom.Testes.Unitario", "SME.GoogleClassroom.Testes.Unitario\SME.GoogleClassroom.Testes.Unitario.csproj", "{42112A05-86D8-41DA-857D-A3BC01DF6F63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37B78C0F-0292-4EC2-A984-C20FB00730FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

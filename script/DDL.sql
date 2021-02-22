@@ -1,75 +1,132 @@
--- public.controle_execucao definition
+-- public.execucao_controle definition
 
 -- Drop table
 
--- DROP TABLE public.controle_execucao;
+-- DROP TABLE public.execucao_controle;
 
-CREATE TABLE public.controle_execucao (
+CREATE TABLE public.execucao_controle (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	tipo_execucao_id int NOT NULL,
+	execucao_tipo int NOT NULL,
 	ultima_execucao date NOT NULL,
-	CONSTRAINT controle_execucao_pk PRIMARY KEY (id)
+	CONSTRAINT execucao_controle_pk PRIMARY KEY (id)
 );
 
--- public.usuario definition
+-- public.usuarios definition
 
 -- Drop table
 
--- DROP TABLE public.usuario;
+-- DROP TABLE public.usuarios;
 
-CREATE TABLE public.usuario (
-	documento varchar(30) NOT NULL,
-	tipo_usuario_id int NOT NULL,
+CREATE TABLE public.usuarios (
+	id int8 NOT NULL,
+	usuario_tipo int NOT NULL,
 	email varchar(200) NOT NULL,
 	organization_path varchar(200) NOT NULL,
+	data_inclusao date NOT NULL,
+	data_atualizacao date NULL,
 	CONSTRAINT usuario_pk PRIMARY KEY (documento)
 );
 
--- public.usuario_cargo definition
+-- public.usuarios_erro definition
 
 -- Drop table
 
--- DROP TABLE public.usuario_cargo;
+-- DROP TABLE public.usuarios_erro;
 
-CREATE TABLE public.usuario_cargo (
+CREATE TABLE public.usuarios_erro (
+	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	usuario_id varchar(30) NULL,
+	email varchar(200) NOT NULL,
+	mensagem text NOT NULL,
+	usuario_tipo int NOT NULL,
+	execucao_tipo int NOT NULL,
+	data_inclusao date NOT NULL,
+	CONSTRAINT usuarios_erro_pk PRIMARY KEY (id)
+);
+
+ALTER TABLE public.usuarios_erro ADD constraint usuarios_erro_usuario_fk FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+
+-- public.usuarios_cargos definition
+
+-- Drop table
+
+-- DROP TABLE public.usuarios_cargos;
+
+CREATE TABLE public.usuarios_cargos (
 	usuario_id int8 NOT NULL,
 	cargo_base int NOT NULL,
 	cargo_sobreposto int NULL,
 	funcao_atividade int NULL
 );
 
--- public.usuario_cargo foreign keys
+-- public.usuarios_cargos foreign keys
 
-ALTER TABLE public.usuario_cargo ADD constraint usuario_cargo_usuario_fk FOREIGN KEY (usuario_id) REFERENCES usuario(id);
+ALTER TABLE public.usuarios_cargos ADD constraint usuarios_cargos_usuario_fk FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
 
--- public.curso definition
+-- public.cursos definition
 
 -- Drop table
 
--- DROP TABLE public.curso;
+-- DROP TABLE public.cursos;
 
-CREATE TABLE public.curso (
-	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	id_google int8 NOT NULL,
+CREATE TABLE public.cursos (
+	id int8 NOT NULL,
 	email varchar(200) NOT NULL,
 	nome varchar(200) NOT NULL,
 	secao varchar(200) NOT NULL,
 	turma_id int NOT NULL,
-	componente_curricular_id int8 NOT NULL,
-	CONSTRAINT curso_pk PRIMARY KEY (id),
-	CONSTRAINT curso_unique UNIQUE (turma_id, componente_curricular_id)
+	componente_curricular_id int NOT NULL,
+	data_inclusao date NOT NULL,
+	data_atualizacao date NULL,
+	CONSTRAINT cursos_pk PRIMARY KEY (id_google),
+	CONSTRAINT cursos_unique UNIQUE (turma_id, componente_curricular_id)
 );
 
--- public.curso_usuario definition
+-- public.cursos_usuarios definition
 
 -- Drop table
 
--- DROP TABLE public.curso_usuario;
+-- DROP TABLE public.cursos_usuarios;
 
-CREATE TABLE public.curso_usuario (
+CREATE TABLE public.cursos_usuarios (
 	curso_id int8 NOT NULL,
 	usuario_id int8 NOT NULL
 );
 
-ALTER TABLE public.curso_usuario ADD constraint curso_usuario_usuario_fk FOREIGN KEY (usuario_id) REFERENCES usuario(id);
-ALTER TABLE public.curso_usuario ADD constraint curso_usuario_curso_fk FOREIGN KEY (curso_id) REFERENCES curso(id);
+ALTER TABLE public.cursos_usuarios ADD constraint cursos_usuarios_usuario_fk FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+ALTER TABLE public.cursos_usuarios ADD constraint cursos_usuarios_curso_fk FOREIGN KEY (curso_id) REFERENCES cursos(id);
+
+-- public.cursos_erro definition
+
+-- Drop table
+
+-- DROP TABLE public.cursos_erro;
+
+CREATE TABLE public.cursos_erro (
+	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	turma_id int NOT NULL,
+	componente_curricular_id int NOT NULL,
+	mensagem text NOT NULL,
+	execucao_tipo int NOT NULL,
+	curso_id int8 NULL,
+	data_inclusao date NOT NULL,
+	CONSTRAINT cursos_pk PRIMARY KEY (id),
+	CONSTRAINT cursos_unique UNIQUE (turma_id, componente_curricular_id)
+);
+
+ALTER TABLE public.cursos_erro ADD constraint cursos_erro_curso_fk FOREIGN KEY (curso_id) REFERENCES cursos(id);
+
+-- public.acessos_google definition
+
+-- Drop table
+
+-- DROP TABLE public.acessos_google;
+
+CREATE TABLE public.acessos_google (
+	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	aplicacao_nome varchar(100) NOT NULL,
+	email_conta_servico varchar(200) NOT NULL,
+	email_admin varchar(200) NOT NULL,
+	private_key varchar(200) NOT NULL,
+	CONSTRAINT acessos_google_pk PRIMARY KEY (id)
+);
