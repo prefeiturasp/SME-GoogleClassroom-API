@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Infra;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
