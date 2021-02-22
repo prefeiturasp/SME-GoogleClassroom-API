@@ -24,7 +24,7 @@ CREATE TABLE public.usuarios (
 	organization_path varchar(200) NOT NULL,
 	data_inclusao date NOT NULL,
 	data_atualizacao date NULL,
-	CONSTRAINT usuario_pk PRIMARY KEY (documento)
+	CONSTRAINT usuario_pk PRIMARY KEY (id)
 );
 
 -- public.usuarios_erro definition
@@ -35,7 +35,7 @@ CREATE TABLE public.usuarios (
 
 CREATE TABLE public.usuarios_erro (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	usuario_id varchar(30) NULL,
+	usuario_id int8 NULL,
 	email varchar(200) NOT NULL,
 	mensagem text NOT NULL,
 	usuario_tipo int NOT NULL,

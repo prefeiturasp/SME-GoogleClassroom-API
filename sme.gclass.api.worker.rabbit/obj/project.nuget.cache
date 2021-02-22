@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ANQcXZ48HX80FCnrvRkIvlUEoxcz9XYlK2ZhLhrW+gihyuBuHV5b8C9oJOuqBqEKNoTZGS5aDhOyJqqwwTn7qQ==",
+  "dgSpecHash": "c0Vl0cpmG0uj2/3GYy/MuhrWjwUYUL3bZZmAQMXiSBpe4ON1qv5jcNIweRsxfKrwn38PdY6bojzXRoorUpr4/g==",
   "success": true,
   "projectFilePath": "D:\\SGP\\SME-GoogleClassroom-API\\sme.gclass.api.worker.rabbit\\SME.GoogleClassroom.Worker.Rabbit.csproj",
   "expectedPackageFiles": [
@@ -39,6 +39,7 @@
     "C:\\Users\\jef_m\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.0\\microsoft.extensions.primitives.5.0.0.nupkg.sha512",
     "C:\\Users\\jef_m\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\jef_m\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\jef_m\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.10.9\\microsoft.visualstudio.azure.containers.tools.targets.1.10.9.nupkg.sha512",
     "C:\\Users\\jef_m\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\jef_m\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\jef_m\\.nuget\\packages\\polly\\7.2.1\\polly.7.2.1.nupkg.sha512",
