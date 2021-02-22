@@ -11,9 +11,10 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public Task<UsuarioDto> Executar(string login)
+        public async Task<UsuarioDto> Executar(string login)
         {
-            return mediator.Send(new ObterDadosUsuarioPorLoginQuery(login));
+            var retorno = await mediator.Send(new ObterAcessoRandomicoQuery());
+            return await mediator.Send(new ObterDadosUsuarioPorLoginQuery(login));
         }
     }
 }
