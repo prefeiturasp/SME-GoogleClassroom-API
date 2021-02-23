@@ -1,4 +1,4 @@
-﻿namespace SME.GoogleClassroom.Dominio.Enumerados
+﻿namespace SME.GoogleClassroom.Dominio
 {
     public enum ExecucaoTipo
     {
