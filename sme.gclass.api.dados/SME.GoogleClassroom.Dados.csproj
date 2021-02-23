@@ -21,4 +21,9 @@
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Eol\" />
+    <Folder Include="Repositorios\Eol\" />
+  </ItemGroup>
+
 </Project>

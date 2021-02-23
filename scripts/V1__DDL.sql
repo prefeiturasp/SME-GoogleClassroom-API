@@ -1,3 +1,4 @@
+
 -- public.execucao_controle definition
 
 -- Drop table
@@ -7,7 +8,7 @@
 CREATE TABLE public.execucao_controle (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	execucao_tipo int NOT NULL,
-	ultima_execucao date NOT NULL,
+	ultima_execucao timestamp NOT NULL,
 	CONSTRAINT execucao_controle_pk PRIMARY KEY (id)
 );
 
@@ -22,8 +23,8 @@ CREATE TABLE public.usuarios (
 	usuario_tipo int NOT NULL,
 	email varchar(200) NOT NULL,
 	organization_path varchar(200) NOT NULL,
-	data_inclusao date NOT NULL,
-	data_atualizacao date NULL,
+	data_inclusao timestamp NOT NULL,
+	data_atualizacao timestamp NULL,
 	CONSTRAINT usuario_pk PRIMARY KEY (id)
 );
 
@@ -40,7 +41,7 @@ CREATE TABLE public.usuarios_erro (
 	mensagem text NOT NULL,
 	usuario_tipo int NOT NULL,
 	execucao_tipo int NOT NULL,
-	data_inclusao date NOT NULL,
+	data_inclusao timestamp NOT NULL,
 	CONSTRAINT usuarios_erro_pk PRIMARY KEY (id)
 );
 
@@ -76,8 +77,8 @@ CREATE TABLE public.cursos (
 	secao varchar(200) NOT NULL,
 	turma_id int NOT NULL,
 	componente_curricular_id int NOT NULL,
-	data_inclusao date NOT NULL,
-	data_atualizacao date NULL,
+	data_inclusao timestamp NOT NULL,
+	data_atualizacao timestamp NULL,
 	CONSTRAINT cursos_pk PRIMARY KEY (id),
 	CONSTRAINT cursos_unique UNIQUE (turma_id, componente_curricular_id)
 );
@@ -109,7 +110,7 @@ CREATE TABLE public.cursos_erro (
 	mensagem text NOT NULL,
 	execucao_tipo int NOT NULL,
 	curso_id int8 NULL,
-	data_inclusao date NOT NULL,
+	data_inclusao timestamp NOT NULL,
 	CONSTRAINT cursos_erro_pk PRIMARY KEY (id)
 );
 
@@ -129,3 +130,11 @@ CREATE TABLE public.acessos_google (
 	private_key varchar(2000) NOT NULL,
 	CONSTRAINT acessos_google_pk PRIMARY KEY (id)
 );
+
+
+
+insert into execucao_controle 
+(execucao_tipo, ultima_execucao)values(1, '2021-02-20');
+
+insert into execucao_controle 
+(execucao_tipo, ultima_execucao)values(2, '2021-02-20');

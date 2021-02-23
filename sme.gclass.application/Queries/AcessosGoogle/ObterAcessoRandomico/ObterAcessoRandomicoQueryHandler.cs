@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SME.GoogleClassrom.Dados;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -22,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var listaAcessos = await repositorioAcessosGoogle.Listar();
 
-            if (listaAcessos == null || !listaAcessos.Any()) 
+            if (listaAcessos == null || !listaAcessos.Any())
             {
                 throw new NegocioException("Acessos não encontrados");
             };

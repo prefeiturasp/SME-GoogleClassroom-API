@@ -2,18 +2,18 @@
 using Newtonsoft.Json;
 using Polly;
 using Polly.Registry;
+using Polly.Retry;
 using SME.GoogleClassroom.Infra;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TesteGoogleClassUseCase : ITesteGoogleClassUseCase
+    public class TrataSyncGoogleGeralUseCase : ITrataSyncGoogleGeralUseCase
     {
-        public TesteGoogleClassUseCase(IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
+        public TrataSyncGoogleGeralUseCase(IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
         {
-            var a = configuration.GetSection("ronaldo");
-            var policy = registry.Get<IAsyncPolicy<HttpResponseMessage>>("SimpleHttpRetryPolicy");
+            var policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
