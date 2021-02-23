@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface ITesteGoogleClassUseCase
+    public interface ITrataSyncGoogleGeralUseCase
     {
         Task<bool> Executar(MensagemRabbit mensagemRabbit);
     }

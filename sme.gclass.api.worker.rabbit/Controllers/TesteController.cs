@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> Testar([FromServices] IMediator mediator)
         {
-            await mediator.Send(new AtualizaExecucaoControleCommand(Dominio.Enumerados.ExecucaoTipo.CursoAdicionar, DateTime.Now));
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar, DateTime.Now));
 
             return Ok();
         }

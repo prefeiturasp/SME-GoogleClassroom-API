@@ -38,11 +38,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             this.serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
             canalRabbit = conexaoRabbit.CreateModel();
 
-            //canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeServidorRelatorios, ExchangeType.Topic);
-            //canalRabbit.QueueDeclare(RotasRabbit.FilaSgp, false, false, false, null);
-            //canalRabbit.QueueBind(RotasRabbit.FilaSgp, RotasRabbit.ExchangeServidorRelatorios, "*", null);
-            //canalRabbit.QueueDeclare(RotasRabbit.WorkerRelatoriosSgp, false, false, false, null);
-            //canalRabbit.QueueBind(RotasRabbit.WorkerRelatoriosSgp, RotasRabbit.ExchangeServidorRelatorios, "*", null);
+            canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
+                        
+            canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
+            //canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, "*.sync");
 
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
@@ -50,9 +50,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private void RegistrarUseCases()
         {
-            comandos.Add(RotasRabbit.RotaTesteGoogleClass, new ComandoRabbit("Receber teste google class", typeof(ITesteGoogleClassUseCase)));
-
-            //comandos.Add(RotasRabbit.RotaRelatoriosProntos, new ComandoRabb
+            comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -148,7 +146,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 await TratarMensagem(ea);
             };
 
-            //canalRabbit.BasicConsume(RotasRabbit.FilaSgp, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
             return Task.CompletedTask;
         }
     }

@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Dominio.Enumerados;
+using SME.GoogleClassroom.Dominio;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {

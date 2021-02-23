@@ -1,4 +1,4 @@
-﻿using SME.GoogleClassroom.Dominio.Enumerados;
+﻿using SME.GoogleClassroom.Dominio;
 using System;
 using System.Threading.Tasks;
 

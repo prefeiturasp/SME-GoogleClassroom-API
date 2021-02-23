@@ -46,12 +46,12 @@ namespace SME.GoogleClassroom.IoC
 
         private static void RegistrarServicos(IServiceCollection services)
         {
-            services.TryAddSingleton<IServicoGoogleClassroom, ServicoGoogleClassroom>();
+            
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
-            services.TryAddScoped<ITesteGoogleClassUseCase, TesteGoogleClassUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
         }
     }
 }
