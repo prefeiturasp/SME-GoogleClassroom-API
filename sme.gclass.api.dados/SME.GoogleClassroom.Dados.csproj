@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\GoogleClassroom\" />
+    <Folder Include="Interfaces\Eol\" />
+    <Folder Include="Repositorios\Eol\" />
   </ItemGroup>
 
 </Project>

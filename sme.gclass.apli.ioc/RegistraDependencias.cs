@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using SME.GoogleClassrom.Dados;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Infra;
@@ -23,7 +22,6 @@ namespace SME.GoogleClassroom.IoC
             RegistrarConsultas(services);
             RegistrarServicos(services);
             RegistrarCasosDeUso(services);
-            RegistrarMapeamentos.Registrar();
         }
 
         private static void RegistrarComandos(IServiceCollection services)
@@ -40,8 +38,9 @@ namespace SME.GoogleClassroom.IoC
 
         private static void RegistrarRepositorios(IServiceCollection services)
         {
-            services.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
             services.TryAddScoped<IRepositorioAcessosGoogle, RepositorioAcessosGoogle>();
+            services.TryAddScoped<IRepositorioExecucaoControle, RepositorioExecucaoControle>();
+
         }
 
         private static void RegistrarServicos(IServiceCollection services)
@@ -52,7 +51,6 @@ namespace SME.GoogleClassroom.IoC
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITesteGoogleClassUseCase, TesteGoogleClassUseCase>();
-            services.TryAddScoped<IObterDadosUsuarioPorLoginUseCase, ObterDadosUsuarioPorLoginUseCase>();
         }
     }
 }
