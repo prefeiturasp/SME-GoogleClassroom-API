@@ -21,8 +21,4 @@
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\GoogleClassroom\" />
-  </ItemGroup>
-
 </Project>
