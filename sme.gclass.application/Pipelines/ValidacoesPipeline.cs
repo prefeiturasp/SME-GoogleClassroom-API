@@ -10,13 +10,10 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ValidacoesPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly IMediator mediator;
         private readonly IEnumerable<IValidator<TRequest>> validadores;
 
-        public ValidacoesPipeline(IMediator mediator,
-                                  IEnumerable<IValidator<TRequest>> validadores)
+        public ValidacoesPipeline(IEnumerable<IValidator<TRequest>> validadores)
         {
-            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
             this.validadores = validadores ?? throw new System.ArgumentNullException(nameof(validadores));
         }
 
@@ -24,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (validadores.Any())
             {
-                var context = new FluentValidation.ValidationContext<object>(request);
+                var context = new ValidationContext<object>(request);
 
                 var erros = validadores
                     .Select(v => v.Validate(context))

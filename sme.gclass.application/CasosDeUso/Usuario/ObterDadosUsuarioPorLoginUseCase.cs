@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -11,9 +10,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public Task<UsuarioDto> Executar(string login)
+        public async Task<UsuarioDto> Executar(string login)
         {
-            return mediator.Send(new ObterDadosUsuarioPorLoginQuery(login));
+            return await mediator.Send(new ObterDadosUsuarioPorLoginQuery(login));
         }
     }
 }
