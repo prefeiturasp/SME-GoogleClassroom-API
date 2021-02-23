@@ -42,6 +42,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioExecucaoControle, RepositorioExecucaoControle>();
 
             services.TryAddScoped<IRepositorioCursoErro, RepositorioCursoErro>();
+            services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
         }
 
         private static void RegistrarServicos(IServiceCollection services)
