@@ -5,7 +5,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class SalvarUsuarioErroCommand : IRequest<long>
     {
-        public SalvarUsuarioErroCommand(long usuarioId, string email, string mensagem, int usuarioTipo, int execucaoTipo, DateTime dataInclusao)
+        public SalvarUsuarioErroCommand(long? usuarioId, string email, string mensagem, int usuarioTipo, int execucaoTipo, DateTime dataInclusao)
         {
             UsuarioId = usuarioId;
             Email = email;
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             DataInclusao = dataInclusao;
         }
 
-        public long UsuarioId { get; set; }
+        public long? UsuarioId { get; set; }
         public string Email { get; set; }
         public string Mensagem { get; set; }
         public int UsuarioTipo { get; set; }

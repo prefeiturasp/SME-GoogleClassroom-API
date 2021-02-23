@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Dados
             this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<long> Salvar(long usuarioId, string email, string mensagem, int usuarioTipo, int execucaoTipo, DateTime dataInclusao)
+        public async Task<long> Salvar(long? usuarioId, string email, string mensagem, int usuarioTipo, int execucaoTipo, DateTime dataInclusao)
         {
             var query = @" insert into public.usuarios_erro
                                   (usuario_id, email, mensagem, usuario_tipo, execucao_tipo, data_inclusao)
