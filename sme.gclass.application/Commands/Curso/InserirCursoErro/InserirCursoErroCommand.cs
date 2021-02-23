@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Dominio.Enumerados;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
