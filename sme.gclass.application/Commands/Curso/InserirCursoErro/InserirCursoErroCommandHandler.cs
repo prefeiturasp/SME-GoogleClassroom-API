@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return id;
         }
 
-        CursoErroDto MapearParaDto(InserirCursoErroCommand request) {
+        private CursoErroDto MapearParaDto(InserirCursoErroCommand request) {
             return new CursoErroDto()
             {
                 TurmaId = request.TurmaId,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SME.GoogleClassroom.Dominio;
+using System;
 
 namespace SME.GoogleClassroom.Infra
 {
