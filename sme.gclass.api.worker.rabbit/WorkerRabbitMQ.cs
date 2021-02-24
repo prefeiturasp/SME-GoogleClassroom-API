@@ -8,6 +8,7 @@ using Sentry;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -23,6 +24,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private readonly string sentryDSN;
         private readonly IConnection conexaoRabbit;
         private readonly IServiceScopeFactory serviceScopeFactory;
+        private readonly IMetricReporter metricReporter;
 
         /// <summary>
         /// configuração da lista de tipos para a fila do rabbit instanciar, seguindo a ordem de propriedades:
@@ -31,11 +33,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private readonly Dictionary<string, ComandoRabbit> comandos;
 
 
-        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration)
+        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter)
         {
             sentryDSN = configuration.GetValue<string>("Sentry:DSN");
             this.conexaoRabbit = conexaoRabbit ?? throw new ArgumentNullException(nameof(conexaoRabbit));
             this.serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
+            this.metricReporter = metricReporter;
             canalRabbit = conexaoRabbit.CreateModel();
 
             canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
@@ -68,14 +71,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     {
                         using (var scope = serviceScopeFactory.CreateScope())
                         {
-
+                            var dataHoraInicio = DateTime.Now;
                             //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - EXECUTANDO - {ea.RoutingKey} - {DateTime.Now:dd/MM/yyyy HH:mm:ss}", SentryLevel.Debug);
                             var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
+                            metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
                             await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
 
                             //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - SUCESSO - {ea.RoutingKey}", SentryLevel.Info);
                             canalRabbit.BasicAck(ea.DeliveryTag, false);
+
+                            var dataHoraFim = DateTime.Now;
+                            var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
+                            metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, mensagemRabbit.Mensagem, dataHoraInicio, dataHoraFim, tempoDeExecucao);
                         }
                     }
                     catch (NegocioException nex)
@@ -142,7 +150,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var consumer = new EventingBasicConsumer(canalRabbit);
             consumer.Received += async (ch, ea) =>
             {
-
                 await TratarMensagem(ea);
             };
 

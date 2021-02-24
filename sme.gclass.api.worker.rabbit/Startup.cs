@@ -5,8 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using Sentry;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
 using System;
 
@@ -36,7 +38,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             services.AddHostedService<WorkerRabbitMQ>();
 
-
             // Teste para injeção do client de telemetria em classe estática 
             SentrySdk.Init(Configuration.GetValue<string>("Sentry:DSN"));
 
@@ -45,6 +46,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
             });
+
+            services.UseMetricReporter();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -71,6 +74,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 await context.Response.WriteAsync("WorkerRabbitMQ!");
             });
+
+            app.UseMetricServer();
         }
 
         private static void RegistrarHttpClients(IServiceCollection services, IConfiguration configuration)
