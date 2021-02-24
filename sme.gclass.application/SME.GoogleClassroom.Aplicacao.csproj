@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="9.5.1" />
+    <PackageReference Include="Google.Apis.Admin.Directory.directory_v1" Version="1.49.0.1982" />
+    <PackageReference Include="Google.Apis.Classroom.v1" Version="1.50.0.2223" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Polly" Version="7.2.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    <PackageReference Include="Sentry" Version="3.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Queries\Execucao\" />
+  </ItemGroup>
+</Project>
