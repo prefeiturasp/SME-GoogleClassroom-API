@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dados",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Testes.Unitario", "SME.GoogleClassroom.Testes.Unitario\SME.GoogleClassroom.Testes.Unitario.csproj", "{42112A05-86D8-41DA-857D-A3BC01DF6F63}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2142DAA4-36E1-4885-93B8-18AE938A8531}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42112A05-86D8-41DA-857D-A3BC01DF6F63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

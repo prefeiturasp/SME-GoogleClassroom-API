@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  gca-api:
+    container_name: gca-api
+    image: ${DOCKER_REGISTRY-}smegoogleclassroomworkerrabbit
+    build:
+      context: .
+      dockerfile: sme.gclass.api.worker.rabbit/Dockerfile
+    networks:
+      - gca-network
+    env_file:
+      - gca-api.env
+networks:
+  gca-network:
+    external:
+      name: gca-network
