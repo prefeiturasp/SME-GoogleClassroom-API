@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Infra.Metricas
     {
         public static void UseMetricReporter(this IServiceCollection services)
         {
-            services.AddSingleton<MetricReporter>();
+            services.AddSingleton<IMetricReporter, MetricReporter>();
         }
     }
 }
