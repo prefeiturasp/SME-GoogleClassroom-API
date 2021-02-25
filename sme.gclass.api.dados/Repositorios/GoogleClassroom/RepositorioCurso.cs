@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using Npgsql;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -17,13 +17,13 @@ namespace SME.GoogleClassroom.Dados
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<IEnumerable<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataUltimaExecucao)
+        public async Task<IEnumerable<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia)
         {
-            var query = @"";
+            var query = QueriesCursos.ObterCursosParaInclusao();
 
-            using (var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringEol))
+            using (var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol))
             {
-                return await conn.QueryAsync<CursoParaInclusaoDto>(query, new { dataUltimaExecucao });
+                return await conn.QueryAsync<CursoParaInclusaoDto>(query, new { dataReferencia });
             }
         }
     }

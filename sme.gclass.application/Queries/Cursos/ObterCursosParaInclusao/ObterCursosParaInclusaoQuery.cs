@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,15 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public DateTime UltimaDataExecucao { get; set; }
+    }
+
+    public class ObterCursosParaInclusaoQueryValidator : AbstractValidator<ObterCursosParaInclusaoQuery>
+    {
+        public ObterCursosParaInclusaoQueryValidator()
+        {
+            RuleFor(c => c.UltimaDataExecucao)
+            .NotEmpty()
+            .WithMessage("A ultima data de execução deve ser informada.");
+        }
     }
 }
