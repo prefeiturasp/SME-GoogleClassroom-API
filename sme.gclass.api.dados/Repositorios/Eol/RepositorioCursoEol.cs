@@ -21,10 +21,8 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = QueriesCursos.ObterCursosParaInclusao();
 
-            using (var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol))
-            {
-                return await conn.QueryAsync<CursoParaInclusaoDto>(query, new { dataReferencia });
-            }
+            using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);         
+            return await conn.QueryAsync<CursoParaInclusaoDto>(query, new { dataReferencia });
         }
     }
 }

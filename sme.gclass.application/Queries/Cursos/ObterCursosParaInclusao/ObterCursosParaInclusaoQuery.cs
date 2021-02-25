@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(c => c.UltimaDataExecucao)
             .NotEmpty()
-            .WithMessage("A ultima data de execução deve ser informada.");
+            .WithMessage("A última data de execução deve ser informada.");
         }
     }
 }
