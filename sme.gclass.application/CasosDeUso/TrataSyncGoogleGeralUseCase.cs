@@ -1,23 +1,31 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Polly;
+﻿using MediatR;
+using Microsoft.Extensions.Configuration;
 using Polly.Registry;
 using Polly.Retry;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class TrataSyncGoogleGeralUseCase : ITrataSyncGoogleGeralUseCase
     {
-        public TrataSyncGoogleGeralUseCase(IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
+        private readonly IMediator mediator;
+
+        public TrataSyncGoogleGeralUseCase(IMediator mediator)
         {
-            var policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
+            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
+
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var resposta = JsonConvert.SerializeObject(mensagemRabbit);
+            var resposta = mensagemRabbit.Mensagem;
+
+            var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, resposta));
+
+            if (publicarCurso)
+                throw new NegocioException("Erro ao enviar o curso");
+
             return await Task.FromResult(true);
         }
     }
