@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
 
-            comandos.Add(RotasRabbit.FilaUsuarioSync, new ComandoRabbit("Tratamento de usuário do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
+            comandos.Add(RotasRabbit.FilaUsuarioSync, new ComandoRabbit("Tratamento de usuário do sync com google", typeof(ITrataSyncGoogleUsuarioUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
