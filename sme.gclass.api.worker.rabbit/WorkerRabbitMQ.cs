@@ -147,6 +147,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public Task StartAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
+
             var consumer = new EventingBasicConsumer(canalRabbit);
             consumer.Received += async (ch, ea) =>
             {

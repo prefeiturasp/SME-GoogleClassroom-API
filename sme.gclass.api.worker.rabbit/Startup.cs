@@ -31,11 +31,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistraDependencias.Registrar(services, Configuration);
             RegistrarHttpClients(services, Configuration);
 
-
             services.AddRabbit();
             services.AddPolicies();
-
-
             services.AddHostedService<WorkerRabbitMQ>();
 
             // Teste para injeção do client de telemetria em classe estática 
@@ -59,10 +56,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -70,12 +64,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 endpoints.MapControllers();
             });
 
+            app.UseHttpMetrics();
+            app.UseMetricServer();
+
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("WorkerRabbitMQ!");
+                await context.Response.WriteAsync("GoogleClassroom Worker!");
             });
-
-            app.UseMetricServer();
         }
 
         private static void RegistrarHttpClients(IServiceCollection services, IConfiguration configuration)
