@@ -49,6 +49,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
 
+            canalRabbit.QueueDeclare(RotasRabbit.FilaUsuarioSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaUsuarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuarioSync);
+
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
         }
@@ -56,6 +59,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private void RegistrarUseCases()
         {
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
+
+            comandos.Add(RotasRabbit.FilaUsuarioSync, new ComandoRabbit("Tratamento de usuário do sync com google", typeof(ITrataSyncGoogleUsuarioUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)

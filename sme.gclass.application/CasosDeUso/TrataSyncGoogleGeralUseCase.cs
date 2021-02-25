@@ -26,6 +26,11 @@ namespace SME.GoogleClassroom.Aplicacao
             if (publicarCurso)
                 throw new NegocioException("Erro ao enviar o curso");
 
+            var publicarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioSync, RotasRabbit.FilaUsuarioSync, resposta));
+
+            if (publicarUsuario)
+                throw new NegocioException("Erro ao enviar o usuário");
+
             return await Task.FromResult(true);
         }
     }
