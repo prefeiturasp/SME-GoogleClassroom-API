@@ -35,6 +35,7 @@ namespace SME.GoogleClassroom.IoC
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();            
         }
     }
 }

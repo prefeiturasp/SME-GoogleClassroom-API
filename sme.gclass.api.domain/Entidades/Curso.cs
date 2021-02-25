@@ -11,6 +11,6 @@ namespace SME.GoogleClassroom.Dominio
         public long ComponenteCurricularId { get; set; }
         public string Email { get; set; }
         public DateTime DataInclusao { get; set; }
-        public DateTime DataAtualizacao { get; set; }
+        public DateTime? DataAtualizacao { get; set; }
     }
 }

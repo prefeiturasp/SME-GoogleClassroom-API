@@ -6,6 +6,11 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosCadastradosQuery : IRequest<IEnumerable<Curso>>
     {
+        public ObterCursosCadastradosQuery(Paginacao paginacacao)
+        {
+            this.paginacacao = paginacacao;
+        }
 
+        public Paginacao paginacacao { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioCurso
     {
-        Task<IEnumerable<Curso>> ObterTodosCursos();
+        Task<IEnumerable<Curso>> ObterTodosCursos(Paginacao paginacao);
 
     }
 }

@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterCursosCadastradosUseCase
     {
-        Task<IEnumerable<Curso>> Executar();
+        Task<IEnumerable<Curso>> Executar(int registrosQuantidade, int paginaNumero);
     }
 }

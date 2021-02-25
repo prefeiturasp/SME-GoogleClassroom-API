@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dominio;
 using System.Collections.Generic;
 using System.Threading;
@@ -8,13 +9,15 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosCadastradosQueryHandler : IRequestHandler<ObterCursosCadastradosQuery, IEnumerable<Curso>>
     {
-        public ObterCursosCadastradosQueryHandler()
-        {
+        private readonly IRepositorioCurso repositorioCursos;
 
-        }
-        public Task<IEnumerable<Curso>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
+        public ObterCursosCadastradosQueryHandler(IRepositorioCurso repositorioCursos)
         {
-            throw new System.NotImplementedException();
+            this.repositorioCursos = repositorioCursos ?? throw new System.ArgumentNullException(nameof(repositorioCursos));
+        }
+        public async Task<IEnumerable<Curso>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
+        {
+            return await repositorioCursos.ObterTodosCursos(request.paginacacao);
         }
     }
 }

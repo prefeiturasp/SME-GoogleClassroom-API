@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -15,20 +16,49 @@ namespace SME.GoogleClassroom.Dados
         {
             this.ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
-        public async Task<IEnumerable<Curso>> ObterTodosCursos()
+        private string MontaQueryObterTodosOsCursos(bool ehParaPaginacao, Paginacao paginacao)
         {
-            var query = @" SELECT C.ID, 
-                                  C.NOME, 
-                                  C.SECAO, 
-                                  C.TURMA_ID AS TURMAID, 
-                                  C.COMPONENTE_CURRICULAR_ID AS COMPONENTECURRICULARID,  
+            var queryCompleta = new StringBuilder("SELECT ");
+
+            if (ehParaPaginacao)
+                queryCompleta.AppendLine("count(*)");
+            else
+            {
+                queryCompleta.AppendLine(@"C.ID, 
+                                  C.NOME,
+                                  C.SECAO,
+                                  C.TURMA_ID AS TURMAID,
+                                  C.COMPONENTE_CURRICULAR_ID AS COMPONENTECURRICULARID,
                                   C.DATA_INCLUSAO AS DATAINCLUSAO,
-                                  C.DATA_ATUALIZACAO AS DATAATUALIZACAO
-                                  FROM CURSO C";           
+                                  C.DATA_ATUALIZACAO AS DATAATUALIZACAO,
+                                  C.EMAIL ");
+            }
+
+            queryCompleta.AppendLine(@"FROM CURSOS C");
+
+            if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
+                queryCompleta.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+
+            return queryCompleta.ToString();
+        }
+        public async Task<IEnumerable<Curso>> ObterTodosCursos(Paginacao paginacao)
+        {
+            var queryCompleta = new StringBuilder();
+
+            queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(false, paginacao));
+            queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(true, paginacao));
+
+            var retorno = new PaginacaoResultadoDto<Curso>();
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
 
-            return await conn.QueryAsync<Curso>(query);
+            using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString());
+
+            retorno.Items = multi.Read<Curso>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return await conn.QueryAsync<Curso>(queryCompleta.ToString());
         }
     }
 }
