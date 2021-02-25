@@ -1,16 +1,16 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dominio;
-using System.Collections.Generic;
+using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCadastradosQuery : IRequest<IEnumerable<Curso>>
+    public class ObterCursosCadastradosQuery : IRequest<PaginacaoResultadoDto<Curso>>
     {
         public ObterCursosCadastradosQuery(Paginacao paginacacao)
         {
-            this.paginacacao = paginacacao;
+            this.Paginacacao = paginacacao;
         }
 
-        public Paginacao paginacacao { get; set; }
+        public Paginacao Paginacacao { get; set; }
     }
 }

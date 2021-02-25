@@ -3,7 +3,6 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        public async Task<IEnumerable<Curso>> ObterTodosCursos(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<Curso>> ObterTodosCursos(Paginacao paginacao)
         {
             var queryCompleta = new StringBuilder();
 
@@ -58,7 +57,7 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
-            return await conn.QueryAsync<Curso>(queryCompleta.ToString());
+            return retorno;
         }
     }
 }

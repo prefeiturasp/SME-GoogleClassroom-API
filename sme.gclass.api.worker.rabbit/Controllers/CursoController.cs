@@ -19,5 +19,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await obterCursosCadastradosUseCase.Executar(registrosQuantidade, paginaNumero);
             return Ok(retorno);
         }
+        [HttpGet("novos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<Curso>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterTodosCursosParaIncluir([FromServices] IObterCursosParaIncluirUseCase obterCursosCadastradosUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero)
+        {
+            return Ok();
+            //var retorno = await obterCursosCadastradosUseCase.Executar(registrosQuantidade, paginaNumero);
+            //return Ok(retorno);
+        }
     }
 }

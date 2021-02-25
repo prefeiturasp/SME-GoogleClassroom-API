@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dominio;
-using System.Collections.Generic;
+using SME.GoogleClassroom.Infra;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCadastradosQueryHandler : IRequestHandler<ObterCursosCadastradosQuery, IEnumerable<Curso>>
+    public class ObterCursosCadastradosQueryHandler : IRequestHandler<ObterCursosCadastradosQuery, PaginacaoResultadoDto<Curso>>
     {
         private readonly IRepositorioCurso repositorioCursos;
 
@@ -15,9 +15,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.repositorioCursos = repositorioCursos ?? throw new System.ArgumentNullException(nameof(repositorioCursos));
         }
-        public async Task<IEnumerable<Curso>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<Curso>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursos.ObterTodosCursos(request.paginacacao);
+            return await repositorioCursos.ObterTodosCursos(request.Paginacacao);
         }
     }
 }
