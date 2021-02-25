@@ -148,13 +148,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            metricReporter.RegistrarExecucao("Teste");
-
-            var dataHoraInicio = DateTime.Now;
-            var dataHoraFim = DateTime.Now.AddMinutes(2);
-            var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
-            metricReporter.RegistrarTempoDeExecucao("Teste", "Testando", dataHoraInicio, dataHoraFim, tempoDeExecucao);
-
             var consumer = new EventingBasicConsumer(canalRabbit);
             consumer.Received += async (ch, ea) =>
             {

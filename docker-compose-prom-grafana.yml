@@ -43,3 +43,4 @@ networks:
   gca-network:
     external:
       name: gca-network
+    driver: bridge
