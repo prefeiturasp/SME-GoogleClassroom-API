@@ -75,6 +75,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 await context.Response.WriteAsync("WorkerRabbitMQ!");
             });
 
+            app.UseHttpMetrics();
             app.UseMetricServer();
         }
 
