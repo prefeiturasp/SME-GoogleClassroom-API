@@ -25,9 +25,9 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagemJson = JsonConvert.SerializeObject(mensagem);
             var body = Encoding.UTF8.GetBytes(mensagemJson);
 
-            rabbitChannel.QueueBind(request.NomeFila, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
+            rabbitChannel.QueueBind(request.NomeFila, RotasRabbit.ExchangeGoogleSync, request.NomeRota);
             
-            rabbitChannel.BasicPublish(RotasRabbit.ExchangeGoogleSync, request.NomeFila, null, body);
+            rabbitChannel.BasicPublish(RotasRabbit.ExchangeGoogleSync, request.NomeRota, null, body);
 
             return Task.FromResult(true);
         }

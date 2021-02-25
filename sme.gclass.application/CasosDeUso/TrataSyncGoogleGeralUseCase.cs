@@ -19,9 +19,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var resposta = mensagemRabbit.ObterObjetoMensagem<string>();
+            var resposta = mensagemRabbit.Mensagem;
 
-            var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, resposta));
+            var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, resposta));
 
             if (publicarCurso)
                 throw new NegocioException("Erro ao enviar o curso");
