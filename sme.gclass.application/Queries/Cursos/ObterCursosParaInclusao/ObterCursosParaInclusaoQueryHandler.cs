@@ -10,9 +10,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosParaInclusaoQueryHandler : IRequestHandler<ObterCursosParaInclusaoQuery, IEnumerable<CursoParaInclusaoDto>>
     {
-        private readonly IRepositorioCurso repositorioCurso;
+        private readonly IRepositorioCursoEol repositorioCurso;
 
-        public ObterCursosParaInclusaoQueryHandler(IRepositorioCurso repositorioCurso)
+        public ObterCursosParaInclusaoQueryHandler(IRepositorioCursoEol repositorioCurso)
         {
             this.repositorioCurso = repositorioCurso ?? throw new ArgumentNullException(nameof(repositorioCurso));
         }

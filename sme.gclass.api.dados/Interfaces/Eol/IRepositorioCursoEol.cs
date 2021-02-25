@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados.Interfaces
 {
-    public interface IRepositorioCurso
+    public interface IRepositorioCursoEol
     {
         Task<IEnumerable<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataUltimaExecucao);
     }

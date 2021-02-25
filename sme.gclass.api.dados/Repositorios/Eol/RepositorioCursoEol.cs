@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioCurso : IRepositorioCurso
+    public class RepositorioCursoEol : IRepositorioCursoEol
     {
         private readonly ConnectionStrings ConnectionStrings;
 
-        public RepositorioCurso(ConnectionStrings connectionStrings)
+        public RepositorioCursoEol(ConnectionStrings connectionStrings)
         {
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
