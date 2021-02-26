@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.GoogleClassroom.Infra
+namespace SME.GoogleClassroom.Dominio
 {
-    public class UsuarioDto
+    public class Usuario
     {
         public long Id { get; set; }
         public int UsuarioTipo { get; set; }
