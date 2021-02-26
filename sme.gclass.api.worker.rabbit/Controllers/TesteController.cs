@@ -18,17 +18,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> Testar([FromServices] IMediator mediator)
         {
-            var cursoParaIncluir = new CursoParaInclusaoDto()
-            {
-                ComponenteCurricularId = 1,
-                Email = "williansantos.amcom@edu.sme.prefeitura.sp.gov.br",
-                Nome = "Teste",
-                Secao = "P - XX - 000001 - 99999 - TESTE DE INTEGRAÇÃO",
-                TurmaId = 12345,
-                UeCodigo = "54321"
-            };
+            //var cursoParaIncluir = new CursoParaInclusaoDto()
+            //{
+            //    ComponenteCurricularId = 1,
+            //    Email = "williansantos.amcom@edu.sme.prefeitura.sp.gov.br",
+            //    Nome = "Teste",
+            //    Secao = "P - XX - 000001 - 99999 - TESTE DE INTEGRAÇÃO",
+            //    TurmaId = 12345,
+            //    UeCodigo = "54321"
+            //};
 
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, cursoParaIncluir));
+            //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaIncluir));
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar, DateTime.Now));
 
