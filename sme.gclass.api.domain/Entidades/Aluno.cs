@@ -5,6 +5,12 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class Aluno
     {
+        public Aluno(string nome, DateTime dataNascimento)
+        {
+            Nome = nome;
+            DataNascimento = dataNascimento;
+        }
+
         public string Nome { get; set; }
 
         public DateTime DataNascimento { get; set; }
