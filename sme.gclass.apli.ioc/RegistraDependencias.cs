@@ -2,7 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.IoC
@@ -43,16 +45,17 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IRepositorioCursoErro, RepositorioCursoErro>();
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
+            services.TryAddScoped<IRepositorioFuncionarioEol, RepositorioFuncionarioEol>();
         }
 
         private static void RegistrarServicos(IServiceCollection services)
         {
-            
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<IObterFuncionariosParaIncluirGoogleUseCase, ObterFuncionariosParaIncluirGoogleUseCase>();
         }
     }
 }
