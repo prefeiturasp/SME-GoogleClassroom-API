@@ -1,0 +1,42 @@
+﻿using Dapper;
+using Npgsql;
+using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SME.GoogleClassroom.Dados
+{
+    public class RepositorioUsuario : IRepositorioUsuario
+    {
+        private readonly ConnectionStrings ConnectionStrings;
+
+        public RepositorioUsuario(ConnectionStrings connectionStrings)
+        {
+            this.ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
+        }
+
+        public async Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao)
+        {
+            var query = new StringBuilder(@"SELECT * 
+                                              FROM usuarios u 
+                                             WHERE usuario_tipo = 1 "); 
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+
+            var retorno = new PaginacaoResultadoDto<Usuario>();
+
+            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+
+            using var alunos = await conn.QueryMultipleAsync(query.ToString());
+
+            retorno.Items = alunos.Read<Usuario>();
+            retorno.TotalRegistros = alunos.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
+    }
+}
