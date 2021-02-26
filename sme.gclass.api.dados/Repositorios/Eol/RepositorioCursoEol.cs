@@ -323,6 +323,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									t1.Email IS NULL;
 							END; 
+
 							SELECT
 								temp.Nome,
 								temp.Secao,
@@ -331,62 +332,13 @@ namespace SME.GoogleClassroom.Dados
 								temp.cd_unidade_educacao as UeCodigo,
 								temp.Email
 							FROM
-								#tempCursosDrePaginado temp
-							LEFT JOIN
-								turma_componente_curricular_classroom curso
-								ON temp.TurmaId = curso.cd_turma_escola AND temp.ComponenteCurricularId = curso.cd_componente_curricular
-							WHERE
-								curso.cd_curso_classroom IS NULL;
+								#tempCursosDrePaginado temp;
+
 					-- Totalizacao
-							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicaoTotal') IS NOT NULL 
-								DROP TABLE #tempUEsSemAtribuicaoTotal
-							SELECT
-								DISTINCT
-								temp.cd_unidade_educacao
-							INTO #tempUEsSemAtribuicaoTotal
-							FROM
-								#tempCursosDre temp
-							WHERE
-								Email IS NULL;
-
-							IF EXISTS (SELECT TOP 1 1 FROM #tempUEsSemAtribuicaoTotal)
-							BEGIN
-								IF OBJECT_ID('tempdb..#ResponsaveisUeTotal') IS NOT NULL 
-									DROP TABLE #ResponsaveisUeTotal;
-								CREATE TABLE #responsaveisUeTotal
-								(
-									CodigoUe varchar(10) NOT NULL,
-									Email varchar(MAX) NULL
-								);
-
-								INSERT INTO #responsaveisUeTotal
-								SELECT DISTINCT temp.cd_unidade_educacao, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf) AS Email
-								FROM 
-									#tempUEsSemAtribuicaoTotal temp
-								CROSS APPLY 
-									[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub;
-
-								UPDATE t1
-									SET t1.Email = t2.Email
-								FROM
-									#tempCursosDre t1
-								INNER JOIN
-									#responsaveisUe t2
-									ON t1.cd_unidade_educacao = t2.CodigoUe
-								WHERE
-									t1.Email IS NULL;
-							END
-
-							
 						SELECT
-							count(*)
+							COUNT(*)
 						FROM
-								#tempCursosDre temp
-							LEFT JOIN
-								turma_componente_curricular_classroom curso
-								ON temp.TurmaId = curso.cd_turma_escola AND temp.ComponenteCurricularId = curso.cd_componente_curricular
-							WHERE
-								curso.cd_curso_classroom IS NULL";         
+							#tempCursosDre temp;";         
 
         }
     }
