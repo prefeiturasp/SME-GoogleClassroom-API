@@ -32,13 +32,13 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoEol, RepositorioCursoEol>();
             services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
-
         }
 
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<IIncluirCursoUseCase, IncluirCursoUseCase>();
             services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
             services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
         }
