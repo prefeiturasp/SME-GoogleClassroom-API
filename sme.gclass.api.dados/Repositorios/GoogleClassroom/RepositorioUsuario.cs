@@ -49,6 +49,40 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
-        }        
+        }
+
+        public async Task<PaginacaoResultadoDto<UsuarioDto>> ObterProfessoresAsync(Paginacao paginacao)
+        {
+            var query = new StringBuilder(@"SELECT u.id, 
+                                                   u.usuario_tipo as usuariotipo,
+                                                   u.email,
+                                                   u.organization_path as organizationpath,
+                                                   u.data_inclusao as datainclusao,
+                                                   u.data_atualizacao as dataatualizacao
+                                              FROM usuarios u 
+                                             WHERE usuario_tipo = 2");
+            if (paginacao.QuantidadeRegistros > 0)
+            {
+                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+            }
+            else
+            {
+                query.AppendLine(";");
+            }
+
+            query.AppendLine("SELECT count(*) from usuarios u");
+
+            var retorno = new PaginacaoResultadoDto<UsuarioDto>();
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            using var professores = await conn.QueryMultipleAsync(query.ToString());
+
+            retorno.Items = professores.Read<UsuarioDto>();
+            retorno.TotalRegistros = professores.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
     }
 }
