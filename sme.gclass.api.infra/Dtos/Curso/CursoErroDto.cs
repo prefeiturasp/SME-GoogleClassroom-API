@@ -5,9 +5,9 @@ namespace SME.GoogleClassroom.Infra
 {
     public class CursoErroDto
     {
-        public int TurmaId { get; set; }
+        public long TurmaId { get; set; }
 
-        public int ComponenteCurricularId { get; set; }
+        public long ComponenteCurricularId { get; set; }
 
         public string Mensagem { get; set; }
 
