@@ -176,12 +176,11 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 
 				-- 7. Final
 				SELECT
-					serv.cd_registro_funcional AS cd_servidor_cotic,
-					NULL AS cd_servidor_classroom,
-					[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS nm_email,
-					'True' AS in_ativo,
-					[dbo].[proc_gerar_unidade_organizacional_funcionario_v2](temp.cd_cargo, '') AS nm_organizacao,
-					temp.cd_cargo
+					serv.cd_registro_funcional AS CdRegistroFuncional,
+					[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email,
+					'True' AS Ativo,
+					[dbo].[proc_gerar_unidade_organizacional_funcionario_v2](temp.cd_cargo, '') AS OrganizationPath,
+					temp.cd_cargo AS CdCargo
 				FROM
 					v_servidor_cotic serv (NOLOCK)
 				INNER JOIN
