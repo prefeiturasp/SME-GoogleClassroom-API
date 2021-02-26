@@ -17,6 +17,10 @@ namespace SME.GoogleClassroom.Dados
         }
         public async Task<PaginacaoResultadoDto<UsuarioDto>> ObterUsuarios(UsuarioTipo usuarioTipo, Paginacao paginacao)
         {
+            try
+            {
+
+            
             var query = @" select id,
 	                               usuario_tipo as UsuarioTipo,
 	                               email,
@@ -24,7 +28,8 @@ namespace SME.GoogleClassroom.Dados
 	                               data_inclusao as DataInclusao,
 	                               data_atualizacao as DataAtualizacao
                               from usuarios 
-                             where usuario_tipo = @usuarioTipo ";
+                             where usuario_tipo = @usuarioTipo
+                             limit 1";
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             using var multi = await conn.QueryMultipleAsync(query,
@@ -41,6 +46,12 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
