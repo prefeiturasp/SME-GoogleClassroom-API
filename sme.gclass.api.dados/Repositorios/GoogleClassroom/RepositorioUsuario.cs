@@ -20,11 +20,18 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao)
         {
-            var query = new StringBuilder(@"SELECT * 
+            var query = new StringBuilder(@"SELECT u.id, 
+                                                   u.usuario_tipo as usuariotipo,
+                                                   u.email,
+                                                   u.organization_path as organizationpath,
+                                                   u.data_inclusao as datainclusao,
+                                                   u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = 1 "); 
+                                             WHERE usuario_tipo = 1"); 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+
+            query.AppendLine("SELECT count(*) from usuarios u");
 
             var retorno = new PaginacaoResultadoDto<Usuario>();
 

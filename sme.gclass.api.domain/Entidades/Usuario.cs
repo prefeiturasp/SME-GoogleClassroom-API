@@ -11,5 +11,6 @@ namespace SME.GoogleClassroom.Dominio
         public string Email { get; set; }
         public string OrganizationPath { get; set; }
         public DateTime DataInclusao { get; set; }
+        public DateTime? DataAtualizacao { get; set; }
     }
 }
