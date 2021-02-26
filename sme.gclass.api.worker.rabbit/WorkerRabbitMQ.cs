@@ -42,7 +42,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit = conexaoRabbit.CreateModel();
 
             canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
+
             canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
                         
