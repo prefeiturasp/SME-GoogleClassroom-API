@@ -28,7 +28,13 @@ namespace SME.GoogleClassroom.Dados
                                               FROM usuarios u 
                                              WHERE usuario_tipo = 3");
             if (paginacao.QuantidadeRegistros > 0)
+            {
                 query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+            }
+            else
+            {
+                query.AppendLine(";");
+            }
 
             query.AppendLine("SELECT count(*) from usuarios u");
 
@@ -36,10 +42,10 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
-            using var alunos = await conn.QueryMultipleAsync(query.ToString());
+            using var funcionarios = await conn.QueryMultipleAsync(query.ToString());
 
-            retorno.Items = alunos.Read<UsuarioDto>();
-            retorno.TotalRegistros = alunos.ReadFirst<int>();
+            retorno.Items = funcionarios.Read<UsuarioDto>();
+            retorno.TotalRegistros = funcionarios.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
