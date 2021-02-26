@@ -3,8 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dados;
-using SME.GoogleClassroom.Dados.Interfaces.Eol;
-using SME.GoogleClassroom.Dados.Repositorios.Eol;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.IoC

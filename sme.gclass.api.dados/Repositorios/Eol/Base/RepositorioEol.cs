@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace SME.GoogleClassroom.Dados.Repositorios.Eol.Base
+namespace SME.GoogleClassroom.Dados
 {
     public abstract class RepositorioEol
     {

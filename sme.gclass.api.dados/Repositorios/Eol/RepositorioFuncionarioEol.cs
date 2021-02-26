@@ -1,13 +1,11 @@
 ﻿using Dapper;
-using SME.GoogleClassroom.Dados.Interfaces.Eol;
-using SME.GoogleClassroom.Dados.Repositorios.Eol.Base;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos.Funcionarios;
 using System;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Dados.Repositorios.Eol
+namespace SME.GoogleClassroom.Dados
 {
     public class RepositorioFuncionarioEol : RepositorioEol, IRepositorioFuncionarioEol
     {
@@ -81,7 +79,6 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 					css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
 					AND css.dt_nomeacao_cargo_sobreposto > @dataReferencia;
-				GO
 
 				-- 3. União das tabelas de cargo fixo
 				IF OBJECT_ID('tempdb..#tempCargosFuncionarios_Fixos') IS NOT NULL
@@ -94,7 +91,7 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 					(SELECT * FROM #tempCargosSobrepostosFuncionarios_Fixos) AS sobrepostos
 				UNION
 					(SELECT * FROM #tempCargosBaseFuncionarios_Fixos
-					 WHERE NOT cd_cargo_base_servidor IN (SELECT DISTINCT cd_cargo_base_servidor FROM #tempCargosSobrepostosFuncionarios_Fixos));
+						WHERE NOT cd_cargo_base_servidor IN (SELECT DISTINCT cd_cargo_base_servidor FROM #tempCargosSobrepostosFuncionarios_Fixos));
 
 				-- 4. Funções específicas ativas
 				DECLARE @tipoFuncaoPAP AS INT = 30;
@@ -137,17 +134,6 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 				UNION
 					(SELECT * FROM #tempProfessores_PAP_PAEE_CIEJA);
 
-				-- 5.1 Paginação
-				IF OBJECT_ID('tempdb..#tempCargosFuncionariosPaginados') IS NOT NULL
-					DROP TABLE #tempCargosFuncionariosPaginados;
-				SELECT
-					*
-				INTO #tempCargosFuncionariosPaginados
-				FROM
-					#tempCargosFuncionarios
-				ORDER BY cd_servidor
-				OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;
-
 				-- 6. Ajustar prioridade para funcionários com mais de um cargo
 				IF OBJECT_ID('tempdb..#tempFuncionariosCargoPrioridade') IS NOT NULL
 					DROP TABLE #tempFuncionariosCargoPrioridade;
@@ -156,7 +142,7 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 					MIN(prioridade) AS prioridade
 				INTO #tempFuncionariosCargoPrioridade
 				FROM
-					#tempCargosFuncionariosPaginados
+					#tempCargosFuncionarios
 				GROUP BY
 					cd_servidor;
 
@@ -171,8 +157,18 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 					#tempFuncionariosCargoPrioridade t1
 				CROSS APPLY
 				(
-					SELECT TOP 1 * FROM #tempCargosFuncionariosPaginados temp WHERE temp.cd_servidor = t1.cd_servidor AND temp.prioridade = t1.prioridade
+					SELECT TOP 1 * FROM #tempCargosFuncionarios temp WHERE temp.cd_servidor = t1.cd_servidor AND temp.prioridade = t1.prioridade
 				) AS t2;
+
+				IF OBJECT_ID('tempdb..#tempCargosFuncionariosRemovendoDuplicadosPaginado') IS NOT NULL
+					DROP TABLE #tempCargosFuncionariosRemovendoDuplicadosPaginado;
+				SELECT
+					*
+				INTO #tempCargosFuncionariosRemovendoDuplicadosPaginado
+				FROM
+					#tempCargosFuncionariosRemovendoDuplicados
+				ORDER BY cd_servidor
+				OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;
 
 				-- 7. Final
 				SELECT
@@ -184,9 +180,13 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol
 				FROM
 					v_servidor_cotic serv (NOLOCK)
 				INNER JOIN
-					#tempCargosFuncionariosRemovendoDuplicados temp
+					#tempCargosFuncionariosRemovendoDuplicadosPaginado temp
 					ON temp.cd_servidor = serv.cd_servidor;
-";
+
+				SELECT
+					COUNT(*)
+				FROM
+					#tempCargosFuncionariosRemovendoDuplicados temp;";
 
             using var conn = ObterConexao();
             using var multi = await conn.QueryMultipleAsync(queryObterFuncionariosParaInclusao,

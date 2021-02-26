@@ -1,4 +1,4 @@
-﻿namespace SME.GoogleClassroom.Infra.Dtos.Funcionarios
+﻿namespace SME.GoogleClassroom.Infra
 {
     public class FuncionarioParaInclusaoDto
     {
