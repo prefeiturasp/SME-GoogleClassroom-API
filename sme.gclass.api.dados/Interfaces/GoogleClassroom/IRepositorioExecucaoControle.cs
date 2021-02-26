@@ -7,5 +7,7 @@ namespace SME.GoogleClassroom.Dados
     public interface IRepositorioExecucaoControle
     {
         Task<bool> AtualizaControleExecucao(ExecucaoTipo execucaoTipo, DateTime data);
+
+        Task<DateTime> ObterDataUltimaExecucaoPorTipo(ExecucaoTipo execucaoTipo);
     }
 }

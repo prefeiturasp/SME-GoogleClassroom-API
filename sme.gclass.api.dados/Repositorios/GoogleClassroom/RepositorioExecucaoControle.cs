@@ -25,5 +25,16 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(query, parametros) > 0;
 
         }
+
+        public async Task<DateTime> ObterDataUltimaExecucaoPorTipo(ExecucaoTipo execucaoTipo)
+        {
+            var query = @"SELECT ULTIMA_EXECUCAO FROM EXECUCAO_CONTROLE WHERE EXECUCAO_TIPO = @execucaoTipo ORDER BY ULTIMA_EXECUCAO DESC LIMIT 1";
+            var parametros = new { execucaoTipo };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            return await conn.QueryFirstAsync<DateTime>(query, parametros);
+
+        }
     }
 }

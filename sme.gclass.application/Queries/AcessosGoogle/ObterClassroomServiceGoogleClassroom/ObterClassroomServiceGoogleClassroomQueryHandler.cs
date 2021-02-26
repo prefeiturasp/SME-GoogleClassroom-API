@@ -25,18 +25,28 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioAutenticacao == null)
                 throw new NegocioException("Usuário para acesso ao Google Classroom não encontrado!");
 
-            var credenciais = new ServiceAccountCredential(
-            new ServiceAccountCredential.Initializer(usuarioAutenticacao.EmailContaServico)
+            try
             {
-                Scopes = UtilsGoogleClassroom.Escopos,
-                User = usuarioAutenticacao.EmailAdmin,
-            }.FromPrivateKey(usuarioAutenticacao.PrivateKey));
 
-            return new ClassroomService(new BaseClientService.Initializer()
+                var credenciais = new ServiceAccountCredential(
+                new ServiceAccountCredential.Initializer(usuarioAutenticacao.EmailContaServico)
+                {
+                    Scopes = UtilsGoogleClassroom.Escopos,
+                    User = usuarioAutenticacao.EmailAdmin,
+                }.FromPrivateKey(usuarioAutenticacao.PrivateKey));
+
+                return new ClassroomService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credenciais,
+                    ApplicationName = usuarioAutenticacao.AplicacaoNome,
+                });
+            }
+            catch (Exception ex)
             {
-                HttpClientInitializer = credenciais,
-                ApplicationName = usuarioAutenticacao.AplicacaoNome,
-            });
+
+                throw;
+            }
+          
         }
     }
 }
