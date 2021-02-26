@@ -19,24 +19,10 @@ namespace SME.GoogleClassroom.IoC
             services.AdicionarValidadoresFluentValidation();
 
             RegistrarRepositorios(services);
-            RegistrarContextos(services);
-            RegistrarComandos(services);
-            RegistrarConsultas(services);
-            RegistrarServicos(services);
             RegistrarCasosDeUso(services);
         }
 
-        private static void RegistrarComandos(IServiceCollection services)
-        {
-        }
 
-        private static void RegistrarConsultas(IServiceCollection services)
-        {
-        }
-
-        private static void RegistrarContextos(IServiceCollection services)
-        {
-        }
 
         private static void RegistrarRepositorios(IServiceCollection services)
         {
@@ -45,16 +31,18 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IRepositorioCursoErro, RepositorioCursoErro>();
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
+            services.TryAddScoped<IRepositorioCursoEol, RepositorioCursoEol>();
+            services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
             services.TryAddScoped<IRepositorioFuncionarioEol, RepositorioFuncionarioEol>();
         }
 
-        private static void RegistrarServicos(IServiceCollection services)
-        {
-        }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<IIncluirCursoUseCase, IncluirCursoUseCase>();
+            services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
+            services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
             services.TryAddScoped<IObterFuncionariosParaIncluirGoogleUseCase, ObterFuncionariosParaIncluirGoogleUseCase>();
         }
     }

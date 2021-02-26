@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class InserirCursoErroCommand : IRequest<long>
     {
-        public InserirCursoErroCommand(int turmaId, int componenteCurricularId, string mensagem, long? cursoId, ExecucaoTipo execucaoTipo)
+        public InserirCursoErroCommand(long turmaId, long componenteCurricularId, string mensagem, long? cursoId, ExecucaoTipo execucaoTipo)
         {
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
@@ -15,9 +15,9 @@ namespace SME.GoogleClassroom.Aplicacao
             ExecucaoTipo = execucaoTipo;
         }
 
-        public int TurmaId { get; set; }
+        public long TurmaId { get; set; }
 
-        public int ComponenteCurricularId { get; set; }
+        public long ComponenteCurricularId { get; set; }
 
         public string Mensagem { get; set; }
 
