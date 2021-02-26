@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.IoC
             services.AdicionarMediatr();
             services.AdicionarValidadoresFluentValidation();
 
-            RegistrarRepositorios(services);            
+            RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
         }
 
@@ -32,14 +32,15 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoEol, RepositorioCursoEol>();
             services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
-            
+
         }
 
- 
+
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
-            services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();            
+            services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
+            services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
         }
     }
 }

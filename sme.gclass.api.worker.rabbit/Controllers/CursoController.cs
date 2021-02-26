@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
@@ -23,11 +24,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(PaginacaoResultadoDto<Curso>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterTodosCursosParaIncluir([FromServices] IObterCursosParaIncluirUseCase obterCursosCadastradosUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero)
+        public async Task<IActionResult> ObterTodosCursosParaIncluir([FromServices] IObterCursosParaIncluirGoogleUseCase obterCursosParaIncluirGoogleUseCase, 
+            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery]DateTime ultimaExecucao)
         {
-            return Ok();
-            //var retorno = await obterCursosCadastradosUseCase.Executar(registrosQuantidade, paginaNumero);
-            //return Ok(retorno);
+            var retorno = await obterCursosParaIncluirGoogleUseCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao);
+            return Ok(retorno);
         }
     }
 }

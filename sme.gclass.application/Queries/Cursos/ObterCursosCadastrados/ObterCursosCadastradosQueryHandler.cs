@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
         public async Task<PaginacaoResultadoDto<Curso>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursos.ObterTodosCursos(request.Paginacacao);
+            return await repositorioCursos.ObterTodosCursosAsync(request.Paginacacao);
         }
     }
 }

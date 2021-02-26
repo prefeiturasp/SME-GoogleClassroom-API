@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioCurso
     {
-        Task<PaginacaoResultadoDto<Curso>> ObterTodosCursos(Paginacao paginacao);
+        Task<PaginacaoResultadoDto<Curso>> ObterTodosCursosAsync(Paginacao paginacao);
 
     }
 }

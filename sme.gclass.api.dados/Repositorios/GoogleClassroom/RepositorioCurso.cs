@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        public async Task<PaginacaoResultadoDto<Curso>> ObterTodosCursos(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<Curso>> ObterTodosCursosAsync(Paginacao paginacao)
         {
             var queryCompleta = new StringBuilder();
 
