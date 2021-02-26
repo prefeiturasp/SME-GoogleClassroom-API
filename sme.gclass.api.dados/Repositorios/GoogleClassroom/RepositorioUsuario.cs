@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,6 +45,13 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
+        }
+
+        public async Task<bool> ExisteAlunoPorRf(long rf)
+        {
+            var query = @"SELECT count(id) from usuarios where id = @rf";
+            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
         }
     }
 }
