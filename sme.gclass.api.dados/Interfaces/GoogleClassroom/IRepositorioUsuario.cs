@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioUsuario
     {
-        Task<PaginacaoResultadoDto<UsuarioDto>> ObterFuncionarios(UsuarioTipo usuarioTipo, Paginacao paginacao);
+        Task<PaginacaoResultadoDto<UsuarioDto>> ObterUsuarios(UsuarioTipo usuarioTipo, Paginacao paginacao);
     }
 }

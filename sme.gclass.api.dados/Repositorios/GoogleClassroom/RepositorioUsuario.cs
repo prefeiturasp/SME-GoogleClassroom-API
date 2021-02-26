@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Dados
         {
             this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
-        public async Task<PaginacaoResultadoDto<UsuarioDto>> ObterFuncionarios(UsuarioTipo usuarioTipo, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<UsuarioDto>> ObterUsuarios(UsuarioTipo usuarioTipo, Paginacao paginacao)
         {
             var query = @" select id,
 	                               usuario_tipo as UsuarioTipo,
