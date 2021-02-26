@@ -20,8 +20,8 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
         {
-			
-			dataReferencia.Add(new TimeSpan(0, 0, 0));
+
+			dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
             var query = MontaQueryCursosParaInclusao();
 
@@ -38,10 +38,10 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private string MontaQueryCursosParaInclusao()
+        private static string MontaQueryCursosParaInclusao()
         {
-            var str = new StringBuilder();
-            str.Append(@"-- 2) Busca os cursos regulares
+            
+            return @"-- 2) Busca os cursos regulares
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesRegulares
 							SELECT
@@ -336,10 +336,8 @@ namespace SME.GoogleClassroom.Dados
 								turma_componente_curricular_classroom curso
 								ON temp.TurmaId = curso.cd_turma_escola AND temp.ComponenteCurricularId = curso.cd_componente_curricular
 							WHERE
-								curso.cd_curso_classroom IS NULL;");
-
-
-            str.AppendLine(@"-- Totalizacao
+								curso.cd_curso_classroom IS NULL;
+					-- Totalizacao
 							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicaoTotal') IS NOT NULL 
 								DROP TABLE #tempUEsSemAtribuicaoTotal
 							SELECT
@@ -388,8 +386,7 @@ namespace SME.GoogleClassroom.Dados
 								turma_componente_curricular_classroom curso
 								ON temp.TurmaId = curso.cd_turma_escola AND temp.ComponenteCurricularId = curso.cd_componente_curricular
 							WHERE
-								curso.cd_curso_classroom IS NULL");
-            return str.ToString();
+								curso.cd_curso_classroom IS NULL";         
 
         }
     }
