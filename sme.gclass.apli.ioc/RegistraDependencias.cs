@@ -45,6 +45,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoErro, RepositorioCursoErro>();
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoEol, RepositorioCursoEol>();
+            services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
         }
 
         private static void RegistrarServicos(IServiceCollection services)
@@ -55,6 +56,7 @@ namespace SME.GoogleClassroom.IoC
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<IIncluirCursoUseCase, IncluirCursoUseCase>();
         }
     }
 }

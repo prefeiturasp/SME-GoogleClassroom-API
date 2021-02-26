@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             //rabbitChannel.QueueBind(RotasRabbit.FilaSgp, RotasRabbit.ExchangeSgp, request.NomeFila);
             //
-            //rabbitChannel.BasicPublish(RotasRabbit.ExchangeSgp, request.NomeFila, null, body);
+            rabbitChannel.BasicPublish(RotasRabbit.ExchangeGoogleSync, request.NomeFila, null, body);
 
             return Task.FromResult(true);
         }
