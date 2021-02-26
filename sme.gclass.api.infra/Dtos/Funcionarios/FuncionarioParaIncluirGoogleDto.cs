@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Infra
 {
-    public class FuncionarioParaInclusaoDto
+    public class FuncionarioParaIncluirGoogleDto
     {
         public string CdRegistroFuncional { get; set; }
         public string Email { get; set; }

@@ -6,9 +6,9 @@ using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionariosParaInclusaoQuery : IRequest<PaginacaoResultadoDto<FuncionarioParaInclusaoDto>>
+    public class ObterFuncionariosParaIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>>
     {
-        public ObterFuncionariosParaInclusaoQuery(DateTime ultimaDataExecucao, Paginacao paginacao)
+        public ObterFuncionariosParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao)
         {
             UltimaDataExecucao = ultimaDataExecucao;
             Paginacao = paginacao;
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public Paginacao Paginacao { get; set; }
     }
 
-    public class ObterFuncionariosParaInclusaoQueryValidator : AbstractValidator<ObterFuncionariosParaInclusaoQuery>
+    public class ObterFuncionariosParaInclusaoQueryValidator : AbstractValidator<ObterFuncionariosParaIncluirGoogleQuery>
     {
         public ObterFuncionariosParaInclusaoQueryValidator()
         {

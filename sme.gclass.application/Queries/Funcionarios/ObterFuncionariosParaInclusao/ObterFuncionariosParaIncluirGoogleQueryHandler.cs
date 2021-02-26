@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionariosParaInclusaoQueryHandler : IRequestHandler<ObterFuncionariosParaInclusaoQuery, PaginacaoResultadoDto<FuncionarioParaInclusaoDto>>
+    public class ObterFuncionariosParaIncluirGoogleQueryHandler : IRequestHandler<ObterFuncionariosParaIncluirGoogleQuery, PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>>
     {
         private readonly IRepositorioFuncionarioEol repositorioFuncionarioEol;
 
-        public ObterFuncionariosParaInclusaoQueryHandler(IRepositorioFuncionarioEol repositorioFuncionarioEol)
+        public ObterFuncionariosParaIncluirGoogleQueryHandler(IRepositorioFuncionarioEol repositorioFuncionarioEol)
         {
             this.repositorioFuncionarioEol = repositorioFuncionarioEol;
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioParaInclusaoDto>> Handle(ObterFuncionariosParaInclusaoQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>> Handle(ObterFuncionariosParaIncluirGoogleQuery request, CancellationToken cancellationToken)
             => await repositorioFuncionarioEol.ObterFuncionariosParaInclusaoAsync(request.UltimaDataExecucao, request.Paginacao);
     }
 }

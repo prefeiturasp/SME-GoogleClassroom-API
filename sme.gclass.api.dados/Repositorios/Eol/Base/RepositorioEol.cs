@@ -14,6 +14,11 @@ namespace SME.GoogleClassroom.Dados
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        protected IDbConnection ObterConexao() => new SqlConnection(ConnectionStrings.ConnectionStringEol);
+        protected IDbConnection ObterConexao()
+        {
+            var conexao = new SqlConnection(ConnectionStrings.ConnectionStringEol);
+            conexao.Open();
+            return conexao;
+        }
     }
 }

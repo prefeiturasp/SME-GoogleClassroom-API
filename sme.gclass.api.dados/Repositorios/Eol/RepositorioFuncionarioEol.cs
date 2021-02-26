@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioParaInclusaoDto>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
         {
             const string queryObterFuncionariosParaInclusao = @"
                 DECLARE @cargoCP AS INT = 3379;
@@ -192,14 +192,14 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(queryObterFuncionariosParaInclusao,
                 new
                 {
-                    dataReferencia.Date,
+					dataReferencia = dataReferencia.Date,
                     paginacao.QuantidadeRegistros,
                     paginacao.QuantidadeRegistrosIgnorados
                 });
 
-            var retorno = new PaginacaoResultadoDto<FuncionarioParaInclusaoDto>();
+            var retorno = new PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>();
 
-            retorno.Items = multi.Read<FuncionarioParaInclusaoDto>();
+            retorno.Items = multi.Read<FuncionarioParaIncluirGoogleDto>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
