@@ -9,5 +9,6 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<PaginacaoResultadoDto<UsuarioDto>> ObterFuncionariosAsync(Paginacao paginacao);
         Task<IEnumerable<UsuarioDto>> ObterFuncionariosPorRfs(long[] rfs);
+        Task<bool> ExisteFuncionarioPorRf(long rf);
     }
 }

@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionarioGooglePorRfQueryHandler : IRequestHandler<ObterFuncionarioGooglePorRfQuery, IEnumerable<UsuarioDto>>
+    public class ObterFuncionariosGooglePorRfsQueryHandler : IRequestHandler<ObterFuncionariosGooglePorRfsQuery, IEnumerable<UsuarioDto>>
     {
         private readonly IRepositorioUsuario repositorioUsuario;
 
-        public ObterFuncionarioGooglePorRfQueryHandler(IRepositorioUsuario repositorioUsuario)
+        public ObterFuncionariosGooglePorRfsQueryHandler(IRepositorioUsuario repositorioUsuario)
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
         }
 
-        public async Task<IEnumerable<UsuarioDto>> Handle(ObterFuncionarioGooglePorRfQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UsuarioDto>> Handle(ObterFuncionariosGooglePorRfsQuery request, CancellationToken cancellationToken)
             => await repositorioUsuario.ObterFuncionariosPorRfs(request.Rfs);
     }
 }
