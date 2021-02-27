@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine(";");
             }
 
-            query.AppendLine("SELECT count(*) from usuarios u");
+            query.AppendLine("SELECT count(*) from usuarios u where usuario_tipo = 3");
 
             var retorno = new PaginacaoResultadoDto<UsuarioDto>();
 
