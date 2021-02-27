@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,6 +70,13 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
             return await conn.QueryAsync<UsuarioDto>(query, parametros);
+        }
+
+        public async Task<bool> ExisteProfessorPorRf(long rf)
+        {
+            var query = @"SELECT count(id) from usuarios where id = @rf";
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
         }
 
     }
