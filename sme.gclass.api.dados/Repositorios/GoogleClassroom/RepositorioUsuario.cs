@@ -86,7 +86,7 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
-        }
+        
 
         public async Task<IEnumerable<UsuarioDto>> ObterFuncionariosPorRfs(long[] rfs)
         {
