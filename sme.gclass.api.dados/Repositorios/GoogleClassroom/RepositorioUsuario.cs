@@ -113,7 +113,7 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
         }
-        }
+        
 
         public async Task<IEnumerable<UsuarioDto>> ObterProfessoresPorRfs(long[] rfs)
         {
