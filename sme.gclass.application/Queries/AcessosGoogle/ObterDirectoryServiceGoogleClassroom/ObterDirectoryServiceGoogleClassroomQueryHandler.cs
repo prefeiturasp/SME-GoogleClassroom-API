@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 Scopes = UtilsGoogleClassroom.Escopos,
                 User = usuarioAutenticacao.EmailAdmin,
-            }.FromPrivateKey(usuarioAutenticacao.PrivateKey));
+            }.FromPrivateKey(usuarioAutenticacao.PrivateKey.ToString()));
 
             return new DirectoryService(new BaseClientService.Initializer()
             {

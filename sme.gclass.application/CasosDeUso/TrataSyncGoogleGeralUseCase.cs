@@ -1,7 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Configuration;
-using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
