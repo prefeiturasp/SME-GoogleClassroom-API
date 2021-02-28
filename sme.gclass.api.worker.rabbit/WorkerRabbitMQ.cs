@@ -47,16 +47,29 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
 
+            RegistrarFilasCurso();
+            RegistrarFilasFuncionario();
+
+            comandos = new Dictionary<string, ComandoRabbit>();
+            RegistrarUseCases();
+        }
+
+        private void RegistrarFilasCurso()
+        {
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
-                        
-            canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
+        }
 
-            comandos = new Dictionary<string, ComandoRabbit>();
-            RegistrarUseCases();
+        private void RegistrarFilasFuncionario()
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioIncluir);
         }
 
         private void RegistrarUseCases()

@@ -3,6 +3,7 @@ using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -16,7 +17,30 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
         {
-            const string queryObterFuncionariosParaInclusao = @"
+            using var conn = ObterConexao();
+
+			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
+			var query = MontaQueryCursosParaInclusao(aplicarPaginacao);
+			using var multi = await conn.QueryMultipleAsync(query,
+                new
+                {
+					dataReferencia = dataReferencia.Date,
+                    paginacao.QuantidadeRegistros,
+                    paginacao.QuantidadeRegistrosIgnorados
+                });
+
+            var retorno = new PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>();
+
+            retorno.Items = multi.Read<FuncionarioParaIncluirGoogleDto>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+
+            return retorno;
+        }
+
+		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao)
+        {
+			const string queryBase = @"
                 DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
@@ -158,19 +182,22 @@ namespace SME.GoogleClassroom.Dados
 				CROSS APPLY
 				(
 					SELECT TOP 1 * FROM #tempCargosFuncionarios temp WHERE temp.cd_servidor = t1.cd_servidor AND temp.prioridade = t1.prioridade
-				) AS t2;
+				) AS t2; 
 
-				IF OBJECT_ID('tempdb..#tempCargosFuncionariosRemovendoDuplicadosPaginado') IS NOT NULL
-					DROP TABLE #tempCargosFuncionariosRemovendoDuplicadosPaginado;
+				IF OBJECT_ID('tempdb..#tempCargosFuncionariosRemovendoDuplicadosFinal') IS NOT NULL
+					DROP TABLE #tempCargosFuncionariosRemovendoDuplicadosFinal;
 				SELECT
 					*
-				INTO #tempCargosFuncionariosRemovendoDuplicadosPaginado
+				INTO #tempCargosFuncionariosRemovendoDuplicadosFinal
 				FROM
 					#tempCargosFuncionariosRemovendoDuplicados
-				ORDER BY cd_servidor
-				OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;
+				ORDER BY cd_servidor";
 
-				-- 7. Final
+			var query = new StringBuilder(queryBase);
+			if (aplicarPaginacao)
+				query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
+
+			query.Append(@"
 				SELECT
 					serv.cd_registro_funcional AS CdRegistroFuncional,
 					[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email,
@@ -180,30 +207,17 @@ namespace SME.GoogleClassroom.Dados
 				FROM
 					v_servidor_cotic serv (NOLOCK)
 				INNER JOIN
-					#tempCargosFuncionariosRemovendoDuplicadosPaginado temp
+					#tempCargosFuncionariosRemovendoDuplicadosFinal temp
 					ON temp.cd_servidor = serv.cd_servidor;
 
 				SELECT
 					COUNT(*)
 				FROM
-					#tempCargosFuncionariosRemovendoDuplicados temp;";
+					#tempCargosFuncionariosRemovendoDuplicados temp;");
 
-            using var conn = ObterConexao();
-            using var multi = await conn.QueryMultipleAsync(queryObterFuncionariosParaInclusao,
-                new
-                {
-					dataReferencia = dataReferencia.Date,
-                    paginacao.QuantidadeRegistros,
-                    paginacao.QuantidadeRegistrosIgnorados
-                });
+			return query.ToString();
 
-            var retorno = new PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>();
+		}
 
-            retorno.Items = multi.Read<FuncionarioParaIncluirGoogleDto>();
-            retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
-
-            return retorno;
-        }
-    }
+	}
 }
