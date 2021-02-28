@@ -42,10 +42,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit = conexaoRabbit.CreateModel();
 
             canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
+
             canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
-                        
             canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
-            //canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, "*.sync");
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
+
 
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
@@ -54,6 +60,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private void RegistrarUseCases()
         {
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoIncluir, new ComandoRabbit("Incluir cursos novos no google", typeof(IIncluirCursoUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoSync, new ComandoRabbit("Incluir cursos novos no google", typeof(ITrataSyncGoogleCursoUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -69,43 +77,43 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     var comandoRabbit = comandos[rota];
                     try
                     {
-                        using (var scope = serviceScopeFactory.CreateScope())
-                        {
-                            var dataHoraInicio = DateTime.Now;
-                            //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - EXECUTANDO - {ea.RoutingKey} - {DateTime.Now:dd/MM/yyyy HH:mm:ss}", SentryLevel.Debug);
-                            var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
+                        using var scope = serviceScopeFactory.CreateScope();
 
-                            metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
-                            await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
+                        var dataHoraInicio = DateTime.Now;
+                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - EXECUTANDO - {ea.RoutingKey} - {DateTime.Now:dd/MM/yyyy HH:mm:ss}", SentryLevel.Debug);
+                        var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
-                            //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - SUCESSO - {ea.RoutingKey}", SentryLevel.Info);
-                            canalRabbit.BasicAck(ea.DeliveryTag, false);
+                        metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
+                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
 
-                            var dataHoraFim = DateTime.Now;
-                            var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
-                            metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, mensagemRabbit.Mensagem, dataHoraInicio, dataHoraFim, tempoDeExecucao);
-                        }
+                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - SUCESSO - {ea.RoutingKey}", SentryLevel.Info);
+                        canalRabbit.BasicAck(ea.DeliveryTag, false);
+
+                        var dataHoraFim = DateTime.Now;
+                        var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
+                        metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, mensagemRabbit.Mensagem, dataHoraInicio, dataHoraFim, tempoDeExecucao);
+
                     }
                     catch (NegocioException nex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
                         SentrySdk.CaptureException(nex);
-                        RegistrarSentry(ea, mensagemRabbit, nex);                        
+                        RegistrarSentry(ea, mensagemRabbit, nex);
                     }
                     catch (ValidacaoException vex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
                         SentrySdk.CaptureException(vex);
-                        RegistrarSentry(ea, mensagemRabbit, vex);                        
+                        RegistrarSentry(ea, mensagemRabbit, vex);
                     }
                     catch (Exception ex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
                         SentrySdk.CaptureException(ex);
-                        RegistrarSentry(ea, mensagemRabbit, ex);                        
+                        RegistrarSentry(ea, mensagemRabbit, ex);
                     }
                 }
             }
@@ -151,10 +159,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var consumer = new EventingBasicConsumer(canalRabbit);
             consumer.Received += async (ch, ea) =>
             {
-                await TratarMensagem(ea);
+                try
+                {
+                    await TratarMensagem(ea);
+                }
+                catch (Exception)
+                {
+                    //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
+
+                }
             };
 
             canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
+
             return Task.CompletedTask;
         }
     }

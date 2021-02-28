@@ -1,10 +1,10 @@
-﻿using SME.GoogleClassroom.Infra;
+﻿using SME.GoogleClassroom.Dominio;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioCursoErro
     {
-        Task<long> SalvarAsync(CursoErroDto dto);
+        Task<long> SalvarAsync(CursoErro dto);
     }
 }
