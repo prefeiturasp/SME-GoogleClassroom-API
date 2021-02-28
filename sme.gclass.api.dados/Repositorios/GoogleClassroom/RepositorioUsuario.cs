@@ -113,5 +113,33 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
         }
+        
+
+        public async Task<IEnumerable<UsuarioDto>> ObterProfessoresPorRfs(long[] rfs)
+        {
+            var query = @"SELECT u.id, 
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao
+                            FROM usuarios u 
+                           WHERE usuario_tipo = 2
+                             and id = any(@rfs)";
+
+            var parametros = new { rfs };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            return await conn.QueryAsync<UsuarioDto>(query, parametros);
+        }
+
+        public async Task<bool> ExisteProfessorPorRf(long rf)
+        {
+            var query = @"SELECT count(id) from usuarios where id = @rf";
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
+        }
+
     }
 }
