@@ -111,6 +111,7 @@ CREATE TABLE public.cursos_erro (
 	execucao_tipo int NOT NULL,
 	curso_id int8 NULL,
 	data_inclusao timestamp NOT NULL,
+	tipo int not null,
 	CONSTRAINT cursos_erro_pk PRIMARY KEY (id)
 );
 
