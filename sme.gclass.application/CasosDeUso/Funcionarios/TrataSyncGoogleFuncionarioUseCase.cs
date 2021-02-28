@@ -18,16 +18,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task Executar(MensagemRabbit mensagem)
         {
-            var ultimaAtualizacao = DateTime.Now;
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar));
 
             var paginacao = new Paginacao(0, 0);
             var funcionariosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao));
-            foreach(var funcionarioParaIncluirGoogle in funcionariosParaIncluirGoogle)
+            foreach(var funcionarioParaIncluirGoogle in funcionariosParaIncluirGoogle.Items)
             {
 
             }
-
-
         }
     }
 }
