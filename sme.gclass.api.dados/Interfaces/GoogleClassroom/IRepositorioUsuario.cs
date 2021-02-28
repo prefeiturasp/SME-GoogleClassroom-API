@@ -1,5 +1,6 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -8,5 +9,7 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<PaginacaoResultadoDto<UsuarioDto>> ObterFuncionariosAsync(Paginacao paginacao);
         Task<PaginacaoResultadoDto<UsuarioDto>> ObterProfessoresAsync(Paginacao paginacao);
+        Task<IEnumerable<UsuarioDto>> ObterFuncionariosPorRfs(long[] rfs);
+        Task<bool> ExisteFuncionarioPorRf(long rf);
     }
 }

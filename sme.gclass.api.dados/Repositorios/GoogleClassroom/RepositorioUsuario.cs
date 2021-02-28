@@ -3,6 +3,8 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -83,6 +85,33 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
+        }
+        }
+
+        public async Task<IEnumerable<UsuarioDto>> ObterFuncionariosPorRfs(long[] rfs)
+        {
+            var query = @"SELECT u.id, 
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao
+                            FROM usuarios u 
+                           WHERE usuario_tipo = 3
+                             and id = any(@rfs)";
+
+            var parametros = new { rfs };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            return await conn.QueryAsync<UsuarioDto>(query, parametros);
+
+        }
+        public async Task<bool> ExisteFuncionarioPorRf(long rf)
+        {
+            var query = @"SELECT count(id) from usuarios ";
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
         }
     }
 }
