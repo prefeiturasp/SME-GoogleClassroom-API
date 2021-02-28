@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY ["sme.gclass.api.worker.rabbit/SME.GoogleClassroom.Worker.Rabbit.csproj", "sme.gclass.api.worker.rabbit/"]
 COPY ["sme.gclass.application/SME.GoogleClassroom.Aplicacao.csproj", "sme.gclass.application/"]
-COPY ["sme.gclass.api.dados/SME.GoogleClassrom.Dados.csproj", "sme.gclass.api.dados/"]
+COPY ["sme.gclass.api.dados/SME.GoogleClassroom.Dados.csproj", "sme.gclass.api.dados/"]
 COPY ["sme.gclass.api.infra/SME.GoogleClassroom.Infra.csproj", "sme.gclass.api.infra/"]
 COPY ["sme.gclass.api.domain/SME.GoogleClassroom.Dominio.csproj", "sme.gclass.api.domain/"]
 COPY ["sme.gclass.apli.ioc/SME.GoogleClassroom.IoC.csproj", "sme.gclass.apli.ioc/"]
