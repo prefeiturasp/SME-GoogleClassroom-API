@@ -3,6 +3,7 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -81,6 +82,20 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
             return await conn.ExecuteAsync(query, parametros);
+        }
+
+        public async Task<bool> ExisteCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId)
+        {
+            var query = @"select id from public.cursos where turma_id = @turmaId and componente_curricular_id = @componenteCurricularId";
+
+            var parametros = new
+            {
+               turmaId, componenteCurricularId
+            };
+
+            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+
+            return (await conn.QueryFirstOrDefaultAsync<long>(query, parametros)) > 0;            
         }
     }
 }
