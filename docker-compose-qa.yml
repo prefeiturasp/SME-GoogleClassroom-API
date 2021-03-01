@@ -1,0 +1,50 @@
+version: '3.4'
+
+volumes:
+  postgres-gca-data: {}
+
+services:
+  gca-api:
+    container_name: gca-api
+    image: gca-api
+    build:
+      context: .
+      dockerfile: sme.gclass.api.worker.rabbit/Dockerfile-qa
+    restart: on-failure
+    depends_on: 
+      - 'gca_rabbitmq'
+      - 'gca-db'
+    networks:
+      - gca-network
+    env_file:
+      - gca-api.env
+    ports:
+      - "80:80"
+      - "443:443"    
+  gca_rabbitmq:
+    container_name: gca_rabbitmq
+    image: rabbitmq:3.7-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=bitnami
+    ports:
+      - "5672:5672"
+      - "15672:15672"    
+    networks:
+      - gca-network
+  gca-db:
+    container_name: gca-db
+    restart: always
+    image: postgres:11-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sgp_db
+    volumes:
+      - postgres-gca-data:/var/lib/postgresql/data
+    networks:
+      - gca-network
+networks:
+  gca-network:
+    driver: bridge
