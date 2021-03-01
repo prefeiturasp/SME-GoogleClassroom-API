@@ -2,10 +2,9 @@
 {
     public class ProfessorParaIncluirGoogleDto
     {
-        public string CdRegistroFuncional { get; set; }
-        public string Email { get; set; }
+        public string Rf { get; set; }
+        public string Nome { get; set; }
         public bool Ativo { get; set; }
-        public string OrganizationPath { get; set; }
-        public int CdCargo { get; set; }
+        public string OrganizationPath { get; set; }        
     }
 }
