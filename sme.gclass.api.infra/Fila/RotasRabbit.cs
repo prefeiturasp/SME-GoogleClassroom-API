@@ -8,6 +8,8 @@
         public static string FilaCursoSync => "googleclass.curso.sync";
         public static string FilaFuncionarioIncluir => "googleclass.funcionario.incluir";
         public static string FilaFuncionarioSync => "googleclass.funcionario.sync";
+        public static string FilaProfessorIncluir => "googleclass.professor.incluir";
+        public static string FilaProfessorSync => "googleclass.professor.sync";
     }
 }
 

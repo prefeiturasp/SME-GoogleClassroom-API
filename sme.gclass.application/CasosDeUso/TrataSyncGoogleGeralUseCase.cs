@@ -20,12 +20,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, resposta));
             var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioSync, RotasRabbit.FilaFuncionarioSync, resposta));
+            var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorSync, RotasRabbit.FilaProfessorSync, resposta));
 
-            if (publicarCurso)
+            if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");
 
-            if (publicarFuncionario)
+            if (!publicarFuncionario)
                 throw new NegocioException("Erro ao enviar a sync de funcionários.");
+
+            if (!publicarProfessor)
+                throw new NegocioException("Erro ao enviar a sync de professores.");
 
             return await Task.FromResult(true);
         }
