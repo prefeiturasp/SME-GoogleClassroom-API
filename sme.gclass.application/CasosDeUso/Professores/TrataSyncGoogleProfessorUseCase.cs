@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioAdicionar, DateTime.Today));
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
             }
             catch (Exception ex)
             {
@@ -48,16 +48,16 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task IncluirProfessorComErroAsync(ProfessorEol funcionarioParaIncluirGoogle, string mensagem)
+        private async Task IncluirProfessorComErroAsync(ProfessorEol professorParaIncluirGoogle, string mensagem)
         {
-            var funcionarioComErro = new IncluirUsuarioErroCommand(
-                                funcionarioParaIncluirGoogle.Rf,
-                                funcionarioParaIncluirGoogle.Email,
+            var professorComErro = new IncluirUsuarioErroCommand(
+                                professorParaIncluirGoogle.Rf,
+                                professorParaIncluirGoogle.Email,
                                 mensagem,
                                 UsuarioTipo.Professor,
                                 ExecucaoTipo.ProfessorAdicionar,
                                 DateTime.Now);
-            await mediator.Send(funcionarioComErro);
+            await mediator.Send(professorComErro);
         }
 
         private static string ObterMensagemDeErro(long cdRegistroFuncional, Exception ex = null)
