@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
         {
             using var conn = ObterConexao();
 
@@ -29,9 +29,9 @@ namespace SME.GoogleClassroom.Dados
                     paginacao.QuantidadeRegistrosIgnorados
                 });
 
-            var retorno = new PaginacaoResultadoDto<FuncionarioParaIncluirGoogleDto>();
+            var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
 
-            retorno.Items = multi.Read<FuncionarioParaIncluirGoogleDto>();
+            retorno.Items = multi.Read<FuncionarioEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
@@ -199,11 +199,10 @@ namespace SME.GoogleClassroom.Dados
 
 			query.Append(@"
 				SELECT
-					serv.cd_registro_funcional AS CdRegistroFuncional,
-					[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email,
+					serv.cd_registro_funcional AS Rf,
+					serv.nm_pessoa AS Nome,
 					'True' AS Ativo,
-					[dbo].[proc_gerar_unidade_organizacional_funcionario_v2](temp.cd_cargo, '') AS OrganizationPath,
-					temp.cd_cargo AS CdCargo
+					[dbo].[proc_gerar_unidade_organizacional_funcionario_v2](temp.cd_cargo, '') AS OrganizationPath
 				FROM
 					v_servidor_cotic serv (NOLOCK)
 				INNER JOIN

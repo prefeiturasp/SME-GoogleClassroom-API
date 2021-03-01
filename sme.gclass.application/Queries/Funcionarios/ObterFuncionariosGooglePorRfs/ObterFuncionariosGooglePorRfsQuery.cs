@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
-using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Dominio;
 using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionariosGooglePorRfsQuery : IRequest<IEnumerable<UsuarioDto>>
+    public class ObterFuncionariosGooglePorRfsQuery : IRequest<IEnumerable<FuncionarioGoogle>>
     {
         public ObterFuncionariosGooglePorRfsQuery(long[] rfs)
         {
@@ -14,6 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public long[] Rfs { get; set; }
     }
+
     public class ObterFuncionariosGooglePorRfsQueryValidator : AbstractValidator<ObterFuncionariosGooglePorRfsQuery>
     {
         public ObterFuncionariosGooglePorRfsQueryValidator()

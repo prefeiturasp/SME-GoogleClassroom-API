@@ -31,12 +31,12 @@ namespace SME.GoogleClassroom.Aplicacao
                         var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.FilaFuncionarioIncluir, funcionarioParaIncluirGoogle));
                         if (!publicarFuncionario)
                         {
-                            await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.CdRegistroFuncional));
+                            await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.Rf));
                         }
                     }
                     catch(Exception ex)
                     {
-                        await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.CdRegistroFuncional, ex));
+                        await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.Rf, ex));
                     }
                 }
 
@@ -48,10 +48,10 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task IncluirFuncionarioComErroAsync(FuncionarioParaIncluirGoogleDto funcionarioParaIncluirGoogle, string mensagem)
+        private async Task IncluirFuncionarioComErroAsync(FuncionarioEol funcionarioParaIncluirGoogle, string mensagem)
         {
             var funcionarioComErro = new IncluirUsuarioErroCommand(
-                                long.Parse(funcionarioParaIncluirGoogle.CdRegistroFuncional),
+                                funcionarioParaIncluirGoogle.Rf,
                                 funcionarioParaIncluirGoogle.Email,
                                 mensagem,
                                 UsuarioTipo.Funcionario,
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
             await mediator.Send(funcionarioComErro);
         }
 
-        private static string ObterMensagemDeErro(string cdRegistroFuncional, Exception ex = null)
+        private static string ObterMensagemDeErro(long cdRegistroFuncional, Exception ex = null)
         {
             var mensagem = $"Não foi possível inserir o funcionário RF{cdRegistroFuncional} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;

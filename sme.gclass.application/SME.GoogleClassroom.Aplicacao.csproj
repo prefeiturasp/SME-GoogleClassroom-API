@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Funcionarios\" />
     <Folder Include="Queries\Execucao\" />
   </ItemGroup>
 </Project>

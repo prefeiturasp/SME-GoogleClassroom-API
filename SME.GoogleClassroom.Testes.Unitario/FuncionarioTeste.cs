@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Testes
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(CorrectData))]
         public void GeracaoDeEmail(long rf, string nome, string emailEsperado)
         {
-            Funcionario funcionario = new Funcionario(rf, nome);
+            FuncionarioEol funcionario = new FuncionarioEol(rf, nome,"");
 
             Assert.Equal(emailEsperado, funcionario.Email);
         }
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Testes
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(WrongData))]
         public void GeracaoDeEmailErrado(long rf, string nome, string emailEsperado)
         {
-            Funcionario funcionario = new Funcionario(rf, nome);
+            FuncionarioEol funcionario = new FuncionarioEol(rf, nome, "");
 
             Assert.NotEqual(emailEsperado, funcionario.Email);
         }
