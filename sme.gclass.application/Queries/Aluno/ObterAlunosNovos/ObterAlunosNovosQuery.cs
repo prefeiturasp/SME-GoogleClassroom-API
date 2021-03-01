@@ -4,9 +4,9 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosCadastradosQuery : IRequest<PaginacaoResultadoDto<Usuario>>
+    public class ObterAlunosNovosQuery : IRequest<PaginacaoResultadoDto<Aluno>>
     {
-        public ObterAlunosCadastradosQuery(Paginacao paginacao)
+        public ObterAlunosNovosQuery(Paginacao paginacao)
         {
             this.Paginacao = paginacao;
         }
