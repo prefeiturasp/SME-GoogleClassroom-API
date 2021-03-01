@@ -33,6 +33,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
             services.TryAddScoped<IRepositorioFuncionarioEol, RepositorioFuncionarioEol>();
             services.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
+            services.TryAddScoped<IRepositorioProfessorEol, RepositorioProfessorEol>();
         }
 
 
@@ -48,6 +49,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleFuncionarioUseCase, TrataSyncGoogleFuncionarioUseCase>();
             services.TryAddScoped<IInserirFuncionarioGoogleUseCase, InserirFuncionarioGoogleUseCase>();
             services.TryAddScoped<IObterProfessoresGoogleUseCase, ObterProfessoresGoogleUseCase>();
+            services.TryAddScoped<IObterProfessoresParaIncluirGoogleUseCase, ObterProfessoresParaIncluirGoogleUseCase>();
         }
     }
 }
