@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionariosGoogleQuery : IRequest<PaginacaoResultadoDto<UsuarioDto>>
+    public class ObterFuncionariosGoogleQuery : IRequest<PaginacaoResultadoDto<FuncionarioGoogle>>
     {
         public ObterFuncionariosGoogleQuery(Paginacao paginacao)
         {
