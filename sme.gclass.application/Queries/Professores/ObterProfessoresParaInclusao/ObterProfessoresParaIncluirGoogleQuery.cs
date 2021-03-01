@@ -6,7 +6,7 @@ using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterProfessoresParaIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<ProfessorParaIncluirGoogleDto>>
+    public class ObterProfessoresParaIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<ProfessorEol>>
     {
         public ObterProfessoresParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao)
         {

@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     public class ProfessorController : Controller
     {
         [HttpGet("novos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<ProfessorParaIncluirGoogleDto>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<ProfessorEol>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterProfessoresParaIncluirGoogle([FromServices] IObterProfessoresParaIncluirGoogleUseCase useCase,

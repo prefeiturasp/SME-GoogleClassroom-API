@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterProfessoresParaIncluirGoogleQueryHandler : IRequestHandler<ObterProfessoresParaIncluirGoogleQuery, PaginacaoResultadoDto<ProfessorParaIncluirGoogleDto>>
+    public class ObterProfessoresParaIncluirGoogleQueryHandler : IRequestHandler<ObterProfessoresParaIncluirGoogleQuery, PaginacaoResultadoDto<ProfessorEol>>
     {
         private readonly IRepositorioProfessorEol repositorioProfessorEol;
 
@@ -16,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioProfessorEol = repositorioProfessorEol ?? throw new ArgumentNullException(nameof(repositorioProfessorEol));
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorParaIncluirGoogleDto>> Handle(ObterProfessoresParaIncluirGoogleQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<ProfessorEol>> Handle(ObterProfessoresParaIncluirGoogleQuery request, CancellationToken cancellationToken)
             => await repositorioProfessorEol.ObterProfessoresParaInclusaoAsync(request.UltimaDataExecucao, request.Paginacao);
     }
 }

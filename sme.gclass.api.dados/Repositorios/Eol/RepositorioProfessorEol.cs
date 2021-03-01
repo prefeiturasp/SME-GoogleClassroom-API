@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorParaIncluirGoogleDto>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
         {
             using var conn = ObterConexao();
 
@@ -28,9 +28,9 @@ namespace SME.GoogleClassroom.Dados
                     paginacao.QuantidadeRegistrosIgnorados
                 });
 
-            var retorno = new PaginacaoResultadoDto<ProfessorParaIncluirGoogleDto>();
+            var retorno = new PaginacaoResultadoDto<ProfessorEol>();
 
-            retorno.Items = multi.Read<ProfessorParaIncluirGoogleDto>();
+            retorno.Items = multi.Read<ProfessorEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
