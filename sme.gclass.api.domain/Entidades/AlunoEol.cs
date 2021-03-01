@@ -35,13 +35,13 @@ namespace SME.GoogleClassroom.Dominio
             get
             {
                 if (string.IsNullOrEmpty(_Email))
-                    return DefinirEmail();
-                else
-                    return _Email;
+                    DefinirEmail();
+
+                return _Email;
             }
         }
 
-        public string DefinirEmail(int? tentativa = 0)
+        public void DefinirEmail(int? tentativa = 0)
         {
 
             if (!string.IsNullOrEmpty(Nome) && DataNascimento != null)
@@ -80,10 +80,7 @@ namespace SME.GoogleClassroom.Dominio
                 }
 
                 _Email = $"{primeiroNome}{iniciaisMeio}{complementoTratativa}{ultimoNome}.{DataNascimento:ddMMyyyy}@edu.sme.prefeitura.sp.gov.br".ToLower();
-                return _Email;
             }
-            else
-                return string.Empty;
         }
     }
 }
