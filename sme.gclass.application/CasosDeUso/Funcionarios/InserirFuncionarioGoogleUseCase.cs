@@ -24,11 +24,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var funcionarioJaIncluido = await mediator.Send(new ExisteFuncionarioPorRfQuery(funcionarioParaIncluir.Rf));
-                if (funcionarioJaIncluido) return true;
+                // TO DO: Remover ao subir para produção
+                //var funcionarioJaIncluido = await mediator.Send(new ExisteFuncionarioPorRfQuery(funcionarioParaIncluir.Rf));
+                //if (funcionarioJaIncluido) return true;
 
-                var funcionarioGoogle = new FuncionarioGoogle(funcionarioParaIncluir.Rf, funcionarioParaIncluir.Nome, funcionarioParaIncluir.Email, funcionarioParaIncluir.OrganizationPath);
-                await mediator.Send(new InserirFuncionarioGoogleCommand(funcionarioGoogle));
+                //var funcionarioGoogle = new FuncionarioGoogle(funcionarioParaIncluir.Rf, funcionarioParaIncluir.Nome, funcionarioParaIncluir.Email, funcionarioParaIncluir.OrganizationPath);
+                //await mediator.Send(new InserirFuncionarioGoogleCommand(funcionarioGoogle));
 
                 return true;
             }
