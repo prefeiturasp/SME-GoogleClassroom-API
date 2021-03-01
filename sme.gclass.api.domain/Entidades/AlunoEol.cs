@@ -3,13 +3,20 @@ using System.Linq;
 
 namespace SME.GoogleClassroom.Dominio
 {
-    public class Aluno
+    public class AlunoEol
     {
-        public Aluno() { }
-
-        public Aluno(string nome, DateTime dataNascimento)
+      
+        public AlunoEol(string nome, DateTime dataNascimento)
         {
             Nome = nome;
+            DataNascimento = dataNascimento;
+        }
+
+        public AlunoEol(int codigo, string nome, string caminhoOrganizacao, DateTime dataNascimento)
+        {
+            Codigo = codigo;
+            Nome = nome;
+            CaminhoOrganizacao = caminhoOrganizacao;
             DataNascimento = dataNascimento;
         }
 

@@ -16,19 +16,19 @@ namespace SME.GoogleClassroom.Dados
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<Aluno>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
         {
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryAlunosParaInclusao();
+            var query = MontaQueryAlunosParaInclusao(paginacao);
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
 
-            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados });
+            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados }, commandTimeout: 6000);
 
-            var retorno = new PaginacaoResultadoDto<Aluno>
+            var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
-                Items = multi.Read<Aluno>(),
+                Items = multi.Read<AlunoEol>(),
                 TotalRegistros = multi.ReadFirst<int>()
             };
 
@@ -37,10 +37,10 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryAlunosParaInclusao()
+        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao)
         {
 
-            return @"DECLARE @anoLetivo AS INT = 2021;
+            return $@"DECLARE @anoLetivo AS INT = 2021;
 
 					DECLARE @situacaoAtivo AS CHAR = 1;
 					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
@@ -313,8 +313,7 @@ namespace SME.GoogleClassroom.Dados
 						FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
 
 					SELECT 
-						DISTINCT cd_aluno_classroom,
-						cd_aluno_eol Codigo, aluno.nm_aluno Nome, nm_organizacao CaminhoOrganizacao
+						cd_aluno_eol Codigo, aluno.nm_aluno Nome, nm_organizacao CaminhoOrganizacao, aluno.dt_nascimento_aluno DataNascimento
 					FROM 
 						#tempAlunosMatriculasAtivasFinal temp
 					INNER JOIN
@@ -322,8 +321,9 @@ namespace SME.GoogleClassroom.Dados
 						ON temp.cd_aluno_eol = aluno.cd_aluno
 					ORDER BY
 						cd_aluno_eol
-					OFFSET @quantidadeRegistrosIgnorados ROWS
-					FETCH NEXT @quantidadeRegistros ROWS ONLY;
+					{(paginacao.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
+					FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";")}
+					
 
 					-- Totalizacao
 					SELECT 

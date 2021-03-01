@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Testes
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(CorrectData))]
         public void GeracaoDeEmail(string nome, DateTime dataNascimento, string emailEsperado)
         {
-            Aluno aluno = new Aluno(nome, dataNascimento);
+            AlunoEol aluno = new AlunoEol(nome, dataNascimento);
 
             Assert.Equal(emailEsperado, aluno.Email);
         }
@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Testes
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(WrongData))]
         public void GeracaoDeEmailErrado(string nome, DateTime dataNascimento, string emailEsperado)
         {
-            Aluno aluno = new Aluno(nome, dataNascimento);
+            AlunoEol aluno = new AlunoEol(nome, dataNascimento);
 
             Assert.NotEqual(emailEsperado, aluno.Email);
         }

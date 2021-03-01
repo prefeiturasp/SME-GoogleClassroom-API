@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosNovosQueryHandler : IRequestHandler<ObterAlunosNovosQuery, PaginacaoResultadoDto<Aluno>>
+    public class ObterAlunosNovosQueryHandler : IRequestHandler<ObterAlunosNovosQuery, PaginacaoResultadoDto<AlunoEol>>
     {
         private readonly IRepositorioAlunoEol repositorioAlunoEol;
         private readonly IRepositorioExecucaoControle repositorioExecucaoControle;
@@ -17,14 +17,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioAlunoEol = repositorioAlunoEol ?? throw new ArgumentNullException(nameof(repositorioAlunoEol));
             this.repositorioExecucaoControle = repositorioExecucaoControle ?? throw new ArgumentNullException(nameof(repositorioExecucaoControle));
         }
-        public async Task<PaginacaoResultadoDto<Aluno>> Handle(ObterAlunosNovosQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(ObterAlunosNovosQuery request, CancellationToken cancellationToken)
         {
-            var dataReferencia = await repositorioExecucaoControle.ObterDataUltimaExecucaoPorTipo(ExecucaoTipo.UsuarioAdicionar);
-
-            if (dataReferencia == DateTime.MinValue)
-                dataReferencia = new DateTime(2021, 01, 01);
-
-            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusao(dataReferencia, request.Paginacao);
+            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusao(request.DataReferencia, request.Paginacao);
             return alunos;
         }
     }
