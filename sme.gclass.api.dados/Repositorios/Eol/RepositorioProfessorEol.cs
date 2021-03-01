@@ -23,6 +23,7 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(query,
                 new
                 {
+                    anoLetivo = dataReferencia.Year,
                     dataReferencia = dataReferencia.Date,
                     paginacao.QuantidadeRegistros,
                     paginacao.QuantidadeRegistrosIgnorados
@@ -37,7 +38,6 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-
         private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao)
         {
             const string queryBase = @"IF OBJECT_ID('tempdb..#tempCargosProfessores') IS NOT NULL
@@ -48,7 +48,9 @@ namespace SME.GoogleClassroom.Dados
                                         INTO #tempCargosProfessores
                                         FROM
 	                                        atribuicao_aula atr
-                                        WHERE dt_atribuicao_aula > @dataReferencia
+                                        WHERE 
+                                            an_atribuicao = @anoLetivo
+                                            AND dt_atribuicao_aula > @dataReferencia
 	                                        AND dt_cancelamento is null AND (dt_disponibilizacao_aulas is null OR dt_disponibilizacao_aulas > GETDATE());
 
                                         IF OBJECT_ID('tempdb..#tempProfessoresAtivos') IS NOT NULL
@@ -87,7 +89,6 @@ namespace SME.GoogleClassroom.Dados
                              FROM #tempProfessoresAtivos;");
 
             return query.ToString();
-
         }
     }
 }

@@ -25,9 +25,9 @@ namespace SME.GoogleClassroom.Testes
         {
             new object[] { 0, "", "", "" },
             new object[] { 1234567 , "Maria Jesus", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },
-            new object[] { 1234567, "Maria Tereza Jesus", "/FUNCIONARIO", "mariatjesus.1234567@edu.sme.prefeitura.sp.gov.br" },
-            new object[] { 1234567, "Maria Tereza Santos Jesus", "/FUNCIONARIO", "mariatsjesus.1234567@edu.sme.prefeitura.sp.gov.br" },
-            new object[] { 1234567, "Maria Tereza de Santos Jesus", "/FUNCIONARIO", "mariatsjesus.1234567@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "Maria Tereza Jesus", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "Maria Tereza Santos Jesus", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "Maria Tereza de Santos Jesus", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 1234567, "João da Silva", "/FUNCIONARIO", "joaosilva.1234567@edu.sme.prefeitura.sp.gov.br" }
         };
 
