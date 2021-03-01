@@ -1,5 +1,6 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> ExisteFuncionarioPorRf(long rf);
         Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs);
         Task<bool> ExisteProfessorPorRf(long rf);
+        Task<long> SalvarAsync(long id, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao);
     }
 }
