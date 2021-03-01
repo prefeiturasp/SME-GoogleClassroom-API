@@ -27,25 +27,14 @@ namespace SME.GoogleClassroom.Dominio
                 var nomeFormatado = Nome.RemoverAcentosECaracteresEspeciais();
                 string[] splitNome = nomeFormatado.Split(' ');
                 string primeiroNome = splitNome[0];
-                string ultimoNome = "", iniciaisMeio = "";
+                string ultimoNome = "";
 
                 if (splitNome.Length > 1)
                 {
                     ultimoNome = splitNome[^1];
-
-                    if (splitNome.Length > 2)
-                    {
-                        for (int i = 1; i < splitNome.Length - 1; i++)
-                        {
-                            string elemento = splitNome[i].ToLower();
-
-                            if (!(new string[] { "da", "das", "de", "do", "dos", "os" }).Contains(elemento))
-                                iniciaisMeio += elemento.Substring(0, 1);
-                        }
-                    }
                 }
 
-                return $"{primeiroNome}{iniciaisMeio}{ultimoNome}.{Rf}@edu.sme.prefeitura.sp.gov.br".ToLower();
+                return $"{primeiroNome}{ultimoNome}.{Rf}@edu.sme.prefeitura.sp.gov.br".ToLower();
             }
 
             return string.Empty;
