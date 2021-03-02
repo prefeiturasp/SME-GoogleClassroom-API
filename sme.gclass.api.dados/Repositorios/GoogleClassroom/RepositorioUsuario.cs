@@ -141,16 +141,17 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { rf, tipo = (int)UsuarioTipo.Professor })).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long id, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
+        public async Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
         {
             const string insertQuery = @"insert into public.usuario
-                                        (id, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
+                                        (id, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
                                         values
-                                        (@id, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)";
+                                        (@id, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)";
 
             var parametros = new
             {
                 id,
+                nome,
                 email,
                 tipo,
                 organizationPath,
