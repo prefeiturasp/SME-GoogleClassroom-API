@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>Docker</ActiveDebugProfile>
+    <ActiveDebugProfile>SME.GoogleClassroom.api.worker.rabbit</ActiveDebugProfile>
   </PropertyGroup>
 </Project>
