@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -17,24 +18,33 @@ namespace SME.GoogleClassroom.Aplicacao
         }
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
-
-            if (ultimaExecucaoCursosIncluir == null)
-                throw new NegocioException($"Não foi possível obter a última execução da ação {ExecucaoTipo.CursoAdicionar}");
-
-            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), null, null));
-
-            if (cursosParaAdicionar != null || cursosParaAdicionar.Items.Any())
+            try
             {
-                foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)
+                var ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+
+                if (ultimaExecucaoCursosIncluir == null)
+                    throw new NegocioException($"Não foi possível obter a última execução da ação {ExecucaoTipo.CursoAdicionar}");
+
+                var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), null, null));
+
+                if (cursosParaAdicionar != null || cursosParaAdicionar.Items.Any())
                 {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
+                    foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)
+                    {
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
+                    }
                 }
+
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
+
+                return true;
+
             }
-
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
-
-            return true;
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+                throw new NegocioException($"Não foi possível iniciar a inclusão de novos cursos no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
+            }
         }
     }
 }
