@@ -3,7 +3,6 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +16,7 @@ namespace SME.GoogleClassroom.Dados
         {
             this.ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
-        private string MontaQueryObterTodosOsCursos(bool ehParaPaginacao, Paginacao paginacao)
+        private string MontaQueryObterTodosOsCursos(bool ehParaPaginacao, Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {
             var queryCompleta = new StringBuilder("SELECT ");
 
@@ -36,24 +35,45 @@ namespace SME.GoogleClassroom.Dados
             }
 
             queryCompleta.AppendLine(@"FROM CURSOS C");
+            queryCompleta.AppendLine(@"WHERE 1=1");
+
+            if (turmaId.HasValue)
+                queryCompleta.AppendLine(@"AND C.TURMA_ID = @turmaId");
+
+            if (componenteCurricularId.HasValue)
+                queryCompleta.AppendLine(@"AND C.COMPONENTE_CURRICULAR_ID = @componenteCurricularId");
+
+            if (cursoId.HasValue)
+                queryCompleta.AppendLine(@"AND C.Id = @cursoId");
+
+            if (!string.IsNullOrEmpty(emailCriador))
+                queryCompleta.AppendLine(@"AND C.email like('%" + emailCriador?.Trim().ToLower() + "%')");
 
             if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
                 queryCompleta.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
 
             return queryCompleta.ToString();
         }
-        public async Task<PaginacaoResultadoDto<Curso>> ObterTodosCursosAsync(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<Curso>> ObterTodosCursosAsync(Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {
             var queryCompleta = new StringBuilder();
 
-            queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(false, paginacao));
-            queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(true, paginacao));
+            queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(false, paginacao, turmaId, componenteCurricularId, cursoId, emailCriador));
+            queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(true, paginacao, turmaId, componenteCurricularId, cursoId, emailCriador));
 
             var retorno = new PaginacaoResultadoDto<Curso>();
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
 
-            using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString());
+            var parametros = new
+            {
+                paginacao,
+                turmaId,
+                componenteCurricularId,
+                cursoId                
+            };
+
+            using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
 
             retorno.Items = multi.Read<Curso>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
@@ -90,12 +110,13 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-               turmaId, componenteCurricularId
+                turmaId,
+                componenteCurricularId
             };
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
 
-            return (await conn.QueryFirstOrDefaultAsync<long>(query, parametros)) > 0;            
+            return (await conn.QueryFirstOrDefaultAsync<long>(query, parametros)) > 0;
         }
     }
 }
