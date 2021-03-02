@@ -14,6 +14,6 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> ExisteFuncionarioPorRf(long rf);
         Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs);
         Task<bool> ExisteProfessorPorRf(long rf);
-        Task<long> SalvarAsync(long id, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao);
+        Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao);
     }
 }

@@ -31,6 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 //var funcionarioGoogle = new FuncionarioGoogle(funcionarioParaIncluir.Rf, funcionarioParaIncluir.Nome, funcionarioParaIncluir.Email, funcionarioParaIncluir.OrganizationPath);
                 //await mediator.Send(new InserirFuncionarioGoogleCommand(funcionarioGoogle));
 
+                await Task.Delay(10000);
                 return true;
             }
             catch (Exception ex)

@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             //    await mediator.Send(new InserirCursoErroCommand(0, 0, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", null, Dominio.ExecucaoTipo.CursoAdicionar, Dominio.ErroTipo.Interno));
             //    throw;
             //}
-            
+            await Task.Delay(10000);
             return default;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -28,6 +29,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery]DateTime ultimaExecucao)
         {
             var retorno = await obterCursosParaIncluirGoogleUseCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao);
+            return Ok(retorno);
+        }
+
+        [HttpPost("sincronizacao/iniciar")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleCursoUseCase iniciarSyncGoogleCursoUseCase)
+        {
+            var retorno = await iniciarSyncGoogleCursoUseCase.Executar();
             return Ok(retorno);
         }
     }
