@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SME.GoogleClassroom.Dominio;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioUsuarioErro
     {
-        Task<long> Salvar(long? usuarioId, string email, string mensagem, int usuarioTipo, int execucaoTipo, DateTime dataInclusao);
+        Task<long> SalvarAsync(long? usuarioId, string email, string mensagem, UsuarioTipo usuarioTipo, ExecucaoTipo execucaoTipo, DateTime dataInclusao);
     }
 }

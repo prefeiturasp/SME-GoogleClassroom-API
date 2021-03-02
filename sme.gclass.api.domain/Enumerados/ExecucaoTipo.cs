@@ -2,7 +2,9 @@
 {
     public enum ExecucaoTipo
     {
-        UsuarioAdicionar = 1,
-        CursoAdicionar = 2
+        CursoAdicionar = 1,
+        AlunoAdicionar = 2,
+        ProfessorAdicionar = 3,
+        FuncionarioAdicionar = 4
     }
 }

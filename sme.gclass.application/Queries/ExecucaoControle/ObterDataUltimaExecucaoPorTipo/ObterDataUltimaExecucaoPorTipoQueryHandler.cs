@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dataUltimaExecucao = await repositorioExecucaoControle.ObterDataUltimaExecucaoPorTipo(request.ExecucaoTipo);
 
-            if (dataUltimaExecucao == null)
+            if (dataUltimaExecucao == null || dataUltimaExecucao == DateTime.MinValue)
                 throw new NegocioException("Não foi possível obter a última data de execução do tipo informado!");
 
             return dataUltimaExecucao;

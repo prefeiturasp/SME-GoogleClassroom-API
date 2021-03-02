@@ -21,13 +21,13 @@ namespace SME.GoogleClassroom.Dados
         public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
         {
 
-			dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
+            dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryCursosParaInclusao();
+            var query = MontaQueryCursosParaInclusao(paginacao.QuantidadeRegistrosIgnorados > 0);
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
-
-            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados });
+			
+            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados }, commandTimeout: 300);
 
             var retorno = new PaginacaoResultadoDto<CursoParaInclusaoDto>();
 
@@ -38,10 +38,10 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryCursosParaInclusao()
+        private static string MontaQueryCursosParaInclusao(bool ehParaPaginar)
         {
-            
-            return @"-- 2) Busca os cursos regulares
+            var query = new StringBuilder();
+            query.AppendLine(@"-- 2) Busca os cursos regulares
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesRegulares
 							SELECT
@@ -134,8 +134,8 @@ namespace SME.GoogleClassroom.Dados
 							--- Território
 							WHERE  
 								te.st_turma_escola in ('O', 'A', 'C')
-								AND   te.cd_tipo_turma in (1,2,3,5,6)
-								AND   esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,25,28,31)	
+								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
 								AND   te.dt_inicio >= @dataReferencia;
 
 							--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
@@ -282,9 +282,13 @@ namespace SME.GoogleClassroom.Dados
 									*
 								INTO #tempCursosDrePaginado
 									from #tempCursosDre
-							order by 1
-						OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY
-					-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
+							order by 1 ");
+
+            if (ehParaPaginar)
+                query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+            else query.AppendLine(";");
+
+            query.AppendLine(@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
 							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicao') IS NOT NULL 
 								DROP TABLE #tempUEsSemAtribuicao
 							SELECT
@@ -338,7 +342,9 @@ namespace SME.GoogleClassroom.Dados
 						SELECT
 							COUNT(*)
 						FROM
-							#tempCursosDre temp;";         
+							#tempCursosDre temp;");
+
+            return query.ToString();
 
         }
     }
