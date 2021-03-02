@@ -21,14 +21,14 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
         {
-            var query = new StringBuilder(@"SELECT u.id, 
+            var query = new StringBuilder(@$"SELECT u.id, 
                                                    u.usuario_tipo as usuariotipo,
                                                    u.email,
                                                    u.organization_path as organizationpath,
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE u.usuario_tipo = 1");
+                                             WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
             if (codigoEol != null || codigoEol > 0)
                 query.AppendLine($"AND u.id = {codigoEol}");
 
@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(";");
 
-            query.AppendLine("SELECT count(*) from usuarios u WHERE u.usuario_tipo = 1");
+            query.AppendLine($"SELECT count(*) from usuarios u WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
 
             var retorno = new PaginacaoResultadoDto<Usuario>();
 
