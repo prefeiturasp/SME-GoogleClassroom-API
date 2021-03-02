@@ -68,6 +68,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoIncluir);
         }
 
         private void RegistrarFilasFuncionario()
@@ -94,7 +97,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoIncluir, new ComandoRabbit("Incluir cursos novos no google", typeof(IIncluirCursoUseCase)));
             comandos.Add(RotasRabbit.FilaCursoSync, new ComandoRabbit("Incluir cursos novos no google", typeof(ITrataSyncGoogleCursoUseCase)));
             comandos.Add(RotasRabbit.FilaAlunoSync, new ComandoRabbit("Tratamento de alunos do sync com google", typeof(ITrataSyncGoogleAlunoUseCase)));
-            comandos.Add(RotasRabbit.FilaAlunoIncluir, new ComandoRabbit("Incluir alunos novos no Google", typeof(ITrataSyncGoogleAlunoUseCase)));
+            comandos.Add(RotasRabbit.FilaAlunoIncluir, new ComandoRabbit("Incluir alunos novos no Google", typeof(IIncluirAlunoUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioSync, new ComandoRabbit("Tratamento de funcionários do sync com Google", typeof(ITrataSyncGoogleFuncionarioUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIncluir, new ComandoRabbit("Incluir funcionários novos no Google", typeof(IInserirFuncionarioGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorSync, new ComandoRabbit("Tratamento de professores do sync com Google", typeof(ITrataSyncGoogleProfessorUseCase)));
@@ -207,6 +210,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);

@@ -24,11 +24,12 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 // TO DO: Remover ao subir para produção
-                var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoParaIncluir.Codigo));
-                if (alunoJaIncluido) return true;
+                //var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoParaIncluir.Codigo));
+                //if (alunoJaIncluido) return true;
 
-                var alunoGoogle = new FuncionarioGoogle(alunoParaIncluir.Rf, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
-                await mediator.Send(new InserirFuncionarioGoogleCommand(alunoGoogle));
+                //var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.CaminhoOrganizacao);
+                //await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
+                //await mediator.Send(new IncluirUsuarioCommand(alunoGoogle);
 
                 await Task.Delay(10000);
                 return true;
