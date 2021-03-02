@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterAlunosCadastradosUseCase
     {
-        Task<PaginacaoResultadoDto<Usuario>> Executar(int registrosQuantidade, int paginaNumero, long? codigoEol, string email);
+        Task<PaginacaoResultadoDto<AlunoGoogle>> Executar(int registrosQuantidade, int paginaNumero, long? codigoEol, string email);
     }
 }

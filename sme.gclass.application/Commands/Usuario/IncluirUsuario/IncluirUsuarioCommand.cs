@@ -42,10 +42,21 @@ namespace SME.GoogleClassroom.Aplicacao
             Id = professorGoogle.Rf;
             Nome = professorGoogle.Nome;
             Email = professorGoogle.Email;
-            Tipo = UsuarioTipo.Funcionario;
+            Tipo = UsuarioTipo.Professor;
             OrganizationPath = professorGoogle.OrganizationPath;
             DataInclusao = professorGoogle.DataInclusao;
             DataAtualizacao = professorGoogle.DataAtualizacao;
+        }
+
+        public IncluirUsuarioCommand(AlunoGoogle alunoGoogle)
+        {
+            Id = alunoGoogle.Codigo;
+            Nome = alunoGoogle.Nome;
+            Email = alunoGoogle.Email;
+            Tipo = UsuarioTipo.Aluno;
+            OrganizationPath = alunoGoogle.OrganizationPath;
+            DataInclusao = alunoGoogle.DataInclusao;
+            DataAtualizacao = alunoGoogle.DataAtualizacao;
         }
     }
 

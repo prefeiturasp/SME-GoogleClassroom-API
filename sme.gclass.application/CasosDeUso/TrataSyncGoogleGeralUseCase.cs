@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!publicarProfessor)
                 throw new NegocioException("Erro ao enviar a sync de professores.");
 
-            var publicarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioSync, RotasRabbit.FilaUsuarioSync, resposta));
+            var publicarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoSync, RotasRabbit.FilaAlunoSync, resposta));
 
             if (publicarUsuario)
                 throw new NegocioException("Erro ao enviar o usuário");
