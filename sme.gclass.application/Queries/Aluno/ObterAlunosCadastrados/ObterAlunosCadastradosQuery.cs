@@ -6,11 +6,15 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosCadastradosQuery : IRequest<PaginacaoResultadoDto<AlunoGoogle>>
     {
-        public ObterAlunosCadastradosQuery(Paginacao paginacao)
+        public ObterAlunosCadastradosQuery(Paginacao paginacao, long? codigoEol, string email)
         {
-            this.Paginacao = paginacao;
+            Paginacao = paginacao;
+            CodigoEol = codigoEol;
+            Email = email;
         }
 
         public Paginacao Paginacao { get; set; }
+        public long? CodigoEol { get; set; }
+        public string Email { get; set; }
     }
 }

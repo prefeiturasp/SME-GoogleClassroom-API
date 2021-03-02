@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<AlunoGoogle>> Handle(ObterAlunosCadastradosQuery request, CancellationToken cancellationToken)
         {
-            var alunos = await repositorioUsuario.ObterAlunosAsync(request.Paginacao);
+            var alunos = await repositorioUsuario.ObterAlunosAsync(request.Paginacao, request.CodigoEol, request.Email);
             return alunos;
         }
     }
