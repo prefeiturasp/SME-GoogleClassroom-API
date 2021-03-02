@@ -16,15 +16,15 @@ namespace SME.GoogleClassroom.Dados
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long codigoEol)
         {
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryAlunosParaInclusao(paginacao);
+            var query = MontaQueryAlunosParaInclusao(paginacao, codigoEol);
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
 
-            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados }, commandTimeout: 6000);
+            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, codigoEol }, commandTimeout: 6000);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao)
+        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, long codigoEol)
         {
 
             return $@"DECLARE @anoLetivo AS INT = 2021;
@@ -87,7 +87,9 @@ namespace SME.GoogleClassroom.Dados
 						AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 						AND NOT esc.cd_escola IN ('200242', '019673')
 						AND te.an_letivo = @anoLetivo
-						AND NOT cd_serie_ensino IS NULL;
+						AND NOT cd_serie_ensino IS NULL
+						
+						{(codigoEol > 0 ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
 
 					--- 1.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasDatasMaisRecentes') IS NOT NULL
@@ -215,7 +217,9 @@ namespace SME.GoogleClassroom.Dados
 						AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 						AND NOT esc.cd_escola IN ('200242', '019673')
 						AND te.an_letivo = @anoLetivo
-						AND NOT matr.cd_tipo_programa IS NULL;
+						AND NOT matr.cd_tipo_programa IS NULL
+
+						{(codigoEol > 0 ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
 
 					--- 2.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes') IS NOT NULL

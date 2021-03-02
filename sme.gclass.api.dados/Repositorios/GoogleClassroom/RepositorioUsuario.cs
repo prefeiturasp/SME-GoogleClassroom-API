@@ -19,20 +19,28 @@ namespace SME.GoogleClassroom.Dados
             this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
         {
-            var query = new StringBuilder(@"SELECT u.id, 
+            var query = new StringBuilder(@$"SELECT u.id, 
                                                    u.usuario_tipo as usuariotipo,
                                                    u.email,
                                                    u.organization_path as organizationpath,
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = 1"); 
-            if (paginacao.QuantidadeRegistros > 0)
-                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+                                             WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
+            if (codigoEol != null || codigoEol > 0)
+                query.AppendLine($"AND u.id = {codigoEol}");
 
-            query.AppendLine("SELECT count(*) from usuarios u");
+            if(!string.IsNullOrEmpty(email))
+                query.AppendLine($"AND u.email = '{email}'");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ");
+
+            query.AppendLine(";");
+
+            query.AppendLine($"SELECT count(*) from usuarios u WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
 
             var retorno = new PaginacaoResultadoDto<Usuario>();
 
