@@ -16,19 +16,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(PaginacaoResultadoDto<Curso>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterTodosCursos([FromServices] IObterCursosCadastradosUseCase obterCursosCadastradosUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero)
+        public async Task<IActionResult> ObterTodosCursos([FromServices] IObterCursosCadastradosUseCase obterCursosCadastradosUseCase,
+            [FromQuery] FiltroObterCursosCadastradosDto filtro)
         {
-            var retorno = await obterCursosCadastradosUseCase.Executar(registrosQuantidade, paginaNumero);
+            var retorno = await obterCursosCadastradosUseCase.Executar(filtro);
             return Ok(retorno);
         }
         [HttpGet("novos")]
         [ProducesResponseType(typeof(PaginacaoResultadoDto<Curso>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterTodosCursosParaIncluir([FromServices] IObterCursosParaIncluirGoogleUseCase obterCursosParaIncluirGoogleUseCase, 
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery]DateTime ultimaExecucao)
+        public async Task<IActionResult> ObterTodosCursosParaIncluir([FromServices] IObterCursosParaIncluirGoogleUseCase obterCursosParaIncluirGoogleUseCase,
+            [FromQuery] FiltroObterCursosIncluirGoogleDto filtro)
         {
-            var retorno = await obterCursosParaIncluirGoogleUseCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao);
+            var retorno = await obterCursosParaIncluirGoogleUseCase.Executar(filtro);
             return Ok(retorno);
         }
 

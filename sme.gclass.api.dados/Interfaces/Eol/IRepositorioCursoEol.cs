@@ -7,6 +7,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
 {
     public interface IRepositorioCursoEol
     {
-        Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataUltimaExecucao, Paginacao paginacao);
+        Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataUltimaExecucao, Paginacao paginacao, long? componenteCurricularId, long? turmaId);
     }
 }
