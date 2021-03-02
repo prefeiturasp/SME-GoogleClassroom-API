@@ -7,14 +7,17 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosNovosQuery : IRequest<PaginacaoResultadoDto<AlunoEol>>
     {
-        public ObterAlunosNovosQuery(DateTime dataReferencia, Paginacao paginacao)
+        public ObterAlunosNovosQuery(Paginacao paginacao, DateTime dataReferencia, long codigoEol)
         {
-            this.Paginacao = paginacao;
-            this.DataReferencia = dataReferencia;
+            Paginacao = paginacao;
+            DataReferencia = dataReferencia;
+            CodigoEol = codigoEol;
         }
 
         public Paginacao Paginacao { get; set; }
 
         public DateTime DataReferencia { get; set; }
+
+        public long CodigoEol { get; set; }
     }
 }
