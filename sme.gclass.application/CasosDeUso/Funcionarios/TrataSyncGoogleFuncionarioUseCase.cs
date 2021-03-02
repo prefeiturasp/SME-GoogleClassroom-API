@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task Executar(MensagemRabbit mensagem)
+        public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             try
             {
@@ -41,6 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
 
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioAdicionar, DateTime.Today));
+                return true;
             }
             catch(Exception ex)
             {

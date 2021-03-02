@@ -63,12 +63,12 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao)
         {
-            var query = new StringBuilder(@"SELECT u.id, 
-                                                   u.usuario_tipo as usuariotipo,
-                                                   u.email,
-                                                   u.organization_path as organizationpath,
-                                                   u.data_inclusao as datainclusao,
-                                                   u.data_atualizacao as dataatualizacao
+            var query = new StringBuilder(@"SELECT u.id AS Rf, 
+                                                   u.nome AS Nome,
+                                                   u.email AS Email,
+                                                   u.organization_path as OrganizationPath,
+                                                   u.data_inclusao as DataInclusao,
+                                                   u.data_atualizacao as DataAtualizacao
                                               FROM usuarios u 
                                              WHERE usuario_tipo = @tipo");
             if (paginacao.QuantidadeRegistros > 0)
@@ -97,12 +97,12 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao)
         {
-            var query = new StringBuilder(@"SELECT u.id, 
-                                                   u.usuario_tipo as usuariotipo,
-                                                   u.email,
-                                                   u.organization_path as organizationpath,
-                                                   u.data_inclusao as datainclusao,
-                                                   u.data_atualizacao as dataatualizacao
+            var query = new StringBuilder(@"SELECT u.id AS Rf, 
+                                                   u.nome AS Nome,
+                                                   u.email AS Email,
+                                                   u.organization_path as OrganizationPath,
+                                                   u.data_inclusao as DataInclusao,
+                                                   u.data_atualizacao as DataAtualizacao
                                               FROM usuarios u 
                                              WHERE usuario_tipo = @tipo");
             if (paginacao.QuantidadeRegistros > 0)
@@ -183,16 +183,17 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { rf, tipo = (int)UsuarioTipo.Professor })).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long id, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
+        public async Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
         {
             const string insertQuery = @"insert into public.usuario
-                                        (id, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
+                                        (id, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
                                         values
-                                        (@id, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)";
+                                        (@id, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)";
 
             var parametros = new
             {
                 id,
+                nome,
                 email,
                 tipo,
                 organizationPath,
