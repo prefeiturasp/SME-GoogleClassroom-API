@@ -47,6 +47,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
 
             RegistrarFilasCurso();
+            RegistrarFilasAluno();
             RegistrarFilasFuncionario();
             RegistrarFilasProfessor();
 
@@ -59,11 +60,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaUsuarioSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaUsuarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuarioSync);
-
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
+        }
+
+        private void RegistrarFilasAluno()
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoSync);
         }
 
         private void RegistrarFilasFuncionario()
@@ -88,9 +92,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
             comandos.Add(RotasRabbit.FilaCursoIncluir, new ComandoRabbit("Incluir cursos novos no google", typeof(IIncluirCursoUseCase)));
-
-            comandos.Add(RotasRabbit.FilaUsuarioSync, new ComandoRabbit("Tratamento de usuário do sync com google", typeof(ITrataSyncGoogleUsuarioUseCase)));
             comandos.Add(RotasRabbit.FilaCursoSync, new ComandoRabbit("Incluir cursos novos no google", typeof(ITrataSyncGoogleCursoUseCase)));
+            comandos.Add(RotasRabbit.FilaAlunoSync, new ComandoRabbit("Tratamento de alunos do sync com google", typeof(ITrataSyncGoogleAlunoUseCase)));
+            comandos.Add(RotasRabbit.FilaAlunoIncluir, new ComandoRabbit("Incluir alunos novos no Google", typeof(ITrataSyncGoogleAlunoUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioSync, new ComandoRabbit("Tratamento de funcionários do sync com Google", typeof(ITrataSyncGoogleFuncionarioUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIncluir, new ComandoRabbit("Incluir funcionários novos no Google", typeof(IInserirFuncionarioGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorSync, new ComandoRabbit("Tratamento de professores do sync com Google", typeof(ITrataSyncGoogleProfessorUseCase)));
@@ -202,6 +206,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             };
 
             canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
