@@ -33,5 +33,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(registrosQuantidade, paginaNumero);
             return Ok(retorno);
         }
+
+        [HttpPost("sincronizacao/iniciar")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleFuncionarioUseCase iniciarSyncGoogleFuncionarioUseCase)
+        {
+            var retorno = await iniciarSyncGoogleFuncionarioUseCase.Executar();
+            return Ok(retorno);
+        }
     }
 }

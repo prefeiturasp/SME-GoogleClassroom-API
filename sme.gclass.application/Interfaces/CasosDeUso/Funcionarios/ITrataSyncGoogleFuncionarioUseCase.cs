@@ -5,6 +5,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface ITrataSyncGoogleFuncionarioUseCase
     {
-        Task Executar(MensagemRabbit mensagem);
+        Task<bool> Executar(MensagemRabbit mensagem);
     }
 }

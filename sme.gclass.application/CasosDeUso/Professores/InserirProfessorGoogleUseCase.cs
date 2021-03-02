@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 //var professorGoogle = new ProfessorGoogle(professorParaIncluir.Rf, professorParaIncluir.Nome, professorParaIncluir.Email, professorParaIncluir.OrganizationPath);
                 //await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
-
+                await Task.Delay(10000);
                 return true;
             }
             catch (Exception ex)

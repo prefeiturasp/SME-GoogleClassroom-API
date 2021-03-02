@@ -58,7 +58,8 @@ namespace SME.GoogleClassroom.Dados
                                         SELECT
 	                                        DISTINCT
 	                                        serv.cd_registro_funcional AS Rf,
-	                                        serv.nm_pessoa AS Nome,
+	                                        serv.nm_pessoa AS NomePessoa,
+                                            serv.nm_social AS NomeSocial,
 	                                        'True' AS Ativo,
 	                                        '/Professores' AS OrganizationPath
                                         INTO #tempProfessoresAtivos
