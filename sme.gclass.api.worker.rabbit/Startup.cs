@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 using Sentry;
-using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
 using System;
@@ -29,13 +28,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             services.AddHttpContextAccessor();
             RegistraDependencias.Registrar(services, Configuration);
-            RegistrarHttpClients(services, Configuration);
-
 
             services.AddRabbit();
             services.AddPolicies();
-
-
             services.AddHostedService<WorkerRabbitMQ>();
 
             // Teste para injeção do client de telemetria em classe estática 
@@ -55,14 +50,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -70,21 +63,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 endpoints.MapControllers();
             });
 
+            app.UseHttpMetrics();
+            app.UseMetricServer();
+
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("WorkerRabbitMQ!");
+                await context.Response.WriteAsync("GoogleClassroom Worker!");
             });
-
-            app.UseMetricServer();
-        }
-
-        private static void RegistrarHttpClients(IServiceCollection services, IConfiguration configuration)
-        {
-            //services.AddHttpClient<IServicoJurema, ServicoJurema>(c =>
-            //{
-            //    c.BaseAddress = new Uri(configuration.GetSection("UrlApiJurema").Value);
-            //    c.DefaultRequestHeaders.Add("Accept", "application/json");
-            //});
         }
     }
 }

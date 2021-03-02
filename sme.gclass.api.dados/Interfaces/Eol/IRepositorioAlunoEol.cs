@@ -10,5 +10,6 @@ namespace SME.GoogleClassroom.Dados
     public interface IRepositorioAlunoEol
     {
         Task<PaginacaoResultadoDto<AlunoDto>> ObterAlunosAsync(Paginacao paginacao, int anoLetivo, DateTime dataReferencia);
+        Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao);
     }
 }

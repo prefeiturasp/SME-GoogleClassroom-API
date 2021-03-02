@@ -1,0 +1,61 @@
+version: '3.9'
+
+volumes:
+  postgres-gca-data: {}
+
+services:
+  gca-api:
+    container_name: gca-api
+    image: registry.sme.prefeitura.sp.gov.br/googleclassroom/gca-api:dev
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - gca-network
+    depends_on:
+      - 'gca-db'
+      - 'gca-rabbitmq'
+    env_file:
+      - gca-api.env
+    deploy:
+      restart_policy:
+        condition: on-failure
+  gca-rabbitmq:
+    container_name: gca-rabbitmq
+    image: rabbitmq:3.7-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=bitnami
+    ports:
+      - "5672:5672"
+      - "15672:15672"    
+    networks:
+      - gca-network
+  gca-db:
+    container_name: gca-db
+    image: postgres:11-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db_googleclassroom
+    volumes:
+      - postgres-gca-data:/var/lib/postgresql/data
+    networks:
+      - gca-network
+  gca-flyway:
+    container_name: gca-flyway
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://gca-db:5432/db_googleclassroom?user=postgres&password=postgres -locations='filesystem:/opt/scripts' -outOfOrder=true migrate
+    volumes:
+      - ./scripts:/opt/scripts
+    depends_on:
+      - gca-db
+    restart: on-failure
+    networks:
+      - gca-network
+networks:
+  gca-network:
+    external:
+      name: gca-network
+    driver: bridge

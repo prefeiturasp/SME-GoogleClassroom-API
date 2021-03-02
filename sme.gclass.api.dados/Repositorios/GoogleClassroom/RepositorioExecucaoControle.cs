@@ -33,7 +33,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
-            return await conn.QueryFirstAsync<DateTime>(query, parametros);
+            return await conn.QueryFirstOrDefaultAsync<DateTime>(query, parametros);
 
         }
     }

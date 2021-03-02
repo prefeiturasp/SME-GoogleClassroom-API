@@ -12,6 +12,12 @@ namespace SME.GoogleClassroom.Aplicacao
             Data = data;
         }
 
+        public AtualizaExecucaoControleCommand(ExecucaoTipo execucaoTipo)
+        {
+            ExecucaoTipo = execucaoTipo;
+            Data = DateTime.Now;
+        }
+
         public ExecucaoTipo ExecucaoTipo { get; set; }
         public DateTime Data { get; set; }
     }

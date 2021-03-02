@@ -1,7 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Configuration;
-using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
@@ -22,9 +19,17 @@ namespace SME.GoogleClassroom.Aplicacao
             var resposta = mensagemRabbit.Mensagem;
 
             var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, resposta));
+            var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioSync, RotasRabbit.FilaFuncionarioSync, resposta));
+            var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorSync, RotasRabbit.FilaProfessorSync, resposta));
 
-            if (publicarCurso)
-                throw new NegocioException("Erro ao enviar o curso");
+            if (!publicarCurso)
+                throw new NegocioException("Erro ao enviar a sync de cursos.");
+
+            if (!publicarFuncionario)
+                throw new NegocioException("Erro ao enviar a sync de funcionários.");
+
+            if (!publicarProfessor)
+                throw new NegocioException("Erro ao enviar a sync de professores.");
 
             var publicarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioSync, RotasRabbit.FilaUsuarioSync, resposta));
 

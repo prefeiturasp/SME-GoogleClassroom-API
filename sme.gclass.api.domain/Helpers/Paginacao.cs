@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.GoogleClassroom.Dominio
+﻿namespace SME.GoogleClassroom.Dominio
 {
     public class Paginacao
     {
@@ -17,7 +13,5 @@ namespace SME.GoogleClassroom.Dominio
 
         public int QuantidadeRegistros { get; private set; }
         public int QuantidadeRegistrosIgnorados { get; private set; }
-
-
     }
 }

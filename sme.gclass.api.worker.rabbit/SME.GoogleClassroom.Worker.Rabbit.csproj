@@ -4,6 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>187877ae-af63-4bac-9b63-a523da80e8f3</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>1</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +26,7 @@
     <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj" />
     <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
-    <ProjectReference Include="..\sme.gclass.apli.ioc\SME.GoogleClassroom.IoC.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.ioc\SME.GoogleClassroom.IoC.csproj" />
     <ProjectReference Include="..\sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj" />
   </ItemGroup>
 
