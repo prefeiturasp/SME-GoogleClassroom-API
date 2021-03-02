@@ -4,8 +4,17 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class FuncionarioGoogle
     {
+        private const int TamanhoMaximoDoSobrenome = 60;
+
         public long Rf { get; set; }
-        public string Nome { get; set; }
+
+        private string nome;
+        public string Nome
+        {
+            get => nome;
+            set => SetNome(value);
+        }
+
         public string PrimeiroNome 
         { 
             get
@@ -40,6 +49,17 @@ namespace SME.GoogleClassroom.Dominio
 
         protected FuncionarioGoogle()
         {
+        }
+
+        private void SetNome(string nome)
+        {
+            this.nome = nome;
+            if (Sobrenome.Length <= TamanhoMaximoDoSobrenome)
+                return;
+
+            var sobrenomeTrucado = Sobrenome.Substring(0, TamanhoMaximoDoSobrenome);
+            var nomeFormatado = nome.Replace(Sobrenome, sobrenomeTrucado).Trim(); ;
+            this.nome = nomeFormatado;
         }
     }
 }
