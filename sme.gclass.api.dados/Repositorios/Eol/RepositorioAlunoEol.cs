@@ -313,7 +313,7 @@ namespace SME.GoogleClassroom.Dados
 						FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
 
 					SELECT 
-						cd_aluno_eol Codigo, aluno.nm_aluno Nome, nm_organizacao CaminhoOrganizacao, aluno.dt_nascimento_aluno DataNascimento
+						cd_aluno_eol Codigo, aluno.nm_aluno Nome,  aluno.nm_social_aluno NomeSocial, nm_organizacao CaminhoOrganizacao, aluno.dt_nascimento_aluno DataNascimento
 					FROM 
 						#tempAlunosMatriculasAtivasFinal temp
 					INNER JOIN
