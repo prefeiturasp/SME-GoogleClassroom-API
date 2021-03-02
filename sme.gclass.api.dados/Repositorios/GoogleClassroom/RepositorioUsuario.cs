@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = 3");
+                                             WHERE usuario_tipo = @tipo");
             if (paginacao.QuantidadeRegistros > 0)
             {
                 query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
@@ -38,13 +38,13 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine(";");
             }
 
-            query.AppendLine("SELECT count(*) from usuarios u where usuario_tipo = 3");
+            query.AppendLine("SELECT count(*) from usuarios u where usuario_tipo = @tipo");
 
             var retorno = new PaginacaoResultadoDto<FuncionarioGoogle>();
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
-            using var funcionarios = await conn.QueryMultipleAsync(query.ToString());
+            using var funcionarios = await conn.QueryMultipleAsync(query.ToString(), new { tipo = (int)UsuarioTipo.Funcionario });
 
             retorno.Items = funcionarios.Read<FuncionarioGoogle>();
             retorno.TotalRegistros = funcionarios.ReadFirst<int>();
@@ -62,7 +62,7 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = 2");
+                                             WHERE usuario_tipo = @tipo");
             if (paginacao.QuantidadeRegistros > 0)
             {
                 query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
@@ -72,13 +72,13 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine(";");
             }
 
-            query.AppendLine("SELECT count(*) from usuarios u");
+            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo");
 
             var retorno = new PaginacaoResultadoDto<ProfessorGoogle>();
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
-            using var professores = await conn.QueryMultipleAsync(query.ToString());
+            using var professores = await conn.QueryMultipleAsync(query.ToString(), new { tipo = (int)UsuarioTipo.Professor });
 
             retorno.Items = professores.Read<ProfessorGoogle>();
             retorno.TotalRegistros = professores.ReadFirst<int>();
