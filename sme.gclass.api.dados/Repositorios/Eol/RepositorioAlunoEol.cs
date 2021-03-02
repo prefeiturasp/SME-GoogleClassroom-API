@@ -349,8 +349,7 @@ namespace SME.GoogleClassroom.Dados
 		private string QueryPrincipal()
         {
 			var query = new StringBuilder();
-			query.Append(@"
-					 -- 1. Busca matrículas regulares
+			query.Append(@"-- 1. Busca matrículas regulares
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivas') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasAtivas;
 						SELECT
@@ -389,6 +388,7 @@ namespace SME.GoogleClassroom.Dados
 						ORDER By aluno.cd_aluno
 						OFFSET @PageNumber*@RowsOfPage ROWS
 						FETCH NEXT @RowsOfPage ROWS ONLY;
+
 						--- 1.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasDatasMaisRecentes') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasAtivasDatasMaisRecentes;
@@ -398,6 +398,7 @@ namespace SME.GoogleClassroom.Dados
 						INTO #tempAlunosMatriculasAtivasDatasMaisRecentes
 						FROM #tempAlunosMatriculasAtivas
 						GROUP BY cd_aluno;
+
 						--- 1.2 Mantém apenas a matrícula mais recente de cada aluno
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasRemovendoDuplicadas') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasAtivasRemovendoDuplicadas;
@@ -411,13 +412,13 @@ namespace SME.GoogleClassroom.Dados
 							#tempAlunosMatriculasAtivasDatasMaisRecentes t2
 							ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
 						--- 1.3 Montagem da tabela de inserção
+
 						IF OBJECT_ID('tempdb..#tempAlunosAtivos') IS NOT NULL
 							DROP TABLE #tempAlunosAtivos;
 						SELECT
 							DISTINCT
 							NULL AS cd_aluno_classroom,
 							aluno.cd_aluno AS cd_aluno_eol,
-							[dbo].[proc_gerar_email_aluno](aluno.nm_aluno, aluno.dt_nascimento_aluno) AS nm_email,
 							'True' AS in_ativo,
 							[dbo].[proc_gerar_unidade_organizacional_aluno](se.cd_modalidade_ensino, se.cd_etapa_ensino, ce.cd_ciclo_ensino) AS nm_organizacao,
 							0 AS email_alterado,
@@ -454,7 +455,10 @@ namespace SME.GoogleClassroom.Dados
 							matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 							and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 							and matr.an_letivo = @anoLetivo;
+
 						-- 2. Busca matrículas de programa
+
+
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivas') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 						SELECT
@@ -493,6 +497,7 @@ namespace SME.GoogleClassroom.Dados
 						ORDER By aluno.cd_aluno
 						OFFSET @PageNumber*@RowsOfPage ROWS
 						FETCH NEXT @RowsOfPage ROWS ONLY;
+
 						--- 2.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes;
@@ -502,6 +507,7 @@ namespace SME.GoogleClassroom.Dados
 						INTO #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes
 						FROM #tempAlunosMatriculasProgramaAtivas
 						GROUP BY cd_aluno;
+
 						--- 2.2 Mantém apenas a matrícula mais recente de cada aluno
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas;
@@ -513,14 +519,16 @@ namespace SME.GoogleClassroom.Dados
 						INNER JOIN
 							#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes t2
 							ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
+
 						--- 2.3 Montagem da tabela de inserção
+
+
 						IF OBJECT_ID('tempdb..#tempAlunosProgramaAtivos') IS NOT NULL
 							DROP TABLE #tempAlunosProgramaAtivos;
 						SELECT
 							DISTINCT
 							NULL AS cd_aluno_classroom,
 							aluno.cd_aluno AS cd_aluno_eol,
-							[dbo].[proc_gerar_email_aluno](aluno.nm_aluno, aluno.dt_nascimento_aluno) AS nm_email,
 							'True' AS in_ativo,
 							'/Alunos/FUNDAMENTAL' AS nm_organizacao,
 							0 AS email_alterado,
@@ -542,6 +550,7 @@ namespace SME.GoogleClassroom.Dados
 							matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 							and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 							and matr.an_letivo = @anoLetivo;
+
 						-- 3. União dos dois tipos de matrículas
 						IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasFinal') IS NOT NULL
 							DROP TABLE #tempAlunosMatriculasAtivasFinal;
@@ -553,10 +562,11 @@ namespace SME.GoogleClassroom.Dados
 							(SELECT DISTINCT * FROM #tempAlunosAtivos) AS Regulares
 						UNION
 							(SELECT DISTINCT * FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
+
 						-- Totalização
+
 						SELECT
 							CONCAT([dbo].[proc_retorna_primeiro_nome](aluno.nm_aluno), ' ', [dbo].[proc_retorna_ultimo_nome](aluno.nm_aluno)) AS 'Nome',
-							aluClass.nm_email AS 'Email',
 							aluClass.nm_organizacao AS 'OrganizationPath',
 							aluno.dt_nascimento_aluno as 'DataNascimento',
 							'1' as UsuarioTipo
