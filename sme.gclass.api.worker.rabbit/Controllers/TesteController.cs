@@ -28,9 +28,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             //    UeCodigo = "54321"
             //};
 
-            //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaIncluir));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, true));
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar, DateTime.Now));
+            //await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar, DateTime.Now));
 
             return Ok();
         }
