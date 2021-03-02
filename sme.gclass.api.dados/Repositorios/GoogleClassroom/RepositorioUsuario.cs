@@ -53,5 +53,12 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
         }
+
+        public async Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo)
+        {
+            var query = @"SELECT email from usuarios where email = @email and usuario_tipo = @usuarioTipo";
+            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryFirstOrDefaultAsync<string>(query, new { email, usuarioTipo }));
+        }
     }
 }

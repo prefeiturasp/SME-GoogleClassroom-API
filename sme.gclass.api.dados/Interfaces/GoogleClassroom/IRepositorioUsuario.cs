@@ -11,5 +11,6 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao);
         Task<bool> ExisteAlunoPorRf(long rf);
+        Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo);
     }
 }
