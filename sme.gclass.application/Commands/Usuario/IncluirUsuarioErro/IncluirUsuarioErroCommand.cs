@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Dominio;
 using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SalvarUsuarioErroCommand : IRequest<long>
+    public class IncluirUsuarioErroCommand : IRequest<long>
     {
-        public SalvarUsuarioErroCommand(long? usuarioId, string email, string mensagem, int usuarioTipo, int execucaoTipo, DateTime dataInclusao)
+        public IncluirUsuarioErroCommand(long? usuarioId, string email, string mensagem, UsuarioTipo usuarioTipo, ExecucaoTipo execucaoTipo, DateTime dataInclusao)
         {
             UsuarioId = usuarioId;
             Email = email;
@@ -18,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
         public long? UsuarioId { get; set; }
         public string Email { get; set; }
         public string Mensagem { get; set; }
-        public int UsuarioTipo { get; set; }
-        public int ExecucaoTipo { get; set; }
+        public UsuarioTipo UsuarioTipo { get; set; }
+        public ExecucaoTipo ExecucaoTipo { get; set; }
         public DateTime DataInclusao { get; set; }        
     }
 }

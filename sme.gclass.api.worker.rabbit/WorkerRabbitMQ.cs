@@ -6,6 +6,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
@@ -32,7 +33,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// </summary>
         private readonly Dictionary<string, ComandoRabbit> comandos;
 
-
         public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter)
         {
             sentryDSN = configuration.GetValue<string>("Sentry:DSN");
@@ -46,15 +46,39 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
 
+            RegistrarFilasCurso();
+            RegistrarFilasFuncionario();
+            RegistrarFilasProfessor();
+
+            comandos = new Dictionary<string, ComandoRabbit>();
+            RegistrarUseCases();
+        }
+
+        private void RegistrarFilasCurso()
+        {
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
+        }
 
+        private void RegistrarFilasFuncionario()
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioSync);
 
-            comandos = new Dictionary<string, ComandoRabbit>();
-            RegistrarUseCases();
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioIncluir);
+        }
+
+        private void RegistrarFilasProfessor()
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorIncluir);
         }
 
         private void RegistrarUseCases()
@@ -62,6 +86,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
             comandos.Add(RotasRabbit.FilaCursoIncluir, new ComandoRabbit("Incluir cursos novos no google", typeof(IIncluirCursoUseCase)));
             comandos.Add(RotasRabbit.FilaCursoSync, new ComandoRabbit("Incluir cursos novos no google", typeof(ITrataSyncGoogleCursoUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioSync, new ComandoRabbit("Tratamento de funcionários do sync com Google", typeof(ITrataSyncGoogleFuncionarioUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioIncluir, new ComandoRabbit("Incluir funcionários novos no Google", typeof(IInserirFuncionarioGoogleUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorSync, new ComandoRabbit("Tratamento de professores do sync com Google", typeof(ITrataSyncGoogleProfessorUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorIncluir, new ComandoRabbit("Incluir professores novos no Google", typeof(IInserirProfessorGoogleUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -127,7 +155,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             SentrySdk.CaptureException(ex);
         }
 
-
         private MethodInfo ObterMetodo(Type objType, string method)
         {
             var executar = objType.GetMethod(method);
@@ -166,13 +193,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 catch (Exception)
                 {
                     //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
-
                 }
             };
 
             canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
 
             return Task.CompletedTask;
         }

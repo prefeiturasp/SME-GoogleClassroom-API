@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
@@ -21,8 +22,6 @@ namespace SME.GoogleClassroom.IoC
             RegistrarCasosDeUso(services);
         }
 
-
-
         private static void RegistrarRepositorios(IServiceCollection services)
         {
             services.TryAddScoped<IRepositorioAcessosGoogle, RepositorioAcessosGoogle>();
@@ -32,6 +31,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoEol, RepositorioCursoEol>();
             services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
+            services.TryAddScoped<IRepositorioFuncionarioEol, RepositorioFuncionarioEol>();
+            services.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
+            services.TryAddScoped<IRepositorioProfessorEol, RepositorioProfessorEol>();
         }
 
 
@@ -42,6 +44,14 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
             services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
             services.TryAddScoped<ITrataSyncGoogleCursoUseCase, TrataSyncGoogleCursoUseCase>();            
+            services.TryAddScoped<IObterFuncionariosParaIncluirGoogleUseCase, ObterFuncionariosParaIncluirGoogleUseCase>();
+            services.TryAddScoped<IObterFuncionariosGoogleUseCase, ObterFuncionariosGoogleUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleFuncionarioUseCase, TrataSyncGoogleFuncionarioUseCase>();
+            services.TryAddScoped<IInserirFuncionarioGoogleUseCase, InserirFuncionarioGoogleUseCase>();
+            services.TryAddScoped<IObterProfessoresGoogleUseCase, ObterProfessoresGoogleUseCase>();
+            services.TryAddScoped<IObterProfessoresParaIncluirGoogleUseCase, ObterProfessoresParaIncluirGoogleUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleProfessorUseCase, TrataSyncGoogleProfessorUseCase>();
+            services.TryAddScoped<IInserirProfessorGoogleUseCase, InserirProfessorGoogleUseCase>();
         }
     }
 }
