@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Aplicac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Worker.Rabbit", "sme.gclass.api.worker.rabbit\SME.GoogleClassroom.Worker.Rabbit.csproj", "{C9D4FB4F-5080-417D-91DF-FDBB32716F71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.IoC", "sme.gclass.apli.ioc\SME.GoogleClassroom.IoC.csproj", "{7253C2DB-5DD2-405A-9772-71867B014958}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dominio", "sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj", "{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Dados", "sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj", "{37B78C0F-0292-4EC2-A984-C20FB00730FA}"
@@ -18,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.Testes.Unitario", "SME.GoogleClassroom.Testes.Unitario\SME.GoogleClassroom.Testes.Unitario.csproj", "{42112A05-86D8-41DA-857D-A3BC01DF6F63}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2142DAA4-36E1-4885-93B8-18AE938A8531}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.GoogleClassroom.IoC", "sme.gclass.api.ioc\SME.GoogleClassroom.IoC.csproj", "{2E5AA67F-DA51-4015-9350-A89BBD895A9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,6 @@ Global
 		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9D4FB4F-5080-417D-91DF-FDBB32716F71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7253C2DB-5DD2-405A-9772-71867B014958}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7253C2DB-5DD2-405A-9772-71867B014958}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7253C2DB-5DD2-405A-9772-71867B014958}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7253C2DB-5DD2-405A-9772-71867B014958}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A3E73CA-BCE9-4EF1-B86B-1C59016E3D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +53,10 @@ Global
 		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2142DAA4-36E1-4885-93B8-18AE938A8531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E5AA67F-DA51-4015-9350-A89BBD895A9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E5AA67F-DA51-4015-9350-A89BBD895A9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E5AA67F-DA51-4015-9350-A89BBD895A9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E5AA67F-DA51-4015-9350-A89BBD895A9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
