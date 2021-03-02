@@ -19,8 +19,8 @@ namespace SME.GoogleClassroom.Dominio
         { 
             get
             {
-                if (string.IsNullOrWhiteSpace(Nome)) return string.Empty;
-                return Nome.Split(' ')[0];
+                if (string.IsNullOrWhiteSpace(nome)) return string.Empty;
+                return nome.Split(' ')[0];
             }
         }
 
@@ -28,8 +28,8 @@ namespace SME.GoogleClassroom.Dominio
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Nome)) return string.Empty;
-                return Nome.Replace(PrimeiroNome, "").Trim();
+                if (string.IsNullOrWhiteSpace(nome)) return string.Empty;
+                return nome.Replace(PrimeiroNome, "").Trim();
             }
         }
 
