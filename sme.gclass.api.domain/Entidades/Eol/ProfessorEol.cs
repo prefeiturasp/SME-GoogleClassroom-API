@@ -1,14 +1,14 @@
 ﻿using SME.GoogleClassroom.Infra;
-using System.Linq;
 
 namespace SME.GoogleClassroom.Dominio
 {
     public class ProfessorEol
     {
-        public ProfessorEol(long rf, string nome, string organizationPath)
+        public ProfessorEol(long rf, string nomePessoa, string nomeSocial, string organizationPath)
         {
             Rf = rf;
-            Nome = nome;
+            NomePessoa = nomePessoa;
+            NomeSocial = nomeSocial;
             OrganizationPath = organizationPath;
         }
 
@@ -16,9 +16,24 @@ namespace SME.GoogleClassroom.Dominio
         { }
 
         public long Rf { get; set; }
-        public string Nome { get; set; }
+        public string NomePessoa { get; set; }
+        public string NomeSocial { get; set; }
+        public string Nome { get => ObterNome(); }
         public string Email { get => GerarEmail(); }
         public string OrganizationPath { get; set; }
+
+        private string ObterNome()
+        {
+            if (string.IsNullOrWhiteSpace(NomeSocial)) return NomePessoa;
+
+            var primeiroNomePessoa = NomePessoa.Split(' ')[0];
+            var primeiroNomeSocial = NomeSocial.Split(' ')[0];
+            var ultimoNomeSocial = NomeSocial.Replace(primeiroNomeSocial, string.Empty).Trim();
+
+            if (primeiroNomePessoa.Equals(primeiroNomeSocial)) return NomePessoa;
+            if (string.IsNullOrWhiteSpace(ultimoNomeSocial)) return NomePessoa;
+            return NomeSocial;
+        }
 
         private string GerarEmail()
         {

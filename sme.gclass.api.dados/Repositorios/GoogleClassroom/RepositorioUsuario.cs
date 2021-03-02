@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao)
         {
             var query = new StringBuilder(@"SELECT u.id AS Rf, 
-                                                   u.nome AS Nome
+                                                   u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
@@ -56,7 +56,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao)
         {
             var query = new StringBuilder(@"SELECT u.id AS Rf, 
-                                                   u.nome AS Nome
+                                                   u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,

@@ -200,7 +200,8 @@ namespace SME.GoogleClassroom.Dados
 			query.Append(@"
 				SELECT
 					serv.cd_registro_funcional AS Rf,
-					serv.nm_pessoa AS Nome,
+					serv.nm_pessoa AS NomePessoa,
+					serv.nm_social AS NomeSocial,
 					'True' AS Ativo,
 					[dbo].[proc_gerar_unidade_organizacional_funcionario_v2](temp.cd_cargo, '') AS OrganizationPath
 				FROM

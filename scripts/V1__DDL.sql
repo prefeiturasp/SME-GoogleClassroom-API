@@ -20,7 +20,6 @@ CREATE TABLE public.execucao_controle (
 
 CREATE TABLE public.usuarios (
 	id int8 NOT NULL,
-	nome varchar(300) NOT NULL,
 	usuario_tipo int NOT NULL,
 	email varchar(200) NOT NULL,
 	organization_path varchar(200) NOT NULL,
@@ -140,9 +139,3 @@ insert into execucao_controle
 
 insert into execucao_controle 
 (execucao_tipo, ultima_execucao)values(2, '2021-02-20');
-
-insert into execucao_controle 
-(execucao_tipo, ultima_execucao)values(3, '2021-02-20');
-
-insert into execucao_controle 
-(execucao_tipo, ultima_execucao)values(4, '2021-02-20');
