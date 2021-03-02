@@ -265,7 +265,7 @@ __pycache__/
 *.pyc
 
 # Variáveis de ambiente para docker-compose
-sme-api.env
+gca-api.env
 variaveis.json
 src/SME.SGP.WebClient/package-lock.json
 src/SME.SGP.Api/healthchecksdb

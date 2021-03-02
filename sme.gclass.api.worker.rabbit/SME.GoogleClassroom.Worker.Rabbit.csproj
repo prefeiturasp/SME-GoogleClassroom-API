@@ -26,7 +26,7 @@
     <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj" />
     <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
-    <ProjectReference Include="..\sme.gclass.apli.ioc\SME.GoogleClassroom.IoC.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.ioc\SME.GoogleClassroom.IoC.csproj" />
     <ProjectReference Include="..\sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj" />
   </ItemGroup>
 
