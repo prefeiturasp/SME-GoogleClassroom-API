@@ -16,9 +16,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosCursos([FromServices] IObterCursosCadastradosUseCase obterCursosCadastradosUseCase,
-            [FromQuery] FiltroObterTodosCursosDto filtroObterTodosCursosDto)
+            [FromQuery] FiltroObterCursosCadastradosDto filtro)
         {
-            var retorno = await obterCursosCadastradosUseCase.Executar(filtroObterTodosCursosDto);
+            var retorno = await obterCursosCadastradosUseCase.Executar(filtro);
             return Ok(retorno);
         }
         [HttpGet("novos")]
@@ -26,9 +26,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosCursosParaIncluir([FromServices] IObterCursosParaIncluirGoogleUseCase obterCursosParaIncluirGoogleUseCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime ultimaExecucao)
+            [FromQuery] FiltroObterCursosIncluirGoogleDto filtro)
         {
-            var retorno = await obterCursosParaIncluirGoogleUseCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao);
+            var retorno = await obterCursosParaIncluirGoogleUseCase.Executar(filtro);
             return Ok(retorno);
         }
     }

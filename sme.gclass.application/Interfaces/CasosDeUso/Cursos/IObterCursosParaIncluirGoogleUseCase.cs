@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterCursosParaIncluirGoogleUseCase
     {
-        Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> Executar(int registrosQuantidade, int paginaNumero, DateTime ultimaAtualizacao);
+        Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> Executar(FiltroObterCursosIncluirGoogleDto filtro);
     }
 }

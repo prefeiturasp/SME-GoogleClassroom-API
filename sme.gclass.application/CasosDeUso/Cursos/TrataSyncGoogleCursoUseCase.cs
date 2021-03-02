@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (ultimaExecucaoCursosIncluir == null)
                 throw new NegocioException($"Não foi possível obter a última execução da ação {ExecucaoTipo.CursoAdicionar}");
 
-            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0)));
+            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), null, null));
 
             if (cursosParaAdicionar != null || cursosParaAdicionar.Items.Any())
             {

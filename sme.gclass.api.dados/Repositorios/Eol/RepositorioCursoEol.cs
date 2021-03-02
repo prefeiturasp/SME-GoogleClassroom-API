@@ -18,16 +18,18 @@ namespace SME.GoogleClassroom.Dados
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
 
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryCursosParaInclusao(paginacao.QuantidadeRegistrosIgnorados > 0);
+            var query = MontaQueryCursosParaInclusao(paginacao.QuantidadeRegistrosIgnorados > 0, componenteCurricularId, turmaId);
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
-			
-            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados }, commandTimeout: 300);
+
+			var parametros = new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
+
+			using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
             var retorno = new PaginacaoResultadoDto<CursoParaInclusaoDto>();
 
@@ -38,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryCursosParaInclusao(bool ehParaPaginar)
+        private static string MontaQueryCursosParaInclusao(bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
         {
             var query = new StringBuilder();
             query.AppendLine(@"-- 2) Busca os cursos regulares
@@ -136,9 +138,23 @@ namespace SME.GoogleClassroom.Dados
 								te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-								AND   te.dt_inicio >= @dataReferencia;
+								AND   te.dt_inicio >= @dataReferencia");
 
-							--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
+            if (componenteCurricularId.HasValue)
+            {
+                if (componenteCurricularId.Value == 512)
+                {
+                    query.AppendLine("AND etapa_ensino.cd_etapa_ensino = 1 ");
+                }
+                else query.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+            }
+
+            if (turmaId.HasValue)
+            {
+                query.AppendLine("AND te.cd_turma_escola = @turmaId");
+            }
+
+            query.AppendLine(@"--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesRegularesProfessores
 							SELECT
@@ -224,9 +240,23 @@ namespace SME.GoogleClassroom.Dados
 								te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6)
 								AND   esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,25,28,31)	
-								AND   te.dt_inicio >= @dataReferencia;
+								AND   te.dt_inicio >= @dataReferencia");
 
-							--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
+            if (componenteCurricularId.HasValue)
+            {
+                if (componenteCurricularId.Value != 512)
+                {
+                    query.AppendLine("AND pcc.cd_componente_curricular = @componenteCurricularId ");
+                }
+            }
+
+            if (turmaId.HasValue)
+            {
+                query.AppendLine("AND te.cd_turma_escola = @turmaId");
+            }
+
+
+            query.AppendLine(@"--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramaProfessores') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesProgramaProfessores
 							SELECT

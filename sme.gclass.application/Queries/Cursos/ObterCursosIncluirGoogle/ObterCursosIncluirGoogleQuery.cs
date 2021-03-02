@@ -7,12 +7,17 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<CursoParaInclusaoDto>>
     {
-        public ObterCursosIncluirGoogleQuery(DateTime ultimaExecucao, Paginacao paginacao)
+        public ObterCursosIncluirGoogleQuery(DateTime ultimaExecucao, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             UltimaExecucao = ultimaExecucao;
             Paginacao = paginacao;
+            ComponenteCurricularId = componenteCurricularId;
+            TurmaId = turmaId;
         }
         public Paginacao Paginacao { get; set; }
         public DateTime UltimaExecucao { get; set; }
+        public long? ComponenteCurricularId { get; set; }
+        public long? TurmaId { get; set; }
+
     }
 }
