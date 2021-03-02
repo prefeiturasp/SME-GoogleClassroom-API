@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioUsuario
     {
-        Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao);
+        Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao);
         Task<bool> ExisteAlunoPorRf(long rf);
         Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo);
         Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao);

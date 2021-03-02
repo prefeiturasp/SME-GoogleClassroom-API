@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     public class AlunoController : Controller
     {
         [HttpGet]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<Usuario>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoGoogle>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosAlunos([FromServices] IObterAlunosCadastradosUseCase obterAlunosCadastradosUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero)
@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         [HttpGet("novos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<Usuario>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoEol>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAlunosCadastrar([FromServices] IObterAlunosParaCadastrarUseCase obterAlunosParaCadastrarUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime dataReferencia)

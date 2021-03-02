@@ -19,28 +19,28 @@ namespace SME.GoogleClassroom.Dados
             this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<Usuario>> ObterAlunosAsync(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao)
         {
-            var query = new StringBuilder(@"SELECT u.id, 
-                                                   u.usuario_tipo as usuariotipo,
-                                                   u.email,
+            var query = new StringBuilder(@"SELECT u.id AS Codigo, 
+                                                   u.nome AS Nome,
+                                                   u.email AS Email,
                                                    u.organization_path as organizationpath,
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = 1"); 
+                                             WHERE usuario_tipo = @tipo"); 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
 
-            query.AppendLine("SELECT count(*) from usuarios u");
+            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo");
 
-            var retorno = new PaginacaoResultadoDto<Usuario>();
+            var retorno = new PaginacaoResultadoDto<AlunoGoogle>();
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
-            using var alunos = await conn.QueryMultipleAsync(query.ToString());
+            using var alunos = await conn.QueryMultipleAsync(query.ToString(), new { tipo = (int)UsuarioTipo.Aluno });
 
-            retorno.Items = alunos.Read<Usuario>();
+            retorno.Items = alunos.Read<AlunoGoogle>();
             retorno.TotalRegistros = alunos.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 

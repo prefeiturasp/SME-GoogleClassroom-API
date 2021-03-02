@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Dados
                 TotalRegistros = multi.ReadFirst<int>()
             };
 
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
             return retorno;
         }
@@ -313,7 +313,11 @@ namespace SME.GoogleClassroom.Dados
 						FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
 
 					SELECT 
-						cd_aluno_eol Codigo, aluno.nm_aluno Nome,  aluno.nm_social_aluno NomeSocial, nm_organizacao CaminhoOrganizacao, aluno.dt_nascimento_aluno DataNascimento
+						cd_aluno_eol Codigo, 
+						aluno.nm_aluno NomeAluno,  
+						aluno.nm_social_aluno NomeSocial, 
+						nm_organizacao OrganizationPath, 
+						aluno.dt_nascimento_aluno DataNascimento
 					FROM 
 						#tempAlunosMatriculasAtivasFinal temp
 					INNER JOIN
