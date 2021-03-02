@@ -12,10 +12,11 @@ namespace SME.GoogleClassroom.Dominio
             DataNascimento = dataNascimento;
         }
 
-        public AlunoEol(int codigo, string nome, string caminhoOrganizacao, DateTime dataNascimento)
+        public AlunoEol(int codigo, string nome, string nomeSocial, string caminhoOrganizacao, DateTime dataNascimento)
         {
             Codigo = codigo;
             Nome = nome;
+            NomeSocial = nomeSocial;
             CaminhoOrganizacao = caminhoOrganizacao;
             DataNascimento = dataNascimento;
         }
@@ -23,6 +24,8 @@ namespace SME.GoogleClassroom.Dominio
         public int Codigo { get; set; }
 
         public string Nome { get; set; }
+
+        public string NomeSocial { get; set; }
 
         public string CaminhoOrganizacao { get; set; }
 
@@ -41,10 +44,12 @@ namespace SME.GoogleClassroom.Dominio
             }
         }
 
+        public string NomeValido => !string.IsNullOrEmpty(NomeSocial) ? NomeSocial : Nome;
+
         public void DefinirEmail(int? tentativa = 0)
         {
 
-            if (!string.IsNullOrEmpty(Nome) && DataNascimento != null)
+            if (!string.IsNullOrEmpty(NomeValido) && DataNascimento != null)
             {
                 string complementoTratativa = "";
 
@@ -59,7 +64,7 @@ namespace SME.GoogleClassroom.Dominio
                 }
 
 
-                string[] splitNome = Nome.Split(' ');
+                string[] splitNome = NomeValido.Split(' ');
                 string primeiroNome = splitNome[0];
                 string ultimoNome = "", iniciaisMeio = "";
 
