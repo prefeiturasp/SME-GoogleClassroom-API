@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -23,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar));
 
                 var paginacao = new Paginacao(0, 0);
-                var funcionariosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao));
+                var funcionariosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
                 foreach (var funcionarioParaIncluirGoogle in funcionariosParaIncluirGoogle.Items)
                 {
                     try
@@ -45,6 +46,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch(Exception ex)
             {
+                SentrySdk.CaptureException(ex);
                 throw new NegocioException($"Não foi possível iniciar a inclusão de novos funcionários no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
             }
         }

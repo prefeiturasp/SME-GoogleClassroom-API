@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -14,11 +13,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
-        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> Executar(int registrosQuantidade, int paginaNumero, DateTime ultimaAtualizacao)
+        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> Executar(FiltroObterCursosIncluirGoogleDto filtro)
         {
-            var paginacao = new Paginacao(paginaNumero, registrosQuantidade);
+            var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
-            return await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaAtualizacao, paginacao));
+            return await mediator.Send(new ObterCursosIncluirGoogleQuery(filtro.UltimaExecucao, paginacao, filtro.ComponenteCurricularId, filtro.TurmaId));
         }
     }
 }
