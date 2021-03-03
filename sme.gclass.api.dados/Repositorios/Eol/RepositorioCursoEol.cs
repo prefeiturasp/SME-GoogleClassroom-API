@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Dados
         {
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-			var paginar = paginacao.QuantidadeRegistrosIgnorados > 0;
+			var paginar = paginacao.QuantidadeRegistros > 0;
             var query = MontaQueryCursosParaInclusao(paginar, componenteCurricularId, turmaId);
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);

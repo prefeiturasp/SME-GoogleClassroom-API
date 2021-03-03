@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Sentry;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -67,7 +66,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// Inicia a sincronização de cursos do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada, 
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>

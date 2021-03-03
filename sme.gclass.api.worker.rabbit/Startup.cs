@@ -59,8 +59,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 options.Filters.Add(new FiltroExcecoesAttribute(Configuration));
             });
 
-            
-
             services.UseMetricReporter();
         }
 

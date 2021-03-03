@@ -38,9 +38,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterProfessoresParaIncluirGoogle([FromServices] IObterProfessoresParaIncluirGoogleUseCase useCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime ultimaExecucao, [FromQuery] string rf)
+            [FromQuery] FiltroObterProfessoresIncluirGoogleDto filtro)
         {
-            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao, rf);
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
 
@@ -55,9 +55,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterProfessoresGoogle([FromServices] IObterProfessoresGoogleUseCase useCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] long? rf, [FromQuery] string email)
+            [FromQuery] FiltroObterProfessoresCadastradosDto filtro)
         {
-            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero, rf, email);
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
 

@@ -38,9 +38,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterFuncionariosParaIncluirGoogle([FromServices] IObterFuncionariosParaIncluirGoogleUseCase obterFuncionariosParaIncluirGoogleUseCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime ultimaExecucao, [FromQuery] string rf)
+            [FromQuery] FiltroObterFuncionariosIncluirGoogleDto filtro)
         {
-            var retorno = await obterFuncionariosParaIncluirGoogleUseCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao, rf);
+            var retorno = await obterFuncionariosParaIncluirGoogleUseCase.Executar(filtro);
             return Ok(retorno);
         }
 
@@ -55,9 +55,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterFuncionariosGoogle([FromServices] IObterFuncionariosGoogleUseCase useCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] long? rf, [FromQuery] string email)
+            [FromQuery] FiltroObterFuncionariosCadastradosDto filtro)
         {
-            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero, rf, email);
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
 
