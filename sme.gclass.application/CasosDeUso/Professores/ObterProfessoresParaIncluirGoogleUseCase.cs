@@ -15,10 +15,10 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorEol>> Executar(int registrosQuantidade, int paginaNumero, DateTime ultimaAtualizacao, string rf)
+        public async Task<PaginacaoResultadoDto<ProfessorEol>> Executar(FiltroObterProfessoresIncluirGoogleDto filtro)
         {
-            var paginacao = new Paginacao(paginaNumero, registrosQuantidade);
-            return await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, rf));
+            var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
+            return await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(filtro.UltimaExecucao, paginacao, filtro.Rf));
         }
     }
 }
