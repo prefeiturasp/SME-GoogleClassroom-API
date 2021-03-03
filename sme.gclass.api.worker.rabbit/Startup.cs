@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+ï»¿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,12 +37,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddPolicies();
             services.AddHostedService<WorkerRabbitMQ>();
 
-            // Teste para injeção do client de telemetria em classe estática 
+            // Teste para injeï¿½ï¿½o do client de telemetria em classe estï¿½tica 
             SentrySdk.Init(Configuration.GetValue<string>("Sentry:DSN"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
+                c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
+                //TODO: Remover rota fixa
+
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -56,6 +59,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 options.Filters.Add(new FiltroExcecoesAttribute(Configuration));
             });
 
+            
+
             services.UseMetricReporter();
         }
 
@@ -64,21 +69,32 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+            } else
+            {
+                app.UseHttpsRedirection();
             }
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
 
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseRouting();
             app.UseAuthorization();
+
+            app.UseHttpMetrics();
+            app.UseMetricServer();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
 
-            app.UseHttpMetrics();
-            app.UseMetricServer();
+            
 
             app.Run(async (context) =>
             {
