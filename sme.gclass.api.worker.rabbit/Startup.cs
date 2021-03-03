@@ -55,6 +55,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
 
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseRouting();
             app.UseAuthorization();
 
