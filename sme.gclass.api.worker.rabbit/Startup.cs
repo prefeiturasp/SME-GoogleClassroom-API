@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +10,10 @@ using Prometheus;
 using Sentry;
 using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
+using SME.GoogleClassroom.Worker.Rabbit.Middlewares;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
 {
@@ -40,6 +44,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = true;
+                options.Filters.Add(new FiltroExcecoesAttribute(Configuration));
             });
 
             services.UseMetricReporter();
