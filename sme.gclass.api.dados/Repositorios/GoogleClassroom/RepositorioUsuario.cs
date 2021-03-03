@@ -28,25 +28,36 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
-                                             WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
-            if (codigoEol != null || codigoEol > 0)
-                query.AppendLine($"AND u.id = {codigoEol}");
+                                             WHERE u.usuario_tipo = @tipo ");
+            if (codigoEol.HasValue && codigoEol > 0)
+                query.AppendLine("AND u.id = @codigoEol");
 
             if(!string.IsNullOrEmpty(email))
-                query.AppendLine($"AND u.email = '{email}'");
+                query.AppendLine("AND u.email = @email");
 
             if (paginacao.QuantidadeRegistros > 0)
-                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ");
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
             query.AppendLine(";");
 
-            query.AppendLine($"SELECT count(*) from usuarios u WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
+            query.AppendLine($"SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
+            if (codigoEol.HasValue && codigoEol > 0)
+                query.AppendLine($"and u.id = @codigoEol");
 
             var retorno = new PaginacaoResultadoDto<AlunoGoogle>();
 
+            var parametros = new
+            {
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros,
+                tipo = UsuarioTipo.Aluno,  
+                codigoEol,
+                email
+            };
+
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
-            using var alunos = await conn.QueryMultipleAsync(query.ToString(), new { tipo = (int)UsuarioTipo.Aluno });
+            using var alunos = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
             retorno.Items = alunos.Read<AlunoGoogle>();
             retorno.TotalRegistros = alunos.ReadFirst<int>();
@@ -98,7 +109,7 @@ namespace SME.GoogleClassroom.Dados
             {
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
-                tipo = (int)UsuarioTipo.Professor,
+                tipo = UsuarioTipo.Professor,
                 rf,
                 email
             };
@@ -145,7 +156,7 @@ namespace SME.GoogleClassroom.Dados
             {
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
-                tipo = (int)UsuarioTipo.Professor,
+                tipo = UsuarioTipo.Professor,
                 rf,
                 email
             };
@@ -177,7 +188,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new 
             { 
                 rfs,
-                tipo = (int)UsuarioTipo.Funcionario
+                tipo = UsuarioTipo.Funcionario
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -191,7 +202,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rf,
-                tipo = (int)UsuarioTipo.Funcionario
+                tipo = UsuarioTipo.Funcionario
             };
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
@@ -213,7 +224,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rfs,
-                tipo = (int)UsuarioTipo.Professor
+                tipo = UsuarioTipo.Professor
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -227,7 +238,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rf,
-                tipo = (int)UsuarioTipo.Professor
+                tipo = UsuarioTipo.Professor
             };
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
