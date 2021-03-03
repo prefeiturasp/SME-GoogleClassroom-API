@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_inclusao as DataInclusao,
                                                    u.data_atualizacao as DataAtualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = {(int)UsuarioTipo.Funcionario}");
+                                             WHERE usuario_tipo = @tipo");
             if (rf != null && rf > 0)
                 query.AppendLine($"AND u.id = {rf}");
 
@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(";");
 
-            query.AppendLine($"SELECT count(*) from usuarios u where usuario_tipo = {(int)UsuarioTipo.Funcionario}");
+            query.AppendLine($"SELECT count(*) from usuarios u where usuario_tipo = @tipo");
 
             var retorno = new PaginacaoResultadoDto<FuncionarioGoogle>();
 
