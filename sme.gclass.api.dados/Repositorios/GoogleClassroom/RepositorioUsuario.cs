@@ -19,26 +19,28 @@ namespace SME.GoogleClassroom.Dados
             this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
         {
-            var query = new StringBuilder(@"SELECT u.id AS Rf, 
+            var query = new StringBuilder(@$"SELECT u.id AS Rf, 
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
                                                    u.data_atualizacao as DataAtualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = @tipo");
-            if (paginacao.QuantidadeRegistros > 0)
-            {
-                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
-            }
-            else
-            {
-                query.AppendLine(";");
-            }
+                                             WHERE usuario_tipo = {(int)UsuarioTipo.Funcionario}");
+            if (rf != null && rf > 0)
+                query.AppendLine($"AND u.id = {rf}");
 
-            query.AppendLine("SELECT count(*) from usuarios u where usuario_tipo = @tipo");
+            if (!string.IsNullOrEmpty(email))
+                query.AppendLine($"AND u.email = '{email}'");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ");
+
+            query.AppendLine(";");
+
+            query.AppendLine($"SELECT count(*) from usuarios u where usuario_tipo = {(int)UsuarioTipo.Funcionario}");
 
             var retorno = new PaginacaoResultadoDto<FuncionarioGoogle>();
 
@@ -53,7 +55,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao, long? rf, string email)
         {
             var query = new StringBuilder(@"SELECT u.id AS Rf, 
                                                    u.nome AS Nome,
@@ -62,15 +64,19 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_inclusao as DataInclusao,
                                                    u.data_atualizacao as DataAtualizacao
                                               FROM usuarios u 
-                                             WHERE usuario_tipo = @tipo");
+                                             WHERE usuario_tipo = @tipo ");
+
+            if (rf != null && rf > 0)
+                query.AppendLine($"AND u.id = {rf}");
+
+            if (!string.IsNullOrEmpty(email))
+                query.AppendLine($"AND u.email = '{email}'");
+
             if (paginacao.QuantidadeRegistros > 0)
-            {
-                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
-            }
-            else
-            {
-                query.AppendLine(";");
-            }
+                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ");
+
+            query.AppendLine(";");
+
 
             query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo");
 
@@ -86,7 +92,7 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
-        
+
 
         public async Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorRfs(long[] rfs)
         {
@@ -113,7 +119,7 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, new { rf, tipo = (int)UsuarioTipo.Funcionario })).FirstOrDefault();
         }
-        
+
 
         public async Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs)
         {
