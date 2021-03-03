@@ -28,8 +28,8 @@ services:
       - 9090:9090
     networks:
       - gca-network
-  gca_rabbitmq:
-    container_name: gca_rabbitmq
+  gca-rabbitmq:
+    container_name: gca-rabbitmq
     image: rabbitmq:3.7-management-alpine
     environment:
       - RABBITMQ_DEFAULT_USER=user

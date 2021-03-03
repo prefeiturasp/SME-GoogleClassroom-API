@@ -14,20 +14,21 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao, string rf)
         {
             using var conn = ObterConexao();
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao);
-            using var multi = await conn.QueryMultipleAsync(query,
-                new
-                {
-                    anoLetivo = dataReferencia.Year,
-                    dataReferencia = dataReferencia.Date,
-                    paginacao.QuantidadeRegistros,
-                    paginacao.QuantidadeRegistrosIgnorados
-                });
+            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, rf);
+            var parametros = new
+            {
+                anoLetivo = dataReferencia.Year,
+                dataReferencia = dataReferencia.Date,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados,
+                rf
+            };
+            using var multi = await conn.QueryMultipleAsync(query, parametros);
 
             var retorno = new PaginacaoResultadoDto<ProfessorEol>();
 
@@ -38,9 +39,9 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao)
+        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, string rf)
         {
-            const string queryBase = @"IF OBJECT_ID('tempdb..#tempCargosProfessores') IS NOT NULL
+             string queryBase = @$"IF OBJECT_ID('tempdb..#tempCargosProfessores') IS NOT NULL
 	                                        DROP TABLE #tempCargosProfessores;
                                         SELECT
 	                                        DISTINCT 
@@ -70,9 +71,10 @@ namespace SME.GoogleClassroom.Dados
 	                                        ON serv.cd_servidor = cbc.cd_servidor
                                         INNER JOIN
 	                                        #tempCargosProfessores temp
-	                                        ON cbc.cd_cargo_base_servidor = temp.cd_cargo_base_servidor;
+	                                        ON cbc.cd_cargo_base_servidor = temp.cd_cargo_base_servidor
+                                        {(!string.IsNullOrEmpty(rf) ? $"WHERE serv.cd_registro_funcional = @rf; " : "; ")}
 
-                                        -- Resultado
+                                           -- Resultado
                                         SELECT
 	                                        *
                                         FROM

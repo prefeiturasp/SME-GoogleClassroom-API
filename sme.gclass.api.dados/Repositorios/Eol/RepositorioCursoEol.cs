@@ -18,27 +18,29 @@ namespace SME.GoogleClassroom.Dados
             ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
-        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
-
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryCursosParaInclusao(paginacao.QuantidadeRegistrosIgnorados > 0);
+			var paginar = paginacao.QuantidadeRegistros > 0;
+            var query = MontaQueryCursosParaInclusao(paginar, componenteCurricularId, turmaId);
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
-			
-            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados }, commandTimeout: 300);
+
+			var parametros = new { anoLetivo = dataReferencia.Year, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
+
+			using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
             var retorno = new PaginacaoResultadoDto<CursoParaInclusaoDto>();
 
             retorno.Items = multi.Read<CursoParaInclusaoDto>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = paginar ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
             return retorno;
         }
 
-        private static string MontaQueryCursosParaInclusao(bool ehParaPaginar)
+        private static string MontaQueryCursosParaInclusao(bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
         {
             var query = new StringBuilder();
             query.AppendLine(@"-- 2) Busca os cursos regulares
@@ -133,12 +135,28 @@ namespace SME.GoogleClassroom.Dados
 								ON tep.cd_experiencia_pedagogica = tgt.cd_experiencia_pedagogica
 							--- Território
 							WHERE  
-								te.st_turma_escola in ('O', 'A', 'C')
+								te.an_letivo = @anoLetivo
+								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-								AND   te.dt_inicio >= @dataReferencia;
+								AND   te.dt_inicio >= @dataReferencia
+								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
-							--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
+            if (componenteCurricularId.HasValue)
+            {
+                if (componenteCurricularId.Value == 512)
+                {
+                    query.AppendLine("AND etapa_ensino.cd_etapa_ensino = 1 ");
+                }
+                else query.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+            }
+
+            if (turmaId.HasValue)
+            {
+                query.AppendLine("AND te.cd_turma_escola = @turmaId");
+            }
+
+            query.AppendLine(@"--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesRegularesProfessores
 							SELECT
@@ -158,7 +176,8 @@ namespace SME.GoogleClassroom.Dados
 								v_servidor_cotic serv (NOLOCK)
 								ON cbc.cd_servidor = serv.cd_servidor
 							WHERE	
-								 atr.dt_cancelamento IS NULL
+								atr.an_atribuicao = @anoLetivo
+								AND atr.dt_cancelamento IS NULL
 								AND atr.dt_disponibilizacao_aulas IS NULL;
 
 							--- 2.2) Define a tabela final de cursos regulares com responsáveis
@@ -221,12 +240,28 @@ namespace SME.GoogleClassroom.Dados
 								componente_curricular pcc (NOLOCK) 
 								ON pgcc.cd_componente_curricular = pcc.cd_componente_curricular and pcc.dt_cancelamento is null
 							WHERE  
-								te.st_turma_escola in ('O', 'A', 'C')
-								AND   te.cd_tipo_turma in (1,2,3,5,6)
-								AND   esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,25,28,31)	
-								AND   te.dt_inicio >= @dataReferencia;
+								te.an_letivo = @anoLetivo
+								AND   te.st_turma_escola in ('O', 'A', 'C')
+								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+								AND   te.dt_inicio >= @dataReferencia
+								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
-							--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
+            if (componenteCurricularId.HasValue)
+            {
+                if (componenteCurricularId.Value != 512)
+                {
+                    query.AppendLine("AND pcc.cd_componente_curricular = @componenteCurricularId ");
+                }
+            }
+
+            if (turmaId.HasValue)
+            {
+                query.AppendLine("AND te.cd_turma_escola = @turmaId");
+            }
+
+
+            query.AppendLine(@"--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramaProfessores') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesProgramaProfessores
 							SELECT
@@ -246,7 +281,8 @@ namespace SME.GoogleClassroom.Dados
 								v_servidor_cotic serv (NOLOCK)
 								ON cbc.cd_servidor = serv.cd_servidor
 							WHERE	
-								atr.dt_cancelamento IS NULL
+								atr.an_atribuicao = @anoLetivo
+								AND atr.dt_cancelamento IS NULL
 								AND atr.dt_disponibilizacao_aulas IS NULL;
 
 							--- 3.2) Define a tabela final de cursos de programa com responsáveis

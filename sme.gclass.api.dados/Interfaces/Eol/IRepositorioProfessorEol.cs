@@ -7,6 +7,6 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioProfessorEol
     {
-        Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao);
+        Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao, string rf);
     }
 }

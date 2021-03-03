@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterFuncionariosGoogleUseCase
     {
-        Task<PaginacaoResultadoDto<FuncionarioGoogle>> Executar(int registrosQuantidade, int paginaNumero);
+        Task<PaginacaoResultadoDto<FuncionarioGoogle>> Executar(FiltroObterFuncionariosCadastradosDto filtro);
     }
 }
