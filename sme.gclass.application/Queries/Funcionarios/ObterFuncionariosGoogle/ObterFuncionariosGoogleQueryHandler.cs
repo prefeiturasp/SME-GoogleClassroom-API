@@ -18,6 +18,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> Handle(ObterFuncionariosGoogleQuery request, CancellationToken cancellationToken)
-           => await repositorioUsuario.ObterFuncionariosAsync(request.Paginacao);
+           => await repositorioUsuario.ObterFuncionariosAsync(request.Paginacao, request.Rf, request.Email);
     }
 }

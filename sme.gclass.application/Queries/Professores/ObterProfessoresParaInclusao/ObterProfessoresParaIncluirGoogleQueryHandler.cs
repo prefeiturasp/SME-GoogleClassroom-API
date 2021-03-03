@@ -18,6 +18,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<PaginacaoResultadoDto<ProfessorEol>> Handle(ObterProfessoresParaIncluirGoogleQuery request, CancellationToken cancellationToken)
-            => await repositorioProfessorEol.ObterProfessoresParaInclusaoAsync(request.UltimaDataExecucao, request.Paginacao);
+            => await repositorioProfessorEol.ObterProfessoresParaInclusaoAsync(request.UltimaDataExecucao, request.Paginacao, request.Rf);
     }
 }
