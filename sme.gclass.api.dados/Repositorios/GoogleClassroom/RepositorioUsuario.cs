@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
         {
-            var query = new StringBuilder(@$"SELECT u.id AS Rf, 
+            var query = new StringBuilder(@"SELECT u.id AS Rf, 
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(";");
 
-            query.AppendLine($"SELECT count(*) from usuarios u where usuario_tipo = @tipo");
+            query.AppendLine("SELECT count(*) from usuarios u where usuario_tipo = @tipo");
 
             var retorno = new PaginacaoResultadoDto<FuncionarioGoogle>();
 
