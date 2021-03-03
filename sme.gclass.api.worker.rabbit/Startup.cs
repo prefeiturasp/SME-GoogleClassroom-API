@@ -39,8 +39,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
+                c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
+                //TODO: Remover rota fixa
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1",  });
             });
+
+            
 
             services.UseMetricReporter();
         }
