@@ -200,7 +200,7 @@ namespace SME.GoogleClassroom.Dados
 			if (aplicarPaginacao)
 				query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
 
-			query.Append(@"
+			query.Append(@$"
 				SELECT
 					serv.cd_registro_funcional AS Rf,
 					serv.nm_pessoa AS NomePessoa,
@@ -211,7 +211,8 @@ namespace SME.GoogleClassroom.Dados
 					v_servidor_cotic serv (NOLOCK)
 				INNER JOIN
 					#tempCargosFuncionariosRemovendoDuplicadosFinal temp
-					ON temp.cd_servidor = serv.cd_servidor;
+					ON temp.cd_servidor = serv.cd_servidor
+				{(!string.IsNullOrEmpty(rf) ? $"WHERE serv.cd_registro_funcional = @rf; " : "; ")}
 
 				SELECT
 					COUNT(*)
