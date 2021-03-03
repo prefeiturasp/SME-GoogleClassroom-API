@@ -217,7 +217,13 @@ namespace SME.GoogleClassroom.Dados
 				SELECT
 					COUNT(*)
 				FROM
-					#tempCargosFuncionariosRemovendoDuplicados temp;");
+					#tempCargosFuncionariosRemovendoDuplicados temp				
+				{(!string.IsNullOrEmpty(rf) ? $@"INNER JOIN v_servidor_cotic serv (NOLOCK)
+												 ON temp.cd_servidor = serv.cd_servidor
+												WHERE serv.cd_registro_funcional = @rf; " : "; ")}
+
+
+				");
 
 			return query.ToString();
 
