@@ -1,4 +1,4 @@
-delete from public.cursos_usuarios 
+delete from public.cursos_usuarios;
 alter table public.cursos_usuarios drop constraint if exists cursos_usuarios_usuario_fk;
 
 drop table public.usuarios_cargos;
