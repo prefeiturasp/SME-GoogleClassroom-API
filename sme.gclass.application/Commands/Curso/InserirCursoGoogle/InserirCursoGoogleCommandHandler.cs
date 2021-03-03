@@ -33,24 +33,21 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task IncluirCurso(CursoParaInclusaoDto cursoParaInclusao, AsyncPolicy policy)
         {
-            //TODO: Descomentar qnd for para produção \\
+            var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
 
-            //var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
+            Task<Course> taskUpdate = GeraCursoGoogleParaIncluir(cursoParaInclusao, servicoClassroom);
 
+            try
+            {
+                await policy.ExecuteAsync(() =>
+                        IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom)
+                    );
 
-            //Task<Course> taskUpdate = GeraCursoGoogleParaIncluir(cursoParaInclusao, servicoClassroom);
-
-            //try
-            //{
-            //    await policy.ExecuteAsync(() =>
-            //            IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom)
-            //        );
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    var cursoErro = await mediator.Send(new InserirCursoErroCommand(cursoParaInclusao.TurmaId, cursoParaInclusao.ComponenteCurricularId, ex.Message, null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
-            //}
+            }
+            catch (Exception ex)
+            {
+                var cursoErro = await mediator.Send(new InserirCursoErroCommand(cursoParaInclusao.TurmaId, cursoParaInclusao.ComponenteCurricularId, ex.Message, null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+            }
         }
 
         private static Task<Course> GeraCursoGoogleParaIncluir(CursoParaInclusaoDto cursoParaInclusao, ClassroomService servicoClassroom)
