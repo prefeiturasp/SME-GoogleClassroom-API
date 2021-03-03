@@ -15,19 +15,21 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao, string rf)
         {
             using var conn = ObterConexao();
 
 			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-			var query = MontaQueryCursosParaInclusao(aplicarPaginacao);
-			using var multi = await conn.QueryMultipleAsync(query,
-                new
-                {
-					dataReferencia = dataReferencia.Date,
-                    paginacao.QuantidadeRegistros,
-                    paginacao.QuantidadeRegistrosIgnorados
-                });
+			var query = MontaQueryCursosParaInclusao(aplicarPaginacao, rf);
+			var parametros = new
+			{
+				dataReferencia = dataReferencia.Date,
+				paginacao.QuantidadeRegistros,
+				paginacao.QuantidadeRegistrosIgnorados,
+				rf
+			};
+
+			using var multi = await conn.QueryMultipleAsync(query, parametros);
 
             var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
 
@@ -38,9 +40,9 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao)
+		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, string rf)
         {
-			const string queryBase = @"
+			string queryBase = @$"
                 DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
@@ -102,7 +104,8 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND css.dt_nomeacao_cargo_sobreposto > @dataReferencia;
+					AND css.dt_nomeacao_cargo_sobreposto > @dataReferencia
+					{(!string.IsNullOrEmpty(rf) ? $"AND serv.cd_registro_funcional = @rf;" : ";")}
 
 				-- 3. União das tabelas de cargo fixo
 				IF OBJECT_ID('tempdb..#tempCargosFuncionarios_Fixos') IS NOT NULL

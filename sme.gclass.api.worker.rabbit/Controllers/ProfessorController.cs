@@ -17,9 +17,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterProfessoresParaIncluirGoogle([FromServices] IObterProfessoresParaIncluirGoogleUseCase useCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime ultimaExecucao)
+            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime ultimaExecucao, [FromQuery] string rf)
         {
-            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao);
+            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero, ultimaExecucao, rf);
             return Ok(retorno);
         }
 
@@ -28,9 +28,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterProfessoresGoogle([FromServices] IObterProfessoresGoogleUseCase useCase,
-            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero)
+            [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] long? rf, [FromQuery] string email)
         {
-            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero);
+            var retorno = await useCase.Executar(registrosQuantidade, paginaNumero, rf, email);
             return Ok(retorno);
         }
 
