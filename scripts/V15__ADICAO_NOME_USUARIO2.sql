@@ -1,0 +1,1 @@
+ALTER TABLE public.usuarios ADD nome varchar(300) NOT NULL;
