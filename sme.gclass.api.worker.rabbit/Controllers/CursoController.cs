@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sentry;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -19,8 +20,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public async Task<IActionResult> ObterTodosCursos([FromServices] IObterCursosCadastradosUseCase obterCursosCadastradosUseCase,
             [FromQuery] FiltroObterCursosCadastradosDto filtro)
         {
-            var retorno = await obterCursosCadastradosUseCase.Executar(filtro);
-            return Ok(retorno);
+            try
+            {
+                var retorno = await obterCursosCadastradosUseCase.Executar(filtro);
+                return Ok(retorno);
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+                throw;
+            }            
         }
         [HttpGet("novos")]
         [ProducesResponseType(typeof(PaginacaoResultadoDto<Curso>), 200)]
