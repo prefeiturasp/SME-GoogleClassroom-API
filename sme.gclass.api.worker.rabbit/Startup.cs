@@ -50,6 +50,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+            } else
+            {
+                app.UseHttpsRedirection();
             }
 
             app.UseSwagger();
@@ -63,13 +67,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             app.UseRouting();
             app.UseAuthorization();
 
+            app.UseHttpMetrics();
+            app.UseMetricServer();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
 
-            app.UseHttpMetrics();
-            app.UseMetricServer();
+            
 
             app.Run(async (context) =>
             {
