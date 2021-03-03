@@ -20,14 +20,15 @@ namespace SME.GoogleClassroom.Dados
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
             var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, rf);
-            using var multi = await conn.QueryMultipleAsync(query,
-                new
-                {
-                    anoLetivo = dataReferencia.Year,
-                    dataReferencia = dataReferencia.Date,
-                    paginacao.QuantidadeRegistros,
-                    paginacao.QuantidadeRegistrosIgnorados
-                });
+            var parametros = new
+            {
+                anoLetivo = dataReferencia.Year,
+                dataReferencia = dataReferencia.Date,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados,
+                rf
+            };
+            using var multi = await conn.QueryMultipleAsync(query, parametros);
 
             var retorno = new PaginacaoResultadoDto<ProfessorEol>();
 
@@ -71,7 +72,7 @@ namespace SME.GoogleClassroom.Dados
                                         INNER JOIN
 	                                        #tempCargosProfessores temp
 	                                        ON cbc.cd_cargo_base_servidor = temp.cd_cargo_base_servidor
-                                        {(!string.IsNullOrEmpty(rf) ? $"WHERE serv.cd_registro_funcional = {rf}; " : "; ")}
+                                        {(!string.IsNullOrEmpty(rf) ? $"WHERE serv.cd_registro_funcional = @rf; " : "; ")}
 
                                            -- Resultado
                                         SELECT
