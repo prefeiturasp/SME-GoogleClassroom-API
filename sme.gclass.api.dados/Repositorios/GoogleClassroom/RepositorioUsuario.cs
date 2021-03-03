@@ -19,6 +19,56 @@ namespace SME.GoogleClassroom.Dados
             this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
+        public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
+        {
+            var query = new StringBuilder(@"SELECT u.id AS Codigo, 
+                                                   u.nome AS Nome,
+                                                   u.email AS Email,
+                                                   u.organization_path as organizationpath,
+                                                   u.data_inclusao as datainclusao,
+                                                   u.data_atualizacao as dataatualizacao
+                                              FROM usuarios u 
+                                             WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
+            if (codigoEol != null || codigoEol > 0)
+                query.AppendLine($"AND u.id = {codigoEol}");
+
+            if(!string.IsNullOrEmpty(email))
+                query.AppendLine($"AND u.email = '{email}'");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ");
+
+            query.AppendLine(";");
+
+            query.AppendLine($"SELECT count(*) from usuarios u WHERE u.usuario_tipo = {(int)UsuarioTipo.Aluno}");
+
+            var retorno = new PaginacaoResultadoDto<AlunoGoogle>();
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            using var alunos = await conn.QueryMultipleAsync(query.ToString(), new { tipo = (int)UsuarioTipo.Aluno });
+
+            retorno.Items = alunos.Read<AlunoGoogle>();
+            retorno.TotalRegistros = alunos.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
+
+        public async Task<bool> ExisteAlunoPorRf(long rf)
+        {
+            var query = @"SELECT count(id) from usuarios where id = @rf";
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
+        }
+
+        public async Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo)
+        {
+            var query = @"SELECT email from usuarios where email = @email and usuario_tipo = @usuarioTipo";
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryFirstOrDefaultAsync<string>(query, new { email, usuarioTipo }));
+        }
+
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
         {
             var query = new StringBuilder(@"SELECT u.id AS Rf, 

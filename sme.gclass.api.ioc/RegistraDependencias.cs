@@ -30,7 +30,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoErro, RepositorioCursoErro>();
             services.TryAddScoped<IRepositorioUsuarioErro, RepositorioUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoEol, RepositorioCursoEol>();
+            services.TryAddScoped<IRepositorioAlunoEol, RepositorioAlunoEol>();
             services.TryAddScoped<IRepositorioCurso, RepositorioCurso>();
+            services.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioEol, RepositorioFuncionarioEol>();
             services.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
             services.TryAddScoped<IRepositorioProfessorEol, RepositorioProfessorEol>();
@@ -44,7 +46,11 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIncluirCursoUseCase, InserirCursoGoogleUseCase>();
             services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
             services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
-            services.TryAddScoped<ITrataSyncGoogleCursoUseCase, TrataSyncGoogleCursoUseCase>();            
+            services.TryAddScoped<ITrataSyncGoogleCursoUseCase, TrataSyncGoogleCursoUseCase>();
+            services.TryAddScoped<IIniciarSyncGooglAlunoUseCase, IniciarSyncGooglAlunoUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleAlunoUseCase, TrataSyncGoogleAlunoUseCase>();
+            services.TryAddScoped<IIncluirAlunoUseCase, IncluirAlunoUseCase>();
+            services.TryAddScoped<IObterAlunosCadastradosUseCase, ObterAlunosCadastradosUseCase>();
             services.TryAddScoped<IObterFuncionariosParaIncluirGoogleUseCase, ObterFuncionariosParaIncluirGoogleUseCase>();
             services.TryAddScoped<IObterFuncionariosGoogleUseCase, ObterFuncionariosGoogleUseCase>();
             services.TryAddScoped<IIniciarSyncGoogleFuncionarioUseCase, IniciarSyncGoogleFuncionarioUseCase>();
@@ -55,6 +61,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSyncGoogleProfessorUseCase, IniciarSyncGoogleProfessorUseCase>();
             services.TryAddScoped<ITrataSyncGoogleProfessorUseCase, TrataSyncGoogleProfessorUseCase>();
             services.TryAddScoped<IInserirProfessorGoogleUseCase, InserirProfessorGoogleUseCase>();
+            services.TryAddScoped<IObterAlunosParaCadastrarUseCase, ObterAlunosParaCadastrarUseCase>();
         }
     }
 }
