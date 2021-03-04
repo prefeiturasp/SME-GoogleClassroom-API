@@ -73,7 +73,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {               
-
                 await mediator.Send(new InserirCursoCommand(long.Parse(cursoAdicionado.Id),
                                                             cursoParaIncluir.Email,
                                                             cursoParaIncluir.Nome,
@@ -84,14 +83,13 @@ namespace SME.GoogleClassroom.Aplicacao
                                                             null));
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoAdicionado.Id);
                 requestUpdate.UpdateMask = "courseState";
-                await requestUpdate.ExecuteAsync();
+                await requestUpdate.ExecuteAsync();                
 
-                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, ex.Message, long.Parse(cursoAdicionado.Id), ExecucaoTipo.CursoAdicionar, ErroTipo.CursoSemEmail));
-                
+                //await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, ex.Message, long.Parse(cursoAdicionado.Id), ExecucaoTipo.CursoAdicionar, ErroTipo.CursoSemEmail));                
                 //TODO: TRATAR ERRO AQUI, ALERTAR DE ERRO NO BANCO
 
                 throw;

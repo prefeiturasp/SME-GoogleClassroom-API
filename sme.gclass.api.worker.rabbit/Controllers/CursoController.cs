@@ -77,5 +77,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await iniciarSyncGoogleCursoUseCase.Executar();
             return Ok(retorno);
         }
+        ///// <summary>
+        ///// Envia novamente para inserir no GSA, os cursos que estão na tabela de cursos_erro
+        ///// </summary>
+        ///// <remarks>
+        ///// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        ///// não sendo possível assim acompanhar em tempo real sua evolução.
+        ///// </remarks>
+        ///// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        //[HttpPost("erros/tratamentos")]
+        //[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> TratarErros([FromServices] IIniciarCursoErrosTratamentoUseCase iniciarCursoErrosTratamentoUseCase)
+        //{
+        //    await iniciarCursoErrosTratamentoUseCase.Executar();
+        //    return Ok();
+        //}
     }
 }

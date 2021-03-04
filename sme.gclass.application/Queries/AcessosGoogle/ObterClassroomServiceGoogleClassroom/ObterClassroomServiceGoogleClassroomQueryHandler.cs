@@ -32,11 +32,15 @@ namespace SME.GoogleClassroom.Aplicacao
                     User = usuarioAutenticacao.EmailAdmin,
                 }.FromPrivateKey(usuarioAutenticacao.PrivateKey.ToString()));
 
-                return new ClassroomService(new BaseClientService.Initializer()
+                var classRoomService = new ClassroomService(new BaseClientService.Initializer()
                 {
                     HttpClientInitializer = credenciais,
                     ApplicationName = usuarioAutenticacao.AplicacaoNome,
                 });
+
+            classRoomService.HttpClient.Timeout = new TimeSpan(0,2,0);
+
+            return classRoomService;
 
         }
     }

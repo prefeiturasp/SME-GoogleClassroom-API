@@ -31,7 +31,14 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)
                     {
-                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
+                        try
+                        {
+                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
+                        }
+                        catch (Exception ex)
+                        {
+                            await mediator.Send(new InserirCursoErroCommand(cursoParaAdicionar.TurmaId, cursoParaAdicionar.ComponenteCurricularId, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                        }
                     }
                 }
 

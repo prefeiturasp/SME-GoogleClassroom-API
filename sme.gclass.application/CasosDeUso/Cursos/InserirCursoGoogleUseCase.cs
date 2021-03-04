@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                await mediator.Send(new InserirCursoErroCommand(0, 0, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", null, Dominio.ExecucaoTipo.CursoAdicionar, Dominio.ErroTipo.Interno));
+                await mediator.Send(new InserirCursoErroCommand(0, 0, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, Dominio.ExecucaoTipo.CursoAdicionar, Dominio.ErroTipo.Interno));
                 throw;
             }            
         }
