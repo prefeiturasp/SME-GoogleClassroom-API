@@ -3,6 +3,7 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -15,6 +16,16 @@ namespace SME.GoogleClassroom.Dados
         {
             this.ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
+
+        //public Task<IEnumerable<CursoErro>> ObterTodos()
+        //{
+        //    //TODO: Funcionarios;
+        //    var query = @"select ce.turma_id as TurmaId,  from public.cursos_erro ce";
+            
+        //    using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+
+        //    return (await conn.QueryFirstOrDefaultAsync<CursoErro>(query, parametros)) > 0;
+        //}
 
         public async Task<long> SalvarAsync(CursoErro entidade)
         {

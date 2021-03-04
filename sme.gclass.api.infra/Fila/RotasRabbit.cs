@@ -6,6 +6,7 @@
         public static string FilaGoogleSync => "googleclass.sync.geral";
         public static string FilaCursoIncluir => "googleclass.curso.incluir";
         public static string FilaCursoSync => "googleclass.curso.sync";
+        public static string FilaCursoErroSync => "googleclass.curso.erro.sync";
         public static string FilaAlunoIncluir => "googleclass.aluno.incluir";
         public static string FilaAlunoSync => "googleclass.aluno.sync";
         public static string FilaFuncionarioIncluir => "googleclass.funcionario.incluir";
