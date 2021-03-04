@@ -5,6 +5,7 @@ using Polly;
 using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +36,9 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Professores.InserirProfessorGoo
             {
                 Name = new UserName { FamilyName = professorGoogle.Sobrenome, GivenName = professorGoogle.PrimeiroNome, FullName = professorGoogle.Nome },
                 PrimaryEmail = professorGoogle.Email,
-                OrgUnitPath = professorGoogle.OrganizationPath
+                OrgUnitPath = professorGoogle.OrganizationPath,
+                Password = GoogleClassroomConstantes.PasswordPadraoParaUsuarioNovo,
+                ChangePasswordAtNextLogin = true
             };
 
             var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);

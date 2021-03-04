@@ -1,0 +1,1 @@
+alter table public.usuarios_erro drop constraint if exists usuarios_erro_usuario_fk;

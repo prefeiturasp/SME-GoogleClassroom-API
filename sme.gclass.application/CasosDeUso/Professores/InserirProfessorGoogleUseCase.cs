@@ -24,13 +24,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                // TO DO: Remover ao subir para produção
-                //var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorParaIncluir.Rf));
-                //if (professorJaIncluido) return true;
+                var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorParaIncluir.Rf));
+                if (professorJaIncluido) return true;
 
-                //var professorGoogle = new ProfessorGoogle(professorParaIncluir.Rf, professorParaIncluir.Nome, professorParaIncluir.Email, professorParaIncluir.OrganizationPath);
-                //await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
-                await Task.Delay(10000);
+                var professorGoogle = new ProfessorGoogle(professorParaIncluir.Rf, professorParaIncluir.Nome, professorParaIncluir.Email, professorParaIncluir.OrganizationPath);
+                await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
+                professorGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(professorGoogle));
+
                 return true;
             }
             catch (Exception ex)

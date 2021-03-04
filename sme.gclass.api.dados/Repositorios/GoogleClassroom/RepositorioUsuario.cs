@@ -21,7 +21,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
         {
-            var query = new StringBuilder(@"SELECT u.id AS Codigo, 
+            var query = new StringBuilder(@"SELECT 
+                                                   u.indice,
+                                                   u.id AS Codigo, 
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as organizationpath,
@@ -82,7 +84,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
         {
-            var query = new StringBuilder(@"SELECT u.id AS Rf, 
+            var query = new StringBuilder(@"SELECT 
+                                                   u.indice,
+                                                   u.id AS Rf, 
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
@@ -127,7 +131,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao, long? rf, string email)
         {
-            var query = new StringBuilder(@"SELECT u.id AS Rf, 
+            var query = new StringBuilder(@"SELECT 
+                                                   u.indice,
+                                                   u.id AS Rf, 
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
@@ -175,7 +181,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorRfs(long[] rfs)
         {
-            var query = @"SELECT u.id, 
+            var query = @"SELECT 
+                                 u.indice,
+                                 u.id as Rf, 
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
@@ -211,7 +219,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs)
         {
-            var query = @"SELECT u.id, 
+            var query = @"SELECT 
+                                 u.indice,
+                                 u.id as Rf, 
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
@@ -246,10 +256,11 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
         {
-            const string insertQuery = @"insert into public.usuario
+            const string insertQuery = @"insert into public.usuarios
                                         (id, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
                                         values
-                                        (@id, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)";
+                                        (@id, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)
+                                        RETURNING indice";
 
             var parametros = new
             {

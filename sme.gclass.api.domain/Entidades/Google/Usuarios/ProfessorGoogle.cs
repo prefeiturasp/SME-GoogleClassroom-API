@@ -6,6 +6,7 @@ namespace SME.GoogleClassroom.Dominio
     {
         private const int TamanhoMaximoDoSobrenome = 60;
 
+        public long Indice { get; set; }
         public long Rf { get; set; }
 
         private string nome;
