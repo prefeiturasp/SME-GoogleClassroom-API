@@ -233,7 +233,7 @@ namespace SME.GoogleClassroom.Dados
 						NULL AS cd_aluno_classroom,
 						aluno.cd_aluno AS cd_aluno_eol,
 						'True' AS in_ativo,
-						'/Alunos/PROGRAMA' AS nm_organizacao,
+						CASE WHEN esc.tp_escola = 23 THEN '/Alunos/PROFISSIONAL' ELSE '/Alunos/PROGRAMA' END AS nm_organizacao,
 						0 AS email_alterado,
 						0 AS AlunoRegular,
 						1 AS AlunoPrograma
@@ -249,6 +249,12 @@ namespace SME.GoogleClassroom.Dados
 					INNER JOIN 
 						matricula_turma_escola mte (NOLOCK) 
 						ON matr.cd_matricula = mte.cd_matricula
+					INNER JOIN
+						turma_escola te (NOLOCK)
+						ON mte.cd_turma_escola = te.cd_turma_escola
+					INNER JOIN
+						escola esc (NOLOCK)
+						ON te.cd_escola = esc.cd_escola
 					WHERE
 						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
