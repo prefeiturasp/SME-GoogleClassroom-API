@@ -3,7 +3,7 @@ using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
+using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
@@ -12,6 +12,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Alunos
     /// </summary>
     [ApiController]
+    [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/alunos")]
     public class AlunoController : Controller
     {
@@ -37,7 +38,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoEol>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterAlunosCadastrar([FromServices] IObterAlunosParaCadastrarUseCase obterAlunosParaCadastrarUseCase, 
+        public async Task<IActionResult> ObterAlunosCadastrar([FromServices] IObterAlunosParaCadastrarUseCase obterAlunosParaCadastrarUseCase,
             [FromQuery] FiltroObterAlunosIncluirGoogleDto filtro)
         {
             var retorno = await obterAlunosParaCadastrarUseCase.Executar(filtro);

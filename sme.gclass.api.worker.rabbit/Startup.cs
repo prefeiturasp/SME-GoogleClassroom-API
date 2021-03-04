@@ -9,6 +9,7 @@ using Prometheus;
 using Sentry;
 using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
+using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using SME.GoogleClassroom.Worker.Rabbit.Middlewares;
 using System;
 using System.IO;
@@ -46,6 +47,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 //TODO: Remover rota fixa
 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
+                c.OperationFilter<AdicionaCabecalhoHttp>();
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

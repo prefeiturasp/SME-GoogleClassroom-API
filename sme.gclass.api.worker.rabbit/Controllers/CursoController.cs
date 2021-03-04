@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
@@ -12,6 +13,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
     /// Cursos
     /// </summary>
     [ApiController]
+    [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/cursos")]
     public class CursoController : Controller
     {
@@ -77,6 +79,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await iniciarSyncGoogleCursoUseCase.Executar();
             return Ok(retorno);
         }
+
         ///// <summary>
         ///// Envia novamente para inserir no GSA, os cursos que estão na tabela de cursos_erro
         ///// </summary>

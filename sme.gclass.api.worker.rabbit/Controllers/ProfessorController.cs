@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
+using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
@@ -13,6 +13,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Professores
     /// </summary>
     [ApiController]
+    [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/professores")]
     public class ProfessorController : Controller
     {
@@ -65,7 +66,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// Inicia a sincronização de professores do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, a sincronização dos professores acontece de forma assíncrona e descentralizada, 
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos professores acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
