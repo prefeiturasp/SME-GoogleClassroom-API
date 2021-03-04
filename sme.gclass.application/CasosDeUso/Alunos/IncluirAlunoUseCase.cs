@@ -24,20 +24,21 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 // TO DO: Remover ao subir para produção
-                //var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoParaIncluir.Codigo));
-                //if (alunoJaIncluido) return true;
+                var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoParaIncluir.Codigo));
+                if (alunoJaIncluido) return true;
 
-                //var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.CaminhoOrganizacao);
-                //await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
-                //await mediator.Send(new IncluirUsuarioCommand(alunoGoogle);
+                var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
+                if (await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle)))
+                    await mediator.Send(new IncluirUsuarioCommand(alunoGoogle));
+                else await mediator.Send(new IncluirUsuarioErroCommand(alunoParaIncluir?.Codigo, alunoParaIncluir?.Email,
+                   $"ex.: Erro ao inserir no google <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
 
-                await Task.Delay(10000);
                 return true;
             }
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoParaIncluir?.Codigo, alunoParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
                 throw;
             }
         }
