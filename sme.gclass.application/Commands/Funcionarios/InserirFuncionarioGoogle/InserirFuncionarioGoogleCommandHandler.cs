@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Admin.Directory.directory_v1;
 using Google.Apis.Admin.Directory.directory_v1.Data;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Polly;
 using Polly.Registry;
 using Polly.Retry;
@@ -15,11 +16,13 @@ namespace SME.GoogleClassroom.Aplicacao
     public class InserirFuncionarioGoogleCommandHandler : IRequestHandler<InserirFuncionarioGoogleCommand, bool>
     {
         private readonly IMediator mediator;
+        private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
@@ -37,7 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 Name = new UserName { FamilyName = funcionarioGoogle.Sobrenome, GivenName = funcionarioGoogle.PrimeiroNome, FullName = funcionarioGoogle.Nome },
                 PrimaryEmail = funcionarioGoogle.Email,
                 OrgUnitPath = funcionarioGoogle.OrganizationPath,
-                Password = GoogleClassroomConstantes.PasswordPadraoParaUsuarioNovo,
+                Password = configuration["GoogleClassroomConfig:PasswordPadraoParaUsuarioNovo"],
                 ChangePasswordAtNextLogin = true
             };
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
     /// <summary>
-    /// Cursos
+    /// Alunos
     /// </summary>
     [ApiController]
     [Route("api/v1/alunos")]
