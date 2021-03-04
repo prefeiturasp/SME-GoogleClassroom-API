@@ -13,11 +13,12 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
-        public async Task<PaginacaoResultadoDto<AlunoGoogle>> Executar(int registrosQuantidade, int paginaNumero, long? codigoEol, string email)
-        {
-            var paginacao = new Paginacao(paginaNumero, registrosQuantidade);
 
-            return await mediator.Send(new ObterAlunosCadastradosQuery(paginacao, codigoEol, email));
+        public async Task<PaginacaoResultadoDto<AlunoGoogle>> Executar(FiltroObterAlunosCadastradosDto filtro)
+        {
+            var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
+
+            return await mediator.Send(new ObterAlunosCadastradosQuery(paginacao, filtro.CodigoEol, filtro.Email));
         }
     }
 }

@@ -37,9 +37,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoEol>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterAlunosCadastrar([FromServices] IObterAlunosParaCadastrarUseCase obterAlunosParaCadastrarUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] DateTime dataReferencia, [FromQuery] long codigoEol)
+        public async Task<IActionResult> ObterAlunosCadastrar([FromServices] IObterAlunosParaCadastrarUseCase obterAlunosParaCadastrarUseCase, 
+            [FromQuery] FiltroObterAlunosIncluirGoogleDto filtro)
         {
-            var retorno = await obterAlunosParaCadastrarUseCase.Executar(registrosQuantidade, paginaNumero, dataReferencia, codigoEol);
+            var retorno = await obterAlunosParaCadastrarUseCase.Executar(filtro);
             return Ok(retorno);
         }
 
@@ -53,9 +54,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoGoogle>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterTodosAlunos([FromServices] IObterAlunosCadastradosUseCase obterAlunosCadastradosUseCase, [FromQuery] int registrosQuantidade, [FromQuery] int paginaNumero, [FromQuery] long? codigoEol, [FromQuery] string email)
+        public async Task<IActionResult> ObterTodosAlunos([FromServices] IObterAlunosCadastradosUseCase obterAlunosCadastradosUseCase,
+            [FromQuery] FiltroObterAlunosCadastradosDto filtro)
         {
-            var retorno = await obterAlunosCadastradosUseCase.Executar(registrosQuantidade, paginaNumero, codigoEol, email);
+            var retorno = await obterAlunosCadastradosUseCase.Executar(filtro);
             return Ok(retorno);
         }
 
