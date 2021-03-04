@@ -24,7 +24,14 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
 
-            using var multi = await conn.QueryMultipleAsync(query, new { dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, codigoEol }, commandTimeout: 6000);
+            using var multi = await conn.QueryMultipleAsync(query, 
+				new 
+				{ 
+					anoLetivo = dataReferencia.Year,
+					dataReferencia, paginacao.QuantidadeRegistros, 
+					paginacao.QuantidadeRegistrosIgnorados, 
+					codigoEol 
+				}, commandTimeout: 6000);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -40,9 +47,7 @@ namespace SME.GoogleClassroom.Dados
         private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, long codigoEol)
         {
 
-            return $@"DECLARE @anoLetivo AS INT = 2021;
-
-					DECLARE @situacaoAtivo AS CHAR = 1;
+            return $@"DECLARE @situacaoAtivo AS CHAR = 1;
 					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
 					DECLARE @situacaoRematriculado AS CHAR = 10;
 					DECLARE @situacaoSemContinuidade AS CHAR = 13;
@@ -83,9 +88,8 @@ namespace SME.GoogleClassroom.Dados
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
 						AND te.st_turma_escola in ('O', 'A', 'C')
-						AND te.cd_tipo_turma in (1,2,3,5,6)
-						AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
-						AND NOT esc.cd_escola IN ('200242', '019673')
+						AND te.cd_tipo_turma in (1,2,3,5,6,7)
+						AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
 						AND te.an_letivo = @anoLetivo
 						AND NOT cd_serie_ensino IS NULL
 						
@@ -115,18 +119,6 @@ namespace SME.GoogleClassroom.Dados
 						ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
 
 					--- 1.3 Montagem da tabela de inserção
-					SET @anoLetivo = 2021;
-
-					SET @situacaoAtivo = 1;
-					SET @situacaoPendenteRematricula = 6;
-					SET @situacaoRematriculado = 10;
-					SET @situacaoSemContinuidade= 13;
-
-					SET @situacaoAtivoInt = 1;
-					SET @situacaoPendenteRematriculaInt  = 6;
-					SET @situacaoRematriculadoInt  = 10;
-					SET @situacaoSemContinuidadeInt  = 13;
-
 					IF OBJECT_ID('tempdb..#tempAlunosAtivos') IS NOT NULL
 						DROP TABLE #tempAlunosAtivos;
 					SELECT
@@ -134,7 +126,7 @@ namespace SME.GoogleClassroom.Dados
 						NULL AS cd_aluno_classroom,
 						aluno.cd_aluno AS cd_aluno_eol,
 						'True' AS in_ativo,
-						[dbo].[proc_gerar_unidade_organizacional_aluno](se.cd_modalidade_ensino, se.cd_etapa_ensino, ce.cd_ciclo_ensino) AS nm_organizacao,
+						[dbo].[proc_gerar_unidade_organizacional_aluno](se.cd_modalidade_ensino, se.cd_etapa_ensino, ce.cd_ciclo_ensino,esc.tp_escola) AS nm_organizacao,
 						0 AS email_alterado,
 						1 AS AlunoRegular,
 						0 AS AlunoPrograma
@@ -153,6 +145,9 @@ namespace SME.GoogleClassroom.Dados
 					INNER JOIN 
 						turma_escola te (NOLOCK) 
 						ON mte.cd_turma_escola = te.cd_turma_escola 
+					INNER JOIN
+						escola esc (NOLOCK)
+						ON te.cd_escola = esc.cd_escola
 					INNER JOIN 
 						serie_turma_grade stg (NOLOCK) 
 						ON stg.cd_turma_escola = te.cd_turma_escola
@@ -171,18 +166,6 @@ namespace SME.GoogleClassroom.Dados
 						and matr.an_letivo = @anoLetivo;
 
 					-- 2. Busca matrículas de programa
-					SET @anoLetivo = 2021;
-
-					SET @situacaoAtivo = 1;
-					SET @situacaoPendenteRematricula = 6;
-					SET @situacaoRematriculado = 10;
-					SET @situacaoSemContinuidade = 13;
-
-					SET @situacaoAtivoInt = 1;
-					SET @situacaoPendenteRematriculaInt  = 6;
-					SET @situacaoRematriculadoInt  = 10;
-					SET @situacaoSemContinuidadeInt  = 13;
-
 					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivas') IS NOT NULL
 						DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 					SELECT
@@ -213,9 +196,8 @@ namespace SME.GoogleClassroom.Dados
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
 						AND te.st_turma_escola in ('O', 'A', 'C')
-						AND te.cd_tipo_turma in (1,2,3,5,6)
-						AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
-						AND NOT esc.cd_escola IN ('200242', '019673')
+						AND te.cd_tipo_turma in (1,2,3,5,6,7)
+						AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
 						AND te.an_letivo = @anoLetivo
 						AND NOT matr.cd_tipo_programa IS NULL
 
@@ -244,17 +226,6 @@ namespace SME.GoogleClassroom.Dados
 						ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
 
 					--- 2.3 Montagem da tabela de inserção
-					SET @anoLetivo = 2021;
-					SET @situacaoAtivo = 1;
-					SET @situacaoPendenteRematricula = 6;
-					SET @situacaoRematriculado = 10;
-					SET @situacaoSemContinuidade = 13;
-
-					SET @situacaoAtivoInt = 1;
-					SET @situacaoPendenteRematriculaInt  = 6;
-					SET @situacaoRematriculadoInt = 10;
-					SET @situacaoSemContinuidadeInt = 13;
-
 					IF OBJECT_ID('tempdb..#tempAlunosProgramaAtivos') IS NOT NULL
 						DROP TABLE #tempAlunosProgramaAtivos;
 					SELECT
@@ -262,7 +233,7 @@ namespace SME.GoogleClassroom.Dados
 						NULL AS cd_aluno_classroom,
 						aluno.cd_aluno AS cd_aluno_eol,
 						'True' AS in_ativo,
-						'/Alunos/FUNDAMENTAL' AS nm_organizacao,
+						'/Alunos/PROGRAMA' AS nm_organizacao,
 						0 AS email_alterado,
 						0 AS AlunoRegular,
 						1 AS AlunoPrograma
