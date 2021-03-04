@@ -2,21 +2,22 @@
 
 namespace SME.GoogleClassroom.Dominio
 {
-    public class AlunoGoogle
+    public class FuncionarioGoogle
     {
         private const int TamanhoMaximoDoSobrenome = 60;
 
-        public int Codigo { get; set; }
-        private string nome;
+        public long Indice { get; set; }
+        public long Rf { get; set; }
 
+        private string nome;
         public string Nome
         {
             get => nome;
             set => SetNome(value);
         }
 
-        public string PrimeiroNome
-        {
+        public string PrimeiroNome 
+        { 
             get
             {
                 if (string.IsNullOrWhiteSpace(nome)) return string.Empty;
@@ -38,16 +39,16 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
-        public AlunoGoogle(int codigo, string nome, string email, string organizationPath)
+        public FuncionarioGoogle(long rf, string nome, string email, string organizationPath)
         {
-            Codigo = codigo;
+            Rf = rf;
             Nome = nome;
             Email = email;
             OrganizationPath = organizationPath;
             DataInclusao = DateTime.Now;
         }
 
-        protected AlunoGoogle()
+        protected FuncionarioGoogle()
         {
         }
 

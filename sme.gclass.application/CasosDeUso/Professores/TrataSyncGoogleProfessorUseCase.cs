@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -25,6 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var paginacao = new Paginacao(0, 0);
                 var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
+
                 foreach (var professorParaIncluirGoogle in professoresParaIncluirGoogle.Items)
                 {
                     try

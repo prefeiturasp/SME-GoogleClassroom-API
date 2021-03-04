@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,7 +36,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddPolicies();
             services.AddHostedService<WorkerRabbitMQ>();
 
-            // Teste para inje��o do client de telemetria em classe est�tica 
+            // Teste para injeção do client de telemetria em classe estática
             SentrySdk.Init(Configuration.GetValue<string>("Sentry:DSN"));
 
             services.AddControllers();
@@ -67,8 +66,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
-            } else
+            }
+            else
             {
                 app.UseHttpsRedirection();
             }
@@ -91,8 +90,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 endpoints.MapControllers();
             });
-
-            
 
             app.Run(async (context) =>
             {
