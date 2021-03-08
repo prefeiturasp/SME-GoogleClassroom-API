@@ -6,9 +6,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirCursoUsuarioErroCommand : IRequest<long>
     {
-        public long Rf { get; set; }
-        public long TurmaId { get; set; }
-        public long ComponenteCurricularId { get; set; }
+        public long? Rf { get; set; }
+        public long? TurmaId { get; set; }
+        public long? ComponenteCurricularId { get; set; }
         public ErroTipo ErroTipo { get; set; }
         public ExecucaoTipo ExecucaoTipo { get; set; }
         public string Mensagem { get; set; }
@@ -29,14 +29,17 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.Rf)
                 .NotEmpty()
+                .When(x => !(x.Rf is null))
                 .WithMessage("O RF do professor deve ser informado para inserir um regitro na tabela de erro.");
 
             RuleFor(x => x.TurmaId)
                 .NotEmpty()
+                .When(x => !(x.TurmaId is null))
                 .WithMessage("A turma do professor deve ser informado para inserir um regitro na tabela de erro.");
 
             RuleFor(x => x.ComponenteCurricularId)
                 .NotEmpty()
+                .When(x => !(x.ComponenteCurricularId is null))
                 .WithMessage("O componente curricular do professor deve ser informado para inserir um regitro na tabela de erro.");
 
             RuleFor(x => x.Mensagem)

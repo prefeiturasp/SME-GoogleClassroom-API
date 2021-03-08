@@ -58,10 +58,30 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
+        private async Task IncluirCursoDoProfessorComErroAsync(ProfessorGoogle professorEol, string mensagem)
+        {
+            var command = new IncluirCursoUsuarioErroCommand(
+                professorEol.Rf,
+                professorEol.TurmaId,
+                professorEol.ComponenteCurricularId,
+                ExecucaoTipo.ProfessorCursoAdicionar,
+                ErroTipo.Negocio,
+                mensagem);
+
+            await mediator.Send(command);
+        }
+
         private async Task IncluirCursoDoProfessorComErroAsync(ProfessorCursoEol cursoDoprofessorParaIncluirGoogle, string mensagem)
         {
-            // TO DO: Adiconar na tabela de erro
-            return;
+            var command = new IncluirCursoUsuarioErroCommand(
+                cursoDoprofessorParaIncluirGoogle.Rf,
+                cursoDoprofessorParaIncluirGoogle.TurmaId,
+                cursoDoprofessorParaIncluirGoogle.ComponenteCurricularId,
+                ExecucaoTipo.ProfessorCursoAdicionar,
+                ErroTipo.Negocio,
+                mensagem);
+
+            await mediator.Send(command);
         }
 
         private static string ObterMensagemDeErro(ProfessorCursoEol cursoDoprofessorParaIncluirGoogle, Exception ex = null)
