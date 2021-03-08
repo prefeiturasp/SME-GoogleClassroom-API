@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var professorParaIncluirCursos = JsonConvert.DeserializeObject<ProfessorGoogle>(mensagemRabbit.Mensagem.ToString());
             if (professorParaIncluirCursos is null)
             {
-                // TO DO: Adiconar na tabela de erro
+                await IncluirCursoDoProfessorComErroAsync(professorParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos professores no Google Classroom. O professor não foi informado corretamente.");
                 return true;
             }
 
@@ -62,8 +62,6 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var command = new IncluirCursoUsuarioErroCommand(
                 professorEol.Rf,
-                professorEol.TurmaId,
-                professorEol.ComponenteCurricularId,
                 ExecucaoTipo.ProfessorCursoAdicionar,
                 ErroTipo.Negocio,
                 mensagem);

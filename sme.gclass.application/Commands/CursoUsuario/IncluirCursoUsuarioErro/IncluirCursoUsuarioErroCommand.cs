@@ -21,6 +21,14 @@ namespace SME.GoogleClassroom.Aplicacao
             ErroTipo = erroTipo;
             Mensagem = mensagem;
         }
+
+        public IncluirCursoUsuarioErroCommand(long rf, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
+        {
+            Rf = rf;
+            ExecucaoTipo = execucaoTipo;
+            ErroTipo = erroTipo;
+            Mensagem = mensagem;
+        }
     }
 
     public class IncluirCursoUsuarioErroCommandValidator : AbstractValidator<IncluirCursoUsuarioErroCommand>
