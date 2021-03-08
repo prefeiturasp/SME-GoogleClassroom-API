@@ -5,8 +5,6 @@ ALTER TABLE public.cursos_usuarios
     ADD column if not exists excluido boolean not null default false,
     ADD CONSTRAINT cursos_usuarios_pk PRIMARY KEY (id); 
 
-
-
 -- public.cursos_usuarios_erro definition
 
 -- Drop table
@@ -17,7 +15,7 @@ CREATE TABLE public.cursos_usuarios_erro (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	rf int8 NULL,
     turma_id int8 NULL,
-	componenteCurricular_id Null,	
+	componenteCurricular_id int8 NULL,	
 	mensagem text NOT NULL,
 	erro_tipo int NOT NULL,
 	execucao_tipo int NOT NULL,
