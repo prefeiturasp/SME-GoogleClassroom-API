@@ -12,7 +12,6 @@ namespace SME.GoogleClassroom.Dominio
         public ErroTipo Tipo { get; set; }
         public string Mensagem { get; set; }
         public DateTime DataInclusao { get; set; }
-        public DateTime? DataAtualizacao { get; set; }
 
         public CursoUsuarioErro(long rf, long turmaId, long componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo tipo, string mensagem)
         {

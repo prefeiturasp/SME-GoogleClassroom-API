@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> SalvarAsync(CursoUsuarioErro cursoUsuarioErro)
         {
             var query = @" INSERT INTO cursos_usuarios_erro
-                            (rf, turma_id, componente_curricular_id, mensagem, execucao_tipo, curso_id, data_inclusao, tipo)
+                            (rf, turma_id, componente_curricular_id, execucao_tipo, erro_tipo, mensagem, data_inclusao)
                             VALUES
                             (@rf, @turmaId, @componenteCurricularId, @execucaoTipo, @tipo, @mensagem, @dataInclusao)
                             RETURNING id";
