@@ -89,6 +89,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaProfessorIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoIncluir);
         }
 
         private void RegistrarUseCases()
@@ -102,6 +108,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaFuncionarioIncluir, new ComandoRabbit("Incluir funcionários novos no Google", typeof(IInserirFuncionarioGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorSync, new ComandoRabbit("Tratamento de professores do sync com Google", typeof(ITrataSyncGoogleProfessorUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorIncluir, new ComandoRabbit("Incluir professores novos no Google", typeof(IInserirProfessorGoogleUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorCursoSync, new ComandoRabbit("Tratamento de cursos do professor do sync com Google", typeof(ITrataSyncGoogleCursosDoProfessorUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -217,6 +224,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoSync, false, consumer);
 
             return Task.CompletedTask;
         }
