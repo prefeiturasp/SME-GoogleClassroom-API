@@ -33,7 +33,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var publicarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoSync, RotasRabbit.FilaAlunoSync, resposta));
 
-            if (publicarUsuario)
+            if (!publicarUsuario)
                 throw new NegocioException("Erro ao enviar o usuário");
 
             return await Task.FromResult(true);
