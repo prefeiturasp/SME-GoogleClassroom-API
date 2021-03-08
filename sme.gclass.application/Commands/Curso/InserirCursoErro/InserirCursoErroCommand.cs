@@ -33,17 +33,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public InserirCursoErroCommandValidator()
         {
 
-            RuleFor(c => c.TurmaId)
-                .NotEmpty()
-                .WithMessage("O Id da Turma deve ser informado.");
-
-            RuleFor(c => c.ComponenteCurricularId)
-                .NotEmpty()
-                .WithMessage("O Componente Curricular deve ser informado.");
-
             RuleFor(c => c.Mensagem)
-                .NotEmpty()
-                .WithMessage("A mensagem deve ser informada.");
+                   .NotEmpty()
+                   .WithMessage("A mensagem deve ser informada.");
 
             RuleFor(c => c.ExecucaoTipo)
                .NotEmpty()

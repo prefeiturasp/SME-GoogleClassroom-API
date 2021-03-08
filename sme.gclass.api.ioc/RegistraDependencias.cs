@@ -20,6 +20,7 @@ namespace SME.GoogleClassroom.IoC
 
             RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
+
         }
 
         private static void RegistrarRepositorios(IServiceCollection services)

@@ -6,6 +6,7 @@ using Polly;
 using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,19 +17,26 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Alunos.InserirAlunoGoogle
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
+        private readonly VariaveisGlobaisOptions variaveisGlobais;
         private readonly IAsyncPolicy policy;
 
-        public InserirAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IConfiguration configuration)
+        public InserirAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IConfiguration configuration, VariaveisGlobaisOptions variaveisGlobais )
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.variaveisGlobais = variaveisGlobais ?? throw new ArgumentNullException(nameof(variaveisGlobais));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
         public async Task<bool> Handle(InserirAlunoGoogleCommand request, CancellationToken cancellationToken)
         {
-            var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-            await policy.ExecuteAsync(() => IncluirAlunoNoGoogle(request.AlunoGoogle, diretorioClassroom));
+            if (variaveisGlobais.DeveExecutarIntegracao)
+            {
+                var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
+                await policy.ExecuteAsync(() => IncluirAlunoNoGoogle(request.AlunoGoogle, diretorioClassroom));
+            }
+            else Thread.Sleep(1000);
+            
             return true;
         }
 
