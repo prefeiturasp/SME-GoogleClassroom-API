@@ -414,20 +414,20 @@ namespace SME.GoogleClassroom.Dados
 			var queryProgramas = new StringBuilder(queryBaseProgramas);
 			if (!string.IsNullOrWhiteSpace(rf))
 			{
-				queryRegulares.Append(" AND serv.cd_registro_funcional = @rf ");
-				queryProgramas.Append(" AND serv.cd_registro_funcional = @rf ");
+				queryRegulares.AppendLine("AND serv.cd_registro_funcional = @rf ");
+				queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
 			}
 
 			if(turmaId.HasValue)
             {
-				queryRegulares.Append(" AND te.cd_turma_escola = @turmaId ");
-				queryProgramas.Append(" AND te.cd_turma_escola = @turmaId ");
+				queryRegulares.AppendLine("AND te.cd_turma_escola = @turmaId ");
+				queryProgramas.AppendLine("AND te.cd_turma_escola = @turmaId ");
 			}
 
 			if (componenteCurricularId.HasValue)
             {
-				queryRegulares.Append(" AND cc.cd_componente_curricular = @componenteCurricularId ");
-				queryProgramas.Append(" AND cc.cd_componente_curricular = @componenteCurricularId ");
+				queryRegulares.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+				queryProgramas.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
 			}
 
 			queryRegulares.Append(";");
