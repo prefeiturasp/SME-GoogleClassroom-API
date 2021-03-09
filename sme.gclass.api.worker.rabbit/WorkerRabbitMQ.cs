@@ -95,6 +95,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoAtribuicaoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync);
         }
 
         private void RegistrarUseCases()
@@ -109,6 +112,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaProfessorSync, new ComandoRabbit("Tratamento de professores do sync com Google", typeof(ITrataSyncGoogleProfessorUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorIncluir, new ComandoRabbit("Incluir professores novos no Google", typeof(IInserirProfessorGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorCursoSync, new ComandoRabbit("Tratamento de cursos do professor do sync com Google", typeof(ITrataSyncGoogleCursosDoProfessorUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorCursoAtribuicaoSync, new ComandoRabbit("Tratamento atribuições de cursos de professores do sync com Google", typeof(ITrataSyncGoogleAtribuicoesDosProfessoresUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -225,6 +229,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoSync, false, consumer);
+            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoAtribuicaoSync, false, consumer);
 
             return Task.CompletedTask;
         }

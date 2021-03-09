@@ -6,6 +6,7 @@
         AlunoAdicionar = 2,
         ProfessorAdicionar = 3,
         FuncionarioAdicionar = 4,
-        ProfessorCursoAdicionar = 5
+        ProfessorCursoAdicionar = 5,
+        AtribuicaoProfessorCursoAdicionar = 6
     }
 }
