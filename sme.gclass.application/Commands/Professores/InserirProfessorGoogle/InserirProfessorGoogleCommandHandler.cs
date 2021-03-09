@@ -6,19 +6,20 @@ using Polly;
 using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Commands.Professores.InserirProfessorGoogle
 {
-    public class InserirProfessorGoogleCommandHandler : IRequestHandler<InserirProfessorGoogleCommand, bool>
+    public class InserirProfessorGoogleCommandHandler : ValidaAmbiente, IRequestHandler<InserirProfessorGoogleCommand, bool>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirProfessorGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
+        public InserirProfessorGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -43,8 +44,13 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Professores.InserirProfessorGoo
                 ChangePasswordAtNextLogin = true
             };
 
-            var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-            await requestCreate.ExecuteAsync();
+            if (DeveExecutarIntegracao)
+            {
+                var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
+                await requestCreate.ExecuteAsync();
+            }
+            else Thread.Sleep(1000);
+            
         }
     }
 }

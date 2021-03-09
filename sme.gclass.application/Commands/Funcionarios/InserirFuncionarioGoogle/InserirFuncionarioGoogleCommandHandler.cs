@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirFuncionarioGoogleCommandHandler : IRequestHandler<InserirFuncionarioGoogleCommand, bool>
+    public class InserirFuncionarioGoogleCommandHandler : ValidaAmbiente, IRequestHandler<InserirFuncionarioGoogleCommand, bool>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
+        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -44,8 +44,12 @@ namespace SME.GoogleClassroom.Aplicacao
                 ChangePasswordAtNextLogin = true
             };
 
-            var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-            await requestCreate.ExecuteAsync();
+            if (DeveExecutarIntegracao)
+            {
+                var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
+                await requestCreate.ExecuteAsync();
+            }
+            else Thread.Sleep(1000);
         }
     }
 }
