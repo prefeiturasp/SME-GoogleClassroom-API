@@ -13,6 +13,7 @@ using SME.GoogleClassroom.IoC;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using SME.GoogleClassroom.Worker.Rabbit.Middlewares;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -23,7 +24,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration ??
-               throw new ArgumentNullException(nameof(configuration));           
+               throw new ArgumentNullException(nameof(configuration));
         }
 
         public IConfiguration Configuration { get; }
@@ -85,7 +86,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 app.UseHttpsRedirection();
             }
 
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                {
+                    swagger.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"https://{httpReq.Host.Value}" } };
+                });
+            });
+
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SME.GoogleClassroom.Worker.Rabbit"));
 
             app.UseCors(builder => builder
