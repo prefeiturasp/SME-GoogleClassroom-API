@@ -210,7 +210,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
+            //canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
