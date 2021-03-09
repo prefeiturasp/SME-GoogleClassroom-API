@@ -11,9 +11,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Commands.Alunos.InserirAlunoGoogle
+namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirAlunoGoogleCommandHandler : ValidaAmbiente, IRequestHandler<InserirAlunoGoogleCommand, bool>
+    public class InserirAlunoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirAlunoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;        
@@ -26,15 +26,10 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Alunos.InserirAlunoGoogle
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Handle(InserirAlunoGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirAlunoGoogleCommand request, CancellationToken cancellationToken)
         {
-            if (DeveExecutarIntegracao)
-            {
-                var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-                await policy.ExecuteAsync(() => IncluirAlunoNoGoogle(request.AlunoGoogle, diretorioClassroom));
-            }
-            else Thread.Sleep(1000);
-            
+            var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
+            await policy.ExecuteAsync(() => IncluirAlunoNoGoogle(request.AlunoGoogle, diretorioClassroom));
             return true;
         }
 
