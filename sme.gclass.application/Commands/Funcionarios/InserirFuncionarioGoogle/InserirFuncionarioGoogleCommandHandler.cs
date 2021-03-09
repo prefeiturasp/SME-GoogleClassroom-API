@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirFuncionarioGoogleCommandHandler : ValidaAmbiente, IRequestHandler<InserirFuncionarioGoogleCommand, bool>
+    public class InserirFuncionarioGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirFuncionarioGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Handle(InserirFuncionarioGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirFuncionarioGoogleCommand request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             await policy.ExecuteAsync(() => IncluirFuncionarioNoGoogle(request.FuncionarioGoogle, diretorioClassroom));
@@ -44,12 +44,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 ChangePasswordAtNextLogin = true
             };
 
-            if (DeveExecutarIntegracao)
-            {
-                var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-                await requestCreate.ExecuteAsync();
-            }
-            else Thread.Sleep(1000);
+            var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
+            await requestCreate.ExecuteAsync();
         }
     }
 }
