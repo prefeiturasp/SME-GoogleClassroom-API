@@ -12,26 +12,24 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirCursoGoogleCommandHandler : IRequestHandler<InserirCursoGoogleCommand, bool>
+    public class InserirCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly AsyncRetryPolicy policy;
 
-
-        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Handle(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             await IncluirCurso(request.CursoParaInclusao, policy);
-
             return true;
         }
 
-        public async Task IncluirCurso(CursoParaInclusaoDto cursoParaInclusao, AsyncPolicy policy)
+        private async Task IncluirCurso(CursoParaInclusaoDto cursoParaInclusao, AsyncPolicy policy)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
 
@@ -39,10 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                await policy.ExecuteAsync(() =>
-                        IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom)
-                    );
-
+                await policy.ExecuteAsync(() => IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom));
             }
             catch (Exception ex)
             {

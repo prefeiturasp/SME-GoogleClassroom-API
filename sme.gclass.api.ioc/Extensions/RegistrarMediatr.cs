@@ -11,7 +11,7 @@ namespace SME.GoogleClassroom.IoC
         {
             var assembly = AppDomain.CurrentDomain.Load("SME.GoogleClassroom.Aplicacao");
             services.AddMediatR(assembly);
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidacoesPipeline<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidacoesPipeline<,>));            
         }
     }
 }

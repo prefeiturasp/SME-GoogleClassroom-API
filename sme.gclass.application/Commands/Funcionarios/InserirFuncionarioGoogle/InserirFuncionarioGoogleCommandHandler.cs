@@ -13,20 +13,20 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirFuncionarioGoogleCommandHandler : IRequestHandler<InserirFuncionarioGoogleCommand, bool>
+    public class InserirFuncionarioGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirFuncionarioGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry)
+        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Handle(InserirFuncionarioGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirFuncionarioGoogleCommand request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             await policy.ExecuteAsync(() => IncluirFuncionarioNoGoogle(request.FuncionarioGoogle, diretorioClassroom));
