@@ -7,6 +7,10 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterProfessoresPorRfsQuery : IRequest<IEnumerable<ProfessorGoogle>>
     {
+        public ObterProfessoresPorRfsQuery(long rf)
+        {
+            Rfs = new long[] { rf };            
+        }
         public ObterProfessoresPorRfsQuery(long[] rfs)
         {
             Rfs = rfs;
