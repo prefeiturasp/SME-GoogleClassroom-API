@@ -91,5 +91,21 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             return cursoAdicionado.Id;
         }
+
+        private async Task IniciarSyncGoogleProfessoresDoCursoAsync(CursoParaInclusaoDto cursoParaIncluir)
+        {
+            var curso = new Curso
+            {
+
+            };
+
+            var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoProfessorSync, RotasRabbit.FilaCursoProfessorSync, professorGoogle));
+            if (!publicarCursosDoProfessor)
+            {
+                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId,
+                    $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.",
+                    null, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno));
+            }
+        }
     }
 }
