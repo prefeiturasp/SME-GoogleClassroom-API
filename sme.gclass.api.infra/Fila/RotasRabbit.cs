@@ -15,6 +15,7 @@
         public static string FilaProfessorSync => "googleclass.professor.sync";
         public static string FilaProfessorCursoIncluir => "googleclass.professor.curso.incluir";
         public static string FilaProfessorCursoSync => "googleclass.professor.curso.sync";
+        public static string FilaProfessorCursoAtribuicaoSync => "googleclass.professor.curso.atribuicao.sync";
     }
 }
 
