@@ -31,6 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
                 professorGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(professorGoogle));
 
+                await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
+
                 return true;
             }
             catch (Exception ex)
@@ -38,6 +40,16 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new IncluirUsuarioErroCommand(professorParaIncluir?.Rf, professorParaIncluir?.Email,
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar, DateTime.Now));
                 throw;
+            }
+        }
+
+        private async Task IniciarSyncGoogleCursosDoProfessorAsync(ProfessorGoogle professorGoogle)
+        {
+            var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.FilaProfessorCursoSync, professorGoogle));
+            if(!publicarCursosDoProfessor)
+            {
+                await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
+                    $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));
             }
         }
     }
