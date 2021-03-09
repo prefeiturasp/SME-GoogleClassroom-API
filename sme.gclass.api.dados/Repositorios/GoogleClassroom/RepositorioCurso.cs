@@ -54,14 +54,14 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        public async Task<PaginacaoResultadoDto<Curso>> ObterTodosCursosAsync(Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
+        public async Task<PaginacaoResultadoDto<CursoGoogle>> ObterTodosCursosAsync(Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {
             var queryCompleta = new StringBuilder();
 
             queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(false, paginacao, turmaId, componenteCurricularId, cursoId, emailCriador));
             queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(true, paginacao, turmaId, componenteCurricularId, cursoId, emailCriador));
 
-            var retorno = new PaginacaoResultadoDto<Curso>();
+            var retorno = new PaginacaoResultadoDto<CursoGoogle>();
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
 
@@ -75,7 +75,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
 
-            retorno.Items = multi.Read<Curso>();
+            retorno.Items = multi.Read<CursoGoogle>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 

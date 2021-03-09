@@ -26,8 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     throw new NegocioException($"Não foi possível obter a última execução da ação {ExecucaoTipo.CursoAdicionar}");
 
                 var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), null, null));
-
-                if (cursosParaAdicionar != null || cursosParaAdicionar.Items.Any())
+                if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
                 {
                     foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)
                     {
@@ -43,7 +42,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
 
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
-
                 return true;
 
             }

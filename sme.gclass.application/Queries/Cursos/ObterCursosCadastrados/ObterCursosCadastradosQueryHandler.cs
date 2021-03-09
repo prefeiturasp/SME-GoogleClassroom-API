@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCadastradosQueryHandler : IRequestHandler<ObterCursosCadastradosQuery, PaginacaoResultadoDto<Curso>>
+    public class ObterCursosCadastradosQueryHandler : IRequestHandler<ObterCursosCadastradosQuery, PaginacaoResultadoDto<CursoGoogle>>
     {
         private readonly IRepositorioCurso repositorioCursos;
 
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.repositorioCursos = repositorioCursos ?? throw new System.ArgumentNullException(nameof(repositorioCursos));
         }
-        public async Task<PaginacaoResultadoDto<Curso>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<CursoGoogle>> Handle(ObterCursosCadastradosQuery request, CancellationToken cancellationToken)
         {
             return await repositorioCursos.ObterTodosCursosAsync(request.Paginacao, request.TurmaId, request.ComponenteCurricularId, request.CursoId, request.EmailCriador);
         }
