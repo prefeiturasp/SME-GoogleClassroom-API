@@ -12,13 +12,12 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirCursoGoogleCommandHandler : IRequestHandler<InserirCursoGoogleCommand, bool>
+    public class InserirCursoGoogleCommandHandler : ValidaAmbiente, IRequestHandler<InserirCursoGoogleCommand, bool>
     {
         private readonly IMediator mediator;
         private readonly AsyncRetryPolicy policy;
 
-
-        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
@@ -33,21 +32,25 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task IncluirCurso(CursoParaInclusaoDto cursoParaInclusao, AsyncPolicy policy)
         {
-            var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-
-            Task<Course> taskUpdate = GeraCursoGoogleParaIncluir(cursoParaInclusao, servicoClassroom);
-
-            try
+            if (DeveExecutarIntegracao)
             {
-                await policy.ExecuteAsync(() =>
-                        IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom)
-                    );
+                var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
 
+                Task<Course> taskUpdate = GeraCursoGoogleParaIncluir(cursoParaInclusao, servicoClassroom);
+
+                try
+                {
+                    await policy.ExecuteAsync(() =>
+                            IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom)
+                        );
+
+                }
+                catch (Exception ex)
+                {
+                    await mediator.Send(new InserirCursoErroCommand(cursoParaInclusao.TurmaId, cursoParaInclusao.ComponenteCurricularId, ex.Message, null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                }
             }
-            catch (Exception ex)
-            {
-                await mediator.Send(new InserirCursoErroCommand(cursoParaInclusao.TurmaId, cursoParaInclusao.ComponenteCurricularId, ex.Message, null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
-            }
+            else Thread.Sleep(1000);
         }
 
         private static Task<Course> GeraCursoGoogleParaIncluir(CursoParaInclusaoDto cursoParaInclusao, ClassroomService servicoClassroom)

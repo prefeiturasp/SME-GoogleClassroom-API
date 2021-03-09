@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -23,21 +24,25 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var paginacao = new Paginacao(0, 0);
                 var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, default));
-                foreach (var alunoParaIncluirGoogle in alunosParaIncluirGoogle.Items)
-                {
-                    try
-                    {
-                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogle));
-                        if (!publicarAluno)
-                        {
-                            await IncluirAlunoComErroAsync(alunoParaIncluirGoogle, ObterMensagemDeErro(alunoParaIncluirGoogle.Codigo));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirAlunoComErroAsync(alunoParaIncluirGoogle, ObterMensagemDeErro(alunoParaIncluirGoogle.Codigo, ex));
-                    }
-                }
+
+                alunosParaIncluirGoogle.Items
+                    .AsParallel()
+                    .WithDegreeOfParallelism(3)
+                    .ForAll(async alunoParaIncluirGoogle =>
+                   {
+                       try
+                       {
+                           var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogle));
+                           if (!publicarAluno)
+                           {
+                               await IncluirAlunoComErroAsync(alunoParaIncluirGoogle, ObterMensagemDeErro(alunoParaIncluirGoogle.Codigo));
+                           }
+                       }
+                       catch (Exception ex)
+                       {
+                           await IncluirAlunoComErroAsync(alunoParaIncluirGoogle, ObterMensagemDeErro(alunoParaIncluirGoogle.Codigo, ex));
+                       }
+                   });
 
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoAdicionar, DateTime.Today));
                 return true;
