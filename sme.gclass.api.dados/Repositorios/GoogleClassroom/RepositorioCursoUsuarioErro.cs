@@ -32,7 +32,8 @@ namespace SME.GoogleClassroom.Dados
                 cursoUsuarioErro.ComponenteCurricularId,
                 cursoUsuarioErro.ExecucaoTipo,
                 cursoUsuarioErro.Tipo,
-                cursoUsuarioErro.Mensagem
+                cursoUsuarioErro.Mensagem,
+                cursoUsuarioErro.DataInclusao
             };
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
