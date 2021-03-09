@@ -6,6 +6,7 @@ using Polly;
 using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Linq;
 using System.Threading;
@@ -13,18 +14,18 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirProfessorCursoGoogleCommandHandler : IRequestHandler<InserirProfessorCursoGoogleCommand, bool>
+    public class InserirProfessorCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirProfessorCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public InserirProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public InserirProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions) : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Handle(InserirProfessorCursoGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirProfessorCursoGoogleCommand request, CancellationToken cancellationToken)
         {
 
             var professor = await mediator.Send(new ObterProfessoresPorRfsQuery(request.ProfessorCursoEol.Rf));
@@ -79,8 +80,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 UserId = professorCursoGoogle.Email
             };
 
-            //var requestCreate = servicoClassroom.Courses.Teachers.Create(professorParaIncluirGoogle, professorCursoGoogle.CursoId.ToString());
-            //await requestCreate.ExecuteAsync();
+            var requestCreate = servicoClassroom.Courses.Teachers.Create(professorParaIncluirGoogle, professorCursoGoogle.CursoId.ToString());
+            await requestCreate.ExecuteAsync();
         }
     }
 }
