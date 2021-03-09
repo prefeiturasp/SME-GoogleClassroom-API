@@ -1,4 +1,4 @@
-﻿namespace SME.GoogleClassroom.Dominio.Entidades.Eol.Cursos
+﻿namespace SME.GoogleClassroom.Dominio
 {
     public class CursoEol
     {

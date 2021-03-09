@@ -5,9 +5,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -23,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var cursoParaIncluirProfessores = JsonConvert.DeserializeObject<Curso>(mensagemRabbit.Mensagem.ToString());
+            var cursoParaIncluirProfessores = JsonConvert.DeserializeObject<CursoGoogle>(mensagemRabbit.Mensagem.ToString());
             if (cursoParaIncluirProfessores is null)
             {
                 await IncluirCursoParaIncluirProfessoresComErroAsync(cursoParaIncluirProfessores, "Não foi possível iniciar a inclusão de professores do curso no Google Classroom. O professor não foi informado corretamente.");
@@ -60,7 +58,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task IncluirCursoParaIncluirProfessoresComErroAsync(Curso cursoGoogle, string mensagem)
+        private async Task IncluirCursoParaIncluirProfessoresComErroAsync(CursoGoogle cursoGoogle, string mensagem)
         {
             var command = new IncluirCursoUsuarioErroCommand(
                 cursoGoogle.TurmaId,

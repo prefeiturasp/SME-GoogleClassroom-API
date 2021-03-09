@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Dados
 		{
 		}
 
-		public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+		public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
@@ -32,9 +32,9 @@ namespace SME.GoogleClassroom.Dados
 
 			using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
-            var retorno = new PaginacaoResultadoDto<CursoParaInclusaoDto>();
+            var retorno = new PaginacaoResultadoDto<CursoEol>();
 
-            retorno.Items = multi.Read<CursoParaInclusaoDto>();
+            retorno.Items = multi.Read<CursoEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = paginar ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 

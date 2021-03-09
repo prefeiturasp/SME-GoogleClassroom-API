@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
     public class InserirCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirCursoGoogleCommand>
     {
         private readonly IMediator mediator;
-        private readonly AsyncRetryPolicy policy;
+        private readonly IAsyncPolicy policy;
 
         public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
@@ -25,87 +25,24 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task<bool> ExecutarAsync(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
         {
-            await IncluirCurso(request.CursoParaInclusao, policy);
+            var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
+            await policy.ExecuteAsync(() => IncluirCursoNoGoogle(request.CursoGoogle, servicoClassroom));
             return true;
         }
 
-        private async Task IncluirCurso(CursoParaInclusaoDto cursoParaInclusao, AsyncPolicy policy)
-        {
-            var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-
-            Task<Course> taskUpdate = GeraCursoGoogleParaIncluir(cursoParaInclusao, servicoClassroom);
-
-            try
-            {
-                await policy.ExecuteAsync(() => IncluirCursoNoGoogle(cursoParaInclusao, taskUpdate, servicoClassroom));
-            }
-            catch (Exception ex)
-            {
-                await mediator.Send(new InserirCursoErroCommand(cursoParaInclusao.TurmaId, cursoParaInclusao.ComponenteCurricularId, ex.Message, null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
-            }
-        }
-
-        private static Task<Course> GeraCursoGoogleParaIncluir(CursoParaInclusaoDto cursoParaInclusao, ClassroomService servicoClassroom)
+        private async Task IncluirCursoNoGoogle(CursoGoogle cursoGoogle, ClassroomService servicoClassroom)
         {
             var cursoParaIncluirGoogle = new Course()
             {
-                Name = cursoParaInclusao.Nome,
-                Section = cursoParaInclusao.Secao,
-                OwnerId = cursoParaInclusao.Email,
+                Name = cursoGoogle.Nome,
+                Section = cursoGoogle.Secao,
+                OwnerId = cursoGoogle.Email,
                 CourseState = "ACTIVE",
             };
 
-
-            var requestUpdate = servicoClassroom.Courses.Create(cursoParaIncluirGoogle);
-
-            var taskUpdate = requestUpdate.ExecuteAsync();
-            return taskUpdate;
-        }
-
-        public async Task<string> IncluirCursoNoGoogle(CursoParaInclusaoDto cursoParaIncluir, Task<Course> taskUpdate, ClassroomService servicoClassroom)
-        {
-            var cursoAdicionado = await taskUpdate;
-
-            try
-            {
-                await mediator.Send(new InserirCursoCommand(long.Parse(cursoAdicionado.Id),
-                                                            cursoParaIncluir.Email,
-                                                            cursoParaIncluir.Nome,
-                                                            cursoParaIncluir.Secao,
-                                                            cursoParaIncluir.TurmaId,
-                                                            cursoParaIncluir.ComponenteCurricularId,
-                                                            DateTime.Now,
-                                                            null));
-
-            }
-            catch (Exception)
-            {
-                var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoAdicionado.Id);
-                requestUpdate.UpdateMask = "courseState";
-                await requestUpdate.ExecuteAsync();
-
-                //await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, ex.Message, long.Parse(cursoAdicionado.Id), ExecucaoTipo.CursoAdicionar, ErroTipo.CursoSemEmail));                
-                //TODO: TRATAR ERRO AQUI, ALERTAR DE ERRO NO BANCO
-
-                throw;
-            }
-            return cursoAdicionado.Id;
-        }
-
-        private async Task IniciarSyncGoogleProfessoresDoCursoAsync(CursoParaInclusaoDto cursoParaIncluir)
-        {
-            var curso = new Curso
-            {
-
-            };
-
-            var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoProfessorSync, RotasRabbit.FilaCursoProfessorSync, professorGoogle));
-            if (!publicarCursosDoProfessor)
-            {
-                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId,
-                    $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.",
-                    null, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno));
-            }
+            var requestCreate = servicoClassroom.Courses.Create(cursoParaIncluirGoogle);
+            var cursoIncluido = await requestCreate.ExecuteAsync();
+            cursoGoogle.Id = long.Parse(cursoIncluido.Id);
         }
     }
 }
