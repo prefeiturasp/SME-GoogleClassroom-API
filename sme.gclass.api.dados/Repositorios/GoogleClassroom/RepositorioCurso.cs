@@ -119,7 +119,7 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryFirstOrDefaultAsync<long>(query, parametros)) > 0;
         }
 
-        public async Task<Curso> ObterCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId)
+        public async Task<CursoGoogle> ObterCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId)
         {
             var query = @"select c.id, 
                                  c.nome,
@@ -141,7 +141,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
 
-            return await conn.QueryFirstOrDefaultAsync<Curso>(query, parametros);
+            return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
         }
     }
 }

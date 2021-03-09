@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursoPorTurmaComponenteCurricularQuery : IRequest<Curso>
+    public class ObterCursoPorTurmaComponenteCurricularQuery : IRequest<CursoGoogle>
     {
         public ObterCursoPorTurmaComponenteCurricularQuery(long turmaId, long componenteCurricularId)
         {
