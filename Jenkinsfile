@@ -32,7 +32,7 @@ pipeline {
          steps {
              sh 'echo Analise SonarQube API'
              sh 'dotnet-sonarscanner begin /k:"SME-GoogleClassroom-API" /d:sonar.host.url="http://sonar.sme.prefeitura.sp.gov.br" /d:sonar.login="5372148e28da7a141a6a553951a6cfd26ed8e9ee"'
-             sh 'dotnet build'
+             sh 'dotnet build sme.gclass.api.worker.rabbit/'
              sh 'dotnet-sonarscanner end /d:sonar.login="5372148e28da7a141a6a553951a6cfd26ed8e9ee"'
            
          }
@@ -125,7 +125,7 @@ pipeline {
         steps {
           //Start JOB deploy Kubernetes 
             timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias'
             }
           script {
             step([$class: "RundeckNotifier",
@@ -181,7 +181,7 @@ pipeline {
          }
         steps {
             timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias'
           }    
           //Start JOB deploy kubernetes 
          
