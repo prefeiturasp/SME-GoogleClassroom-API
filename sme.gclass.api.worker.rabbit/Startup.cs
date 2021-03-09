@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 using Sentry;
+using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
@@ -22,7 +23,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration ??
-               throw new ArgumentNullException(nameof(configuration));
+               throw new ArgumentNullException(nameof(configuration));           
         }
 
         public IConfiguration Configuration { get; }
@@ -31,6 +32,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            ConfiguraVariaveisAmbiente(services);
+
             RegistraDependencias.Registrar(services, Configuration);
 
             services.AddRabbit();
@@ -43,7 +46,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
+                //c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
                 //TODO: Remover rota fixa
 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
@@ -61,6 +64,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             });
 
             services.UseMetricReporter();
+        }
+
+        private void ConfiguraVariaveisAmbiente(IServiceCollection services)
+        {
+            var variaveisGlobais = new VariaveisGlobaisOptions();
+            Configuration.GetSection(VariaveisGlobaisOptions.Secao).Bind(variaveisGlobais, c => c.BindNonPublicProperties = true);
+
+            services.AddSingleton(variaveisGlobais);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
