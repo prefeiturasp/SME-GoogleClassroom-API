@@ -12,8 +12,6 @@ namespace SME.GoogleClassroom.Dados
 {
     public class RepositorioCursoEol : RepositorioEol, IRepositorioCursoEol
 	{
-        private readonly ConnectionStrings ConnectionStrings;
-
 		public RepositorioCursoEol(ConnectionStrings connectionStrings)
 			: base(connectionStrings)
 		{
@@ -26,7 +24,7 @@ namespace SME.GoogleClassroom.Dados
 			var paginar = paginacao.QuantidadeRegistros > 0;
             var query = MontaQueryCursosParaInclusao(paginar, componenteCurricularId, turmaId);
 
-            using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
+            using var conn = ObterConexao();
 
 			var parametros = new { anoLetivo = dataReferencia.Year, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
 
@@ -181,7 +179,7 @@ namespace SME.GoogleClassroom.Dados
 									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
-									AND   gcc.cd_componente_curricular = @componenteCurricularId;
+									AND   pgcc.cd_componente_curricular = @componenteCurricularId;
 
 								SELECT
 									*

@@ -9,6 +9,7 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public InserirCursoCommand(CursoGoogle cursoGoogle)
         {
+            Id = cursoGoogle.Id;
             Email = cursoGoogle.Email;
             Nome = cursoGoogle.Nome;
             Secao = cursoGoogle.Secao;

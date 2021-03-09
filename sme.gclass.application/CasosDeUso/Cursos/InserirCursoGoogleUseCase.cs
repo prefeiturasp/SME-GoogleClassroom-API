@@ -55,7 +55,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                cursoGoogle.Id = await mediator.Send(new InserirCursoCommand(cursoGoogle));
+                await mediator.Send(new InserirCursoCommand(cursoGoogle));
             }
             catch
             {
