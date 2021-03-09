@@ -1,7 +1,6 @@
 ﻿using Google.Apis.Classroom.v1;
 using Google.Apis.Classroom.v1.Data;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Polly;
 using Polly.Registry;
 using Polly.Retry;
@@ -27,7 +26,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task<bool> ExecutarAsync(InserirProfessorCursoGoogleCommand request, CancellationToken cancellationToken)
         {
-
             var professor = await mediator.Send(new ObterProfessoresPorRfsQuery(request.ProfessorCursoEol.Rf));
 
             if (professor == null || !professor.Any())

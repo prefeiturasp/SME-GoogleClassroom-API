@@ -74,12 +74,7 @@ namespace SME.GoogleClassroom.Testes
                 });
 
             mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Curso()
-                {
-                    Id = 1,
-                    TurmaId = 1234,
-                    ComponenteCurricularId = 43
-                });
+                .ReturnsAsync(new CursoGoogle("Nome do curso", "Secao do curso", 1234, 43, "emaildocriador@teste.com.br"));
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
@@ -102,12 +97,7 @@ namespace SME.GoogleClassroom.Testes
                 .ReturnsAsync(new List<ProfessorGoogle>());
 
             mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Curso()
-                {
-                    Id = 1,
-                    TurmaId = 1234,
-                    ComponenteCurricularId = 43
-                });
+                .ReturnsAsync(new CursoGoogle("Nome do curso", "Secao do curso", 1234, 43, "emaildocriador@teste.com.br"));
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
@@ -132,7 +122,7 @@ namespace SME.GoogleClassroom.Testes
                     professorGoogle
                 });
 
-            Curso curso = null;
+            CursoGoogle curso = null;
 
             mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(curso);
