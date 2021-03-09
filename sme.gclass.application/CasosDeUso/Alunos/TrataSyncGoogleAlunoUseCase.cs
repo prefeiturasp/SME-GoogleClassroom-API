@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 alunosParaIncluirGoogle.Items
                     .AsParallel()
-                    .WithDegreeOfParallelism(3)
+                    .WithDegreeOfParallelism(10)
                     .ForAll(async alunoParaIncluirGoogle =>
                    {
                        try
