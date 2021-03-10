@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 .WithMessage("A paginação deve ser informada.");
 
             RuleFor(x => x.Paginacao.QuantidadeRegistros)
-                .NotEmpty()
+                .GreaterThan(0)
                 .WithMessage("O número da página e a quantidade de registro devem ser informados.");
         }
     }
