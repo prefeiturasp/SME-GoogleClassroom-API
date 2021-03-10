@@ -85,7 +85,7 @@ pipeline {
               //options: """
               //     PARAM_1=value1
                //    PARAM_2=value2
-              //     PARAM_3=
+              //     PARAM_3=value3
               //     """,
               rundeckInstance: "Rundeck-SME",
               shouldFailTheBuild: true,
