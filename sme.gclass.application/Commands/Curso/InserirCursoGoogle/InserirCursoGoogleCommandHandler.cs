@@ -44,5 +44,11 @@ namespace SME.GoogleClassroom.Aplicacao
             var cursoIncluido = await requestCreate.ExecuteAsync();
             cursoGoogle.Id = long.Parse(cursoIncluido.Id);
         }
+
+        protected override Task ExecutarQuandoNaoRodarIntegracaoAsync(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
+        {
+            request.CursoGoogle.Id = new Random().Next(999999999);
+            return base.ExecutarQuandoNaoRodarIntegracaoAsync(request, cancellationToken);
+        }
     }
 }

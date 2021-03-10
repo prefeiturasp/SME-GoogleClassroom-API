@@ -6,20 +6,26 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class InserirProfessorCursoGoogleCommand : IRequest<bool>
     {
-        public InserirProfessorCursoGoogleCommand(ProfessorCursoEol professorCursoEol)
+        public InserirProfessorCursoGoogleCommand(ProfessorCursoGoogle professorCursoGoogle, string email)
         {
-            ProfessorCursoEol = professorCursoEol;
+            ProfessorCursoGoogle = professorCursoGoogle;
+            Email = email;
         }
 
-        public ProfessorCursoEol ProfessorCursoEol { get; set; }
+        public ProfessorCursoGoogle ProfessorCursoGoogle { get; set; }
+        public string Email { get; set; }
     }
     public class InserirProfessorCursoGoogleCommandValidator : AbstractValidator<InserirProfessorCursoGoogleCommand>
     {
         public InserirProfessorCursoGoogleCommandValidator()
         {
-            RuleFor(x => x.ProfessorCursoEol)
+            RuleFor(x => x.ProfessorCursoGoogle)
                 .NotEmpty()
                 .WithMessage("É necessário informar um professor x curso que será incluído no Google Classroom.");
+
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .WithMessage("O e-mail do professor deve ser informado.");
         }
     }
 }

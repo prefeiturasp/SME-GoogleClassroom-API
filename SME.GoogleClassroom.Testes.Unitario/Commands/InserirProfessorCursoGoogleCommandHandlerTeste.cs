@@ -66,7 +66,7 @@ namespace SME.GoogleClassroom.Testes
         public async Task Nao_Deve_Inserir_Existe_Professor_Curso_Google_Cadastrado()
         {
             // Arrange
-            var professorGoogle = new ProfessorGoogle(123456, "Jose da Silva", "", "");
+            var professorGoogle = new ProfessorGoogle(123456, "Jose da Silva", "josesilva.7777777@teste.com.br", "");
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle>()
                 {
@@ -80,9 +80,8 @@ namespace SME.GoogleClassroom.Testes
                 .ReturnsAsync(true);
 
             //Act
-            var professorCursoeol = new ProfessorCursoEol(123456, 43, 1234);
-
-            var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoeol), new CancellationToken());
+            var professorCursoGoogle = new ProfessorCursoGoogle(123456, 1234);
+            var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, "josesilva.7777777@teste.com.br"), new CancellationToken());
 
             // Assert            
             Assert.True(inserido);
@@ -92,7 +91,7 @@ namespace SME.GoogleClassroom.Testes
         public async Task Nao_Deve_Inserir_Nao_Existe_Professor_Google_Cadastrado()
         {
             // Arrange
-            var professorGoogle = new ProfessorGoogle(123456, "Jose da Silva", "", "");
+            var professorGoogle = new ProfessorGoogle(123456, "Jose da Silva", "josesilva.7777777@teste.com.br", "");
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle>());
 
@@ -103,8 +102,8 @@ namespace SME.GoogleClassroom.Testes
                 .ReturnsAsync(true);
 
             //Act
-            var professorCursoeol = new ProfessorCursoEol(123456, 43, 1234);
-            var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoeol), new CancellationToken());
+            var professorCursoGoogle = new ProfessorCursoGoogle(123456, 1234);
+            var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, "josesilva.7777777@teste.com.br"), new CancellationToken());
 
             // Assert
             //repositorioCursoUsuario.Verify(x => x.SalvarAsync(It.IsAny<CursoUsuario>()), Times.Once);
@@ -115,7 +114,7 @@ namespace SME.GoogleClassroom.Testes
         public async Task Nao_Deve_Inserir_Nao_Existe_Curso_Google_Cadastrado()
         {
             // Arrange
-            var professorGoogle = new ProfessorGoogle(123456, "Jose da Silva", "", "");
+            var professorGoogle = new ProfessorGoogle(123456, "Jose da Silva", "josesilva.7777777@teste.com.br", "");
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle>()
                 {
@@ -131,8 +130,8 @@ namespace SME.GoogleClassroom.Testes
                 .ReturnsAsync(true);
 
             //Act
-            var professorCursoeol = new ProfessorCursoEol(123456, 43, 1234);
-            var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoeol), new CancellationToken());
+            var professorCursoGoogle = new ProfessorCursoGoogle(123456, 1234);
+            var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, "josesilva.7777777@teste.com.br"), new CancellationToken());
 
             // Assert
             //repositorioCursoUsuario.Verify(x => x.SalvarAsync(It.IsAny<CursoUsuario>()), Times.Once);

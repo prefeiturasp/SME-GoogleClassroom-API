@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (!_deveExecutarIntegracao)
             {
-                await Task.Delay(TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento, cancellationToken);
+                await ExecutarQuandoNaoRodarIntegracaoAsync(request, cancellationToken);
                 return true;
             }
 
@@ -28,5 +28,8 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         protected abstract Task<bool> ExecutarAsync(TRequest request, CancellationToken cancellationToken);
+
+        protected virtual Task ExecutarQuandoNaoRodarIntegracaoAsync(TRequest request, CancellationToken cancellationToken)
+            => Task.Delay(TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento, cancellationToken);
     }
 }
