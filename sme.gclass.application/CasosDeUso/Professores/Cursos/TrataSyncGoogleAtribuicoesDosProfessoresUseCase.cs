@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                     try
                     {
-                        var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorIncluir, RotasRabbit.FilaProfessorIncluir, cursoDoProfessorParaIncluir));
+                        var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
                         if (!publicarProfessor)
                         {
                             await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
@@ -44,7 +44,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar, DateTime.Today));
                 return true;
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 cursoDoprofessorParaIncluirGoogle.Rf,
                 cursoDoprofessorParaIncluirGoogle.TurmaId,
                 cursoDoprofessorParaIncluirGoogle.ComponenteCurricularId,
-                ExecucaoTipo.ProfessorCursoAdicionar,
+                ExecucaoTipo.AtribuicaoProfessorCursoAdicionar,
                 ErroTipo.Negocio,
                 mensagem);
 
