@@ -58,7 +58,9 @@ namespace SME.GoogleClassroom.Dados
         }
         public async Task<PaginacaoResultadoDto<ProfessorCursosCadastradosDto>> ObterProfessoresCursosAsync(Paginacao paginacao, long? rf, long? turmaId, long? componenteCurricularId)
         {
-            var query = new StringBuilder(@"select distinct
+            var query = new StringBuilder(@"DROP TABLE IF EXISTS professorTemp;
+                                            DROP TABLE IF EXISTS professorTempPaginado;
+                                            select distinct
                                                    u.id AS rf, 
                                                    u.nome AS nome,
                                                    u.email AS email 
