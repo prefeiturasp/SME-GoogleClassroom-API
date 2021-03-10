@@ -2,7 +2,7 @@
 {
     public class ConsumoDeFilasOptions
     {
-        public const string Secao = "ConsumoDeFila";
+        public const string Secao = "ConsumoDeFilas";
         public bool ConsumirFilasSync { get; set; }
         public bool ConsumirFilasDeInclusao { get; set; }
     }
