@@ -38,31 +38,37 @@ pipeline {
          }
        }
 
-      stage('Docker build DEV') {
-         when {
-           branch 'development'
-         }
+      stage('Docker Build') {
+         		
+		    when { anyOf { branch 'master'; branch "story/*"; branch 'development'; branch 'release';  } }	
         steps {
-          sh 'echo build docker image desenvolvimento'
-          // Start JOB para build das imagens Docker e push SME Registry
-          script {
+	     
+	      
+        script {
+            def BRANCH_REPO = env.BRANCH_NAME.toLowerCase()
+            def BRANCH_NAME = env.BRANCH_NAME	
+            def GIT_URL = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
+          
+	    	
             step([$class: "RundeckNotifier",
               includeRundeckLogs: true,
-              jobId: "e09dffde-f46f-454e-bbac-18d7d23c7f1c",
+              jobId: "541b688a-fad2-499a-9c4d-56c8ffc4cff2",
               nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
+              options: """
+                    buildNumber=$BUILD_NUMBER
+                    branchName=$BRANCH_NAME
+                    gitUrl=$GIT_URL
+                    branchRepo=$BRANCH_REPO
+               
+                   """,
               rundeckInstance: "Rundeck-SME",
               shouldFailTheBuild: true,
               shouldWaitForRundeckJob: true,
               tags: "",
               tailLog: true])
            }
-          }       
-        } 
+        }
+      }
        
         stage('Deploy DEV') {
           when {
@@ -90,33 +96,7 @@ pipeline {
         } 
        }
        
-      stage('Docker build HOM') {
-         when {
-           branch 'release'
-         }
-        steps {
-          sh 'echo Deploying ambiente homologacao'    
-          // Start JOB para build das imagens Docker e push SME Registry
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-                             
-              //JOB DE BUILD
-              jobId: "e32aa29a-2b26-4d00-9c0e-30dc42d1cde2",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
-        }
-      }  
+        
 
       stage('Deploy HOM') {
          when {
@@ -146,34 +126,6 @@ pipeline {
         }
        }
 
-       stage('Docker build PROD') {
-         when {
-           branch 'master'
-         }
-        steps {
-            sh 'echo Build image docker Produção'
-            // Start JOB para build das imagens Docker e push SME Registry
-      
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-                             
-              //JOB DE BUILD
-              jobId: "b7035310-22e7-4ab5-93f7-acfa562d02f0",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
-        }
-       }
 
        stage('Deploy PROD') {
          when {
