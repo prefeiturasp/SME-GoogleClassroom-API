@@ -9,6 +9,7 @@ namespace SME.GoogleClassroom.Dominio
             CursoId = cursoId;
             UsuarioId = usuarioId;
             DataInclusao = DateTime.Now;
+            Excluido = false;
         }
 
         public long Id { get; set; }
@@ -16,5 +17,6 @@ namespace SME.GoogleClassroom.Dominio
         public long UsuarioId { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
+        public bool Excluido { get; set; }
     }
 }

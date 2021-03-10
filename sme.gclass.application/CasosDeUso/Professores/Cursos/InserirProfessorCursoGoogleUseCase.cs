@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -24,7 +25,20 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoEolParaIncluir));
+                var professor = await mediator.Send(new ObterProfessoresPorRfsQuery(professorCursoEolParaIncluir.Rf));
+                if (professor is null || !professor.Any()) return false;
+
+                var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(professorCursoEolParaIncluir.TurmaId, professorCursoEolParaIncluir.ComponenteCurricularId));
+                if (curso is null) return false;
+
+                var existeProfessorCurso = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professorCursoEolParaIncluir.Rf, curso.Id));
+                if (existeProfessorCurso) return true;
+
+                var professorCursoGoogle = new ProfessorCursoGoogle(professor.First().Indice, curso.Id);
+
+                await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professor.First().Email));
+                professorCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(professorCursoGoogle.UsuarioId, professorCursoGoogle.CursoId));
+
                 return true;
             }
             catch (Exception ex)

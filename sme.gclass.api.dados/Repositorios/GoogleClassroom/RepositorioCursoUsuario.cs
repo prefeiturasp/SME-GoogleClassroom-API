@@ -39,16 +39,17 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> SalvarAsync(CursoUsuario cursoUsuario)
         {
             var query = @"INSERT INTO public.cursos_usuarios
-                           (curso_id, usuario_id, data_inclusao)
+                           (curso_id, usuario_id, data_inclusao, excluido)
                          VALUES
-                           (@cursoId, @usuarioId, @dataInclusao);
+                           (@cursoId, @usuarioId, @dataInclusao, @excluido)
                          RETURNING id";
 
             var parametros = new
             {
                 cursoUsuario.CursoId,
                 cursoUsuario.UsuarioId,
-                cursoUsuario.DataInclusao
+                cursoUsuario.DataInclusao,
+                cursoUsuario.Excluido
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
