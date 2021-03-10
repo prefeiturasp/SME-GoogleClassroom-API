@@ -186,38 +186,38 @@ namespace SME.GoogleClassroom.Dados
 									(SELECT * FROM #tempTurmasComponentesRegularesDoProfessor) AS Regulares
 								UNION
 									(SELECT * FROM #tempTurmasComponentesProgramaDoProfessor);";
-			return await conn.QueryAsync<ProfessorCursoEol>(query, new { rf, anoLetivo });
-		}
+            return await conn.QueryAsync<ProfessorCursoEol>(query, new { rf, anoLetivo });
+        }
 
-		public async Task<PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>> ObterAtribuicoesDeCursosDoProfessorAsync(DateTime dataReferencia, Paginacao paginacao, string rf, 
-			long? turmaId, long? componenteCurricularId)
-		{
-			using var conn = ObterConexao();
-			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-			var query = MontaQueryAtribuicoesDeCursosDosProfessores(aplicarPaginacao, rf, turmaId, componenteCurricularId);
+        public async Task<PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>> ObterAtribuicoesDeCursosDoProfessorAsync(DateTime dataReferencia, Paginacao paginacao, string rf,
+            long? turmaId, long? componenteCurricularId)
+        {
+            using var conn = ObterConexao();
+            var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
+            var query = MontaQueryAtribuicoesDeCursosDosProfessores(aplicarPaginacao, rf, turmaId, componenteCurricularId);
 
-			var parametros = new
-			{
-				anoLetivo = dataReferencia.Year,
-				dataReferencia = dataReferencia.Date,
-				rf,
-				turmaId,
-				componenteCurricularId,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados
-			};
+            var parametros = new
+            {
+                anoLetivo = dataReferencia.Year,
+                dataReferencia = dataReferencia.Date,
+                rf,
+                turmaId,
+                componenteCurricularId,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados
+            };
 
-			using var multi = await conn.QueryMultipleAsync(query, parametros);
-			var retorno = new PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>();
+            using var multi = await conn.QueryMultipleAsync(query, parametros);
+            var retorno = new PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>();
 
-			retorno.Items = multi.Read<AtribuicaoProfessorCursoEol>();
-			retorno.TotalRegistros = multi.ReadFirst<int>();
-			retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            retorno.Items = multi.Read<AtribuicaoProfessorCursoEol>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
-			return retorno;
-		}
+            return retorno;
+        }
 
-		private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, string rf)
+        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, string rf)
         {
             var queryBase = @$"IF OBJECT_ID('tempdb..#tempCargosProfessores') IS NOT NULL
 	                                        DROP TABLE #tempCargosProfessores;
@@ -272,9 +272,9 @@ namespace SME.GoogleClassroom.Dados
             return query.ToString();
         }
 
-		private static string MontaQueryAtribuicoesDeCursosDosProfessores(bool aplicarPaginacao, string rf, long? turmaId, long? componenteCurricularId)
+        private static string MontaQueryAtribuicoesDeCursosDosProfessores(bool aplicarPaginacao, string rf, long? turmaId, long? componenteCurricularId)
         {
-			const string queryBaseRegulares = @"-- 1. Busca atribuições dos cursos regulares
+            const string queryBaseRegulares = @"-- 1. Busca atribuições dos cursos regulares
 								IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL 
 									DROP TABLE #tempTurmasComponentesRegularesProfessores
 								SELECT
@@ -285,7 +285,9 @@ namespace SME.GoogleClassroom.Dados
 										WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
 									ELSE
 										cc.cd_componente_curricular
-									END ComponenteCurricularId
+									END ComponenteCurricularId,
+									te.cd_escola AS CdUe,
+									atb_ser.dt_atribuicao_aula AS DataAtribuicao
 								INTO #tempTurmasComponentesRegularesProfessores
 								FROM
 									turma_escola te (NOLOCK)
@@ -348,16 +350,18 @@ namespace SME.GoogleClassroom.Dados
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 									AND   te.an_letivo = @anoLetivo
-									AND	  atb_ser.dt_atribuicao_aula > @dataReferencia";
+									AND	  atb_ser.dt_atribuicao_aula > @dataReferencia ";
 
-			const string queryBaseProgramas = @"-- 2. Busca os cursos de programa do Professor
+            const string queryBaseProgramas = @"-- 2. Busca os cursos de programa do Professor
 								IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramasProfessores') IS NOT NULL 
 									DROP TABLE #tempTurmasComponentesProgramasProfessores
 								SELECT
 									DISTINCT
 									serv.cd_registro_funcional AS Rf,
 									pcc.cd_componente_curricular AS ComponenteCurricularId,
-									te.cd_turma_escola TurmaId
+									te.cd_turma_escola TurmaId,
+									te.cd_escola AS CdUe,
+									atb_pro.dt_atribuicao_aula AS DataAtribuicao
 								INTO #tempTurmasComponentesProgramasProfessores
 								FROM
 									turma_escola te (NOLOCK)
@@ -408,32 +412,32 @@ namespace SME.GoogleClassroom.Dados
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 									AND   te.an_letivo = @anoLetivo
-									AND	  atb_pro.dt_atribuicao_aula > @dataReferencia";
+									AND	  atb_pro.dt_atribuicao_aula > @dataReferencia ";
 
-			var queryRegulares = new StringBuilder(queryBaseRegulares);
-			var queryProgramas = new StringBuilder(queryBaseProgramas);
-			if (!string.IsNullOrWhiteSpace(rf))
-			{
-				queryRegulares.AppendLine("AND serv.cd_registro_funcional = @rf ");
-				queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
-			}
-
-			if(turmaId.HasValue)
+            var queryRegulares = new StringBuilder(queryBaseRegulares);
+            var queryProgramas = new StringBuilder(queryBaseProgramas);
+            if (!string.IsNullOrWhiteSpace(rf))
             {
-				queryRegulares.AppendLine("AND te.cd_turma_escola = @turmaId ");
-				queryProgramas.AppendLine("AND te.cd_turma_escola = @turmaId ");
-			}
+                queryRegulares.AppendLine("AND serv.cd_registro_funcional = @rf ");
+                queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
+            }
 
-			if (componenteCurricularId.HasValue)
+            if (turmaId.HasValue)
             {
-				queryRegulares.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
-				queryProgramas.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
-			}
+                queryRegulares.AppendLine("AND te.cd_turma_escola = @turmaId ");
+                queryProgramas.AppendLine("AND te.cd_turma_escola = @turmaId ");
+            }
 
-			queryRegulares.Append(";");
-			queryProgramas.Append(";");
+            if (componenteCurricularId.HasValue)
+            {
+                queryRegulares.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+                queryProgramas.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+            }
 
-			var query = $@"{queryRegulares} 
+            queryRegulares.Append(";");
+            queryProgramas.Append(";");
+
+            var query = $@"{queryRegulares} 
 						   {queryProgramas}
                            SELECT
 								*
@@ -454,7 +458,7 @@ namespace SME.GoogleClassroom.Dados
 							FROM
 								#tempAtribuicoesProfessores;";
 
-			return query;
-		}
+            return query;
+        }
     }
 }

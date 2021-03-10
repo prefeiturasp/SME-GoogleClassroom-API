@@ -79,11 +79,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         [HttpGet("novas-atribuicoes")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<ProfessorGoogle>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AtribuicaoProfessorCursoEolDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterAtribuicoesDeCursosDosProfessores([FromServices] IObterProfessoresGoogleUseCase useCase,
-            [FromQuery] FiltroObterProfessoresCadastradosDto filtro)
+        public async Task<IActionResult> ObterAtribuicoesDeCursosDosProfessores([FromServices] IObterAtribuicoesDeCursosDosProfessoresUseCase useCase,
+            [FromQuery] FiltroObterAtribuicoesDeCursosDosProfessoresDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
