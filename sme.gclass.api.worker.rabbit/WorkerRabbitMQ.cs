@@ -26,6 +26,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private readonly IConnection conexaoRabbit;
         private readonly IServiceScopeFactory serviceScopeFactory;
         private readonly IMetricReporter metricReporter;
+        private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
 
         /// <summary>
         /// configuração da lista de tipos para a fila do rabbit instanciar, seguindo a ordem de propriedades:
@@ -33,62 +34,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// </summary>
         private readonly Dictionary<string, ComandoRabbit> comandos;
 
-        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter)
+        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter, ConsumoDeFilasOptions consumoDeFilasOptions)
         {
             sentryDSN = configuration.GetValue<string>("Sentry:DSN");
             this.conexaoRabbit = conexaoRabbit ?? throw new ArgumentNullException(nameof(conexaoRabbit));
             this.serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
             this.metricReporter = metricReporter;
+            this.consumoDeFilasOptions = consumoDeFilasOptions;
             canalRabbit = conexaoRabbit.CreateModel();
 
             canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
-
-            RegistrarFilasCurso();
-            RegistrarFilasAluno();
-            RegistrarFilasFuncionario();
-            RegistrarFilasProfessor();
+            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
 
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
-        }
-
-        private void RegistrarFilasCurso()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
-        }
-
-        private void RegistrarFilasAluno()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaAlunoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoIncluir);
-        }
-
-        private void RegistrarFilasFuncionario()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioIncluir);
-        }
-
-        private void RegistrarFilasProfessor()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorIncluir);
         }
 
         private void RegistrarUseCases()
@@ -208,15 +167,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
             };
 
-            canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
+            if(consumoDeFilasOptions.ConsumirFilasSync)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
+            }
+
+            if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
+            }
 
             return Task.CompletedTask;
         }

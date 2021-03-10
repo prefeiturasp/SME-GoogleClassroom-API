@@ -72,7 +72,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var variaveisGlobais = new VariaveisGlobaisOptions();
             Configuration.GetSection(VariaveisGlobaisOptions.Secao).Bind(variaveisGlobais, c => c.BindNonPublicProperties = true);
 
+            var consumoDeFilasOptions = new ConsumoDeFilasOptions();
+            Configuration.GetSection(nameof(ConsumoDeFilasOptions)).Bind(consumoDeFilasOptions, c => c.BindNonPublicProperties = true);
+
             services.AddSingleton(variaveisGlobais);
+            services.AddSingleton(consumoDeFilasOptions);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
