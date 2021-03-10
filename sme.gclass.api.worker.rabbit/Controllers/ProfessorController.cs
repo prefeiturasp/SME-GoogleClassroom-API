@@ -77,5 +77,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await iniciarSyncGoogleProfessorUseCase.Executar();
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Retorna os professores com os cursos já incluídos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<ProfessorCursosCadastradosDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterProfessoresCursosGoogle([FromServices] IObterProfessoresCursosGoogleUseCase useCase,
+            [FromQuery] FiltroObterProfessoresCursosCadastradosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
     }
 }
