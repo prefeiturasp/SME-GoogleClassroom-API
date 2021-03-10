@@ -70,9 +70,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> ExisteAlunoPorRf(long rf)
         {
-            var query = @"SELECT count(id) from usuarios where id = @rf";
+            var query = @"SELECT exists(SELECT 1 from usuarios where id = @rf and usuario_tipo = @usuarioTipo limit 1)";
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
-            return (await conn.QueryAsync<bool>(query, new { rf })).FirstOrDefault();
+            return (await conn.QueryAsync<bool>(query, new { rf, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
         }
 
         public async Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo)
