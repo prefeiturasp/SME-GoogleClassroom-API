@@ -84,7 +84,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet("cursos")]
+        [HttpGet("cursos/cadastrados")]
         [ProducesResponseType(typeof(PaginacaoResultadoDto<ProfessorCursosCadastradosDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
@@ -110,6 +110,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok(retorno);
         }
 
+        /// <summary>
+        /// Retorna os professores com os cursos para incluir no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("novas-atribuicoes")]
         [ProducesResponseType(typeof(PaginacaoResultadoDto<AtribuicaoProfessorCursoEolDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
