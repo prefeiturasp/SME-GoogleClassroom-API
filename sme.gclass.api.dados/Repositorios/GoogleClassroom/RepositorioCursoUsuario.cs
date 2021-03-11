@@ -21,11 +21,11 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> ExisteProfessorCurso(long usuarioId, long cursoId)
         {
-            var query = @"select count(id) 
+            var query = @"SELECT exists(select 1
                            from cursos_usuarios
                           where usuario_id = @usuarioId
                             and curso_id = @cursoId
-                            and not excluido";
+                            and not excluido limit 1)";
 
             var parametros = new
             {
@@ -39,11 +39,11 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> ExisteAlunoCurso(long usuarioId, long cursoId)
         {
-            var query = @"select count(id) 
+            var query = @"SELECT exists(select 1
                            from cursos_usuarios
                           where usuario_id = @usuarioId
                             and curso_id = @cursoId
-                            and not excluido";
+                            and not excluido limit 1)";            
 
             var parametros = new
             {
