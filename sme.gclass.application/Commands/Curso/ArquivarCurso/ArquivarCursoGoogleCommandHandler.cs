@@ -1,0 +1,40 @@
+﻿using Google.Apis.Classroom.v1;
+using Google.Apis.Classroom.v1.Data;
+using MediatR;
+using Polly;
+using Polly.Registry;
+using Polly.Retry;
+using SME.GoogleClassroom.Infra;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SME.GoogleClassroom.Aplicacao
+{
+    public class ArquivarCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<ArquivarCursoGoogleCommand>
+    {
+        private readonly IMediator mediator;
+        private readonly IAsyncPolicy policy;
+
+        public ArquivarCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
+            : base(variaveisGlobaisOptions)
+        {
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
+        }
+
+        protected override async Task<bool> ExecutarAsync(ArquivarCursoGoogleCommand request, CancellationToken cancellationToken)
+        {
+            var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
+            await policy.ExecuteAsync(() => ArquivarCursoGoogle(request.CursoId, servicoClassroom));
+            return true;
+        }
+
+        private async Task ArquivarCursoGoogle(long cursoId, ClassroomService servicoClassroom)
+        {
+            var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoId.ToString());
+            requestUpdate.UpdateMask = "courseState";
+            await requestUpdate.ExecuteAsync();
+        }
+    }
+}

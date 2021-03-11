@@ -5,7 +5,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCadastradosQuery : IRequest<PaginacaoResultadoDto<Curso>>
+    public class ObterCursosCadastradosQuery : IRequest<PaginacaoResultadoDto<CursoGoogle>>
     {
         public ObterCursosCadastradosQuery(Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {

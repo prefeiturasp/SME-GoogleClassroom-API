@@ -11,22 +11,23 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Commands.Professores.InserirProfessorGoogle
+namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirProfessorGoogleCommandHandler : ValidaAmbiente, IRequestHandler<InserirProfessorGoogleCommand, bool>
+    public class InserirProfessorGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirProfessorGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirProfessorGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
+        public InserirProfessorGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) 
+            : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Handle(InserirProfessorGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirProfessorGoogleCommand request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             await policy.ExecuteAsync(() => IncluirProfessorNoGoogle(request.ProfessorGoogle, diretorioClassroom));
@@ -44,13 +45,8 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Professores.InserirProfessorGoo
                 ChangePasswordAtNextLogin = true
             };
 
-            if (DeveExecutarIntegracao)
-            {
-                var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-                await requestCreate.ExecuteAsync();
-            }
-            else Thread.Sleep(1000);
-            
+            var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
+            await requestCreate.ExecuteAsync();
         }
     }
 }

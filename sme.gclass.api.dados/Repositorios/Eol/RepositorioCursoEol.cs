@@ -3,47 +3,198 @@ using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioCursoEol : IRepositorioCursoEol
-    {
-        private readonly ConnectionStrings ConnectionStrings;
+    public class RepositorioCursoEol : RepositorioEol, IRepositorioCursoEol
+	{
+		public RepositorioCursoEol(ConnectionStrings connectionStrings)
+			: base(connectionStrings)
+		{
+		}
 
-        public RepositorioCursoEol(ConnectionStrings connectionStrings)
-        {
-            ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
-        }
-
-        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+		public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
 			var paginar = paginacao.QuantidadeRegistros > 0;
             var query = MontaQueryCursosParaInclusao(paginar, componenteCurricularId, turmaId);
 
-            using var conn = new SqlConnection(ConnectionStrings.ConnectionStringEol);
+            using var conn = ObterConexao();
 
 			var parametros = new { anoLetivo = dataReferencia.Year, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
 
 			using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
-            var retorno = new PaginacaoResultadoDto<CursoParaInclusaoDto>();
+            var retorno = new PaginacaoResultadoDto<CursoEol>();
 
-            retorno.Items = multi.Read<CursoParaInclusaoDto>();
+            retorno.Items = multi.Read<CursoEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = paginar ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
             return retorno;
         }
 
-        private static string MontaQueryCursosParaInclusao(bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
+        public async Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo, long turmaId, long componenteCurricularId)
         {
-            var query = new StringBuilder();
-            query.AppendLine(@"-- 2) Busca os cursos regulares
+			using var conn = ObterConexao();
+
+			const string query = @"-- 1. Busca os cursos regulares do Professor
+								IF OBJECT_ID('tempdb..#tempProfessoresDeTurmasComponentesRegulares') IS NOT NULL 
+									DROP TABLE #tempProfessoresDeTurmasComponentesRegulares
+								SELECT
+									DISTINCT
+									serv.cd_registro_funcional AS Rf,
+									te.cd_turma_escola TurmaId,
+									CASE
+										WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
+									ELSE
+										cc.cd_componente_curricular
+									END ComponenteCurricularId
+								INTO #tempProfessoresDeTurmasComponentesRegulares
+								FROM
+									turma_escola te (NOLOCK)
+								INNER JOIN
+									escola esc (NOLOCK) 
+									ON te.cd_escola = esc.cd_escola
+								INNER JOIN
+									v_cadastro_unidade_educacao ue (NOLOCK) 
+									ON ue.cd_unidade_educacao = esc.cd_escola
+								INNER JOIN
+									tipo_escola tpe (NOLOCK) 
+									ON esc.tp_escola = tpe.tp_escola
+								INNER JOIN
+									unidade_administrativa dre (NOLOCK) 
+									ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa
+								INNER JOIN
+									serie_turma_escola (NOLOCK) 
+									ON serie_turma_escola.cd_turma_escola = te.cd_turma_escola
+								INNER JOIN
+									serie_turma_grade (NOLOCK) 
+									ON serie_turma_grade.cd_turma_escola = serie_turma_escola.cd_turma_escola AND serie_turma_grade.dt_fim IS NULL
+								INNER JOIN
+									escola_grade (NOLOCK) 
+									ON serie_turma_grade.cd_escola_grade = escola_grade.cd_escola_grade
+								INNER JOIN
+									grade (NOLOCK) 
+									ON escola_grade.cd_grade = grade.cd_grade
+								INNER JOIN
+									grade_componente_curricular gcc (NOLOCK) 
+									ON gcc.cd_grade = grade.cd_grade
+								INNER JOIN
+									componente_curricular cc (NOLOCK) 
+									ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+								INNER JOIN
+									serie_ensino (NOLOCK) 
+									ON grade.cd_serie_ensino = serie_ensino.cd_serie_ensino
+								INNER JOIN
+									etapa_ensino (NOLOCK) 
+									ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino
+								-- Atribuição de aula
+								INNER JOIN 
+									atribuicao_aula atb_ser (NOLOCK) 
+									ON gcc.cd_grade = atb_ser.cd_grade
+									AND gcc.cd_componente_curricular = atb_ser.cd_componente_curricular
+									AND atb_ser.cd_serie_grade = serie_turma_grade.cd_serie_grade 
+									AND atb_ser.dt_cancelamento is null
+									AND atb_ser.dt_disponibilizacao_aulas is null
+									AND atb_ser.an_atribuicao = @anoLetivo
+								-- Servidor
+								INNER JOIN 
+									v_cargo_base_cotic vcbc (NOLOCK) 
+									ON atb_ser.cd_cargo_base_servidor = vcbc.cd_cargo_base_servidor
+									AND vcbc.dt_cancelamento is null 
+									AND vcbc.dt_fim_nomeacao is null
+								INNER JOIN 
+									v_servidor_cotic serv (NOLOCK) 
+									ON serv.cd_servidor = vcbc.cd_servidor
+								WHERE  
+									te.st_turma_escola in ('O', 'A', 'C')
+									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   te.an_letivo = @anoLetivo
+									AND	  te.cd_turma_escola = @turmaId
+									AND   gcc.cd_componente_curricular = @componenteCurricularId;
+
+								-- 2. Busca os cursos de programa do Professor
+								IF OBJECT_ID('tempdb..#tempProfessoresDeTurmasComponentesPrograma') IS NOT NULL 
+									DROP TABLE #tempProfessoresDeTurmasComponentesPrograma
+								SELECT
+									DISTINCT
+									serv.cd_registro_funcional AS Rf,
+									pcc.cd_componente_curricular AS ComponenteCurricularId,
+									te.cd_turma_escola TurmaId
+								INTO #tempProfessoresDeTurmasComponentesPrograma
+								FROM
+									turma_escola te (NOLOCK)
+								INNER JOIN
+									escola esc (NOLOCK) 
+									ON te.cd_escola = esc.cd_escola
+								INNER JOIN
+									v_cadastro_unidade_educacao ue (NOLOCK) 
+									ON ue.cd_unidade_educacao = esc.cd_escola
+								INNER JOIN
+									tipo_escola tpe (NOLOCK) 
+									ON esc.tp_escola = tpe.tp_escola
+								INNER JOIN
+									unidade_administrativa dre (NOLOCK) 
+									ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa
+								INNER JOIN 
+									turma_escola_grade_programa tegp (NOLOCK) 
+									ON tegp.cd_turma_escola = te.cd_turma_escola AND tegp.dt_fim IS NULL
+								INNER JOIN 
+									escola_grade teg (NOLOCK) 
+									ON teg.cd_escola_grade = tegp.cd_escola_grade
+								INNER JOIN 
+									grade pg (NOLOCK) ON pg.cd_grade = teg.cd_grade
+								INNER JOIN 
+									grade_componente_curricular pgcc (NOLOCK) 
+									ON pgcc.cd_grade = teg.cd_grade
+								INNER JOIN 
+									componente_curricular pcc (NOLOCK) 
+									ON pgcc.cd_componente_curricular = pcc.cd_componente_curricular and pcc.dt_cancelamento is null
+								-- Atribuicao turma programa
+								INNER JOIN 
+									atribuicao_aula atb_pro (NOLOCK) 
+									ON pgcc.cd_grade = atb_pro.cd_grade 
+									AND pgcc.cd_componente_curricular = atb_pro.cd_componente_curricular 
+									AND atb_pro.cd_turma_escola_grade_programa = tegp.cd_turma_escola_grade_programa 
+									AND atb_pro.dt_cancelamento IS NULL
+									AND atb_pro.dt_disponibilizacao_aulas IS NULL
+									AND atb_pro.an_atribuicao = @anoLetivo
+								-- Servidor
+								INNER JOIN 
+									v_cargo_base_cotic vcbc (NOLOCK) 
+									ON atb_pro.cd_cargo_base_servidor = vcbc.cd_cargo_base_servidor AND vcbc.dt_cancelamento IS NULL AND vcbc.dt_fim_nomeacao IS NULL
+								INNER JOIN 
+									v_servidor_cotic serv (NOLOCK) 
+									ON serv.cd_servidor = vcbc.cd_servidor
+								WHERE  
+									te.st_turma_escola in ('O', 'A', 'C')
+									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   te.an_letivo = @anoLetivo
+									AND	  te.cd_turma_escola = @turmaId
+									AND   pgcc.cd_componente_curricular = @componenteCurricularId;
+
+								SELECT
+									*
+								FROM
+									(SELECT * FROM #tempProfessoresDeTurmasComponentesRegulares) AS Regulares
+								UNION
+									(SELECT * FROM #tempProfessoresDeTurmasComponentesPrograma);";
+
+			return await conn.QueryAsync<ProfessorCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
+		}
+
+		private static string MontaQueryCursosParaInclusao(bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
+		{
+			var query = new StringBuilder();
+			query.AppendLine(@"-- 2) Busca os cursos regulares
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesRegulares
 							SELECT
@@ -142,21 +293,21 @@ namespace SME.GoogleClassroom.Dados
 								AND   te.dt_inicio >= @dataReferencia
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
-            if (componenteCurricularId.HasValue)
-            {
-                if (componenteCurricularId.Value == 512)
-                {
-                    query.AppendLine("AND etapa_ensino.cd_etapa_ensino = 1 ");
-                }
-                else query.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
-            }
+			if (componenteCurricularId.HasValue)
+			{
+				if (componenteCurricularId.Value == 512)
+				{
+					query.AppendLine("AND etapa_ensino.cd_etapa_ensino = 1 ");
+				}
+				else query.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+			}
 
-            if (turmaId.HasValue)
-            {
-                query.AppendLine("AND te.cd_turma_escola = @turmaId");
-            }
+			if (turmaId.HasValue)
+			{
+				query.AppendLine("AND te.cd_turma_escola = @turmaId");
+			}
 
-            query.AppendLine(@"--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
+			query.AppendLine(@"--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesRegularesProfessores
 							SELECT
@@ -247,21 +398,21 @@ namespace SME.GoogleClassroom.Dados
 								AND   te.dt_inicio >= @dataReferencia
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
-            if (componenteCurricularId.HasValue)
-            {
-                if (componenteCurricularId.Value != 512)
-                {
-                    query.AppendLine("AND pcc.cd_componente_curricular = @componenteCurricularId ");
-                }
-            }
+			if (componenteCurricularId.HasValue)
+			{
+				if (componenteCurricularId.Value != 512)
+				{
+					query.AppendLine("AND pcc.cd_componente_curricular = @componenteCurricularId ");
+				}
+			}
 
-            if (turmaId.HasValue)
-            {
-                query.AppendLine("AND te.cd_turma_escola = @turmaId");
-            }
+			if (turmaId.HasValue)
+			{
+				query.AppendLine("AND te.cd_turma_escola = @turmaId");
+			}
 
 
-            query.AppendLine(@"--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
+			query.AppendLine(@"--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
 							IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramaProfessores') IS NOT NULL 
 								DROP TABLE #tempTurmasComponentesProgramaProfessores
 							SELECT
@@ -320,11 +471,11 @@ namespace SME.GoogleClassroom.Dados
 									from #tempCursosDre
 							order by 1 ");
 
-            if (ehParaPaginar)
-                query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-            else query.AppendLine(";");
+			if (ehParaPaginar)
+				query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+			else query.AppendLine(";");
 
-            query.AppendLine(@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
+			query.AppendLine(@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
 							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicao') IS NOT NULL 
 								DROP TABLE #tempUEsSemAtribuicao
 							SELECT
@@ -380,8 +531,8 @@ namespace SME.GoogleClassroom.Dados
 						FROM
 							#tempCursosDre temp;");
 
-            return query.ToString();
+			return query.ToString();
 
-        }
-    }
+		}
+	}
 }

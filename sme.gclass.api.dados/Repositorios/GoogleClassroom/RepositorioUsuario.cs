@@ -34,7 +34,7 @@ namespace SME.GoogleClassroom.Dados
             if (codigoEol.HasValue && codigoEol > 0)
                 query.AppendLine("AND u.id = @codigoEol");
 
-            if(!string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(email))
                 query.AppendLine("AND u.email = @email");
 
             if (paginacao.QuantidadeRegistros > 0)
@@ -52,7 +52,7 @@ namespace SME.GoogleClassroom.Dados
             {
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
-                tipo = UsuarioTipo.Aluno,  
+                tipo = UsuarioTipo.Aluno,
                 codigoEol,
                 email
             };
@@ -193,8 +193,8 @@ namespace SME.GoogleClassroom.Dados
                            WHERE usuario_tipo = @tipo
                              and id = any(@rfs)";
 
-            var parametros = new 
-            { 
+            var parametros = new
+            {
                 rfs,
                 tipo = UsuarioTipo.Funcionario
             };
@@ -240,6 +240,48 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
 
             return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
+        }
+
+        public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresPaginadoPorRfs(Paginacao paginacao, long[] rfs)
+        {
+            var query = new StringBuilder(@"SELECT 
+                                                 u.indice,
+                                                 u.nome,
+                                                 u.id as Rf, 
+                                                 u.usuario_tipo as usuariotipo,
+                                                 u.email,
+                                                 u.organization_path as organizationpath,
+                                                 u.data_inclusao as datainclusao,
+                                                 u.data_atualizacao as dataatualizacao
+                                            FROM usuarios u 
+                                           WHERE usuario_tipo = @tipo
+                                             and id = any(@rfs)");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
+
+
+            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo and id = any(@rfs)");
+
+            var retorno = new PaginacaoResultadoDto<ProfessorGoogle>();
+
+            var parametros = new
+            {
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros,
+                rfs,
+                tipo = UsuarioTipo.Professor
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            using var professores = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+            retorno.Items = professores.Read<ProfessorGoogle>();
+            retorno.TotalRegistros = professores.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
         }
 
         public async Task<bool> ExisteProfessorPorRf(long rf)
