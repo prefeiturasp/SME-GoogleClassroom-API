@@ -11,10 +11,12 @@ namespace SME.GoogleClassroom.Aplicacao
     public class InserirAlunoCursoGoogleUseCase : IInserirAlunoCursoGoogleUseCase
     {
         private readonly IMediator mediator;
+        private readonly bool _deveExecutarIntegracao;
 
-        public InserirAlunoCursoGoogleUseCase(IMediator mediator)
+        public InserirAlunoCursoGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
@@ -36,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var alunoCursoGoogle = new AlunoCursoGoogle(aluno.First().Indice, curso.Id);
 
                 await mediator.Send(new InserirAlunoCursoGoogleCommand(alunoCursoGoogle, aluno.First().Email));
-                alunoCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(alunoCursoGoogle.UsuarioId, alunoCursoGoogle.CursoId));
+                if (_deveExecutarIntegracao) alunoCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(alunoCursoGoogle.UsuarioId, alunoCursoGoogle.CursoId));
 
                 return true;
             }
