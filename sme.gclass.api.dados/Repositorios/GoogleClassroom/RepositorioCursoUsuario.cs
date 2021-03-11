@@ -166,5 +166,98 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+        public async Task<PaginacaoResultadoDto<AlunoCursosCadastradosDto>> ObterAlunosCursosAsync(Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
+        {
+            var query = new StringBuilder(@"DROP TABLE IF EXISTS alunoTemp;
+                                            DROP TABLE IF EXISTS alunoTempPaginado;
+                                            select distinct
+                                                   u.indice,
+                                                   u.id AS codigoAluno, 
+                                                   u.nome AS nome,
+                                                   u.email AS email 
+                                              into temporary table alunoTemp
+                                              from usuarios u
+                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice 
+                                             inner join cursos c on c.id = cu.curso_id 
+                                             where u.usuario_tipo = @tipo
+                                               and not cu.excluido ");
+            if (codigoAluno.HasValue && codigoAluno > 0)
+                query.AppendLine("and u.id = @codigoAluno ");
+
+            if (turmaId.HasValue && turmaId > 0)
+                query.AppendLine("and c.turma_id = @turmaId ");
+
+            if (componenteCurricularId.HasValue && componenteCurricularId > 0)
+                query.AppendLine("and c.componente_curricular_id = @componenteCurricularId ");
+
+            query.AppendLine(";");
+
+            query.AppendLine("select * into temporary alunoTempPaginado from alunoTemp");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+
+
+
+            query.AppendLine(@"select t1.codigoAluno,
+   		                              t1.nome,
+   		                              t1.email,
+   	                                  c.id,
+                                      c.id as cursoId,
+   		                              c.nome,
+   		                              c.secao,
+   		                              c.turma_id as turmaId,
+   		                              c.componente_curricular_id as componenteCurricularId
+                                 from cursos c
+                                inner join cursos_usuarios cu on cu.curso_id = c.id
+                                inner join alunoTempPaginado t1 on t1.indice = cu.usuario_id;");
+
+
+            query.AppendLine("select count(*) from alunoTemp");
+
+
+
+            var retorno = new PaginacaoResultadoDto<AlunoCursosCadastradosDto>();
+
+            var parametros = new
+            {
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros,
+                tipo = UsuarioTipo.Aluno,
+                codigoAluno,
+                turmaId,
+                componenteCurricularId
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            var multiResult = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+            var dic = new Dictionary<long, AlunoCursosCadastradosDto>();
+
+            var Result = multiResult.Read<AlunoCursosCadastradosDto, CursoDto, AlunoCursosCadastradosDto>(
+                (aluno, curso) =>
+                {
+
+                    if (!dic.TryGetValue(aluno.CodigoAluno, out var alunoResultado))
+                    {
+                        aluno.Cursos.Add(curso);
+                        dic.Add(aluno.CodigoAluno, aluno);
+                        return aluno;
+                    }
+
+                    alunoResultado.Cursos.Add(curso);
+
+                    return alunoResultado;
+                }
+                );
+
+            retorno.Items = Result;
+            retorno.TotalRegistros = multiResult.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
     }
 }
