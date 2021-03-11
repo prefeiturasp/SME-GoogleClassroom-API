@@ -9,6 +9,7 @@
         public static string FilaCursoSync => "googleclass.curso.sync";
         public static string FilaCursoErroSync => "googleclass.curso.erro.sync";
         public static string FilaCursoProfessorSync => "googleclass.curso.professor.sync";
+        public static string FilaCursoAlunoSync => "googleclass.curso.aluno.sync";
         #endregion
 
         #region Alunos
