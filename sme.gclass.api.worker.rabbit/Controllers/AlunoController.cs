@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -75,6 +76,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGooglAlunoUseCase iniciarSyncGoogleAlunoUseCase)
         {
             var retorno = await iniciarSyncGoogleAlunoUseCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Envia uma requisição para atribuir um professor a um curso no Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a consistência das informações é importante garantir que o relacionamento entre professor e curso consta na base de dados do EOL.
+        /// </remarks>
+        /// <response code="200">Foi realizada a requisição para atribuíção do professor ao curso.</response>
+        [HttpPost("cursos")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> EnviarRequisicaoAtribuirProfessorCurso([FromBody] AtribuirAlunoCursoDto atribuirAlunoCurso, [FromServices] IEnviarRequisicaoAtribuirProfessorCursoUseCase atribuirProfessorCursoUseCase)
+        {
+            var retorno = await atribuirProfessorCursoUseCase.Executar(atribuirAlunoCurso);
             return Ok(retorno);
         }
     }
