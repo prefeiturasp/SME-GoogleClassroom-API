@@ -80,17 +80,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Envia uma requisição para atribuir um professor a um curso no Google Classroom.
+        /// Envia uma requisição para atribuir um aluno a um curso no Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a consistência das informações é importante garantir que o relacionamento entre professor e curso consta na base de dados do EOL.
+        /// **Importante:** Visando a consistência das informações é importante garantir que o relacionamento entre aluno e curso consta na base de dados do EOL.
         /// </remarks>
-        /// <response code="200">Foi realizada a requisição para atribuíção do professor ao curso.</response>
+        /// <response code="200">Foi realizada a requisição para atribuíção do aluno ao curso.</response>
         [HttpPost("cursos")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> EnviarRequisicaoAtribuirProfessorCurso([FromBody] AtribuirAlunoCursoDto atribuirAlunoCurso, [FromServices] IEnviarRequisicaoAtribuirProfessorCursoUseCase atribuirProfessorCursoUseCase)
+        public async Task<IActionResult> EnviarRequisicaoAtribuirProfessorCurso([FromBody] AtribuirAlunoCursoDto atribuirAlunoCurso, [FromServices] IEnviarRequisicaoAtribuirAlunoCursoUseCase atribuirAlunoCursoUseCase)
         {
-            var retorno = await atribuirProfessorCursoUseCase.Executar(atribuirAlunoCurso);
+            var retorno = await atribuirAlunoCursoUseCase.Executar(atribuirAlunoCurso);
             return Ok(retorno);
         }
     }
