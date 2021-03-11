@@ -70,7 +70,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
-        [HttpPost("sincronizacao/iniciar")]
+        [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleProfessorUseCase iniciarSyncGoogleProfessorUseCase)
         {
@@ -116,7 +116,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet("novas-atribuicoes")]
+        [HttpGet("cursos/atribuicoes")]
         [ProducesResponseType(typeof(PaginacaoResultadoDto<AtribuicaoProfessorCursoEolDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
@@ -124,6 +124,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             [FromQuery] FiltroObterAtribuicoesDeCursosDosProfessoresDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia a sincronização de atribuições de cursos dos professores do EOL para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos professores acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("cursos/atribuicoes/sincronizacao")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> IniciarSincronizacaoAtribuicoes([FromServices] IIniciarSyncGoogleAtribuicoesDosProfessoresUseCase iniciarSyncGoogleAtribuicoesDosProfessoresUseCase)
+        {
+            var retorno = await iniciarSyncGoogleAtribuicoesDosProfessoresUseCase.Executar();
             return Ok(retorno);
         }
     }

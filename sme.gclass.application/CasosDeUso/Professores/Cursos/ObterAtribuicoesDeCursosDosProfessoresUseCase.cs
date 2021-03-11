@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 professoresGoogle.AddRange(professores.Items);
                 i++;
 
-            } while (i < (int)Math.Truncate(totalRfs / 100));
+            } while (i < (int)Math.Ceiling(totalRfs / 100));
 
             foreach (var item in Atribuicoes)
             {

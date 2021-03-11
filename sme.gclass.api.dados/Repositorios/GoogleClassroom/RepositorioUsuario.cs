@@ -246,6 +246,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = new StringBuilder(@"SELECT 
                                                  u.indice,
+                                                 u.nome,
                                                  u.id as Rf, 
                                                  u.usuario_tipo as usuariotipo,
                                                  u.email,
