@@ -18,6 +18,10 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<ProfessorGoogle>> Handle(ObterProfessoresPorRfsQuery request, CancellationToken cancellationToken)
-            => await repositorioUsuario.ObterProfessoresPorRfs(request.Rfs);
+        {
+            var professor = await repositorioUsuario.ObterProfessoresPorRfs(request.Rfs);
+
+            return professor;
+        }             
     }
 }

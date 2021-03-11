@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
-        public async Task<PaginacaoResultadoDto<CursoParaInclusaoDto>> Executar(FiltroObterCursosIncluirGoogleDto filtro)
+        public async Task<PaginacaoResultadoDto<CursoEol>> Executar(FiltroObterCursosIncluirGoogleDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 

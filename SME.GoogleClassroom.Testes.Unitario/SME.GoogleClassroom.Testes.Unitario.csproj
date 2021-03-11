@@ -8,13 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj" />
     <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
+    <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
+    <ProjectReference Include="..\sme.gclass.application\SME.GoogleClassroom.Aplicacao.csproj" />
   </ItemGroup>
 
 </Project>
