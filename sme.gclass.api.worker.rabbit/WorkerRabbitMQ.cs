@@ -26,6 +26,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private readonly IConnection conexaoRabbit;
         private readonly IServiceScopeFactory serviceScopeFactory;
         private readonly IMetricReporter metricReporter;
+        private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
 
         /// <summary>
         /// configuração da lista de tipos para a fila do rabbit instanciar, seguindo a ordem de propriedades:
@@ -33,23 +34,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// </summary>
         private readonly Dictionary<string, ComandoRabbit> comandos;
 
-        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter)
+        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter, ConsumoDeFilasOptions consumoDeFilasOptions)
         {
             sentryDSN = configuration.GetValue<string>("Sentry:DSN");
             this.conexaoRabbit = conexaoRabbit ?? throw new ArgumentNullException(nameof(conexaoRabbit));
             this.serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
             this.metricReporter = metricReporter;
+            this.consumoDeFilasOptions = consumoDeFilasOptions;
             canalRabbit = conexaoRabbit.CreateModel();
 
             canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
-
-            RegistrarFilasCurso();
-            RegistrarFilasAluno();
-            RegistrarFilasFuncionario();
-            RegistrarFilasProfessor();
+            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
 
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
@@ -223,6 +218,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
                 }
             };
+
+            if(consumoDeFilasOptions.ConsumirFilasSync)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
+            }
+
+            if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
+            }
 
             canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
             canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
