@@ -2,19 +2,19 @@
 {
     public class AlunoCursoEol
     {
-        public AlunoCursoEol()
-        {
+        public long CodigoAluno { get; set; }
+        public long TurmaId { get; set; }
+        public long ComponenteCurricularId { get; set; }
 
-        }
-        public AlunoCursoEol(long alunoCodigo, long turmaId, long componenteCurricularId)
+        public AlunoCursoEol(long codigoAluno, long turmaId, long componenteCurricularId)
         {
-            AlunoCodigo = alunoCodigo;
+            CodigoAluno = codigoAluno;
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
         }
 
-        public long AlunoCodigo { get; set; }
-        public long TurmaId { get; set; }
-        public long ComponenteCurricularId { get; set; }
+        protected AlunoCursoEol()
+        {
+        }
     }
 }
