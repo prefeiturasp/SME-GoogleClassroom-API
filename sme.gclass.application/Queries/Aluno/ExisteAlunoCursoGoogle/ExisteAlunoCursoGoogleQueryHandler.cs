@@ -1,7 +1,6 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Dados;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,9 +8,17 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ExisteAlunoCursoGoogleQueryHandler : IRequestHandler<ExisteAlunoCursoGoogleQuery, bool>
     {
-        public Task<bool> Handle(ExisteAlunoCursoGoogleQuery request, CancellationToken cancellationToken)
+        private readonly IRepositorioCursoUsuario repositorioCursoUsuario;
+
+        public ExisteAlunoCursoGoogleQueryHandler(IRepositorioCursoUsuario repositorioCursoUsuario)
         {
-            throw new NotImplementedException();
+            this.repositorioCursoUsuario = repositorioCursoUsuario ?? throw new ArgumentNullException(nameof(repositorioCursoUsuario));
+        }
+
+        public async Task<bool> Handle(ExisteAlunoCursoGoogleQuery request, CancellationToken cancellationToken)
+        {
+            var existe = await repositorioCursoUsuario.ExisteAlunoCurso(request.UsusarioId, request.CursoId);
+            return existe;
         }
     }
 }

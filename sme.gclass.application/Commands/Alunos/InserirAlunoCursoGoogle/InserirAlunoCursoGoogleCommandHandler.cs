@@ -5,24 +5,25 @@ using Polly;
 using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirAlunoCursoGoogleCommandHandler : IRequestHandler<InserirAlunoCursoGoogleCommand, bool>
+    public class InserirAlunoCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirAlunoCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public InserirAlunoCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public InserirAlunoCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions) : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
-        }
+        }       
 
-        public async Task<bool> Handle(InserirAlunoCursoGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InserirAlunoCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             await policy.ExecuteAsync(() => IncluirAlunoCursoNoGoogle(request.AlunoCursoGoogle, request.Email, servicoClassroom));

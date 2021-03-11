@@ -9,5 +9,6 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> ExisteProfessorCurso(long usuarioId, long cursoId);
         Task<long> SalvarAsync(CursoUsuario cursoUsuario);
         Task<PaginacaoResultadoDto<ProfessorCursosCadastradosDto>> ObterProfessoresCursosAsync(Paginacao paginacao, long? rf, long? TurmaId, long? ComponenteCurricularId);
+        Task<bool> ExisteAlunoCurso(long usuarioId, long cursoId);
     }
 }

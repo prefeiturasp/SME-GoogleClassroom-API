@@ -37,6 +37,24 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
+        public async Task<bool> ExisteAlunoCurso(long usuarioId, long cursoId)
+        {
+            var query = @"select count(id) 
+                           from cursos_usuarios
+                          where usuario_id = @usuarioId
+                            and curso_id = @cursoId
+                            and not excluido";
+
+            var parametros = new
+            {
+                usuarioId,
+                cursoId
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
+        }
+
 
         public async Task<long> SalvarAsync(CursoUsuario cursoUsuario)
         {
