@@ -50,54 +50,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarUseCases();
         }
 
-        private void RegistrarFilasCurso()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoProfessorSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoProfessorSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoProfessorSync);
-        }
-
-        private void RegistrarFilasAluno()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaAlunoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoIncluir);
-        }
-
-        private void RegistrarFilasFuncionario()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioIncluir);
-        }
-
-        private void RegistrarFilasProfessor()
-        {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorIncluir);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoIncluir);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoAtribuicaoSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync);
-        }
-
         private void RegistrarUseCases()
         {
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
@@ -226,6 +178,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoProfessorSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoAtribuicaoSync, false, consumer);
             }
 
             if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -234,21 +189,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoIncluir, false, consumer);
             }
-
-            canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoAtribuicaoSync, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoIncluir, false, consumer);
-            canalRabbit.BasicConsume(RotasRabbit.FilaCursoProfessorSync, false, consumer);
 
             return Task.CompletedTask;
         }
