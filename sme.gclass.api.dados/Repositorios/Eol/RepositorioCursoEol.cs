@@ -191,6 +191,53 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<ProfessorCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
 		}
 
+		public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId)
+		{
+			using var conn = ObterConexao();
+
+			const string query = @"
+				DECLARE @situacaoAtivo AS CHAR = 1;
+				DECLARE @situacaoPendenteRematricula AS CHAR = 6;
+				DECLARE @situacaoRematriculado AS CHAR = 10;
+				DECLARE @situacaoSemContinuidade AS CHAR = 13;
+
+				DECLARE @situacaoAtivoInt AS INT = 1;
+				DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
+				DECLARE @situacaoRematriculadoInt AS INT = 10;
+				DECLARE @situacaoSemContinuidadeInt AS INT = 13;
+
+				SELECT
+					DISTINCT
+					a.cd_aluno AS CodigoAluno,
+					te.cd_turma_escola AS TurmaId,
+					@componenteCurricularId AS ComponenteCurricularId
+				FROM
+					v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN 
+					aluno a
+					ON aluno.cd_aluno = a.cd_aluno
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON aluno.cd_aluno = matr.cd_aluno
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON matr.cd_matricula = mte.cd_matricula
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE
+					matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
+					AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
+					AND matr.an_letivo = @anoLetivo
+					AND te.an_letivo = @anoLetivo
+					AND te.cd_turma_escola = @turmaId";
+
+			return await conn.QueryAsync<AlunoCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
+		}
+
 		private static string MontaQueryCursosParaInclusao(bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
 		{
 			var query = new StringBuilder();
@@ -534,5 +581,5 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 
 		}
-	}
+    }
 }

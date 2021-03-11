@@ -34,6 +34,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoProfessorSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoProfessorSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoProfessorSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoAlunoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoAlunoSync);
         }
 
         private static void RegistrarFilasAlunoSync(IModel canalRabbit)
