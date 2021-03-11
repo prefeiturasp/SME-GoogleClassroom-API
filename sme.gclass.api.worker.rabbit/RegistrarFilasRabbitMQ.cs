@@ -40,6 +40,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoCursoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoCursoSync);
         }
 
         private static void RegistrarFilasProfessorSync(IModel canalRabbit)
@@ -82,6 +85,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoCursoIncluir);
         }
 
         private static void RegistrarFilasProfessorDeInclusao(IModel canalRabbit)
