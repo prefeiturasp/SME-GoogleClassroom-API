@@ -319,7 +319,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
 
-        public async Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] codigosEol)
+        public async Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] CodigosAluno)
         {
             var query = @"SELECT 
                                  u.indice,
@@ -331,11 +331,11 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao
                             FROM usuarios u 
                            WHERE usuario_tipo = @tipo
-                             and id = any(@codigosEol)";
+                             and id = any(@CodigosAluno)";
 
             var parametros = new
             {
-                codigosEol,
+                CodigosAluno,
                 tipo = UsuarioTipo.Aluno
             };
 
