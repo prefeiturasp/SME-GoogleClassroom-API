@@ -62,12 +62,13 @@ namespace SME.GoogleClassroom.Dados
             var query = new StringBuilder(@"DROP TABLE IF EXISTS professorTemp;
                                             DROP TABLE IF EXISTS professorTempPaginado;
                                             select distinct
+                                                   u.indice,
                                                    u.id AS rf, 
                                                    u.nome AS nome,
                                                    u.email AS email 
                                               into temporary table professorTemp
                                               from usuarios u
-                                             inner join cursos_usuarios cu on cu.usuario_id = u.id 
+                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice 
                                              inner join cursos c on c.id = cu.curso_id 
                                              where u.usuario_tipo = @tipo
                                                and not cu.excluido");
@@ -99,7 +100,7 @@ namespace SME.GoogleClassroom.Dados
    		                              c.componente_curricular_id
                                  from cursos c
                                 inner join cursos_usuarios cu on cu.curso_id = c.id
-                                inner join professorTempPaginado t1 on t1.rf = cu.usuario_id;");
+                                inner join professorTempPaginado t1 on t1.indice = cu.usuario_id;");
 
 
             query.AppendLine("select count(*) from professorTemp");
