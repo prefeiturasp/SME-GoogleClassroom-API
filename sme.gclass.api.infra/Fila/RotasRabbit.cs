@@ -14,6 +14,8 @@
         #region Alunos
         public static string FilaAlunoIncluir => "googleclass.aluno.incluir";
         public static string FilaAlunoSync => "googleclass.aluno.sync";
+        public static string FilaAlunoCursoSync => "googleclass.aluno.curso.sync";
+        public static string FilaAlunoCursoIncluir => "googleclass.aluno.curso.incluir";
         #endregion
 
         #region Funcionário
