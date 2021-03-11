@@ -24,13 +24,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoCursoEolParaIncluir.AlunoCodigo));
+                var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoCursoEolParaIncluir.CodigoAluno));
                 if (aluno is null || !aluno.Any()) return false;
 
                 var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(alunoCursoEolParaIncluir.TurmaId, alunoCursoEolParaIncluir.ComponenteCurricularId));
                 if (curso is null) return false;
 
-                var existeProfessorCurso = await mediator.Send(new ExisteAlunoCursoGoogleQuery(alunoCursoEolParaIncluir.AlunoCodigo, curso.Id));
+                var existeProfessorCurso = await mediator.Send(new ExisteAlunoCursoGoogleQuery(alunoCursoEolParaIncluir.CodigoAluno, curso.Id));
                 if (existeProfessorCurso) return true;
 
                 var alunoCursoGoogle = new AlunoCursoGoogle(aluno.First().Indice, curso.Id);
@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                await mediator.Send(new IncluirCursoUsuarioErroCommand(alunoCursoEolParaIncluir.AlunoCodigo, alunoCursoEolParaIncluir.TurmaId,
+                await mediator.Send(new IncluirCursoUsuarioErroCommand(alunoCursoEolParaIncluir.CodigoAluno, alunoCursoEolParaIncluir.TurmaId,
                     alunoCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}"));
                 throw;
             }
