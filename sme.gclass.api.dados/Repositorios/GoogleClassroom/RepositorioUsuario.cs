@@ -318,5 +318,30 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
+
+        public async Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] codigosEol)
+        {
+            var query = @"SELECT 
+                                 u.indice,
+                                 u.id as Codigo, 
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao
+                            FROM usuarios u 
+                           WHERE usuario_tipo = @tipo
+                             and id = any(@codigosEol)";
+
+            var parametros = new
+            {
+                codigosEol,
+                tipo = UsuarioTipo.Aluno
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            return await conn.QueryAsync<AlunoGoogle>(query, parametros);
+        }
     }
 }
