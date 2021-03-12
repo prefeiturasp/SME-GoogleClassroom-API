@@ -596,7 +596,7 @@ namespace SME.GoogleClassroom.Dados
 					AND	  te.st_turma_escola in ('O', 'A', 'C')
 					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-					AND   serie_turma_grade.dt_inicio > @dataReferencia
+					AND   serie_turma_grade.dt_inicio >= @dataReferencia
 					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())";
 
 			const string queryProgramaBase = @"
@@ -643,7 +643,7 @@ namespace SME.GoogleClassroom.Dados
 					AND   te.st_turma_escola in ('O', 'A', 'C')
 					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-					AND   tegp.dt_inicio > @dataReferencia
+					AND   tegp.dt_inicio >= @dataReferencia
 					AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())";
 
 			var queryRegulares = new StringBuilder(queryRegularesBase);
