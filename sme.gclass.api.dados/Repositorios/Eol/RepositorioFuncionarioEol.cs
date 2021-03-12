@@ -74,7 +74,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE())
-					AND cbc.dt_nomeacao > @dataReferencia;
+					AND cbc.dt_nomeacao >= @dataReferencia;
 
 				-- 2. Cargos sobrepostos fixos
 				IF OBJECT_ID('tempdb..#tempCargosSobrepostosFuncionarios_Fixos') IS NOT NULL
@@ -104,7 +104,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND css.dt_nomeacao_cargo_sobreposto > @dataReferencia
+					AND css.dt_nomeacao_cargo_sobreposto >= @dataReferencia
 					{(!string.IsNullOrEmpty(rf) ? $"AND serv.cd_registro_funcional = @rf;" : ";")}
 
 				-- 3. União das tabelas de cargo fixo
@@ -148,7 +148,7 @@ namespace SME.GoogleClassroom.Dados
 					facs.cd_tipo_funcao IN (@tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
 					AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
 					AND dt_fim_nomeacao IS NULL
-					AND facs.dt_designacao > @dataReferencia;
+					AND facs.dt_designacao >= @dataReferencia;
 
 				-- 5. União das tabelas de cargo fixo e função
 				IF OBJECT_ID('tempdb..#tempCargosFuncionarios') IS NOT NULL
