@@ -307,7 +307,7 @@ namespace SME.GoogleClassroom.Dados
 						escola esc (NOLOCK)
 						ON te.cd_escola = esc.cd_escola
 					WHERE
-						matr.dt_status_matricula > @dataReferencia
+						matr.dt_status_matricula >= @dataReferencia
 						AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
@@ -415,7 +415,7 @@ namespace SME.GoogleClassroom.Dados
 						escola esc (NOLOCK)
 						ON te.cd_escola = esc.cd_escola
 					WHERE
-						matr.dt_status_matricula > @dataReferencia
+						matr.dt_status_matricula >= @dataReferencia
 						AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo

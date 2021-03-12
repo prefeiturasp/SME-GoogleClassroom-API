@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                     try
                     {
-                        var publicarGradeAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoCursoGradeSync, RotasRabbit.FilaAlunoCursoGradeSync, cursoDoAlunoParaIncluir));
+                        var publicarGradeAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoCursoIncluir, RotasRabbit.FilaAlunoCursoIncluir, cursoDoAlunoParaIncluir));
                         if (!publicarGradeAlunoCurso)
                         {
                             await IncluirCursoDoAlunoComErroAsync(cursoDoAlunoParaIncluir, ObterMensagemDeErro(cursoDoAlunoParaIncluir));
