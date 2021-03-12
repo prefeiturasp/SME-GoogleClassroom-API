@@ -157,7 +157,7 @@ namespace SME.GoogleClassroom.Dados
 				LEFT JOIN
 					#tempServidorFuncao funcao
 					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor;
-					select * from #tempServidorCargos
+
 				IF OBJECT_ID('tempdb..#tempServidorCargoFinal') IS NOT NULL
 					DROP TABLE #tempServidorCargoFinal;
 				SELECT
