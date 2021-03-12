@@ -5,9 +5,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -26,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var funcionarioParaIncluirCursos = JsonConvert.DeserializeObject<FuncionarioGoogle>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioParaIncluirCursos is null)
             {
-                await IncluirCursoDoFuncionarioComErroAsync(funcionarioParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos do funcionário no Google Classroom. O professor não foi informado corretamente.");
+                await IncluirCursoDoFuncionarioComErroAsync(funcionarioParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos do funcionário no Google Classroom. O funcionário não foi informado corretamente.");
                 return true;
             }
 
@@ -39,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
-                        var publicarFuncionarioCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoFuncionarioParaIncluir));
+                        var publicarFuncionarioCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoIncluir, RotasRabbit.FilaFuncionarioCursoIncluir, cursoDoFuncionarioParaIncluir));
                         if (!publicarFuncionarioCurso)
                         {
                             await IncluirCursoDoFuncionarioComErroAsync(cursoDoFuncionarioParaIncluir, ObterMensagemDeErro(cursoDoFuncionarioParaIncluir));

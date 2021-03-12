@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!publicarCursosDoFuncionario)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(funcionarioGoogle?.Rf, funcionarioGoogle?.Email,
-                    $"O funionário RF{funcionarioGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste funcionário.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));
+                    $"O funionário RF{funcionarioGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste funcionário.", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioCursoAdicionar, DateTime.Now));
             }
         }
     }
