@@ -4,7 +4,10 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class FuncionarioCursoGoogle
     {
-        public FuncionarioCursoGoogle(long usuarioId, long cursoId, DateTime dataInclusao)
+        public FuncionarioCursoGoogle()
+        {
+        }
+        public FuncionarioCursoGoogle(long usuarioId, long cursoId)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;
