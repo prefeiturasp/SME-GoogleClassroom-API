@@ -93,5 +93,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await atribuirAlunoCursoUseCase.Executar(atribuirAlunoCurso);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Retorna os alunos com os cursos já incluídos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos/cadastrados")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoCursosCadastradosDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterAlunosCursosGoogle([FromServices] IObterAlunosCursosGoogleUseCase useCase,
+            [FromQuery] FiltroObterAlunosCursosCadastradosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
     }
 }

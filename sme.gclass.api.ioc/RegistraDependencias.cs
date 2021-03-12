@@ -77,6 +77,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IInserirAlunoCursoGoogleUseCase, InserirAlunoCursoGoogleUseCase>();
             services.TryAddScoped<IEnviarRequisicaoAtribuirAlunoCursoUseCase, EnviarRequisicaoAtribuirAlunoCursoUseCase>();
             services.TryAddScoped<ITrataSyncGoogleGradesDosAlunosUseCase, TrataSyncGoogleGradesDosAlunosUseCase>();
+            services.TryAddScoped<IObterAlunosCursosGoogleUseCase, ObterAlunosCursosGoogleUseCase>();
         }
     }
 }
