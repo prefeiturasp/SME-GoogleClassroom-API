@@ -19,13 +19,13 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var funciorarioCursoEol = new FuncionarioCursoEol(atribuirFuncionarioCurso.Rf, atribuirFuncionarioCurso.TurmaId, atribuirFuncionarioCurso.ComponenteCurricularId);
 
-            var publicarProfessorCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoIncluir, RotasRabbit.FilaFuncionarioCursoIncluir, funciorarioCursoEol));
-            if (!publicarProfessorCurso)
+            var publicarFuncionarioCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoIncluir, RotasRabbit.FilaFuncionarioCursoIncluir, funciorarioCursoEol));
+            if (!publicarFuncionarioCurso)
             {
                 throw new NegocioException("Não foi possível realizar a requisição para atribuir o funcionário ao curso.");
             }
 
-            return publicarProfessorCurso;
+            return publicarFuncionarioCurso;
         }
     }
 }
