@@ -30,15 +30,17 @@ namespace SME.GoogleClassroom.Aplicacao
             };
         }
 
-        private async Task<IEnumerable<AtribuicaoProfessorCursoEolDto>> MapearParaDto(IEnumerable<AtribuicaoProfessorCursoEol> Atribuicoes)
+        private async Task<IEnumerable<AtribuicaoProfessorCursoEolDto>> MapearParaDto(IEnumerable<AtribuicaoProfessorCursoEol> atribuicoes)
         {
             var professoresGoogle = new List<ProfessorGoogle>();
+            var atribuicaoProfessorCursoEol = new List<AtribuicaoProfessorCursoEolDto>();
 
-            var atribuicaoProfessorCursoEol = new List<AtribuicaoProfessorCursoEolDto>();           
+            if (!atribuicoes.Any())
+                return atribuicaoProfessorCursoEol;
 
-            var rfs = Atribuicoes.Select(a => a.Rf).Distinct().ToArray();
+            var rfs = atribuicoes.Select(a => a.Rf).Distinct().ToArray();
 
-            double totalRfs = Atribuicoes.Select(a => a.Rf).Distinct().Count();
+            double totalRfs = atribuicoes.Select(a => a.Rf).Distinct().Count();
 
             var i = 0;
 
@@ -52,7 +54,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             } while (i < (int)Math.Ceiling(totalRfs / 100));
 
-            foreach (var item in Atribuicoes)
+            foreach (var item in atribuicoes)
             {
                 var atribuicaoParaRetornar = new AtribuicaoProfessorCursoEolDto();
 
