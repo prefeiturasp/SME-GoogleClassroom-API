@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<AtribuicaoAlunoCursoEolDto>> Executar(FiltroObterAtribuicoesDeCursosDosAlunosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            var resultadoDto = new PaginacaoResultadoDto<AtribuicaoAlunoCursoEol>();  // TODO : Ajustar com a query da outra atividade
+            var resultadoDto = await mediator.Send(new ObterGradesDeCursosDosAlunosQuery(filtro.DataReferencia, paginacao, filtro.CodigoAluno, filtro.TurmaId, filtro.ComponenteCurricularId));
 
             return new PaginacaoResultadoDto<AtribuicaoAlunoCursoEolDto>()
             {
@@ -30,15 +30,17 @@ namespace SME.GoogleClassroom.Aplicacao
             };
         }
 
-        private async Task<IEnumerable<AtribuicaoAlunoCursoEolDto>> MapearParaDto(IEnumerable<AtribuicaoAlunoCursoEol> Atribuicoes)
+        private async Task<IEnumerable<AtribuicaoAlunoCursoEolDto>> MapearParaDto(IEnumerable<GradeAlunoCursoEol> atribuicoes)
         {
             var alunosGoogle = new List<AlunoGoogle>();
 
             var atribuicoesAlunoCursoEol = new List<AtribuicaoAlunoCursoEolDto>();
 
-            var codigosAluno = Atribuicoes.Select(a => a.CodigoAluno).Distinct().ToArray();
+            if (!atribuicoes.Any()) return atribuicoesAlunoCursoEol;
 
-            double totalCodigos = Atribuicoes.Select(a => a.CodigoAluno).Distinct().Count();
+            var codigosAluno = atribuicoes.Select(a => a.CodigoAluno).Distinct().ToArray();
+
+            double totalCodigos = atribuicoes.Select(a => a.CodigoAluno).Distinct().Count();
 
             var i = 0;
 
@@ -52,7 +54,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             } while (i < (int)Math.Truncate(totalCodigos / 100));
 
-            foreach (var item in Atribuicoes)
+            foreach (var item in atribuicoes)
             {
                 var atribuicaoParaRetornar = new AtribuicaoAlunoCursoEolDto();
 
@@ -60,7 +62,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 atribuicaoParaRetornar.Nome = alunosGoogle.FirstOrDefault(x => x.Codigo == item.CodigoAluno)?.Nome ?? "";
                 atribuicaoParaRetornar.TurmaId = item.TurmaId;
                 atribuicaoParaRetornar.ComponenteCurricularId = item.ComponenteCurricularId;
-                atribuicaoParaRetornar.DataAtribuicao = item.DataAtribuicao;
+                atribuicaoParaRetornar.DataAtribuicao = item.DataInicioGrade;
                 atribuicaoParaRetornar.CdUe = item.CdUe;
 
                 atribuicoesAlunoCursoEol.Add(atribuicaoParaRetornar);
