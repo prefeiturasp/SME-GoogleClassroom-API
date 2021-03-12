@@ -8,6 +8,6 @@
         FuncionarioAdicionar = 4,
         ProfessorCursoAdicionar = 5,
         AtribuicaoProfessorCursoAdicionar = 6,
-        FuncionarioCursoAdicionar = 7,
+        FuncionarioCursoAdicionar = 9
     }
 }
