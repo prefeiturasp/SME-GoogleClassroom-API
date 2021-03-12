@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class AtribuicaoAlunoCursoEolDto
+    public class GradeAlunoCursoEolDto
     {
         public long CodigoAluno { get; set; }
         public string Nome { get; set; }

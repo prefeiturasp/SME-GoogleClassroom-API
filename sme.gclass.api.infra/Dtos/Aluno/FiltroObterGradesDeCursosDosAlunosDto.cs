@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroObterAtribuicoesDeCursosDosAlunosDto : FiltroPaginacaoBaseDto
+    public class FiltroObterGradesDeCursosDosAlunosDto : FiltroPaginacaoBaseDto
     {
         public long? CodigoAluno { get; set; }
         public long? TurmaId { get; set; }
