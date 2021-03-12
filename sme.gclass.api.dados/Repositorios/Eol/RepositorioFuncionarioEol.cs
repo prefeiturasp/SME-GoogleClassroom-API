@@ -3,6 +3,7 @@ using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,6 +40,11 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+		public Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long rf, int anoLetivo)
+		{
+			throw new NotImplementedException();
+		}
 
 		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, string rf)
         {
@@ -228,6 +234,5 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 
 		}
-
-	}
+    }
 }

@@ -19,6 +19,8 @@
         #region Funcionário
         public static string FilaFuncionarioIncluir => "googleclass.funcionario.incluir";
         public static string FilaFuncionarioSync => "googleclass.funcionario.sync";
+        public static string FilaFuncionarioCursoIncluir => "googleclass.funcionario.curso.incluir";
+        public static string FilaFuncionarioCursoSync => "googleclass.funcionario.curso.sync";
         #endregion
 
         #region Professores

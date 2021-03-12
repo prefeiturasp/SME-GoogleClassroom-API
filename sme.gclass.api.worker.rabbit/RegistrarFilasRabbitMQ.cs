@@ -58,6 +58,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioCursoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioCursoSync);
         }
 
         #endregion Filas Sync
