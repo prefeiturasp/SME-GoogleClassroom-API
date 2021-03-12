@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.UsusarioId)
                 .NotEmpty()
-                .WithMessage("o id do funcionario deve ser informado.");
+                .WithMessage("o id do funcionário deve ser informado.");
 
             RuleFor(x => x.CursoId)
                 .NotEmpty()
