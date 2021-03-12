@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace SME.GoogleClassroom.Dados
 {
     public class RepositorioAlunoEol : RepositorioEol, IRepositorioAlunoEol
-	{
+    {
         public RepositorioAlunoEol(ConnectionStrings connectionStrings)
-			:base(connectionStrings)
+            : base(connectionStrings)
         {
         }
 
@@ -24,14 +24,15 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            using var multi = await conn.QueryMultipleAsync(query, 
-				new 
-				{ 
-					anoLetivo = dataReferencia.Year,
-					dataReferencia, paginacao.QuantidadeRegistros, 
-					paginacao.QuantidadeRegistrosIgnorados, 
-					codigoEol 
-				}, commandTimeout: 6000);
+            using var multi = await conn.QueryMultipleAsync(query,
+                new
+                {
+                    anoLetivo = dataReferencia.Year,
+                    dataReferencia,
+                    paginacao.QuantidadeRegistros,
+                    paginacao.QuantidadeRegistrosIgnorados,
+                    codigoEol
+                }, commandTimeout: 6000);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -44,11 +45,11 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
-		{
-			using var conn = ObterConexao();
+        public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
+        {
+            using var conn = ObterConexao();
 
-			const string query = @"
+            const string query = @"
 								DECLARE @situacaoAtivo AS CHAR = 1;
 								DECLARE @situacaoPendenteRematricula AS CHAR = 6;
 								DECLARE @situacaoRematriculado AS CHAR = 10;
@@ -238,37 +239,38 @@ namespace SME.GoogleClassroom.Dados
 									(SELECT * FROM #tempTurmasComponentesRegulares) AS Regulares
 								UNION
 									(SELECT * FROM #tempTurmasComponentesPrograma);";
-			return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
-		}
+            return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
+        }
 
-		public async Task<PaginacaoResultadoDto<GradeAlunoCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime dataReferencia, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
-		{
-			using var conn = ObterConexao();
+        public async Task<PaginacaoResultadoDto<GradeAlunoCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime dataReferencia, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
+        {
+            using var conn = ObterConexao();
 
-			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-			var query = MontaQueryGradesAlunoCursoParaInclusao(aplicarPaginacao, codigoAluno, turmaId, componenteCurricularId);
-			var parametros = new
-			{
-				anoLetivo = dataReferencia.Year,
-				dataReferencia = dataReferencia.Date,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados,
-				codigoAluno,
-				turmaId,
-				componenteCurricularId
-			};
-			using var multi = await conn.QueryMultipleAsync(query, parametros);
+            var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
+            var query = MontaQueryGradesAlunoCursoParaInclusao(aplicarPaginacao, codigoAluno, turmaId, componenteCurricularId);
+            var parametros = new
+            {
+                anoLetivo = dataReferencia.Year,
+                dataReferencia = dataReferencia.Date,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados,
+                codigoAluno,
+                turmaId,
+                componenteCurricularId
+            };
 
-			var retorno = new PaginacaoResultadoDto<GradeAlunoCursoEol>();
+            using var multi = await conn.QueryMultipleAsync(query, parametros);
 
-			retorno.Items = multi.Read<GradeAlunoCursoEol>();
-			retorno.TotalRegistros = multi.ReadFirst<int>();
-			retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            var retorno = new PaginacaoResultadoDto<GradeAlunoCursoEol>();
 
-			return retorno;
-		}
+            retorno.Items = multi.Read<GradeAlunoCursoEol>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
-		private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, long codigoEol)
+            return retorno;
+        }
+
+        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, long codigoEol)
         {
 
             return $@"DECLARE @situacaoAtivo AS CHAR = 1;
@@ -542,9 +544,9 @@ namespace SME.GoogleClassroom.Dados
 
         }
 
-		private static string MontaQueryGradesAlunoCursoParaInclusao(bool aplicarPaginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
+        private static string MontaQueryGradesAlunoCursoParaInclusao(bool aplicarPaginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
         {
-			const string queryRegularesBase = @"
+            const string queryRegularesBase = @"
 				IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
 					DROP TABLE #tempTurmasComponentesRegulares
 				SELECT
@@ -600,7 +602,7 @@ namespace SME.GoogleClassroom.Dados
 					AND   serie_turma_grade.dt_inicio >= @dataReferencia
 					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())";
 
-			const string queryProgramaBase = @"
+            const string queryProgramaBase = @"
 				IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL 
 					DROP TABLE #tempTurmasComponentesPrograma
 				SELECT
@@ -648,26 +650,26 @@ namespace SME.GoogleClassroom.Dados
 					AND   tegp.dt_inicio >= @dataReferencia
 					AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())";
 
-			var queryRegulares = new StringBuilder(queryRegularesBase);
-			var queryPrograma = new StringBuilder(queryProgramaBase);
+            var queryRegulares = new StringBuilder(queryRegularesBase);
+            var queryPrograma = new StringBuilder(queryProgramaBase);
 
-			if(turmaId.HasValue)
+            if (turmaId.HasValue)
             {
-				queryRegulares.AppendLine("AND te.cd_turma_escola = @turmaId");
-				queryPrograma.AppendLine("AND te.cd_turma_escola = @turmaId");
-			}
+                queryRegulares.AppendLine(" AND te.cd_turma_escola = @turmaId");
+                queryPrograma.AppendLine(" AND te.cd_turma_escola = @turmaId");
+            }
 
-			if(componenteCurricularId.HasValue)
+            if (componenteCurricularId.HasValue)
             {
-				queryRegulares.AppendLine("AND gcc.cd_componente_curricular = @componenteCurricularId");
-				queryPrograma.AppendLine("AND pcc.cd_componente_curricular = @componenteCurricularId");
-			}
+                queryRegulares.AppendLine(" AND gcc.cd_componente_curricular = @componenteCurricularId");
+                queryPrograma.AppendLine(" AND pcc.cd_componente_curricular = @componenteCurricularId");
+            }
 
-			queryRegulares.AppendLine(";");
-			queryPrograma.AppendLine(";");
+            queryRegulares.AppendLine(";");
+            queryPrograma.AppendLine(";");
 
-			var query = new StringBuilder($@"{queryRegulares} {queryPrograma}");
-			query.AppendLine(@"
+            var query = new StringBuilder($@"{queryRegulares} {queryPrograma}");
+            query.AppendLine(@"
 				IF OBJECT_ID('tempdb..#tempTurmasComponentes') IS NOT NULL 
 					DROP TABLE #tempTurmasComponentes
 				SELECT
@@ -687,7 +689,7 @@ namespace SME.GoogleClassroom.Dados
 				FROM
 					#tempTurmasComponentes;");
 
-			query.AppendLine(@"
+            query.AppendLine(@"
 				DECLARE @situacaoAtivo AS CHAR = 1;
 				DECLARE @situacaoPendenteRematricula AS CHAR = 6;
 				DECLARE @situacaoRematriculado AS CHAR = 10;
@@ -729,9 +731,9 @@ namespace SME.GoogleClassroom.Dados
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo");
 
-			query.AppendLine(codigoAluno.HasValue ? "AND aluno.cd_aluno = @codigoAluno": ";");
+            query.AppendLine(codigoAluno.HasValue ? " AND aluno.cd_aluno = @codigoAluno" : ";");
 
-			query.AppendLine(@"
+            query.AppendLine(@"
 				IF OBJECT_ID('tempdb..#tempGradesAlunosCursos') IS NOT NULL 
 					DROP TABLE #tempGradesAlunosCursos
 				SELECT
@@ -745,11 +747,12 @@ namespace SME.GoogleClassroom.Dados
 					#tempAlunosTurmas alunos
 				INNER JOIN
 					#tempTurmasComponentes cursos
-					ON alunos.TurmaId =  cursos.TurmaId");
+					ON alunos.TurmaId =  cursos.TurmaId
+			    ORDER BY alunos.CodigoAluno");
 
-			query.AppendLine(aplicarPaginacao ? "OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";");
+            query.AppendLine(aplicarPaginacao ? " OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; " : ";");
 
-			query.AppendLine(@"
+            query.AppendLine(@"
 				SELECT
 					*
 				FROM
@@ -760,7 +763,7 @@ namespace SME.GoogleClassroom.Dados
 				FROM
 					#tempGradesAlunosCursos;");
 
-			return query.ToString();
+            return query.ToString();
         }
     }
 }
