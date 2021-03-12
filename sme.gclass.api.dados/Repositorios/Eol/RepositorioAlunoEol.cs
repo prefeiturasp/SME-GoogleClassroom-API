@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -240,6 +241,33 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
 		}
 
+		public async Task<PaginacaoResultadoDto<GradeAlunoCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime dataReferencia, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
+		{
+			using var conn = ObterConexao();
+
+			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
+			var query = MontaQueryGradesAlunoCursoParaInclusao(aplicarPaginacao, codigoAluno, turmaId, componenteCurricularId);
+			var parametros = new
+			{
+				anoLetivo = dataReferencia.Year,
+				dataReferencia = dataReferencia.Date,
+				paginacao.QuantidadeRegistros,
+				paginacao.QuantidadeRegistrosIgnorados,
+				codigoAluno,
+				turmaId,
+				componenteCurricularId
+			};
+			using var multi = await conn.QueryMultipleAsync(query, parametros);
+
+			var retorno = new PaginacaoResultadoDto<GradeAlunoCursoEol>();
+
+			retorno.Items = multi.Read<GradeAlunoCursoEol>();
+			retorno.TotalRegistros = multi.ReadFirst<int>();
+			retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+
+			return retorno;
+		}
+
 		private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, long codigoEol)
         {
 
@@ -279,7 +307,7 @@ namespace SME.GoogleClassroom.Dados
 						escola esc (NOLOCK)
 						ON te.cd_escola = esc.cd_escola
 					WHERE
-						matr.dt_status_matricula > @dataReferencia
+						matr.dt_status_matricula >= @dataReferencia
 						AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
@@ -387,7 +415,7 @@ namespace SME.GoogleClassroom.Dados
 						escola esc (NOLOCK)
 						ON te.cd_escola = esc.cd_escola
 					WHERE
-						matr.dt_status_matricula > @dataReferencia
+						matr.dt_status_matricula >= @dataReferencia
 						AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
@@ -512,6 +540,227 @@ namespace SME.GoogleClassroom.Dados
 					FROM 
 						#tempAlunosMatriculasAtivasFinal temp;";
 
+        }
+
+		private static string MontaQueryGradesAlunoCursoParaInclusao(bool aplicarPaginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
+        {
+			const string queryRegularesBase = @"
+				IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentesRegulares
+				SELECT
+					DISTINCT
+					CASE
+						WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
+					ELSE
+						cc.cd_componente_curricular
+					END ComponenteCurricularId,
+					te.cd_turma_escola TurmaId,
+					serie_turma_grade.dt_inicio AS DataInicioGrade
+				INTO #tempTurmasComponentesRegulares
+				FROM
+					turma_escola te (NOLOCK)
+				INNER JOIN
+					escola esc (NOLOCK) 
+					ON te.cd_escola = esc.cd_escola
+				INNER JOIN
+					v_cadastro_unidade_educacao ue (NOLOCK) 
+					ON ue.cd_unidade_educacao = esc.cd_escola
+				INNER JOIN
+					tipo_escola tpe (NOLOCK) 
+					ON esc.tp_escola = tpe.tp_escola
+				INNER JOIN
+					unidade_administrativa dre (NOLOCK) 
+					ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa	
+				INNER JOIN
+					serie_turma_grade (NOLOCK) 
+					ON serie_turma_grade.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola_grade (NOLOCK) 
+					ON serie_turma_grade.cd_escola_grade = escola_grade.cd_escola_grade
+				INNER JOIN
+					grade (NOLOCK) 
+					ON escola_grade.cd_grade = grade.cd_grade
+				INNER JOIN
+					grade_componente_curricular gcc (NOLOCK) 
+					ON gcc.cd_grade = grade.cd_grade
+				INNER JOIN
+					componente_curricular cc (NOLOCK) 
+					ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+				INNER JOIN
+					serie_ensino (NOLOCK) 
+					ON grade.cd_serie_ensino = serie_ensino.cd_serie_ensino
+				INNER JOIN
+					etapa_ensino (NOLOCK) 
+					ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino
+				WHERE  
+					te.an_letivo = @anoLetivo
+					AND	  te.st_turma_escola in ('O', 'A', 'C')
+					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+					AND   serie_turma_grade.dt_inicio >= @dataReferencia
+					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())";
+
+			const string queryProgramaBase = @"
+				IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentesPrograma
+				SELECT
+					DISTINCT
+					pcc.cd_componente_curricular AS ComponenteCurricularId,
+					te.cd_turma_escola TurmaId,
+					tegp.dt_inicio AS DataInicioGrade
+				INTO #tempTurmasComponentesPrograma
+				FROM
+					turma_escola te (NOLOCK)
+				INNER JOIN
+					escola esc (NOLOCK) 
+					ON te.cd_escola = esc.cd_escola
+				INNER JOIN
+					v_cadastro_unidade_educacao ue (NOLOCK) 
+					ON ue.cd_unidade_educacao = esc.cd_escola
+				INNER JOIN
+					tipo_escola tpe (NOLOCK) 
+					ON esc.tp_escola = tpe.tp_escola
+				INNER JOIN
+					unidade_administrativa dre (NOLOCK) 
+					ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa	
+				LEFT JOIN 
+					tipo_programa tp (NOLOCK) 
+					ON te.cd_tipo_programa = tp.cd_tipo_programa
+				INNER JOIN 
+					turma_escola_grade_programa tegp (NOLOCK) 
+					ON tegp.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN 
+					escola_grade teg (NOLOCK) 
+					ON teg.cd_escola_grade = tegp.cd_escola_grade
+				INNER JOIN 
+					grade pg (NOLOCK) ON pg.cd_grade = teg.cd_grade
+				INNER JOIN 
+					grade_componente_curricular pgcc (NOLOCK) 
+					ON pgcc.cd_grade = teg.cd_grade
+				INNER JOIN 
+					componente_curricular pcc (NOLOCK) 
+					ON pgcc.cd_componente_curricular = pcc.cd_componente_curricular and pcc.dt_cancelamento is null
+				WHERE  
+					te.an_letivo = @anoLetivo
+					AND   te.st_turma_escola in ('O', 'A', 'C')
+					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+					AND   tegp.dt_inicio >= @dataReferencia
+					AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())";
+
+			var queryRegulares = new StringBuilder(queryRegularesBase);
+			var queryPrograma = new StringBuilder(queryProgramaBase);
+
+			if(turmaId.HasValue)
+            {
+				queryRegulares.AppendLine("AND te.cd_turma_escola = @turmaId");
+				queryPrograma.AppendLine("AND te.cd_turma_escola = @turmaId");
+			}
+
+			if(componenteCurricularId.HasValue)
+            {
+				queryRegulares.AppendLine("AND gcc.cd_componente_curricular = @componenteCurricularId");
+				queryPrograma.AppendLine("AND pcc.cd_componente_curricular = @componenteCurricularId");
+			}
+
+			queryRegulares.AppendLine(";");
+			queryPrograma.AppendLine(";");
+
+			var query = new StringBuilder($@"{queryRegulares} {queryPrograma}");
+			query.AppendLine(@"
+				IF OBJECT_ID('tempdb..#tempTurmasComponentes') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentes
+				SELECT
+					*
+				INTO #tempTurmasComponentes
+				FROM
+					(SELECT * FROM #tempTurmasComponentesRegulares) AS Regulares
+				UNION
+					(SELECT * FROM #tempTurmasComponentesPrograma);
+
+				IF OBJECT_ID('tempdb..#tempTurmas') IS NOT NULL 
+					DROP TABLE #tempTurmas
+				SELECT
+					DISTINCT
+					TurmaId
+				INTO #tempTurmas
+				FROM
+					#tempTurmasComponentes;");
+
+			query.AppendLine(@"
+				DECLARE @situacaoAtivo AS CHAR = 1;
+				DECLARE @situacaoPendenteRematricula AS CHAR = 6;
+				DECLARE @situacaoRematriculado AS CHAR = 10;
+				DECLARE @situacaoSemContinuidade AS CHAR = 13;
+
+				DECLARE @situacaoAtivoInt AS INT = 1;
+				DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
+				DECLARE @situacaoRematriculadoInt AS INT = 10;
+				DECLARE @situacaoSemContinuidadeInt AS INT = 13;
+
+				IF OBJECT_ID('tempdb..#tempAlunosTurmas') IS NOT NULL 
+					DROP TABLE #tempAlunosTurmas
+				SELECT
+					DISTINCT
+					aluno.cd_aluno AS CodigoAluno,
+					te.cd_turma_escola AS TurmaId,
+					te.cd_escola AS CdUe
+				INTO #tempAlunosTurmas
+				FROM
+					#tempTurmas temp
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON temp.TurmaId = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON mte.cd_matricula = matr.cd_matricula
+				INNER JOIn
+					v_aluno_cotic aluno (NOLOCK)
+					ON aluno.cd_aluno = matr.cd_aluno
+				WHERE
+					matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
+					AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
+					AND matr.an_letivo = @anoLetivo
+					AND te.an_letivo = @anoLetivo");
+
+			query.AppendLine(codigoAluno.HasValue ? "AND aluno.cd_aluno = @codigoAluno": ";");
+
+			query.AppendLine(@"
+				IF OBJECT_ID('tempdb..#tempGradesAlunosCursos') IS NOT NULL 
+					DROP TABLE #tempGradesAlunosCursos
+				SELECT
+					alunos.CodigoAluno,
+					cursos.TurmaId,
+					cursos.ComponenteCurricularId,
+					cursos.DataInicioGrade,
+					alunos.CdUe
+				INTO #tempGradesAlunosCursos
+				FROM
+					#tempAlunosTurmas alunos
+				INNER JOIN
+					#tempTurmasComponentes cursos
+					ON alunos.TurmaId =  cursos.TurmaId");
+
+			query.AppendLine(aplicarPaginacao ? "OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";");
+
+			query.AppendLine(@"
+				SELECT
+					*
+				FROM
+					#tempGradesAlunosCursos
+
+				SELECT
+					COUNT(*)
+				FROM
+					#tempGradesAlunosCursos;");
+
+			return query.ToString();
         }
     }
 }
