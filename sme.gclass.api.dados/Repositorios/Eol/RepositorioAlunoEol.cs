@@ -554,7 +554,8 @@ namespace SME.GoogleClassroom.Dados
 					ELSE
 						cc.cd_componente_curricular
 					END ComponenteCurricularId,
-					te.cd_turma_escola TurmaId
+					te.cd_turma_escola TurmaId,
+					serie_turma_grade.dt_inicio AS DataInicioGrade
 				INTO #tempTurmasComponentesRegulares
 				FROM
 					turma_escola te (NOLOCK)
@@ -605,7 +606,8 @@ namespace SME.GoogleClassroom.Dados
 				SELECT
 					DISTINCT
 					pcc.cd_componente_curricular AS ComponenteCurricularId,
-					te.cd_turma_escola TurmaId
+					te.cd_turma_escola TurmaId,
+					tegp.dt_inicio AS DataInicioGrade
 				INTO #tempTurmasComponentesPrograma
 				FROM
 					turma_escola te (NOLOCK)
@@ -736,6 +738,7 @@ namespace SME.GoogleClassroom.Dados
 					alunos.CodigoAluno,
 					cursos.TurmaId,
 					cursos.ComponenteCurricularId,
+					cursos.DataInicioGrade,
 					alunos.CdUe
 				INTO #tempGradesAlunosCursos
 				FROM
