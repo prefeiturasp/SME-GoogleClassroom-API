@@ -148,5 +148,23 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+        public async Task<bool> ExisteFuncionarioCurso(long usuarioId, long cursoId)
+        {
+            var query = @"SELECT exists(select 1
+                           from cursos_usuarios
+                          where usuario_id = @usuarioId
+                            and curso_id = @cursoId
+                            and not excluido limit 1)";
+
+            var parametros = new
+            {
+                usuarioId,
+                cursoId
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
+        }
     }
 }
