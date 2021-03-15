@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Aluno,
                 codigoEol,
-                email = email.Trim().ToLower()
+                email = email?.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -129,7 +129,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Funcionario,
                 rf,
-                email = email.Trim().ToLower()
+                email = email?.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -185,7 +185,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Professor,
                 rf,
-                email = email.Trim().ToLower()
+                email = email?.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -263,7 +263,8 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresPaginadoPorRfs(Paginacao paginacao, long[] rfs)
+        // TO DO: Alterar para utilizar classe abstrata quando fizermos a separação
+        public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresFuncionariosPaginadoPorRfs(Paginacao paginacao, long[] rfs)
         {
             var query = new StringBuilder(@"SELECT 
                                                  u.indice,
@@ -275,14 +276,14 @@ namespace SME.GoogleClassroom.Dados
                                                  u.data_inclusao as datainclusao,
                                                  u.data_atualizacao as dataatualizacao
                                             FROM usuarios u 
-                                           WHERE usuario_tipo = @tipo
+                                           WHERE usuario_tipo = any(@tipos)
                                              and id = any(@rfs)");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
 
 
-            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo and id = any(@rfs)");
+            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = any(@tipos) and id = any(@rfs)");
 
             var retorno = new PaginacaoResultadoDto<ProfessorGoogle>();
 
@@ -291,7 +292,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
                 rfs,
-                tipo = UsuarioTipo.Professor
+                tipos = new [] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
