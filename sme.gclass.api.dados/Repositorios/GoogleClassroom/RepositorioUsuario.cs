@@ -263,6 +263,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
 
+        // TO DO: Alterar para utilizar classe abstrata quando fizermos a separação
         public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresFuncionariosPaginadoPorRfs(Paginacao paginacao, long[] rfs)
         {
             var query = new StringBuilder(@"SELECT 

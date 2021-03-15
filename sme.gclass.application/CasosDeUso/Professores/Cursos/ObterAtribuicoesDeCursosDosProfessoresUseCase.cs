@@ -47,6 +47,7 @@ namespace SME.GoogleClassroom.Aplicacao
             do
             {
                 var paginacao = new Paginacao(i, 100);
+                // TO DO: Alterar para utilizar classe abstrata quando fizermos a separação
                 var professores = await mediator.Send(new ObterProfessoresFuncionariosPorRfsPaginadoQuery(paginacao, rfs));
 
                 professoresGoogle.AddRange(professores.Items);
