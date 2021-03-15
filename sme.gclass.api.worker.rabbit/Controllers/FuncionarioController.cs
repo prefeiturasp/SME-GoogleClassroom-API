@@ -87,9 +87,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">Foi realizada a requisição para atribuíção do funcionário ao curso.</response>
         [HttpPost("cursos")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> EnviarRequisicaoAtribuirFuncionarioCurso([FromBody] AtribuirFuncionarioCursoDto atribuirFuncionarioCursoDto, [FromServices] IEnviarRequisicaoAtribuirFuncionarioCursoUseCase atribuirProfessorCursoUseCase)
+        public async Task<IActionResult> EnviarRequisicaoAtribuirFuncionarioCurso([FromBody] AtribuirFuncionarioCursoDto atribuirFuncionarioCursoDto, [FromServices] IEnviarRequisicaoAtribuirFuncionarioCursoUseCase atribuirFuncionarioCursoUseCase)
         {
-            var retorno = await atribuirProfessorCursoUseCase.Executar(atribuirFuncionarioCursoDto);
+            var retorno = await atribuirFuncionarioCursoUseCase.Executar(atribuirFuncionarioCursoDto);
             return Ok(retorno);
         }
     }
