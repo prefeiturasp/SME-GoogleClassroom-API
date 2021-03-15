@@ -169,14 +169,14 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>> ObterFuncionariosCursosAsync(Paginacao paginacao, long? rf, long? turmaId, long? componenteCurricularId)
         {
-            var query = new StringBuilder(@"DROP TABLE IF EXISTS professorTemp;
-                                            DROP TABLE IF EXISTS professorTempPaginado;
+            var query = new StringBuilder(@"DROP TABLE IF EXISTS funcionarioTemp;
+                                            DROP TABLE IF EXISTS funcionarioTempPaginado;
                                             select distinct
                                                    u.indice,
                                                    u.id AS rf, 
                                                    u.nome AS nome,
                                                    u.email AS email 
-                                              into temporary table professorTemp
+                                              into temporary table funcionarioTemp
                                               from usuarios u
                                              inner join cursos_usuarios cu on cu.usuario_id = u.indice 
                                              inner join cursos c on c.id = cu.curso_id 
@@ -193,7 +193,7 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(";");
 
-            query.AppendLine(" select * into temporary professorTempPaginado from professorTemp");
+            query.AppendLine(" select * into temporary funcionarioTempPaginado from funcionarioTemp");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
@@ -211,10 +211,10 @@ namespace SME.GoogleClassroom.Dados
    		                              c.componente_curricular_id as componenteCurricularId
                                  from cursos c
                                 inner join cursos_usuarios cu on cu.curso_id = c.id
-                                inner join professorTempPaginado t1 on t1.indice = cu.usuario_id;");
+                                inner join funcionarioTempPaginado t1 on t1.indice = cu.usuario_id;");
 
 
-            query.AppendLine("select count(*) from professorTemp");
+            query.AppendLine("select count(*) from funcionarioTemp");
 
 
 
