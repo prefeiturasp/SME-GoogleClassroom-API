@@ -283,7 +283,7 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
 
 
-            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo and id = any(@rfs)");
+            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = any(@tipos) and id = any(@rfs)");
 
             var retorno = new PaginacaoResultadoDto<ProfessorGoogle>();
 
@@ -292,7 +292,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
                 rfs,
-                tipos = new[] { UsuarioTipo.Professor, UsuarioTipo.Funcionario }
+                tipos = new [] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
