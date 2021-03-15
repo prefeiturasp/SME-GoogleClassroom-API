@@ -249,17 +249,16 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_inclusao as datainclusao,
                                  u.data_atualizacao as dataatualizacao
                             FROM usuarios u 
-                           WHERE usuario_tipo = @tipo
+                           WHERE usuario_tipo = any(@tipos)
                              and id = any(@rfs)";
 
             var parametros = new
             {
                 rfs,
-                tipo = UsuarioTipo.Professor
+                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
-
             return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
 
