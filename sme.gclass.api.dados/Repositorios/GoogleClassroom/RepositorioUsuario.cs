@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Aluno,
                 codigoEol,
-                email
+                email = email.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -129,7 +129,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Funcionario,
                 rf,
-                email
+                email = email.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -185,7 +185,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Professor,
                 rf,
-                email
+                email = email.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
