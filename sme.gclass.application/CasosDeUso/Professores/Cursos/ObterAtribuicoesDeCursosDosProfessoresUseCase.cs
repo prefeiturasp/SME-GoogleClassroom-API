@@ -47,7 +47,7 @@ namespace SME.GoogleClassroom.Aplicacao
             do
             {
                 var paginacao = new Paginacao(i, 100);
-                var professores = await mediator.Send(new ObterProfessoresPorRfsPaginadoQuery(paginacao, rfs));
+                var professores = await mediator.Send(new ObterProfessoresFuncionariosPorRfsPaginadoQuery(paginacao, rfs));
 
                 professoresGoogle.AddRange(professores.Items);
                 i++;
