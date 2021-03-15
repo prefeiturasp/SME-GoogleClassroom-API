@@ -31,20 +31,26 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_atualizacao as dataatualizacao
                                               FROM usuarios u 
                                              WHERE u.usuario_tipo = @tipo ");
+
+            var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
+
             if (codigoEol.HasValue && codigoEol > 0)
+            {
                 query.AppendLine("AND u.id = @codigoEol");
+                queryCount.AppendLine("AND u.id = @codigoEol");
+            }
 
             if (!string.IsNullOrEmpty(email))
+            {
                 query.AppendLine("AND u.email = @email");
+                queryCount.AppendLine("AND u.email = @email");
+            }
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
             query.AppendLine(";");
-
-            query.AppendLine($"SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
-            if (codigoEol.HasValue && codigoEol > 0)
-                query.AppendLine($"and u.id = @codigoEol");
+            query.AppendLine(queryCount.ToString());
 
             var retorno = new PaginacaoResultadoDto<AlunoGoogle>();
 
@@ -54,7 +60,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Aluno,
                 codigoEol,
-                email
+                email = email.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -94,18 +100,26 @@ namespace SME.GoogleClassroom.Dados
                                                    u.data_atualizacao as DataAtualizacao
                                               FROM usuarios u 
                                              WHERE usuario_tipo = @tipo ");
+            var queryCount = new StringBuilder("SELECT count(*) from usuarios u where usuario_tipo = @tipo ");
+
             if (rf.HasValue && rf > 0)
+            {
                 query.AppendLine($"AND u.id = @rf");
+                queryCount.AppendLine($"AND u.id = @rf");
+            }
 
             if (!string.IsNullOrEmpty(email))
+            {
                 query.AppendLine($"AND u.email = @email");
+                queryCount.AppendLine($"AND u.email = @email");
+            }
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
             query.AppendLine(";");
 
-            query.AppendLine("SELECT count(*) from usuarios u where usuario_tipo = @tipo");
+            query.AppendLine(queryCount.ToString());
 
             var retorno = new PaginacaoResultadoDto<FuncionarioGoogle>();
 
@@ -113,9 +127,9 @@ namespace SME.GoogleClassroom.Dados
             {
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
-                tipo = UsuarioTipo.Professor,
+                tipo = UsuarioTipo.Funcionario,
                 rf,
-                email
+                email = email.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
@@ -142,19 +156,26 @@ namespace SME.GoogleClassroom.Dados
                                               FROM usuarios u 
                                              WHERE usuario_tipo = @tipo ");
 
+            var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo ");
+
             if (rf.HasValue && rf > 0)
+            {
                 query.AppendLine($"AND u.id = @rf");
+                queryCount.AppendLine($"AND u.id = @rf");
+            }
 
             if (!string.IsNullOrEmpty(email))
+            {
                 query.AppendLine($"AND u.email = @email");
+                queryCount.AppendLine($"AND u.email = @email");
+            }
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
             query.AppendLine(";");
 
-
-            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo");
+            query.AppendLine(queryCount.ToString());
 
             var retorno = new PaginacaoResultadoDto<ProfessorGoogle>();
 
@@ -164,7 +185,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Professor,
                 rf,
-                email
+                email = email.Trim().ToLower()
             };
 
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
