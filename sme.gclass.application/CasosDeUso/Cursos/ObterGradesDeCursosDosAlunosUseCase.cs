@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
             };
         }
 
-        private async Task<IEnumerable<GradeAlunoCursoEolDto>> MapearParaDto(IEnumerable<GradeAlunoCursoEol> grades)
+        private async Task<IEnumerable<GradeAlunoCursoEolDto>> MapearParaDto(IEnumerable<GradeCursoEol> grades)
         {
             var alunosGoogle = new List<AlunoGoogle>();
 

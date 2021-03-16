@@ -242,7 +242,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
         }
 
-        public async Task<PaginacaoResultadoDto<GradeAlunoCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime dataReferencia, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
+        public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime dataReferencia, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
         {
             using var conn = ObterConexao();
 
@@ -261,9 +261,9 @@ namespace SME.GoogleClassroom.Dados
 
             using var multi = await conn.QueryMultipleAsync(query, parametros);
 
-            var retorno = new PaginacaoResultadoDto<GradeAlunoCursoEol>();
+            var retorno = new PaginacaoResultadoDto<GradeCursoEol>();
 
-            retorno.Items = multi.Read<GradeAlunoCursoEol>();
+            retorno.Items = multi.Read<GradeCursoEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 

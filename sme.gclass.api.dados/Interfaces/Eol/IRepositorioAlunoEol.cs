@@ -10,6 +10,6 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long codigoEol);
         Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo);
-        Task<PaginacaoResultadoDto<GradeAlunoCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime ultimaDataExecucao, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId);
+        Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosDosAlunosAsync(DateTime ultimaDataExecucao, Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId);
     }
 }

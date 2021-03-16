@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Aluno.ObterGradesDeCursosDosAlunos
 {
-    public class ObterGradesDeCursosDosAlunosQueryHandler : IRequestHandler<ObterGradesDeCursosDosAlunosQuery, PaginacaoResultadoDto<GradeAlunoCursoEol>>
+    public class ObterGradesDeCursosDosAlunosQueryHandler : IRequestHandler<ObterGradesDeCursosDosAlunosQuery, PaginacaoResultadoDto<GradeCursoEol>>
     {
         private readonly IRepositorioAlunoEol repositorioAlunoEol;
 
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Aluno.ObterGradesDeCursosDosAlun
             this.repositorioAlunoEol = repositorioAlunoEol;
         }
 
-        public async Task<PaginacaoResultadoDto<GradeAlunoCursoEol>> Handle(ObterGradesDeCursosDosAlunosQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<GradeCursoEol>> Handle(ObterGradesDeCursosDosAlunosQuery request, CancellationToken cancellationToken)
             => await repositorioAlunoEol.ObterGradesDeCursosDosAlunosAsync(request.UltimaDataExecucao, request.Paginacao, request.CodigoAluno, request.TurmaId, request.ComponenteCurricularId);
     }
 }

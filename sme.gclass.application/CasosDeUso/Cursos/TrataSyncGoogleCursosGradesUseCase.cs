@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TrataSyncGoogleGradesDosAlunosUseCase : ITrataSyncGoogleGradesDosAlunosUseCase
+    public class TrataSyncGoogleCursosGradesUseCase : ITrataSyncGoogleCursosGradesUseCase
     {
         private readonly IMediator mediator;
 
-        public TrataSyncGoogleGradesDosAlunosUseCase(IMediator mediator)
+        public TrataSyncGoogleCursosGradesUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.GradesAlunosCursoAdicionar));
+                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoGradesAdicionar));
 
                 var paginacao = new Paginacao(0, 0);
                 var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosDosAlunosQuery(ultimaAtualizacao, paginacao));
@@ -44,7 +44,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.GradesAlunosCursoAdicionar, DateTime.Today));
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoGradesAdicionar, DateTime.Today));
                 return true;
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 cursoDoAlunoParaIncluirGoogle.CodigoAluno,
                 cursoDoAlunoParaIncluirGoogle.TurmaId,
                 cursoDoAlunoParaIncluirGoogle.ComponenteCurricularId,
-                ExecucaoTipo.GradesAlunosCursoAdicionar,
+                ExecucaoTipo.CursoGradesAdicionar,
                 ErroTipo.Negocio,
                 mensagem);
 

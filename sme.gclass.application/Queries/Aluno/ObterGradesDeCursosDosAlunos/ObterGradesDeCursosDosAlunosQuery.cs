@@ -6,7 +6,7 @@ using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterGradesDeCursosDosAlunosQuery : IRequest<PaginacaoResultadoDto<GradeAlunoCursoEol>>
+    public class ObterGradesDeCursosDosAlunosQuery : IRequest<PaginacaoResultadoDto<GradeCursoEol>>
     {
         public DateTime UltimaDataExecucao { get; set; }
         public Paginacao Paginacao { get; set; }
