@@ -110,38 +110,5 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
-
-        /// <summary>
-        /// Inicia a sincronização das grades de cursos dos alunos do EOL para o Google Classroom.
-        /// </summary>
-        /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, a sincronização dos alunos acontece de forma assíncrona e descentralizada,
-        /// não sendo possível assim acompanhar em tempo real sua evolução.
-        /// </remarks>
-        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
-        [HttpPost("cursos/grades/sincronizacao")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> IniciarSincronizacaoGrades([FromServices] IIniciarSyncGoogleGradesDosAlunosUseCase iniciarSyncGoogleAtribuicoesDosAlunosUseCase)
-        {
-            var retorno = await iniciarSyncGoogleAtribuicoesDosAlunosUseCase.Executar();
-            return Ok(retorno);
-        }
-
-        /// <summary>
-        /// Retorna os alunos com os cursos para incluir no Google Classroom.
-        /// </summary>
-        /// <response code="200">A consulta foi realizada com sucesso.</response>
-        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
-        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet("novas-grades")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<GradeAlunoCursoEolDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterGradesDeCursosDosAlunos([FromServices] IObterGradesDeCursosDosAlunosUseCase useCase,
-            [FromQuery] FiltroObterGradesDeCursosDosAlunosDto filtro)
-        {
-            var retorno = await useCase.Executar(filtro);
-            return Ok(retorno);
-        }
     }
 }

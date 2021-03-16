@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroObterGradesDeCursosDosAlunosDto : FiltroPaginacaoBaseDto
+    public class FiltroObterGradesDeCursosDto : FiltroPaginacaoBaseDto
     {
-        public long? CodigoAluno { get; set; }
         public long? TurmaId { get; set; }
         public long? ComponenteCurricularId { get; set; }
 
