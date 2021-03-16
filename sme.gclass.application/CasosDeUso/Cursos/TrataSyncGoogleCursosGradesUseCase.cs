@@ -24,23 +24,23 @@ namespace SME.GoogleClassroom.Aplicacao
                 var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoGradesAdicionar));
 
                 var paginacao = new Paginacao(0, 0);
-                var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosDosAlunosQuery(ultimaAtualizacao, paginacao));
+                var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosQuery(ultimaAtualizacao, paginacao));
 
-                foreach (var gradeDeCursoAluno in gradesDeCursosAlunos.Items)
+                foreach (var gradeDeCurso in gradesDeCursosAlunos.Items)
                 {
-                    var cursoDoAlunoParaIncluir = new AlunoCursoEol(gradeDeCursoAluno.CodigoAluno, gradeDeCursoAluno.TurmaId, gradeDeCursoAluno.ComponenteCurricularId);
+                    var cursoDoAlunoParaIncluir = new CursoEol(gradeDeCurso.Nome, gradeDeCurso.Secao, gradeDeCurso.TurmaId, gradeDeCurso.ComponenteCurricularId, gradeDeCurso.UeCodigo, gradeDeCurso.Email);
 
                     try
                     {
-                        var publicarGradeAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoCursoIncluir, RotasRabbit.FilaAlunoCursoIncluir, cursoDoAlunoParaIncluir));
+                        var publicarGradeAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoDoAlunoParaIncluir));
                         if (!publicarGradeAlunoCurso)
                         {
-                            await IncluirCursoDoAlunoComErroAsync(cursoDoAlunoParaIncluir, ObterMensagemDeErro(cursoDoAlunoParaIncluir));
+                            await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso));
                         }
                     }
                     catch (Exception ex)
                     {
-                        await IncluirCursoDoAlunoComErroAsync(cursoDoAlunoParaIncluir, ObterMensagemDeErro(cursoDoAlunoParaIncluir, ex));
+                        await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso, ex));
                     }
                 }
 
@@ -50,26 +50,26 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de novos alunos no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
+                throw new NegocioException($"Não foi possível iniciar a inclusão de novas grades no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
             }
         }
 
-        private async Task IncluirCursoDoAlunoComErroAsync(AlunoCursoEol cursoDoAlunoParaIncluirGoogle, string mensagem)
+        private async Task IncluirGradeDeCursoComErroAsync(GradeCursoEol gradeCursoEol, string mensagem)
         {
-            var command = new IncluirCursoUsuarioErroCommand(
-                cursoDoAlunoParaIncluirGoogle.CodigoAluno,
-                cursoDoAlunoParaIncluirGoogle.TurmaId,
-                cursoDoAlunoParaIncluirGoogle.ComponenteCurricularId,
+            var command = new InserirCursoErroCommand(
+                gradeCursoEol.TurmaId,
+                gradeCursoEol.ComponenteCurricularId,
+                mensagem,
+                null,
                 ExecucaoTipo.CursoGradesAdicionar,
-                ErroTipo.Negocio,
-                mensagem);
+                ErroTipo.Negocio);
 
             await mediator.Send(command);
         }
 
-        private static string ObterMensagemDeErro(AlunoCursoEol cursoDoAlunoParaIncluirGoogle, Exception ex = null)
+        private static string ObterMensagemDeErro(GradeCursoEol gradeCursoEol, Exception ex = null)
         {
-            var mensagem = $"Não foi possível inserir o curso [TurmaId:{cursoDoAlunoParaIncluirGoogle.TurmaId}, ComponenteCurricularId:{cursoDoAlunoParaIncluirGoogle.ComponenteCurricularId}] aluno RA{cursoDoAlunoParaIncluirGoogle.CodigoAluno} na fila para inclusão no Google Classroom.";
+            var mensagem = $"Não foi possível inserir a grade do curso [TurmaId:{gradeCursoEol.TurmaId}, ComponenteCurricularId:{gradeCursoEol.ComponenteCurricularId}] na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}. {ex.StackTrace}";
         }

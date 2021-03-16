@@ -8,5 +8,19 @@
         public long TurmaId { get; set; }
         public string UeCodigo { get; set; }
         public string Email { get; set; }
+
+        public CursoEol(string nome, string secao, long turmaId, long componenteCurricularId, string ueCodigo, string email)
+        {
+            Nome = nome;
+            Secao = secao;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            Email = email;
+            UeCodigo = ueCodigo;
+        }
+
+        protected CursoEol()
+        {
+        }
     }
 }
