@@ -651,7 +651,8 @@ namespace SME.GoogleClassroom.Dados
 								te.cd_turma_escola TurmaId,
 								grade.cd_grade,
 								serie_turma_grade.cd_serie_grade,
-								ue.cd_unidade_educacao	
+								ue.cd_unidade_educacao,
+								serie_turma_grade.dt_inicio AS DataInicioGrade
 							INTO #tempTurmasComponentesRegulares
 							FROM
 								turma_escola te (NOLOCK)
@@ -774,7 +775,8 @@ namespace SME.GoogleClassroom.Dados
 								te.cd_turma_escola TurmaId,
 								pg.cd_grade,
 								tegp.cd_turma_escola_grade_programa,
-								ue.cd_unidade_educacao	
+								ue.cd_unidade_educacao,
+								tegp.dt_inicio AS DataInicioGrade
 							INTO #tempTurmasComponentesPrograma
 							FROM
 								turma_escola te (NOLOCK)
@@ -812,7 +814,7 @@ namespace SME.GoogleClassroom.Dados
 								AND   te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-								AND   serie_turma_grade.dt_inicio >= @dataReferencia
+								AND   tegp.dt_inicio >= @dataReferencia
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
 			if (componenteCurricularId.HasValue)
@@ -874,18 +876,18 @@ namespace SME.GoogleClassroom.Dados
 								*
 							INTO #tempCursosDre
 							FROM
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email  FROM #tempCursosRegulares temp) AS Regulares
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosRegulares temp) AS Regulares
 							UNION
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email FROM #tempCursosPrograma temp);
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosPrograma temp);
 
-								-- 4.1) Paginacao
-								IF OBJECT_ID('tempdb..#tempCursosDrePaginado') IS NOT NULL 
-									DROP TABLE #tempCursosDrePaginado
-								SELECT
-									*
-								INTO #tempCursosDrePaginado
+							-- 4.1) Paginacao
+							IF OBJECT_ID('tempdb..#tempCursosDrePaginado') IS NOT NULL 
+								DROP TABLE #tempCursosDrePaginado
+							SELECT
+								*
+							INTO #tempCursosDrePaginado
 									from #tempCursosDre
-							order by 1 ");
+							ORDER by 1 ");
 
 			if (aplicarPaginacao)
 				query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
@@ -937,6 +939,7 @@ namespace SME.GoogleClassroom.Dados
 								temp.ComponenteCurricularId,
 								temp.TurmaId,
 								temp.cd_unidade_educacao as UeCodigo,
+								temp.DataInicioGrade,
 								temp.Email
 							FROM
 								#tempCursosDrePaginado temp;

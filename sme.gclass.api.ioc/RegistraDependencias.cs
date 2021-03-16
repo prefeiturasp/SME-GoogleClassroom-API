@@ -78,8 +78,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IEnviarRequisicaoAtribuirAlunoCursoUseCase, EnviarRequisicaoAtribuirAlunoCursoUseCase>();
             services.TryAddScoped<ITrataSyncGoogleCursosGradesUseCase, TrataSyncGoogleCursosGradesUseCase>();
             services.TryAddScoped<IObterAlunosCursosGoogleUseCase, ObterAlunosCursosGoogleUseCase>();
-            services.TryAddScoped<IIniciarSyncGoogleGradesDosAlunosUseCase, IniciarSyncGoogleGradesDosAlunosUseCase>();
-            services.TryAddScoped<IObterGradesDeCursosDosAlunosUseCase, ObterGradesDeCursosDosAlunosUseCase>();
+            services.TryAddScoped<IIniciarSyncGoogleGradesUseCase, IniciarSyncGoogleGradesUseCase>();
+            services.TryAddScoped<IObterGradesDeCursosUseCase, ObterGradesDeCursosUseCase>();
         }
     }
 }
