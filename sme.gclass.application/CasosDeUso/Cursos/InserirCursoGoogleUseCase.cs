@@ -25,10 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var existeCurso = await mediator.Send(new ExisteCursoPorTurmaComponenteCurricularQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId));
-                if (existeCurso) return true;
-
-                if (string.IsNullOrEmpty(cursoParaIncluir.Email))
+                if (string.IsNullOrWhiteSpace(cursoParaIncluir.Email))
                 {
                     await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, string.Empty, null, ExecucaoTipo.CursoAdicionar, ErroTipo.CursoSemEmail));
                     return false;
@@ -40,16 +37,24 @@ namespace SME.GoogleClassroom.Aplicacao
                     cursoParaIncluir.TurmaId,
                     cursoParaIncluir.ComponenteCurricularId,
                     cursoParaIncluir.Email);
+
+                var existeCurso = await mediator.Send(new ExisteCursoPorTurmaComponenteCurricularQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId));
+                if (existeCurso)
+                {
+                    await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
+                    return true;
+                }
+
                 await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
 
                 if(_deveExecutarIntegracao) await InserirCursoAsync(cursoGoogle);
-                await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
-                await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
+                await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
                 return true;
             }
             catch (Exception ex)
             {
-                await mediator.Send(new InserirCursoErroCommand(0, 0, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, Dominio.ExecucaoTipo.CursoAdicionar, Dominio.ErroTipo.Interno));
+                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, 
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
                 throw;
             }            
         }
@@ -65,6 +70,12 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new ArquivarCursoGoogleCommand(cursoGoogle.Id));
                 throw;
             }
+        }
+
+        private async Task IniciarSyncGoogleUsuariosDoCursoAsync(CursoGoogle cursoGoogle)
+        {
+            await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
+            await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
         }
 
         private async Task IniciarSyncGoogleProfessoresDoCursoAsync(CursoGoogle cursoGoogle)
