@@ -211,7 +211,18 @@ namespace SME.GoogleClassroom.Dados
    		                              c.componente_curricular_id as componenteCurricularId
                                  from cursos c
                                 inner join cursos_usuarios cu on cu.curso_id = c.id
-                                inner join funcionarioTempPaginado t1 on t1.indice = cu.usuario_id;");
+                                inner join funcionarioTempPaginado t1 on t1.indice = cu.usuario_id");
+
+            if (rf.HasValue && rf > 0)
+                query.AppendLine(" and t1.rf = @rf");
+
+            if (turmaId.HasValue && turmaId > 0)
+                query.AppendLine(" and c.turma_id = @turmaId");
+
+            if (componenteCurricularId.HasValue && componenteCurricularId > 0)
+                query.AppendLine(" and c.componente_curricular_id = @componenteCurricularId");
+
+            query.AppendLine(";");
 
 
             query.AppendLine("select count(*) from funcionarioTemp");
@@ -253,7 +264,7 @@ namespace SME.GoogleClassroom.Dados
                 }
                 );
 
-            retorno.Items = Result;
+            retorno.Items = dic.Values;
             retorno.TotalRegistros = multiResult.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
