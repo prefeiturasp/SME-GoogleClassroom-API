@@ -73,17 +73,17 @@ namespace SME.GoogleClassroom.Dados
                                              where u.usuario_tipo = @tipo
                                                and not cu.excluido");
             if (rf.HasValue && rf > 0)
-                query.AppendLine("and u.id = @rf");
+                query.AppendLine(" and u.id = @rf");
 
             if (turmaId.HasValue && turmaId > 0)
-                query.AppendLine("and c.turma_id = @turmaId");
+                query.AppendLine(" and c.turma_id = @turmaId");
 
             if (componenteCurricularId.HasValue && componenteCurricularId > 0)
-                query.AppendLine("and c.componente_curricular_id = @componenteCurricularId");
+                query.AppendLine(" and c.componente_curricular_id = @componenteCurricularId");
 
             query.AppendLine(";");
 
-            query.AppendLine("select * into temporary professorTempPaginado from professorTemp");
+            query.AppendLine(" select * into temporary professorTempPaginado from professorTemp");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
@@ -93,11 +93,12 @@ namespace SME.GoogleClassroom.Dados
             query.AppendLine(@"select t1.rf,
    		                              t1.nome,
    		                              t1.email,
-   	                                  c.id,
+                                      c.id,
+   	                                  c.id as CursoId,
    		                              c.nome,
    		                              c.secao,
-   		                              c.turma_id,
-   		                              c.componente_curricular_id
+   		                              c.turma_id as TurmaId,
+   		                              c.componente_curricular_id as ComponenteCurricularId
                                  from cursos c
                                 inner join cursos_usuarios cu on cu.curso_id = c.id
                                 inner join professorTempPaginado t1 on t1.indice = cu.usuario_id;");
