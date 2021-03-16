@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -25,18 +26,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoParaIncluir.Codigo));
-                if (alunoJaIncluido) return true;
-
                 var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
-                var incluiuAlunoGoogle = await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
-                if(incluiuAlunoGoogle && _deveExecutarIntegracao)
-                    await mediator.Send(new IncluirUsuarioCommand(alunoGoogle));
 
-                if(!incluiuAlunoGoogle)
-                    await mediator.Send(new IncluirUsuarioErroCommand(alunoParaIncluir?.Codigo, alunoParaIncluir?.Email,
-                   $"ex.: Erro ao inserir no google <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
+                var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoGoogle.Codigo));
+                if (alunoJaIncluido)
+                {
+                    await IniciarSyncGoogleCursosDoAlunoAsync(alunoGoogle);
+                    return true;
+                }
 
+                await InserirAlunoGoogleAsync(alunoGoogle);
                 return true;
             }
             catch (Exception ex)
@@ -44,6 +43,46 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoParaIncluir?.Codigo, alunoParaIncluir?.Email,
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
                 throw;
+            }
+        }
+
+        private async Task InserirAlunoGoogleAsync(AlunoGoogle alunoGoogle)
+        {
+            try
+            {
+                var incluiuAlunoGoogle = await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
+                if (!incluiuAlunoGoogle)
+                {
+                    await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
+                        $"Não foi possível incluir o professor no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
+                    return;
+                }
+
+                await InserirAlunoAsync(alunoGoogle);
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.EhErroDeDuplicidade())
+                    await InserirAlunoAsync(alunoGoogle);
+                else
+                    throw;
+            }
+        }
+
+        private async Task InserirAlunoAsync(AlunoGoogle alunoGoogle)
+        {
+            if (_deveExecutarIntegracao)
+                alunoGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(alunoGoogle));
+            await IniciarSyncGoogleCursosDoAlunoAsync(alunoGoogle);
+        }
+
+        private async Task IniciarSyncGoogleCursosDoAlunoAsync(AlunoGoogle alunoGoogle)
+        {
+            var publicarCursosDoAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoCursoSync, RotasRabbit.FilaAlunoCursoSync, alunoGoogle));
+            if (!publicarCursosDoAluno)
+            {
+                await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
+                    $"O aluno RA{alunoGoogle.Codigo} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste aluno.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));
             }
         }
     }

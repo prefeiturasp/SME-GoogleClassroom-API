@@ -5,7 +5,6 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -28,10 +27,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorParaIncluir.Rf));
-                if (professorJaIncluido) return true;
+                var professorGoogle = new ProfessorGoogle(professorParaIncluir.Rf, professorParaIncluir.Nome, professorParaIncluir.Email, professorParaIncluir.OrganizationPath);
 
-                await InserirProfessorGoogleAsync(professorParaIncluir);
+                var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorGoogle.Rf));
+                if (professorJaIncluido)
+                {
+                    await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
+                    return true;
+                }
+
+                await InserirProfessorGoogleAsync(professorGoogle);
                 return true;
             }
             catch (Exception ex)
@@ -42,17 +47,15 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task InserirProfessorGoogleAsync(ProfessorEol professorParaIncluir)
+        private async Task InserirProfessorGoogleAsync(ProfessorGoogle professorGoogle)
         {
-            var professorGoogle = new ProfessorGoogle(professorParaIncluir.Rf, professorParaIncluir.Nome, professorParaIncluir.Email, professorParaIncluir.OrganizationPath);
-
             try
             {
                 var professorSincronizado = await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
-                if(!professorSincronizado)
+                if (!professorSincronizado)
                 {
-                    await mediator.Send(new IncluirUsuarioErroCommand(professorParaIncluir?.Rf, professorParaIncluir?.Email,
-                        $"Não foi possível incluir o professor no Google Classroom. {professorParaIncluir}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar, DateTime.Now));
+                    await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
+                        $"Não foi possível incluir o professor no Google Classroom. {professorGoogle}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar, DateTime.Now));
                     return;
                 }
 
@@ -69,7 +72,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirProfessorAsync(ProfessorGoogle professorGoogle)
         {
-            if (_deveExecutarIntegracao) 
+            if (_deveExecutarIntegracao)
                 professorGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(professorGoogle));
             await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
         }
@@ -77,7 +80,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task IniciarSyncGoogleCursosDoProfessorAsync(ProfessorGoogle professorGoogle)
         {
             var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.FilaProfessorCursoSync, professorGoogle));
-            if(!publicarCursosDoProfessor)
+            if (!publicarCursosDoProfessor)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
                     $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));

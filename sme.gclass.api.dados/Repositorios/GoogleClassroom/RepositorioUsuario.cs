@@ -339,5 +339,72 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
+
+        public async Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] CodigosAluno)
+        {
+            var query = @"SELECT 
+                                 u.indice,
+                                 u.id as Codigo, 
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao
+                            FROM usuarios u 
+                           WHERE usuario_tipo = @tipo
+                             and id = any(@CodigosAluno)";
+
+            var parametros = new
+            {
+                CodigosAluno,
+                tipo = UsuarioTipo.Aluno
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            return await conn.QueryAsync<AlunoGoogle>(query, parametros);
+        }
+
+        public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosPaginadoPorCodigos(Paginacao paginacao, long[] codigosAluno)
+        {
+            var query = new StringBuilder(@"SELECT 
+                                                 u.indice,
+                                                 u.nome,
+                                                 u.id as Codigo, 
+                                                 u.usuario_tipo as usuariotipo,
+                                                 u.email,
+                                                 u.organization_path as organizationpath,
+                                                 u.data_inclusao as datainclusao,
+                                                 u.data_atualizacao as dataatualizacao
+                                            FROM usuarios u 
+                                           WHERE usuario_tipo = @tipo
+                                             and id = any(@codigosAluno)");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
+
+
+            query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo and id = any(@codigosAluno)");
+
+            var retorno = new PaginacaoResultadoDto<AlunoGoogle>();
+
+            var parametros = new
+            {
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros,
+                codigosAluno,
+                tipo = UsuarioTipo.Aluno
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            using var professores = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+            retorno.Items = professores.Read<AlunoGoogle>();
+            retorno.TotalRegistros = professores.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
     }
 }
