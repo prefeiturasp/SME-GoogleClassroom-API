@@ -30,29 +30,32 @@ namespace SME.GoogleClassroom.Aplicacao
             };
         }
 
-        private async Task<IEnumerable<AtribuicaoProfessorCursoEolDto>> MapearParaDto(IEnumerable<AtribuicaoProfessorCursoEol> Atribuicoes)
+        private async Task<IEnumerable<AtribuicaoProfessorCursoEolDto>> MapearParaDto(IEnumerable<AtribuicaoProfessorCursoEol> atribuicoes)
         {
             var professoresGoogle = new List<ProfessorGoogle>();
+            var atribuicaoProfessorCursoEol = new List<AtribuicaoProfessorCursoEolDto>();
 
-            var atribuicaoProfessorCursoEol = new List<AtribuicaoProfessorCursoEolDto>();           
+            if (!atribuicoes.Any())
+                return atribuicaoProfessorCursoEol;
 
-            var rfs = Atribuicoes.Select(a => a.Rf).Distinct().ToArray();
+            var rfs = atribuicoes.Select(a => a.Rf).Distinct().ToArray();
 
-            double totalRfs = Atribuicoes.Select(a => a.Rf).Distinct().Count();
+            double totalRfs = atribuicoes.Select(a => a.Rf).Distinct().Count();
 
-            var i = 0;
+            var i = 1;
 
             do
             {
                 var paginacao = new Paginacao(i, 100);
-                var professores = await mediator.Send(new ObterProfessoresPorRfsPaginadoQuery(paginacao, rfs));
+                // TO DO: Alterar para utilizar classe abstrata quando fizermos a separação
+                var professores = await mediator.Send(new ObterProfessoresFuncionariosPorRfsPaginadoQuery(paginacao, rfs));
 
                 professoresGoogle.AddRange(professores.Items);
                 i++;
 
-            } while (i < (int)Math.Ceiling(totalRfs / 100));
+            } while (i <= (int)Math.Ceiling(totalRfs / 100));
 
-            foreach (var item in Atribuicoes)
+            foreach (var item in atribuicoes)
             {
                 var atribuicaoParaRetornar = new AtribuicaoProfessorCursoEolDto();
 

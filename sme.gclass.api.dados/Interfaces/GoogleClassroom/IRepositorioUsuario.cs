@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs);
 
-        Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresPaginadoPorRfs(Paginacao paginacao, long[] rfs);
+        Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresFuncionariosPaginadoPorRfs(Paginacao paginacao, long[] rfs);
 
         Task<bool> ExisteProfessorPorRf(long rf);
 
