@@ -154,7 +154,7 @@ namespace SME.GoogleClassroom.Dados
                 }
                 );
 
-            retorno.Items = Result.Distinct();
+            retorno.Items = dic.Values;
             retorno.TotalRegistros = multiResult.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
