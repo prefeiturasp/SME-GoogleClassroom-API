@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             double totalRfs = atribuicoes.Select(a => a.Rf).Distinct().Count();
 
-            var i = 0;
+            var i = 1;
 
             do
             {
@@ -53,7 +53,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 professoresGoogle.AddRange(professores.Items);
                 i++;
 
-            } while (i < (int)Math.Ceiling(totalRfs / 100));
+            } while (i <= (int)Math.Ceiling(totalRfs / 100));
 
             foreach (var item in atribuicoes)
             {
