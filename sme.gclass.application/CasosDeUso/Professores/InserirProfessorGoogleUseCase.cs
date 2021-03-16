@@ -60,10 +60,8 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (GoogleApiException gEx)
             {
-                if (gEx.Error?.Code == (int)HttpStatusCode.Conflict)
-                {
+                if (gEx.EhErroDeDuplicidade())
                     await InserirProfessorAsync(professorGoogle);
-                }
                 else
                     throw;
             }
