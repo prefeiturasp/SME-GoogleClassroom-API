@@ -236,7 +236,7 @@ namespace SME.GoogleClassroom.Dados
 
             var dic = new Dictionary<long, AlunoCursosCadastradosDto>();
 
-            var Result = multiResult.Read<AlunoCursosCadastradosDto, CursoDto, AlunoCursosCadastradosDto>(
+            multiResult.Read<AlunoCursosCadastradosDto, CursoDto, AlunoCursosCadastradosDto>(
                 (aluno, curso) =>
                 {
 
@@ -253,7 +253,7 @@ namespace SME.GoogleClassroom.Dados
                 }
                 );
 
-            retorno.Items = Result;
+            retorno.Items = dic.Values;
             retorno.TotalRegistros = multiResult.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
