@@ -430,8 +430,8 @@ namespace SME.GoogleClassroom.Dados
 
             if (componenteCurricularId.HasValue)
             {
-                queryRegulares.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
-                queryProgramas.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+                queryRegulares.AppendLine("AND atb_ser.cd_componente_curricular = @componenteCurricularId ");
+                queryProgramas.AppendLine("AND pgcc.cd_componente_curricular = @componenteCurricularId ");
             }
 
             queryRegulares.Append(";");
