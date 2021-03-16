@@ -58,9 +58,11 @@ namespace SME.GoogleClassroom.Aplicacao
             foreach (var item in atribuicoes)
             {
                 var atribuicaoParaRetornar = new AtribuicaoProfessorCursoEolDto();
+                var professorParaIncluir = professoresGoogle.FirstOrDefault(x => x.Rf == item.Rf);
 
                 atribuicaoParaRetornar.Rf = item.Rf;
-                atribuicaoParaRetornar.Nome = professoresGoogle.FirstOrDefault(x => x.Rf == item.Rf)?.Nome ?? "";
+                atribuicaoParaRetornar.Nome = professorParaIncluir?.Nome ?? "";
+                atribuicaoParaRetornar.Email = professorParaIncluir?.Email ?? "";
                 atribuicaoParaRetornar.TurmaId = item.TurmaId;
                 atribuicaoParaRetornar.ComponenteCurricularId = item.ComponenteCurricularId;
                 atribuicaoParaRetornar.DataAtribuicao = item.DataAtribuicao;
