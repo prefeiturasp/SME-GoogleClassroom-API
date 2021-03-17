@@ -98,6 +98,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
+        /// Retorna os funcionário com os cursos já incluídos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosCursosGoogle([FromServices] IObterFuncionariosCursosGoogleUseCase useCase,
+            [FromQuery] FiltroObterFuncionariosCursosCadastradosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Envia uma requisição para atribuir um funcionário a um curso no Google Classroom.
         /// </summary>
         /// <remarks>
@@ -109,23 +126,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> EnviarRequisicaoAtribuirFuncionarioCurso([FromBody] AtribuirFuncionarioCursoDto atribuirFuncionarioCursoDto, [FromServices] IEnviarRequisicaoAtribuirFuncionarioCursoUseCase atribuirFuncionarioCursoUseCase)
         {
             var retorno = await atribuirFuncionarioCursoUseCase.Executar(atribuirFuncionarioCursoDto);
-            return Ok(retorno);
-        }
-
-        /// <summary>
-        /// Retorna os funcionário com os cursos já incluídos no Google Classroom.
-        /// </summary>
-        /// <response code="200">A consulta foi realizada com sucesso.</response>
-        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
-        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet("cursos/cadastrados")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterFuncionariosCursosGoogle([FromServices] IObterFuncionariosCursosGoogleUseCase useCase,
-            [FromQuery] FiltroObterFuncionariosCursosCadastradosDto filtro)
-        {
-            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
     }

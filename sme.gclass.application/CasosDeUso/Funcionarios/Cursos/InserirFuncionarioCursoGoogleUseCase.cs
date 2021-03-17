@@ -33,8 +33,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(funcionarioCursoEolParaIncluir.TurmaId, funcionarioCursoEolParaIncluir.ComponenteCurricularId));
                 if (curso is null) return false;
 
-                var existeProfessorCurso = await mediator.Send(new ExisteFuncionarioCursoGoogleQuery(funcionarioCursoEolParaIncluir.Rf, curso.Id));
-                if (existeProfessorCurso) return true;
+                var existeFuncionarioCurso = await mediator.Send(new ExisteFuncionarioCursoGoogleQuery(funcionarioCursoEolParaIncluir.Rf, curso.Id));
+                if (existeFuncionarioCurso) return true;
 
                 await InserirFuncionarioCursoGoogleAsync(funcionario.First(), curso);
                 return true;
