@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -26,14 +27,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var funcionarioJaIncluido = await mediator.Send(new ExisteFuncionarioPorRfQuery(funcionarioParaIncluir.Rf));
-                if (funcionarioJaIncluido) return true;
-
                 var funcionarioGoogle = new FuncionarioGoogle(funcionarioParaIncluir.Rf, funcionarioParaIncluir.Nome, funcionarioParaIncluir.Email, funcionarioParaIncluir.OrganizationPath);
-                await mediator.Send(new InserirFuncionarioGoogleCommand(funcionarioGoogle));
-                if(_deveExecutarIntegracao) funcionarioGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioGoogle));
-                await IniciarSyncGoogleCursosDoFuncionarioAsync(funcionarioGoogle);
 
+                var funcionarioJaIncluido = await mediator.Send(new ExisteFuncionarioPorRfQuery(funcionarioParaIncluir.Rf));
+                if (funcionarioJaIncluido)
+                {
+                    await IniciarSyncGoogleCursosDoFuncionarioAsync(funcionarioGoogle);
+                    return true;
+                }
+
+                await InserirFuncionarioGoogleAsync(funcionarioGoogle);
                 return true;
             }
             catch (Exception ex)
@@ -42,6 +45,36 @@ namespace SME.GoogleClassroom.Aplicacao
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
                 throw;
             }
+        }
+
+        private async Task InserirFuncionarioGoogleAsync(FuncionarioGoogle funcionarioGoogle)
+        {
+            try
+            {
+                var funcionarioSincronizado = await mediator.Send(new InserirFuncionarioGoogleCommand(funcionarioGoogle));
+                if (!funcionarioSincronizado)
+                {
+                    await mediator.Send(new IncluirUsuarioErroCommand(funcionarioGoogle?.Rf, funcionarioGoogle?.Email,
+                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                    return;
+                }
+
+                await InserirFuncionarioAsync(funcionarioGoogle);
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.EhErroDeDuplicidade())
+                    await InserirFuncionarioAsync(funcionarioGoogle);
+                else
+                    throw;
+            }
+        }
+
+        private async Task InserirFuncionarioAsync(FuncionarioGoogle funcionarioGoogle)
+        {
+            if (_deveExecutarIntegracao) 
+                funcionarioGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioGoogle));
+            await IniciarSyncGoogleCursosDoFuncionarioAsync(funcionarioGoogle);
         }
 
         private async Task IniciarSyncGoogleCursosDoFuncionarioAsync(FuncionarioGoogle funcionarioGoogle)

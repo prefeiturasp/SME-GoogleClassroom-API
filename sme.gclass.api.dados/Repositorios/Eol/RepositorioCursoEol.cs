@@ -294,6 +294,7 @@ namespace SME.GoogleClassroom.Dados
 					dt_fim_nomeacao IS NULL
 					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE())
 					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+
 				-- 2. Busca os funcionários por cargo sobreposto fixo
 				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
 					DROP TABLE #tempServidorCargosSobrepostos;
@@ -320,6 +321,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
 					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+
 				-- 3. Busca os funcionários por função
 				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
 					DROP TABLE #tempServidorFuncao;
@@ -347,6 +349,7 @@ namespace SME.GoogleClassroom.Dados
 					(facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
 					AND dt_fim_nomeacao IS NULL
 					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+
 				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
 					DROP TABLE #tempServidorCargos;
 				SELECT
@@ -370,6 +373,7 @@ namespace SME.GoogleClassroom.Dados
 				LEFT JOIN
 					#tempServidorFuncao funcao
 					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor;
+
 				DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
@@ -382,7 +386,8 @@ namespace SME.GoogleClassroom.Dados
 				SELECT
 					temp.Rf,
 					@turmaId AS TurmaId,
-					@componenteCurricularId AS ComponenteCurricularId
+					@componenteCurricularId AS ComponenteCurricularId,
+					temp.CdUe AS UeCodigo
 				FROM
 					#tempServidorCargos temp
 				WHERE

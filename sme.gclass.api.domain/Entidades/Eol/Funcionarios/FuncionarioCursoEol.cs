@@ -5,6 +5,7 @@
         public long Rf { get; set; }
         public long TurmaId { get; set; }
         public long ComponenteCurricularId { get; set; }
+        public string UeCodigo { get; set; }
 
         public FuncionarioCursoEol(long rf, long turmaId, long componenteCurricularId)
         {
