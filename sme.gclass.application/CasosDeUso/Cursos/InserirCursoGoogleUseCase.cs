@@ -76,6 +76,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
             await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
+            await IniciarSyncGoogleFuncionariosDoCursoAsync(cursoGoogle);
         }
 
         private async Task IniciarSyncGoogleProfessoresDoCursoAsync(CursoGoogle cursoGoogle)
@@ -97,6 +98,17 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new InserirCursoErroCommand(cursoGoogle.TurmaId, cursoGoogle.ComponenteCurricularId,
                     $"O curso Turma {cursoGoogle.TurmaId} e Componente Curricular {cursoGoogle.ComponenteCurricularId} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos alunos deste curso.",
                     null, ExecucaoTipo.AlunoCursoAdicionar, ErroTipo.Interno));
+            }
+        }
+
+        private async Task IniciarSyncGoogleFuncionariosDoCursoAsync(CursoGoogle cursoGoogle)
+        {
+            var publicarFuncionariosDoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoFuncionarioSync, RotasRabbit.FilaCursoFuncionarioSync, cursoGoogle));
+            if (!publicarFuncionariosDoCurso)
+            {
+                await mediator.Send(new InserirCursoErroCommand(cursoGoogle.TurmaId, cursoGoogle.ComponenteCurricularId,
+                    $"O curso Turma {cursoGoogle.TurmaId} e Componente Curricular {cursoGoogle.ComponenteCurricularId} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos funcionários deste curso.",
+                    null, ExecucaoTipo.FuncionarioCursoAdicionar, ErroTipo.Interno));
             }
         }
     }

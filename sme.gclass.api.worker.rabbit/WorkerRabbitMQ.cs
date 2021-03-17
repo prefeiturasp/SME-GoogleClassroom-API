@@ -69,6 +69,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoAlunoSync, new ComandoRabbit("Tratamento de alunos do curso do sync com Google", typeof(ITrataSyncGoogleAlunosDoCursoUseCase)));
             comandos.Add(RotasRabbit.FilaAlunoCursoIncluir, new ComandoRabbit("Atribuir aluno ao curso no google", typeof(IInserirAlunoCursoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaCursoGradeSync, new ComandoRabbit("Tratamento grades de cursos do sync com Google", typeof(ITrataSyncGoogleCursosGradesUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioCursoSync, new ComandoRabbit("Tratamento de cursos do funcionário do sync com Google", typeof(ITrataSyncGoogleCursosDoFuncionarioUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioCursoIncluir, new ComandoRabbit("Atribuir funcionário ao curso no google", typeof(IInserirFuncionarioCursoGoogleUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoFuncionarioSync, new ComandoRabbit("Tratamentode funcionários do curso do sync com Google", typeof(ITrataSyncGoogleFuncionariosDoCursoUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -185,10 +188,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoProfessorSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoAtribuicaoSync, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoCursoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoAlunoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoGradeSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoSync, false, consumer);
             }
 
             if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -199,6 +203,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoCursoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoIncluir, false, consumer);
             }
 
             return Task.CompletedTask;

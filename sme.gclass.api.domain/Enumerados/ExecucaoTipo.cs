@@ -9,6 +9,7 @@
         ProfessorCursoAdicionar = 5,
         AtribuicaoProfessorCursoAdicionar = 6,
         AlunoCursoAdicionar = 7,
-        CursoGradesAdicionar = 8
+        CursoGradesAdicionar = 8,
+        FuncionarioCursoAdicionar = 9
     }
 }

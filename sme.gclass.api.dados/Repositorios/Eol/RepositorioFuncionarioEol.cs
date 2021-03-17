@@ -3,6 +3,7 @@ using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,6 +40,265 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+		public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long rf, int anoLetivo)
+		{
+			using var conn = ObterConexao();
+
+			const string query = @"
+				DECLARE @cargoCP AS INT = 3379;
+				DECLARE @cargoAD AS INT = 3085;
+				DECLARE @cargoDiretor AS INT = 3360;
+				DECLARE @tipoFuncaoPAP AS INT = 30;
+				DECLARE @tipoFuncaoPAEE AS INT = 6;
+				DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
+				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
+				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
+
+				-- 1. Busca os funcionários por cargo fixo
+				IF OBJECT_ID('tempdb..#tempServidorCargosBase') IS NOT NULL
+					DROP TABLE #tempServidorCargosBase;
+				SELECT
+					serv.cd_registro_funcional AS Rf,
+					esc.cd_escola AS CdUe,
+					cbc.cd_cargo AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor
+				INTO #tempServidorCargosBase
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					lotacao_servidor ls (NOLOCK)
+					ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc
+					ON ls.cd_unidade_educacao = esc.cd_escola
+				WHERE
+					serv.cd_registro_funcional = @rf
+					AND dt_fim_nomeacao IS NULL
+					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE())
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+
+				-- 2. Busca os funcionários por cargo sobreposto fixo
+
+				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
+					DROP TABLE #tempServidorCargosSobrepostos;
+				SELECT
+					serv.cd_registro_funcional AS Rf, 
+					css.cd_unidade_local_servico AS CdUe,
+					css.cd_cargo AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor
+				INTO #tempServidorCargosSobrepostos
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					cargo_sobreposto_servidor css (NOLOCK)
+					ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc 
+					ON css.cd_unidade_local_servico = esc.cd_escola
+				WHERE
+					serv.cd_registro_funcional = @rf
+					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+
+				-- 3. Busca os funcionários por função
+
+				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
+					DROP TABLE #tempServidorFuncao;
+				SELECT
+					serv.cd_registro_funcional AS Rf, 
+					esc.cd_escola AS CdUe,
+					facs.cd_tipo_funcao AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor
+				INTO #tempServidorFuncao
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					funcao_atividade_cargo_servidor facs (NOLOCK)
+					ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc 
+					ON facs.cd_unidade_local_servico = esc.cd_escola
+				WHERE
+					serv.cd_registro_funcional = @rf
+					AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
+					AND dt_fim_nomeacao IS NULL
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+
+				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
+					DROP TABLE #tempServidorCargos;
+				SELECT
+					base.Rf,
+					CASE
+						WHEN NOT sobreposto.CdCagoFuncao IS NULL THEN sobreposto.CdCagoFuncao
+						WHEN NOT funcao.CdCagoFuncao IS NULL THEN funcao.CdCagoFuncao
+						ELSE base.CdCagoFuncao
+					END AS CdCagoFuncao,
+					CASE
+						WHEN NOT sobreposto.CdUe IS NULL THEN sobreposto.CdUe
+						WHEN NOT funcao.CdUe IS NULL THEN funcao.CdUe
+						ELSE base.CdUe
+					END AS CdUe
+				INTO #tempServidorCargos
+				FROM
+					#tempServidorCargosBase base
+				LEFT JOIN
+					#tempServidorCargosSobrepostos sobreposto
+					ON base.cd_cargo_base_servidor = sobreposto.cd_cargo_base_servidor
+				LEFT JOIN
+					#tempServidorFuncao funcao
+					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor;
+
+				IF OBJECT_ID('tempdb..#tempServidorCargoFinal') IS NOT NULL
+					DROP TABLE #tempServidorCargoFinal;
+				SELECT
+					*
+				INTO #tempServidorCargoFinal
+				FROM
+					#tempServidorCargos
+				WHERE
+					CdCagoFuncao IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD);
+
+				IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentesRegulares
+				SELECT
+					DISTINCT
+					CASE
+						WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
+					ELSE
+						cc.cd_componente_curricular
+					END ComponenteCurricularId,
+					te.cd_turma_escola TurmaId,
+					ue.cd_unidade_educacao AS CdUe	
+				INTO #tempTurmasComponentesRegulares
+				FROM
+					#tempServidorCargoFinal temp
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON temp.CdUe = te.cd_escola
+				INNER JOIN
+					escola esc (NOLOCK) 
+					ON te.cd_escola = esc.cd_escola
+				INNER JOIN
+					v_cadastro_unidade_educacao ue (NOLOCK) 
+					ON ue.cd_unidade_educacao = esc.cd_escola
+				INNER JOIN
+					tipo_escola tpe (NOLOCK) 
+					ON esc.tp_escola = tpe.tp_escola
+				INNER JOIN
+					unidade_administrativa dre (NOLOCK) 
+					ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa	
+				INNER JOIN
+					serie_turma_escola (NOLOCK) 
+					ON serie_turma_escola.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					serie_turma_grade (NOLOCK) 
+					ON serie_turma_grade.cd_turma_escola = serie_turma_escola.cd_turma_escola AND serie_turma_grade.dt_fim IS NULL
+				INNER JOIN
+					escola_grade (NOLOCK) 
+					ON serie_turma_grade.cd_escola_grade = escola_grade.cd_escola_grade
+				INNER JOIN
+					grade (NOLOCK) 
+					ON escola_grade.cd_grade = grade.cd_grade
+				INNER JOIN
+					grade_componente_curricular gcc (NOLOCK) 
+					ON gcc.cd_grade = grade.cd_grade
+				INNER JOIN
+					componente_curricular cc (NOLOCK) 
+					ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+				INNER JOIN
+					serie_ensino (NOLOCK) 
+					ON grade.cd_serie_ensino = serie_ensino.cd_serie_ensino
+				INNER JOIN
+					etapa_ensino (NOLOCK) 
+					ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino
+				WHERE  
+					te.an_letivo = @anoLetivo
+					AND	  te.st_turma_escola in ('O', 'A', 'C')
+					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE());
+
+				IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentesPrograma
+				SELECT
+					DISTINCT
+					pcc.cd_componente_curricular AS ComponenteCurricularId,
+					te.cd_turma_escola TurmaId,
+					ue.cd_unidade_educacao AS CdUe	
+				INTO #tempTurmasComponentesPrograma
+				FROM
+					#tempServidorCargoFinal temp
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON temp.CdUe = te.cd_escola
+				INNER JOIN
+					escola esc (NOLOCK) 
+					ON te.cd_escola = esc.cd_escola
+				INNER JOIN
+					v_cadastro_unidade_educacao ue (NOLOCK) 
+					ON ue.cd_unidade_educacao = esc.cd_escola
+				INNER JOIN
+					tipo_escola tpe (NOLOCK) 
+					ON esc.tp_escola = tpe.tp_escola
+				INNER JOIN
+					unidade_administrativa dre (NOLOCK) 
+					ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa	
+				LEFT JOIN 
+					tipo_programa tp (NOLOCK) 
+					ON te.cd_tipo_programa = tp.cd_tipo_programa
+				INNER JOIN 
+					turma_escola_grade_programa tegp (NOLOCK) 
+					ON tegp.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN 
+					escola_grade teg (NOLOCK) 
+					ON teg.cd_escola_grade = tegp.cd_escola_grade
+				INNER JOIN 
+					grade pg (NOLOCK) ON pg.cd_grade = teg.cd_grade
+				INNER JOIN 
+					grade_componente_curricular pgcc (NOLOCK) 
+					ON pgcc.cd_grade = teg.cd_grade
+				INNER JOIN 
+					componente_curricular pcc (NOLOCK) 
+					ON pgcc.cd_componente_curricular = pcc.cd_componente_curricular and pcc.dt_cancelamento is null
+				WHERE  
+					te.an_letivo = @anoLetivo
+					AND   te.st_turma_escola in ('O', 'A', 'C')
+					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
+					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+					AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE());
+
+				IF OBJECT_ID('tempdb..#tempTurmasComponentes') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentes
+				SELECT
+					*
+				INTO #tempTurmasComponentes
+				FROM
+					(SELECT * FROM #tempTurmasComponentesRegulares) AS Regulares
+				UNION
+					(SELECT * FROM #tempTurmasComponentesPrograma);
+
+				SELECT
+					servidor.Rf,
+					cursos.TurmaId,
+					cursos.ComponenteCurricularId,
+					cursos.CdUe AS UeCodigo
+				FROM
+					#tempServidorCargoFinal servidor
+				INNER JOIN
+					#tempTurmasComponentes cursos
+					ON servidor.CdUe = cursos.CdUe;";
+			return await conn.QueryAsync<FuncionarioCursoEol>(query, new { rf, anoLetivo });
+		}
 
 		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, string rf)
         {
@@ -228,6 +488,5 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 
 		}
-
-	}
+    }
 }
