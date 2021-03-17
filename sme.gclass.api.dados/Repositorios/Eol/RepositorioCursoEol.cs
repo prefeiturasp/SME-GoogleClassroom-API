@@ -210,7 +210,8 @@ namespace SME.GoogleClassroom.Dados
 					DISTINCT
 					a.cd_aluno AS CodigoAluno,
 					te.cd_turma_escola AS TurmaId,
-					@componenteCurricularId AS ComponenteCurricularId
+					@componenteCurricularId AS ComponenteCurricularId,
+					te.cd_escola AS UeCodigo
 				FROM
 					v_aluno_cotic aluno (NOLOCK)
 				INNER JOIN 
