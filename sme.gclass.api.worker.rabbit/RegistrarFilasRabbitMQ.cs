@@ -35,6 +35,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoProfessorSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoProfessorSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoProfessorSync);
 
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoAlunoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoAlunoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoGradeSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoGradeSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoGradeSync);
+
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoFuncionarioSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoFuncionarioSync);
         }
@@ -43,6 +49,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoCursoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoCursoSync);
         }
 
         private static void RegistrarFilasProfessorSync(IModel canalRabbit)
@@ -88,6 +97,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoCursoIncluir);
         }
 
         private static void RegistrarFilasProfessorDeInclusao(IModel canalRabbit)
