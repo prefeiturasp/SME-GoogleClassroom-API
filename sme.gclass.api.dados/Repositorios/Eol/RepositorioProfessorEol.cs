@@ -229,7 +229,7 @@ namespace SME.GoogleClassroom.Dados
 	                                        atribuicao_aula atr
                                         WHERE 
                                             an_atribuicao = @anoLetivo
-                                            AND dt_atribuicao_aula > @dataReferencia
+                                            AND dt_atribuicao_aula >= @dataReferencia
 	                                        AND dt_cancelamento is null AND (dt_disponibilizacao_aulas is null OR dt_disponibilizacao_aulas > GETDATE());
 
                                         IF OBJECT_ID('tempdb..#tempProfessoresAtivos') IS NOT NULL
@@ -350,7 +350,7 @@ namespace SME.GoogleClassroom.Dados
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 									AND   te.an_letivo = @anoLetivo
-									AND	  atb_ser.dt_atribuicao_aula > @dataReferencia ";
+									AND	  atb_ser.dt_atribuicao_aula >= @dataReferencia ";
 
             const string queryBaseProgramas = @"-- 2. Busca os cursos de programa do Professor
 								IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramasProfessores') IS NOT NULL 
@@ -412,7 +412,7 @@ namespace SME.GoogleClassroom.Dados
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
 									AND   te.an_letivo = @anoLetivo
-									AND	  atb_pro.dt_atribuicao_aula > @dataReferencia ";
+									AND	  atb_pro.dt_atribuicao_aula >= @dataReferencia ";
 
             var queryRegulares = new StringBuilder(queryBaseRegulares);
             var queryProgramas = new StringBuilder(queryBaseProgramas);
@@ -430,8 +430,8 @@ namespace SME.GoogleClassroom.Dados
 
             if (componenteCurricularId.HasValue)
             {
-                queryRegulares.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
-                queryProgramas.AppendLine("AND cc.cd_componente_curricular = @componenteCurricularId ");
+                queryRegulares.AppendLine("AND atb_ser.cd_componente_curricular = @componenteCurricularId ");
+                queryProgramas.AppendLine("AND pgcc.cd_componente_curricular = @componenteCurricularId ");
             }
 
             queryRegulares.Append(";");

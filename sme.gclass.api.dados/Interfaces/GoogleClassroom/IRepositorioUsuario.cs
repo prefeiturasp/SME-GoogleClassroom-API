@@ -24,10 +24,13 @@ namespace SME.GoogleClassroom.Dados
 
         Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs);
 
-        Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresPaginadoPorRfs(Paginacao paginacao, long[] rfs);
+        Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresFuncionariosPaginadoPorRfs(Paginacao paginacao, long[] rfs);
 
         Task<bool> ExisteProfessorPorRf(long rf);
 
         Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao);
+        
+        Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] codigosEol);
+        Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosPaginadoPorCodigos(Paginacao paginacao, long[] codigosAluno);
     }
 }

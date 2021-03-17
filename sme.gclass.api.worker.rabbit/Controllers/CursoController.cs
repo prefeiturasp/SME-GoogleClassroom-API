@@ -5,6 +5,8 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
@@ -72,7 +74,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
-        [HttpPost("sincronizacao/iniciar")]
+        [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleCursoUseCase iniciarSyncGoogleCursoUseCase)
         {
@@ -95,5 +97,55 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         //    await iniciarCursoErrosTratamentoUseCase.Executar();
         //    return Ok();
         //}
+
+        /// <summary>
+        /// Retorna as grades dos cursos para incluir no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("grades")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<GradeCursoEol>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterGradesDeCursosDosAlunos([FromServices] IObterGradesDeCursosUseCase useCase,
+            [FromQuery] FiltroObterGradesDeCursosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia a sincronização das grades de cursos do EOL para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização das grades acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("grades/sincronizacao")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> IniciarSincronizacaoGrades([FromServices] IIniciarSyncGoogleGradesUseCase iniciarSyncGoogleAtribuicoesDosAlunosUseCase)
+        {
+            var retorno = await iniciarSyncGoogleAtribuicoesDosAlunosUseCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os alunos do curso do EOL que serão incluídos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("alunos/novos")]
+        [ProducesResponseType(typeof(IEnumerable<AlunoCursoEol>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterAlunosCursosGoogle([FromServices] IObterCursosAlunosParaIncluirGoogleUseCase useCase,
+            [FromQuery][Required] long turmaId, [FromQuery][Required] long componenteCurricularId)
+        {
+            var retorno = await useCase.Executar(turmaId, componenteCurricularId);
+            return Ok(retorno);
+        }
     }
 }

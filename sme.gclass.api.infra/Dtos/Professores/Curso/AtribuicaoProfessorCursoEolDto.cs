@@ -6,6 +6,7 @@ namespace SME.GoogleClassroom.Infra
     {
         public long Rf { get; set; }
         public string Nome { get; set; }
+        public string Email { get; set; }
         public long TurmaId { get; set; }
         public long ComponenteCurricularId { get; set; }
         public DateTime DataAtribuicao { get; set; }

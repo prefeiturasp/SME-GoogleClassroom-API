@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -26,15 +27,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorParaIncluir.Rf));
-                if (professorJaIncluido) return true;
-
                 var professorGoogle = new ProfessorGoogle(professorParaIncluir.Rf, professorParaIncluir.Nome, professorParaIncluir.Email, professorParaIncluir.OrganizationPath);
-                await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
-                if(_deveExecutarIntegracao) professorGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(professorGoogle));
 
-                await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
+                var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorGoogle.Rf));
+                if (professorJaIncluido)
+                {
+                    await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
+                    return true;
+                }
 
+                await InserirProfessorGoogleAsync(professorGoogle);
                 return true;
             }
             catch (Exception ex)
@@ -45,10 +47,40 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
+        private async Task InserirProfessorGoogleAsync(ProfessorGoogle professorGoogle)
+        {
+            try
+            {
+                var professorSincronizado = await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
+                if (!professorSincronizado)
+                {
+                    await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
+                        $"Não foi possível incluir o professor no Google Classroom. {professorGoogle}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar, DateTime.Now));
+                    return;
+                }
+
+                await InserirProfessorAsync(professorGoogle);
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.EhErroDeDuplicidade())
+                    await InserirProfessorAsync(professorGoogle);
+                else
+                    throw;
+            }
+        }
+
+        private async Task InserirProfessorAsync(ProfessorGoogle professorGoogle)
+        {
+            if (_deveExecutarIntegracao)
+                professorGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(professorGoogle));
+            await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
+        }
+
         private async Task IniciarSyncGoogleCursosDoProfessorAsync(ProfessorGoogle professorGoogle)
         {
             var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.FilaProfessorCursoSync, professorGoogle));
-            if(!publicarCursosDoProfessor)
+            if (!publicarCursosDoProfessor)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
                     $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));
