@@ -105,7 +105,8 @@ namespace SME.GoogleClassroom.Dados
 									ELSE
 										cc.cd_componente_curricular
 									END ComponenteCurricularId,
-									te.cd_turma_escola TurmaId
+									te.cd_turma_escola TurmaId,
+									te.cd_escola AS UeCodigo
 								INTO #tempTurmasComponentesRegulares
 								FROM
 									#tempAlunosMatriculasRegularesAtivas temp
@@ -193,7 +194,8 @@ namespace SME.GoogleClassroom.Dados
 									DISTINCT
 									temp.cd_aluno AS CodigoAluno,
 									pcc.cd_componente_curricular AS ComponenteCurricularId,
-									te.cd_turma_escola TurmaId
+									te.cd_turma_escola TurmaId,
+									te.cd_escola AS UeCodigo
 								INTO #tempTurmasComponentesPrograma
 								FROM
 									#tempAlunosMatriculasProgramaAtivas temp
