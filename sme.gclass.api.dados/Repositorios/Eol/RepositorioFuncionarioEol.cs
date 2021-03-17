@@ -290,7 +290,8 @@ namespace SME.GoogleClassroom.Dados
 				SELECT
 					servidor.Rf,
 					cursos.TurmaId,
-					cursos.ComponenteCurricularId
+					cursos.ComponenteCurricularId,
+					cursos.CdUe AS UeCodigo
 				FROM
 					#tempServidorCargoFinal servidor
 				INNER JOIN
