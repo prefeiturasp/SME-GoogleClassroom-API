@@ -298,7 +298,8 @@ namespace SME.GoogleClassroom.Dados
                                                    u.indice,
                                                    u.id AS rf, 
                                                    u.nome AS nome,
-                                                   u.email AS email 
+                                                   u.email AS email,
+                                                   u.organization_path AS organizationPath
                                               into temporary table funcionarioTemp
                                               from usuarios u
                                              inner join cursos_usuarios cu on cu.usuario_id = u.indice 
@@ -326,6 +327,7 @@ namespace SME.GoogleClassroom.Dados
             query.AppendLine(@"select t1.rf,
    		                              t1.nome,
    		                              t1.email,
+                                      t1.organizationPath,
    	                                  c.id,
                                       c.id as cursoId,
    		                              c.nome,

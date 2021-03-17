@@ -12,6 +12,7 @@ namespace SME.GoogleClassroom.Infra
         public long Rf { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
+        public string OrganizationPath { get; set; }
         public ICollection<CursoDto> Cursos { get; set; }
     }
 }
