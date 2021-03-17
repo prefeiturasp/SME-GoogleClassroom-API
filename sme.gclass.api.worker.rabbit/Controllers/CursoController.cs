@@ -147,5 +147,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(turmaId, componenteCurricularId);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Retorna os funcionários do curso do EOL que serão incluídos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("alunos/novos")]
+        [ProducesResponseType(typeof(IEnumerable<FuncionarioCursoEol>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosCursosGoogle([FromServices] IObterCursosFuncionariosParaIncluirGoogleUseCase useCase,
+            [FromQuery][Required] long turmaId, [FromQuery][Required] long componenteCurricularId)
+        {
+            var retorno = await useCase.Executar(turmaId, componenteCurricularId);
+            return Ok(retorno);
+        }
     }
 }
