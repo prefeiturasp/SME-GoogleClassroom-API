@@ -42,6 +42,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             this.metricReporter = metricReporter;
             this.consumoDeFilasOptions = consumoDeFilasOptions;
             canalRabbit = conexaoRabbit.CreateModel();
+            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
 
             canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
             RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
