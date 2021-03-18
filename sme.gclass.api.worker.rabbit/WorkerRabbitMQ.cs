@@ -193,7 +193,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoAlunoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoGradeSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoSync, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoFuncionarioSync, false, consumer);
             }
 
