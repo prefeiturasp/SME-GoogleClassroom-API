@@ -223,8 +223,18 @@ namespace SME.GoogleClassroom.Dados
    		                              c.componente_curricular_id as componenteCurricularId
                                  from cursos c
                                 inner join cursos_usuarios cu on cu.curso_id = c.id
-                                inner join alunoTempPaginado t1 on t1.indice = cu.usuario_id;");
+                                inner join alunoTempPaginado t1 on t1.indice = cu.usuario_id ");
 
+            if (codigoAluno.HasValue && codigoAluno > 0)
+                query.AppendLine("and t1.codigoAluno = @codigoAluno ");
+
+            if (turmaId.HasValue && turmaId > 0)
+                query.AppendLine("and c.turma_id = @turmaId ");
+
+            if (componenteCurricularId.HasValue && componenteCurricularId > 0)
+                query.AppendLine("and c.componente_curricular_id = @componenteCurricularId ");
+
+            query.AppendLine(";");
 
             query.AppendLine("select count(*) from alunoTemp");
 
