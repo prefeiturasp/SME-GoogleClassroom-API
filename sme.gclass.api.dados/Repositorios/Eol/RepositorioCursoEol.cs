@@ -254,7 +254,7 @@ namespace SME.GoogleClassroom.Dados
 				componenteCurricularId
 			};
 
-			using var multi = await conn.QueryMultipleAsync(query, parametros);
+			using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
 			var retorno = new PaginacaoResultadoDto<GradeCursoEol>();
 
