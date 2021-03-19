@@ -10,6 +10,7 @@
         AtribuicaoProfessorCursoAdicionar = 6,
         AlunoCursoAdicionar = 7,
         CursoGradesAdicionar = 8,
-        FuncionarioCursoAdicionar = 9
+        FuncionarioCursoAdicionar = 9,
+        FuncionarioIndiretoAdicionar = 10
     }
 }
