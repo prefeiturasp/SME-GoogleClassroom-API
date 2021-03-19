@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SME.GoogleClassroom.Dominio.Entidades.Google.Usuarios
+namespace SME.GoogleClassroom.Dominio
 {
     public class FuncionarioIndiretoGoogle
     {
