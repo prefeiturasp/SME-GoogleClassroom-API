@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage("o Email do usuário deve ser informado.");
+                .WithMessage("O email do usuário deve ser informado.");
         }
     }
 }
