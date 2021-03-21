@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace SME.GoogleClassroom.Dominio
 {
@@ -7,10 +8,15 @@ namespace SME.GoogleClassroom.Dominio
         private const int TamanhoMaximoDoSobrenome = 60;
 
         public long Indice { get; set; }
-        public long Cpf { get; set; }
+
+        private string cpf;
+        public string Cpf 
+        {
+            get => cpf;
+            set => SetCpf(value);
+        }
 
         private string nome;
-
         public string Nome
         {
             get => nome;
@@ -40,7 +46,7 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
-        public FuncionarioIndiretoGoogle(long cpf, string nome, string email, string organizationPath)
+        public FuncionarioIndiretoGoogle(string cpf, string nome, string email, string organizationPath)
         {
             Cpf = cpf;
             Nome = nome;
@@ -62,6 +68,16 @@ namespace SME.GoogleClassroom.Dominio
             var sobrenomeTrucado = Sobrenome.Substring(0, TamanhoMaximoDoSobrenome);
             var nomeFormatado = nome.Replace(Sobrenome, sobrenomeTrucado).Trim(); ;
             this.nome = nomeFormatado;
+        }
+
+        private void SetCpf(string cpf)
+        {
+            if(!Regex.IsMatch(cpf, "^\\d{11}"))
+            {
+                throw new NegocioException("O CPF informado é inválido.");
+            }
+
+            Cpf = cpf;
         }
     }
 }

@@ -36,6 +36,11 @@
         public static string FilaProfessorCursoSync => "googleclass.professor.curso.sync";
         public static string FilaProfessorCursoAtribuicaoSync => "googleclass.professor.curso.atribuicao.sync";
         #endregion
+
+        #region Funcionário indireto
+        public static string FilaFuncionarioIndiretoSync => "googleclass.funcionario.indireto.sync";
+        public static string FilaFuncionarioIndiretoIncluir => "googleclass.funcionario.indireto.incluir";
+        #endregion
     }
 }
 
