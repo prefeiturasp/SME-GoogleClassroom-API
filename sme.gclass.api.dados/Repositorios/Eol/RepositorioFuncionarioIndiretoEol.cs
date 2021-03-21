@@ -42,15 +42,18 @@ namespace SME.GoogleClassroom.Dados
 
         private static string MontaQueryFuncionariosIndiretosParaInclusao(bool aplicarPaginacao, string cpf)
         {
-            string queryBase = @$"
+            var queryBase = @$"
                 DECLARE @tipoEscola11 AS INT = 11;
                 DECLARE @tipoEscola12 AS INT = 12;
-
+                
+                IF OBJECT_ID('tempdb..#tempFuncionariosIndiretos') IS NOT NULL
+					DROP TABLE #tempFuncionariosIndiretos;
                 SELECT
 	                p.cd_cpf_pessoa AS Cpf,
 	                p.nm_pessoa AS Nome,
 	                p.nm_social AS NomeSocial,
 	                '/Professores/Conveniadas' AS OrganizationPath
+                INTO #tempFuncionariosIndiretos
                 FROM
 	                contrato_externo ce (NOLOCK)
                 INNER JOIN
@@ -68,9 +71,21 @@ namespace SME.GoogleClassroom.Dados
             if (!string.IsNullOrWhiteSpace(cpf))
                 query.AppendLine("AND p.cd_cpf_pessoa = @cpf");
 
-            query.AppendLine("ORDER BY p.nm_pessoa");
+            query.AppendLine(@"
+                SELECT
+                    *
+                FROM
+                    #tempFuncionariosIndiretos ");
+
+            query.AppendLine("ORDER BY Nome");
             if (aplicarPaginacao)
                 query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
+
+            query.AppendLine(@"
+                SELECT
+                    COUNT(*)
+                FROM
+                    #tempFuncionariosIndiretos;");
 
             return query.ToString();
         }

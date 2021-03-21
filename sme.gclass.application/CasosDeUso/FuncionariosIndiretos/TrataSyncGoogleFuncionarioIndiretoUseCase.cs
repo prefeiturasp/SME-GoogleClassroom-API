@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
-                        var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.FilaFuncionarioIncluir, funcionarioIndiretosParaIncluirGoogle));
+                        var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoIncluir, RotasRabbit.FilaFuncionarioIndiretoIncluir, funcionarioIndiretosParaIncluirGoogle));
                         if (!publicarFuncionario)
                         {
                             await IncluirFuncionarioIndiretoComErroAsync(funcionarioIndiretosParaIncluirGoogle, ObterMensagemDeErro(funcionarioIndiretosParaIncluirGoogle.Cpf));
