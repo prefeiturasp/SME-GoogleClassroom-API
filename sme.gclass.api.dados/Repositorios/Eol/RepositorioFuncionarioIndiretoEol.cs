@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.Dados
 					DROP TABLE #tempFuncionariosIndiretos;
                 SELECT
 	                p.cd_cpf_pessoa AS Cpf,
-	                p.nm_pessoa AS Nome,
+	                p.nm_pessoa AS NomePessoa,
 	                p.nm_social AS NomeSocial,
 	                '/Professores/Conveniadas' AS OrganizationPath
                 INTO #tempFuncionariosIndiretos
@@ -77,7 +77,7 @@ namespace SME.GoogleClassroom.Dados
                 FROM
                     #tempFuncionariosIndiretos ");
 
-            query.AppendLine("ORDER BY Nome");
+            query.AppendLine("ORDER BY NomePessoa");
             if (aplicarPaginacao)
                 query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
 

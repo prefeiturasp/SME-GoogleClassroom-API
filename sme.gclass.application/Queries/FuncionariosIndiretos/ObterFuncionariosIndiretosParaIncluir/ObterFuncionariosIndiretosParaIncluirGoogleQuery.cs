@@ -8,10 +8,15 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterFuncionariosIndiretosParaIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<FuncionarioIndiretoEol>>
     {
-        public ObterFuncionariosIndiretosParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao, string cpf)
+        public ObterFuncionariosIndiretosParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao)
         {
             UltimaDataExecucao = ultimaDataExecucao;
             Paginacao = paginacao;
+        }
+
+        public ObterFuncionariosIndiretosParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao, string cpf)
+            :this(ultimaDataExecucao, paginacao)
+        {
             Cpf = cpf;
         }
 
