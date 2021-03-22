@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioAdicionar, DateTime.Today));
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioIndiretoAdicionar, DateTime.Today));
                 return true;
             }
             catch (Exception ex)

@@ -74,6 +74,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaFuncionarioCursoIncluir, new ComandoRabbit("Atribuir funcionário ao curso no google", typeof(IInserirFuncionarioCursoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaCursoFuncionarioSync, new ComandoRabbit("Tratamento de funcionários do curso do sync com Google", typeof(ITrataSyncGoogleFuncionariosDoCursoUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIndiretoSync, new ComandoRabbit("Tratamento de funcionários indiretos do sync com Google", typeof(ITrataSyncGoogleFuncionarioIndiretoUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioIndiretoIncluir, new ComandoRabbit("Incluir funcionários indiretos novos no Google", typeof(IInserirFuncionarioIndiretoGoogleUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -207,6 +208,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
             }
 
             return Task.CompletedTask;

@@ -4,17 +4,17 @@ using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class AtualizarFuncionarioGoogleCommand : IRequest<bool>
+    public class AtualizarFuncionarioIndiretoGoogleCommand : IRequest<bool>
     {
         public FuncionarioIndiretoGoogle FuncionarioIndiretoGoogle { get; set; }
 
-        public AtualizarFuncionarioGoogleCommand(FuncionarioIndiretoGoogle funcionarioIndiretoGoogle)
+        public AtualizarFuncionarioIndiretoGoogleCommand(FuncionarioIndiretoGoogle funcionarioIndiretoGoogle)
         {
             FuncionarioIndiretoGoogle = funcionarioIndiretoGoogle;
         }
     }
 
-    public class AtualizarFuncionarioGoogleCommandValidator : AbstractValidator<AtualizarFuncionarioGoogleCommand>
+    public class AtualizarFuncionarioGoogleCommandValidator : AbstractValidator<AtualizarFuncionarioIndiretoGoogleCommand>
     {
         public AtualizarFuncionarioGoogleCommandValidator()
         {

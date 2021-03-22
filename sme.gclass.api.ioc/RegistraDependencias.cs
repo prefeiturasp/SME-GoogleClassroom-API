@@ -94,6 +94,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleFuncionarioIndiretoUseCase, TrataSyncGoogleFuncionarioIndiretoUseCase>();
             services.TryAddScoped<IObterFuncionariosIndiretosParaIncluirGoogleUseCase, ObterFuncionariosIndiretosParaIncluirGoogleUseCase>();
             services.TryAddScoped<IIniciarSyncGoogleFuncionarioIndiretoUseCase, IniciarSyncGoogleFuncionarioIndiretoUseCase>();
+            services.TryAddScoped<IInserirFuncionarioIndiretoGoogleUseCase, InserirFuncionarioIndiretoGoogleUseCase>();
         }
     }
 }
