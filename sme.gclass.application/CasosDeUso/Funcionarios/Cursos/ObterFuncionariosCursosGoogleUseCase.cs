@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>> Executar(FiltroObterFuncionariosCursosCadastradosDto filtro)
         {
-            await mediator.Send(new IncluirUsuarioCommand(null, "William Santos", "William.santos.amcom1", UsuarioTipo.Funcionario, "/Admin/Supervisores", DateTime.Now ));
+            await mediator.Send(new ObterUsuarioGoogleQuery("William@amcom.com.br"));
 
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
             return await mediator.Send(new ObterFuncionariosCursosGoogleQuery(paginacao, filtro.Rf, filtro.TurmaId, filtro.ComponenteCurricularId));
