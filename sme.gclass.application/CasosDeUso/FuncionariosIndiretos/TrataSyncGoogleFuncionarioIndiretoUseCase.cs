@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioIndiretoAdicionar));
 
                 var paginacao = new Paginacao(0, 0);
-                var funcionariosIndiretosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosIndiretosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
+                var funcionariosIndiretosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosIndiretosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao));
 
                 foreach (var funcionarioIndiretosParaIncluirGoogle in funcionariosIndiretosParaIncluirGoogle.Items)
                 {
