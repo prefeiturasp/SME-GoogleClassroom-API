@@ -414,5 +414,61 @@ namespace SME.GoogleClassroom.Dados
             using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
             return (await conn.QueryAsync<bool>(query, new { cpf, usuarioTipo = UsuarioTipo.FuncionarioIndireto })).FirstOrDefault();
         }
+
+        public async Task<PaginacaoResultadoDto<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretoAsync(Paginacao paginacao, string cpf, string email)
+        {
+            var query = new StringBuilder(@"SELECT 
+                                                   u.indice,
+                                                   u.id AS Rf,
+                                                   u.cpf AS Cpf,
+                                                   u.nome AS Nome,
+                                                   u.email AS Email,
+                                                   u.organization_path as OrganizationPath,
+                                                   u.data_inclusao as DataInclusao,
+                                                   u.data_atualizacao as DataAtualizacao
+                                              FROM usuarios u 
+                                             WHERE usuario_tipo = @tipo ");
+            var queryCount = new StringBuilder("SELECT count(*) from usuarios u where usuario_tipo = @tipo ");
+
+            if (!string.IsNullOrWhiteSpace(cpf))
+            {
+                query.AppendLine($"AND u.cpf = @cpf");
+                queryCount.AppendLine($"AND u.cpf = @cpf");
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                query.AppendLine($"AND u.email = @email");
+                queryCount.AppendLine($"AND u.email = @email");
+            }
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
+
+            query.AppendLine(";");
+
+            query.AppendLine(queryCount.ToString());
+
+            var retorno = new PaginacaoResultadoDto<FuncionarioIndiretoGoogle>();
+
+            var parametros = new
+            {
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros,
+                tipo = UsuarioTipo.FuncionarioIndireto,
+                cpf,
+                email = email?.Trim().ToLower()
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+
+            using var funcionarios = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+            retorno.Items = funcionarios.Read<FuncionarioIndiretoGoogle>();
+            retorno.TotalRegistros = funcionarios.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
     }
 }

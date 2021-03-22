@@ -45,6 +45,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
+        /// Retorna os funcionários indiretos já incluídos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<FuncionarioGoogle>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosGoogle([FromServices] IObterFuncionariosIndiretosGoogleUseCase useCase,
+            [FromQuery] FiltroObterFuncionariosIndiretosCadastradosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Inicia a sincronização de funcionários indiretos do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>
