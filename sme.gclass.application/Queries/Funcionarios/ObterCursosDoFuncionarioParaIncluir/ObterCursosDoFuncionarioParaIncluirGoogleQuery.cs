@@ -7,10 +7,10 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosDoFuncionarioParaIncluirGoogleQuery : IRequest<IEnumerable<FuncionarioCursoEol>>
     {
-        public long Rf { get; set; }
+        public long? Rf { get; set; }
         public int AnoLetivo { get; set; }
 
-        public ObterCursosDoFuncionarioParaIncluirGoogleQuery(long rf, int anoLetivo)
+        public ObterCursosDoFuncionarioParaIncluirGoogleQuery(long? rf, int anoLetivo)
         {
             Rf = rf;
             AnoLetivo = anoLetivo;
