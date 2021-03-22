@@ -6,12 +6,12 @@ namespace SME.GoogleClassroom.Testes.Unitario
     public class FuncionarioIndiretoEolTeste
     {
         [Theory(DisplayName = "Definição de nome, considerando nome social")]
-        [InlineData(28541640086, "Maria de Jesus", "", "Maria de Jesus", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br")]
-        [InlineData(28541640086, "Maria de Jesus", "José da Silva", "José da Silva", "josesilva.28541640086@edu.sme.prefeitura.sp.gov.br")]
-        [InlineData(28541640086, "Maria de Jesus", "Maria Jesus", "Maria de Jesus", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br")]
-        [InlineData(28541640086, "Maria de Jesus", "Maria", "Maria de Jesus", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br")]
-        [InlineData(28541640086, "José da Silva", "José Gonçalves", "José da Silva", "josesilva.28541640086@edu.sme.prefeitura.sp.gov.br")]
-        public void DefinicaoDeNome(long cpf, string nomePessoa, string nomeSocial, string nomeEsperado, string emailEsperado)
+        [InlineData("28541640086", "Maria de Jesus", "", "Maria de Jesus", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br")]
+        [InlineData("28541640086", "Maria de Jesus", "José da Silva", "José da Silva", "josesilva.28541640086@edu.sme.prefeitura.sp.gov.br")]
+        [InlineData("28541640086", "Maria de Jesus", "Maria Jesus", "Maria de Jesus", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br")]
+        [InlineData("28541640086", "Maria de Jesus", "Maria", "Maria de Jesus", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br")]
+        [InlineData("28541640086", "José da Silva", "José Gonçalves", "José da Silva", "josesilva.28541640086@edu.sme.prefeitura.sp.gov.br")]
+        public void DefinicaoDeNome(string cpf, string nomePessoa, string nomeSocial, string nomeEsperado, string emailEsperado)
         {
             var funcionarioEol = new FuncionarioIndiretoEol(cpf, nomePessoa, nomeSocial, string.Empty);
 
@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Testes.Unitario
         }
 
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(CorrectData))]
-        public void GeracaoDeEmail(long cpf, string nomePessoa, string nomeSocial, string organizationPath, string emailEsperado)
+        public void GeracaoDeEmail(string cpf, string nomePessoa, string nomeSocial, string organizationPath, string emailEsperado)
         {
             var funcionario = new FuncionarioIndiretoEol(cpf, nomePessoa, nomeSocial, organizationPath);
 
@@ -29,9 +29,9 @@ namespace SME.GoogleClassroom.Testes.Unitario
         }
 
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(WrongData))]
-        public void GeracaoDeEmailErrado(long rf, string nomePessoa, string nomeSocial, string organizationPath, string emailEsperado)
+        public void GeracaoDeEmailErrado(string cpf, string nomePessoa, string nomeSocial, string organizationPath, string emailEsperado)
         {
-            var funcionario = new FuncionarioIndiretoEol(rf, nomePessoa, nomeSocial, organizationPath);
+            var funcionario = new FuncionarioIndiretoEol(cpf, nomePessoa, nomeSocial, organizationPath);
 
             Assert.NotEqual(emailEsperado, funcionario.Email);
         }

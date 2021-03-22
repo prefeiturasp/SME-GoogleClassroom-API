@@ -4,7 +4,7 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class FuncionarioIndiretoEol
     {
-        public FuncionarioIndiretoEol(long cpf, string nomePessoa, string nomeSocial, string organizationPath)
+        public FuncionarioIndiretoEol(string cpf, string nomePessoa, string nomeSocial, string organizationPath)
         {
             Cpf = cpf;
             NomePessoa = nomePessoa;
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Dominio
         protected FuncionarioIndiretoEol()
         { }
 
-        public long Cpf { get; set; }
+        public string Cpf { get; set; }
         public string NomePessoa { get; set; }
         public string NomeSocial { get; set; }
         public string Nome { get => ObterNome(); }
@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Dominio
 
         private string GerarEmail()
         {
-            if (!string.IsNullOrEmpty(Nome) && Cpf > 0)
+            if (!string.IsNullOrEmpty(Nome) && !string.IsNullOrWhiteSpace(Cpf))
             {
                 var nomeFormatado = Nome.RemoverAcentosECaracteresEspeciais();
                 string[] splitNome = nomeFormatado.Split(' ');
