@@ -1,4 +1,5 @@
-﻿using Google.Apis.Admin.Directory.directory_v1;
+﻿using Google;
+using Google.Apis.Admin.Directory.directory_v1;
 using MediatR;
 using Polly;
 using Polly.Registry;
@@ -47,12 +48,11 @@ namespace SME.GoogleClassroom.Aplicacao
                     DataCriacao = usuario.CreationTime
                 };
             }
-            catch (Exception ex)
+            catch (GoogleApiException gEx)
             {
-
-                throw ex;
-            }
-            
+                //Fazer tratamento aqui para ver se não existe e não ficar repetindo na policy;
+                throw;
+            }            
         }
     }
 }
