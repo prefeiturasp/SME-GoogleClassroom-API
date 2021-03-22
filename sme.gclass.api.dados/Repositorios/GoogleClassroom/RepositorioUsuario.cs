@@ -317,7 +317,7 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
+        public async Task<long> SalvarAsync(long? id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
         {
             const string insertQuery = @"insert into public.usuarios
                                         (id, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)

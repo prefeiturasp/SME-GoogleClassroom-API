@@ -7,7 +7,7 @@ namespace SME.GoogleClassroom.Dominio
         private const int TamanhoMaximoDoSobrenome = 60;
 
         public long Indice { get; set; }
-        public long Rf { get; set; }
+        public long? Rf { get; set; }
 
         private string nome;
         public string Nome
@@ -39,7 +39,7 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
-        public FuncionarioGoogle(long rf, string nome, string email, string organizationPath)
+        public FuncionarioGoogle(long? rf, string nome, string email, string organizationPath)
         {
             Rf = rf;
             Nome = nome;
