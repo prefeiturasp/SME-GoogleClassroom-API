@@ -43,5 +43,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Inicia a sincronização de funcionários indiretos do EOL para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos funcionários acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("sincronizacao")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleFuncionarioUseCase iniciarSyncGoogleFuncionarioUseCase)
+        {
+            var retorno = await iniciarSyncGoogleFuncionarioUseCase.Executar();
+            return Ok(retorno);
+        }
     }
 }
