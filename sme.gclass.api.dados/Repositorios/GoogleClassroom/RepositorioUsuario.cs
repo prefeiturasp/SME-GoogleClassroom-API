@@ -317,17 +317,18 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
+        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
         {
             const string insertQuery = @"insert into public.usuarios
-                                        (id, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
+                                        (id, cpf, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
                                         values
-                                        (@id, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)
+                                        (@id, @cpf, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)
                                         RETURNING indice";
 
             var parametros = new
             {
                 id,
+                cpf,
                 nome,
                 email,
                 tipo,
@@ -405,6 +406,13 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
+        }
+
+        public async Task<bool> ExisteFuncionarioIndiretoPorCpf(string cpf)
+        {
+            var query = @"SELECT exists(SELECT 1 from usuarios where cpf = @cpf and usuario_tipo = @usuarioTipo limit 1)";
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return (await conn.QueryAsync<bool>(query, new { cpf, usuarioTipo = UsuarioTipo.FuncionarioIndireto })).FirstOrDefault();
         }
     }
 }

@@ -15,6 +15,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<long> Handle(IncluirUsuarioCommand request, CancellationToken cancellationToken)
-            => await repositorioUsuario.SalvarAsync(request.Id, request.Nome, request.Email, request.Tipo, request.OrganizationPath, request.DataInclusao, request.DataAtualizacao);
+            => await repositorioUsuario.SalvarAsync(request.Id, request.Cpf, request.Nome, request.Email, request.Tipo, request.OrganizationPath, request.DataInclusao, request.DataAtualizacao);
     }
 }

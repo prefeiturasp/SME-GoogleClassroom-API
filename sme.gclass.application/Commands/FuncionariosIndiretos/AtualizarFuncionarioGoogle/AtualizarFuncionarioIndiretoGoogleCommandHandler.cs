@@ -1,7 +1,6 @@
 ﻿using Google.Apis.Admin.Directory.directory_v1;
 using Google.Apis.Admin.Directory.directory_v1.Data;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Polly;
 using Polly.Registry;
 using Polly.Retry;
@@ -13,21 +12,19 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class AtualizarFuncionarioGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<AtualizarFuncionarioGoogleCommand>
+    public class AtualizarFuncionarioIndiretoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<AtualizarFuncionarioIndiretoGoogleCommand>
     {
         private readonly IMediator mediator;
-        private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public AtualizarFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
+        public AtualizarFuncionarioIndiretoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
             : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
         }
 
-        protected override async Task<bool> ExecutarAsync(AtualizarFuncionarioGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(AtualizarFuncionarioIndiretoGoogleCommand request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             await policy.ExecuteAsync(() => AtualizarFuncionarioNoGoogle(request.FuncionarioIndiretoGoogle, diretorioClassroom));

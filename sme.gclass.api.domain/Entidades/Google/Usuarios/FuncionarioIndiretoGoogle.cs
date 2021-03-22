@@ -77,7 +77,7 @@ namespace SME.GoogleClassroom.Dominio
                 throw new NegocioException("O CPF informado é inválido.");
             }
 
-            Cpf = cpf;
+            this.cpf = cpf;
         }
     }
 }

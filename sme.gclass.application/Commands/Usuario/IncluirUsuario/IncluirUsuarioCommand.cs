@@ -7,24 +7,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirUsuarioCommand : IRequest<long>
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
+        public string Cpf { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public UsuarioTipo Tipo { get; set; }
         public string OrganizationPath { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
-
-        public IncluirUsuarioCommand(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao = null)
-        {
-            Id = id;
-            Nome = nome;
-            Email = email;
-            Tipo = tipo;
-            OrganizationPath = organizationPath;
-            DataInclusao = dataInclusao;
-            DataAtualizacao = dataAtualizacao;
-        }
 
         public IncluirUsuarioCommand(FuncionarioGoogle funcionarioGoogle)
         {
@@ -58,6 +48,17 @@ namespace SME.GoogleClassroom.Aplicacao
             DataInclusao = alunoGoogle.DataInclusao;
             DataAtualizacao = alunoGoogle.DataAtualizacao;
         }
+
+        public IncluirUsuarioCommand(FuncionarioIndiretoGoogle funcionarioIndiretoGoogle)
+        {
+            Cpf = funcionarioIndiretoGoogle.Cpf;
+            Nome = funcionarioIndiretoGoogle.Nome;
+            Email = funcionarioIndiretoGoogle.Email;
+            Tipo = UsuarioTipo.FuncionarioIndireto;
+            OrganizationPath = funcionarioIndiretoGoogle.OrganizationPath;
+            DataInclusao = funcionarioIndiretoGoogle.DataInclusao;
+            DataAtualizacao = funcionarioIndiretoGoogle.DataAtualizacao;
+        }
     }
 
     public class IncluirUsuarioCommandValidator : AbstractValidator<IncluirUsuarioCommand>
@@ -66,6 +67,12 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.Id)
                 .NotEmpty()
+                .When(x => string.IsNullOrWhiteSpace(x.Cpf))
+                .WithMessage("A identificação do usuário deve ser informada.");
+
+            RuleFor(x => x.Cpf)
+                .NotEmpty()
+                .When(x => x.Id is null)
                 .WithMessage("A identificação do usuário deve ser informada.");
 
             RuleFor(x => x.Nome)
