@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuarioGoogleQuery : IRequest<UsuarioGoogle>
+    public class ObterUsuarioGoogleQuery : IRequest<UsuarioGoogleDto>
     {
         public ObterUsuarioGoogleQuery(string email)
         {

@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public InserirProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions) : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
+            this.policy = registry.Get<AsyncPolicy>("RetryPolicy");
         }
 
         protected override async Task<bool> ExecutarAsync(InserirProfessorCursoGoogleCommand request, CancellationToken cancellationToken)

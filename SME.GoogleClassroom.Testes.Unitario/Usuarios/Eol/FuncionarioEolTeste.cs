@@ -3,7 +3,7 @@ using Xunit;
 
 namespace SME.GoogleClassroom.Testes
 {
-    public class ProfessorEolTeste
+    public class FuncionarioEolTeste
     {
         [Theory(DisplayName = "Definição de nome, considerando nome social")]
         [InlineData(1234567, "Maria de Jesus", "", "Maria de Jesus", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br")]
@@ -13,17 +13,17 @@ namespace SME.GoogleClassroom.Testes
         [InlineData(1234567, "José da Silva", "José Gonçalves", "José da Silva", "josesilva.1234567@edu.sme.prefeitura.sp.gov.br")]
         public void DefinicaoDeNome(long rf, string nomePessoa, string nomeSocial, string nomeEsperado, string emailEsperado)
         {
-            var professorEol = new ProfessorEol(rf, nomePessoa, nomeSocial, string.Empty);
+            var funcionarioEol = new FuncionarioEol(rf, nomePessoa, nomeSocial, string.Empty);
 
-            Assert.NotNull(professorEol);
-            Assert.Equal(nomeEsperado, professorEol.Nome);
-            Assert.Equal(emailEsperado, professorEol.Email);
+            Assert.NotNull(funcionarioEol);
+            Assert.Equal(nomeEsperado, funcionarioEol.Nome);
+            Assert.Equal(emailEsperado, funcionarioEol.Email);
         }
 
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(CorrectData))]
         public void GeracaoDeEmail(long rf, string nomePessoa, string nomeSocial, string organizationPath, string emailEsperado)
         {
-            ProfessorEol funcionario = new ProfessorEol(rf, nomePessoa, nomeSocial, organizationPath);
+            var funcionario = new FuncionarioEol(rf, nomePessoa, nomeSocial, organizationPath);
 
             Assert.Equal(emailEsperado, funcionario.Email);
         }
@@ -31,14 +31,14 @@ namespace SME.GoogleClassroom.Testes
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(WrongData))]
         public void GeracaoDeEmailErrado(long rf, string nomePessoa, string nomeSocial, string organizationPath, string emailEsperado)
         {
-            ProfessorEol funcionario = new ProfessorEol(rf, nomePessoa, nomeSocial, organizationPath);
+            var funcionario = new FuncionarioEol(rf, nomePessoa, nomeSocial, organizationPath);
 
             Assert.NotEqual(emailEsperado, funcionario.Email);
         }
 
         public static readonly object[][] CorrectData =
         {
-            new object[] { 0, "", "", "", "" },
+            new object[] { 0, "", "", "", null },
             new object[] { 1234567 , "Maria Jesus", "", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 1234567, "Maria Tereza Jesus", "", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 1234567, "Maria Tereza Santos Jesus", "", "/FUNCIONARIO", "mariajesus.1234567@edu.sme.prefeitura.sp.gov.br" },

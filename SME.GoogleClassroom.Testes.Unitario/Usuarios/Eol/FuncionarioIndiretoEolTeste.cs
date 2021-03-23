@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Testes.Unitario
 
         public static readonly object[][] CorrectData =
         {
-            new object[] { 0, "", "", "", "" },
+            new object[] { 0, "", "", "", null },
             new object[] { 28541640086 , "Maria Jesus", "", "/Professores/Conveniadas", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 28541640086, "Maria Tereza Jesus", "", "/Professores/Conveniadas", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 28541640086, "Maria Tereza Santos Jesus", "", "/Professores/Conveniadas", "mariajesus.28541640086@edu.sme.prefeitura.sp.gov.br" },
