@@ -23,6 +23,17 @@ namespace SME.GoogleClassroom.Aplicacao
             Mensagem = mensagem;
         }
 
+        public IncluirCursoUsuarioErroCommand(long? rf, string email, long turmaId, long componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
+        {
+            Rf = rf;
+            Email = email;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            ExecucaoTipo = execucaoTipo;
+            ErroTipo = erroTipo;
+            Mensagem = mensagem;
+        }
+
         public IncluirCursoUsuarioErroCommand(long? rf, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
         {
             Rf = rf;

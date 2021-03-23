@@ -2,7 +2,6 @@
 using MediatR;
 using Polly;
 using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using System;
 using System.Threading;
@@ -18,21 +17,19 @@ namespace SME.GoogleClassroom.Aplicacao
         public ObterUsuarioGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
         }
 
         public async Task<UsuarioGoogle> Handle(ObterUsuarioGoogleQuery request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             return await policy.ExecuteAsync(() => ObterUsuarioNoGoogle(request.Email, diretorioClassroom));
-
         }
 
         private async Task<UsuarioGoogle> ObterUsuarioNoGoogle(string email, DirectoryService diretorioClassroom)
         {
-
             var requestCreate = diretorioClassroom.Users.Get(email);
-            var usuario = await requestCreate.ExecuteAsync();            
+            var usuario = await requestCreate.ExecuteAsync();
 
             return new UsuarioGoogle()
             {

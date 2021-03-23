@@ -128,5 +128,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await atribuirFuncionarioCursoUseCase.Executar(atribuirFuncionarioCursoDto);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Envia uma requisição para atribuir um funcionário sem rf a um curso no Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a consistência das informações é importante garantir que o relacionamento entre funcionário e curso consta na base de dados do EOL e o funcionário já estaja incluido do Google.
+        /// </remarks>
+        /// <response code="200">Foi realizada a requisição para atribuíção do funcionário ao curso.</response>
+        [HttpPost("cursos/email")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> EnviarRequisicaoAtribuirFuncionarioCursoSemRf([FromBody] AtribuirFuncionarioSemRfCursoDto atribuirFuncionarioSemRfCurso, [FromServices] IEnviarRequisicaoAtribuirFuncionarioSemRfCursoUseCase atribuirFuncionarioSemRfCursoUseCase)
+        {
+            var retorno = await atribuirFuncionarioSemRfCursoUseCase.Executar(atribuirFuncionarioSemRfCurso);
+            return Ok(retorno);
+        }
     }
 }

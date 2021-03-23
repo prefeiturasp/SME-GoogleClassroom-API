@@ -406,5 +406,29 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+        public async Task<FuncionarioGoogle> ObterFuncionarioPorEmail(string email)
+        {
+            var query = @"SELECT 
+                                 u.indice,
+                                 u.id as Rf, 
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao
+                            FROM usuarios u 
+                           WHERE usuario_tipo = @tipo
+                             and email = @email";
+
+            var parametros = new
+            {
+                email,
+                tipo = UsuarioTipo.Funcionario
+            };
+
+            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, parametros);
+        }
     }
 }
