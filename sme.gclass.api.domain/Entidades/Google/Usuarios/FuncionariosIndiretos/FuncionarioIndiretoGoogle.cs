@@ -5,12 +5,12 @@ namespace SME.GoogleClassroom.Dominio
     public class FuncionarioIndiretoGoogle : UsuarioGoogle
     {
         private string cpf;
-
         public string Cpf
         {
             get => cpf;
             set => SetCpf(value);
         }
+        public override UsuarioTipo UsuarioTipo => UsuarioTipo.FuncionarioIndireto;
 
         public FuncionarioIndiretoGoogle(string cpf, string nome, string email, string organizationPath)
             : base(nome, email, organizationPath)

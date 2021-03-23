@@ -34,6 +34,7 @@ namespace SME.GoogleClassroom.Dominio
             }
         }
 
+        public abstract UsuarioTipo UsuarioTipo { get; }
         public string Email { get; set; }
         public string OrganizationPath { get; set; }
         public DateTime DataInclusao { get; set; }
