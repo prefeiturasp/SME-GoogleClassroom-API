@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var curso = await ObterCurso(atribuirFuncionarioSemRfCurso.TurmaId, atribuirFuncionarioSemRfCurso.ComponenteCurricularId);
 
             if (curso is null)
-                throw new NegocioException("Curso ainda não inserido no google classroom");
+                throw new NegocioException("Curso ainda não inserido no Google Classroom");
            
             var existe = await mediator.Send(new ExisteFuncionarioCursoGoogleQuery(funcionarioGoogle.Indice, curso.Id));
 
