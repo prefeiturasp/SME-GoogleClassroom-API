@@ -50,7 +50,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 //c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
                 //TODO: Remover rota fixa
 
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SME.GoogleClassroom.Worker.Rabbit", Version = "v1" });
+                c.SwaggerDoc("v1", 
+                    new OpenApiInfo 
+                    { 
+                        Title = "SME.GoogleClassroom.Worker.Rabbit", 
+                        Description = "Serviço de integração EOL com o Google Classroom",
+                        Version = "v1" });
                 c.OperationFilter<AdicionaCabecalhoHttp>();
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

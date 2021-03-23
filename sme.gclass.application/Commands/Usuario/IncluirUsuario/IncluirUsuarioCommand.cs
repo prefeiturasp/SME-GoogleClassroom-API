@@ -8,6 +8,7 @@ namespace SME.GoogleClassroom.Aplicacao
     public class IncluirUsuarioCommand : IRequest<long>
     {
         public long? Id { get; set; }
+        public string Cpf { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public UsuarioTipo Tipo { get; set; }
@@ -15,48 +16,38 @@ namespace SME.GoogleClassroom.Aplicacao
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
-        public IncluirUsuarioCommand(long? id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao = null)
-        {
-            Id = id;
-            Nome = nome;
-            Email = email;
-            Tipo = tipo;
-            OrganizationPath = organizationPath;
-            DataInclusao = dataInclusao;
-            DataAtualizacao = dataAtualizacao;
-        }
-
         public IncluirUsuarioCommand(FuncionarioGoogle funcionarioGoogle)
+            : this(usuarioGoogle: funcionarioGoogle)
         {
             Id = funcionarioGoogle.Rf;
-            Nome = funcionarioGoogle.Nome;
-            Email = funcionarioGoogle.Email;
-            Tipo = UsuarioTipo.Funcionario;
-            OrganizationPath = funcionarioGoogle.OrganizationPath;
-            DataInclusao = funcionarioGoogle.DataInclusao;
-            DataAtualizacao = funcionarioGoogle.DataAtualizacao;
         }
 
         public IncluirUsuarioCommand(ProfessorGoogle professorGoogle)
+            : this(usuarioGoogle: professorGoogle)
         {
             Id = professorGoogle.Rf;
-            Nome = professorGoogle.Nome;
-            Email = professorGoogle.Email;
-            Tipo = UsuarioTipo.Professor;
-            OrganizationPath = professorGoogle.OrganizationPath;
-            DataInclusao = professorGoogle.DataInclusao;
-            DataAtualizacao = professorGoogle.DataAtualizacao;
         }
 
         public IncluirUsuarioCommand(AlunoGoogle alunoGoogle)
+            : this(usuarioGoogle: alunoGoogle)
         {
             Id = alunoGoogle.Codigo;
-            Nome = alunoGoogle.Nome;
-            Email = alunoGoogle.Email;
-            Tipo = UsuarioTipo.Aluno;
-            OrganizationPath = alunoGoogle.OrganizationPath;
-            DataInclusao = alunoGoogle.DataInclusao;
-            DataAtualizacao = alunoGoogle.DataAtualizacao;
+        }
+
+        public IncluirUsuarioCommand(FuncionarioIndiretoGoogle funcionarioIndiretoGoogle)
+            :this(usuarioGoogle: funcionarioIndiretoGoogle)
+        {
+            Cpf = funcionarioIndiretoGoogle.Cpf;
+        }
+
+        private IncluirUsuarioCommand(UsuarioGoogle usuarioGoogle)
+        {
+            Nome = usuarioGoogle.Nome;
+            Email = usuarioGoogle.Email;
+            Tipo = usuarioGoogle.UsuarioTipo;
+            OrganizationPath = usuarioGoogle.OrganizationPath;
+            DataInclusao = usuarioGoogle.DataInclusao;
+            DataAtualizacao = usuarioGoogle.DataAtualizacao;
         }
     }
 
