@@ -7,7 +7,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirUsuarioCommand : IRequest<long>
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public UsuarioTipo Tipo { get; set; }
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
-        public IncluirUsuarioCommand(long id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao = null)
+        public IncluirUsuarioCommand(long? id, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao = null)
         {
             Id = id;
             Nome = nome;
@@ -64,10 +64,6 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public IncluirUsuarioCommandValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .WithMessage("A identificação do usuário deve ser informada.");
-
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage("O nome do usuário deve ser informado.");
@@ -75,6 +71,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .WithMessage("O email do usuário deve ser informado.");
+
+            RuleFor(x => x.Email)
+                .EmailAddress()
+                .WithMessage("Email inválido"); 
 
             RuleFor(x => x.OrganizationPath)
                 .NotEmpty()

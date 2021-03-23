@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var cursosDoFuncionarioParaIncluir = await mediator.Send(new ObterCursosDoFuncionarioParaIncluirGoogleQuery(funcionarioParaIncluirCursos.Rf, DateTime.Now.Year));
+                var cursosDoFuncionarioParaIncluir = await mediator.Send(new ObterCursosDoFuncionarioParaIncluirGoogleQuery(funcionarioParaIncluirCursos.Rf.GetValueOrDefault(), DateTime.Now.Year));
                 if (!cursosDoFuncionarioParaIncluir?.Any() ?? true) return true;
 
                 foreach (var cursoDoFuncionarioParaIncluir in cursosDoFuncionarioParaIncluir)
