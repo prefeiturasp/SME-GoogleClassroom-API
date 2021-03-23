@@ -8,6 +8,7 @@ using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {

@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public ObterUsuarioGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
         }
 
         public async Task<UsuarioGoogleDto> Handle(ObterUsuarioGoogleQuery request, CancellationToken cancellationToken)

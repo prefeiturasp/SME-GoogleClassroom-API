@@ -492,7 +492,7 @@ namespace SME.GoogleClassroom.Dados
 
 					SELECT
 						cd_aluno_eol Codigo,
-						aluno.nm_aluno NomeAluno,
+						aluno.nm_aluno NomePessoa,
 						aluno.nm_social_aluno NomeSocial,
 						nm_organizacao OrganizationPath,
 						aluno.dt_nascimento_aluno DataNascimento
