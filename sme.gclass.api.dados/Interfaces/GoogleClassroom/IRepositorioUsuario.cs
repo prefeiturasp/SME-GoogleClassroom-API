@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> ExisteAlunoPorRf(long rf);
 
-        Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo);
+        Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo);
 
         Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email);
 
