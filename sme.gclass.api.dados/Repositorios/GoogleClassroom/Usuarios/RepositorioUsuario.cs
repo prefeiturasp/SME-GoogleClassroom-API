@@ -10,13 +10,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioUsuario : IRepositorioUsuario
+    public class RepositorioUsuario : RepositorioGoogle, IRepositorioUsuario
     {
-        private readonly ConnectionStrings connectionStrings;
-
         public RepositorioUsuario(ConnectionStrings connectionStrings)
+            :base(connectionStrings)
         {
-            this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
         public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
@@ -63,7 +61,7 @@ namespace SME.GoogleClassroom.Dados
                 email = email?.Trim().ToLower()
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             using var alunos = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -77,14 +75,14 @@ namespace SME.GoogleClassroom.Dados
         public async Task<bool> ExisteAlunoPorRf(long rf)
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where id = @rf and usuario_tipo = @usuarioTipo limit 1)";
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { rf, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
         }
 
         public async Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo)
         {
             var query = @"SELECT email from usuarios where email = @email and usuario_tipo = @usuarioTipo";
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryFirstOrDefaultAsync<string>(query, new { email, usuarioTipo }));
         }
 
@@ -132,7 +130,7 @@ namespace SME.GoogleClassroom.Dados
                 email = email?.Trim().ToLower()
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             using var funcionarios = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -188,7 +186,7 @@ namespace SME.GoogleClassroom.Dados
                 email = email?.Trim().ToLower()
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             using var professores = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -220,7 +218,7 @@ namespace SME.GoogleClassroom.Dados
                 tipo = UsuarioTipo.Funcionario
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return await conn.QueryAsync<FuncionarioGoogle>(query, parametros);
 
         }
@@ -233,7 +231,7 @@ namespace SME.GoogleClassroom.Dados
                 rf,
                 tipo = UsuarioTipo.Funcionario
             };
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
@@ -258,7 +256,7 @@ namespace SME.GoogleClassroom.Dados
                 tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
 
@@ -294,7 +292,7 @@ namespace SME.GoogleClassroom.Dados
                 tipos = new [] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             using var professores = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -313,7 +311,7 @@ namespace SME.GoogleClassroom.Dados
                 rf,
                 tipo = UsuarioTipo.Professor
             };
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
@@ -337,7 +335,7 @@ namespace SME.GoogleClassroom.Dados
                 dataAtualizacao
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
 
@@ -361,7 +359,7 @@ namespace SME.GoogleClassroom.Dados
                 tipo = UsuarioTipo.Aluno
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             return await conn.QueryAsync<AlunoGoogle>(query, parametros);
         }
@@ -397,7 +395,7 @@ namespace SME.GoogleClassroom.Dados
                 tipo = UsuarioTipo.Aluno
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             using var professores = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -411,7 +409,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<bool> ExisteFuncionarioIndiretoPorCpf(string cpf)
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where cpf = @cpf and usuario_tipo = @usuarioTipo limit 1)";
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { cpf, usuarioTipo = UsuarioTipo.FuncionarioIndireto })).FirstOrDefault();
         }
 
@@ -460,7 +458,7 @@ namespace SME.GoogleClassroom.Dados
                 email = email?.Trim().ToLower()
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             using var funcionarios = await conn.QueryMultipleAsync(query.ToString(), parametros);
 

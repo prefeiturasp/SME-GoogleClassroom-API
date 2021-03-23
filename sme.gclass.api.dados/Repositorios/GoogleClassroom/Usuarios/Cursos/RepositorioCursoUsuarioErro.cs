@@ -1,20 +1,16 @@
 ﻿using Dapper;
-using Npgsql;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioCursoUsuarioErro : IRepositorioCursoUsuarioErro
+    public class RepositorioCursoUsuarioErro : RepositorioGoogle, IRepositorioCursoUsuarioErro
     {
-        private readonly ConnectionStrings ConnectionStrings;
-
         public RepositorioCursoUsuarioErro(ConnectionStrings connectionStrings)
+            : base(connectionStrings)
         {
-            this.ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
         public async Task<long> SalvarAsync(CursoUsuarioErro cursoUsuarioErro)
@@ -36,8 +32,8 @@ namespace SME.GoogleClassroom.Dados
                 cursoUsuarioErro.DataInclusao
             };
 
-            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
-            return  await conn.ExecuteAsync(query, parametros);
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, parametros);
         }
     }
 }

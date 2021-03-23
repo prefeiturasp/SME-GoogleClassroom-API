@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -10,13 +9,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioCursoUsuario : IRepositorioCursoUsuario
+    public class RepositorioCursoUsuario : RepositorioGoogle, IRepositorioCursoUsuario
     {
-        private readonly ConnectionStrings connectionStrings;
-
         public RepositorioCursoUsuario(ConnectionStrings connectionStrings)
+            : base(connectionStrings)
         {
-            this.connectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
 
         public async Task<bool> ExisteProfessorCurso(long usuarioId, long cursoId)
@@ -33,7 +30,7 @@ namespace SME.GoogleClassroom.Dados
                 cursoId
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
@@ -43,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
                            from cursos_usuarios
                           where usuario_id = @usuarioId
                             and curso_id = @cursoId
-                            and not excluido limit 1)";            
+                            and not excluido limit 1)";
 
             var parametros = new
             {
@@ -51,10 +48,9 @@ namespace SME.GoogleClassroom.Dados
                 cursoId
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
-
 
         public async Task<long> SalvarAsync(CursoUsuario cursoUsuario)
         {
@@ -72,22 +68,23 @@ namespace SME.GoogleClassroom.Dados
                 cursoUsuario.Excluido
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return await conn.ExecuteAsync(query, parametros);
         }
+
         public async Task<PaginacaoResultadoDto<ProfessorCursosCadastradosDto>> ObterProfessoresCursosAsync(Paginacao paginacao, long? rf, long? turmaId, long? componenteCurricularId)
         {
             var query = new StringBuilder(@"DROP TABLE IF EXISTS professorTemp;
                                             DROP TABLE IF EXISTS professorTempPaginado;
                                             select distinct
                                                    u.indice,
-                                                   u.id AS rf, 
+                                                   u.id AS rf,
                                                    u.nome AS nome,
-                                                   u.email AS email 
+                                                   u.email AS email
                                               into temporary table professorTemp
                                               from usuarios u
-                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice 
-                                             inner join cursos c on c.id = cu.curso_id 
+                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice
+                                             inner join cursos c on c.id = cu.curso_id
                                              where u.usuario_tipo = @tipo
                                                and not cu.excluido");
             if (rf.HasValue && rf > 0)
@@ -105,8 +102,6 @@ namespace SME.GoogleClassroom.Dados
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-
-           
 
             query.AppendLine(@"select t1.rf,
    		                              t1.nome,
@@ -132,10 +127,7 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(";");
 
-
             query.AppendLine("select count(*) from professorTemp");
-            
-
 
             var retorno = new PaginacaoResultadoDto<ProfessorCursosCadastradosDto>();
 
@@ -149,7 +141,7 @@ namespace SME.GoogleClassroom.Dados
                 componenteCurricularId
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             var multiResult = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -158,14 +150,13 @@ namespace SME.GoogleClassroom.Dados
             var Result = multiResult.Read<ProfessorCursosCadastradosDto, CursoDto, ProfessorCursosCadastradosDto>(
                 (professor, curso) =>
                 {
-                    
                     if (!dic.TryGetValue(professor.Rf, out var professorResultado))
                     {
                         professor.Cursos.Add(curso);
                         dic.Add(professor.Rf, professor);
-                        return professor;                        
+                        return professor;
                     }
-                    
+
                     professorResultado.Cursos.Add(curso);
 
                     return professorResultado;
@@ -185,13 +176,13 @@ namespace SME.GoogleClassroom.Dados
                                             DROP TABLE IF EXISTS alunoTempPaginado;
                                             select distinct
                                                    u.indice,
-                                                   u.id AS codigoAluno, 
+                                                   u.id AS codigoAluno,
                                                    u.nome AS nome,
-                                                   u.email AS email 
+                                                   u.email AS email
                                               into temporary table alunoTemp
                                               from usuarios u
-                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice 
-                                             inner join cursos c on c.id = cu.curso_id 
+                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice
+                                             inner join cursos c on c.id = cu.curso_id
                                              where u.usuario_tipo = @tipo
                                                and not cu.excluido ");
             if (codigoAluno.HasValue && codigoAluno > 0)
@@ -209,8 +200,6 @@ namespace SME.GoogleClassroom.Dados
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-
-
 
             query.AppendLine(@"select t1.codigoAluno,
    		                              t1.nome,
@@ -238,8 +227,6 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine("select count(*) from alunoTemp");
 
-
-
             var retorno = new PaginacaoResultadoDto<AlunoCursosCadastradosDto>();
 
             var parametros = new
@@ -252,7 +239,7 @@ namespace SME.GoogleClassroom.Dados
                 componenteCurricularId
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             var multiResult = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -261,7 +248,6 @@ namespace SME.GoogleClassroom.Dados
             multiResult.Read<AlunoCursosCadastradosDto, CursoDto, AlunoCursosCadastradosDto>(
                 (aluno, curso) =>
                 {
-
                     if (!dic.TryGetValue(aluno.CodigoAluno, out var alunoResultado))
                     {
                         aluno.Cursos.Add(curso);
@@ -296,7 +282,7 @@ namespace SME.GoogleClassroom.Dados
                 cursoId
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
@@ -306,14 +292,14 @@ namespace SME.GoogleClassroom.Dados
                                             DROP TABLE IF EXISTS funcionarioTempPaginado;
                                             select distinct
                                                    u.indice,
-                                                   u.id AS rf, 
+                                                   u.id AS rf,
                                                    u.nome AS nome,
                                                    u.email AS email,
                                                    u.organization_path AS organizationPath
                                               into temporary table funcionarioTemp
                                               from usuarios u
-                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice 
-                                             inner join cursos c on c.id = cu.curso_id 
+                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice
+                                             inner join cursos c on c.id = cu.curso_id
                                              where u.usuario_tipo = @tipo
                                                and not cu.excluido");
             if (rf.HasValue && rf > 0)
@@ -331,8 +317,6 @@ namespace SME.GoogleClassroom.Dados
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-
-
 
             query.AppendLine(@"select t1.rf,
    		                              t1.nome,
@@ -359,10 +343,7 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(";");
 
-
             query.AppendLine("select count(*) from funcionarioTemp");
-
-
 
             var retorno = new PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>();
 
@@ -376,7 +357,7 @@ namespace SME.GoogleClassroom.Dados
                 componenteCurricularId
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             var multiResult = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
@@ -385,7 +366,6 @@ namespace SME.GoogleClassroom.Dados
             var Result = multiResult.Read<FuncionarioCursosCadastradosDto, CursoDto, FuncionarioCursosCadastradosDto>(
                 (funcionario, curso) =>
                 {
-
                     if (!dic.TryGetValue(funcionario.Rf, out var funcionarioResultado))
                     {
                         funcionario.Cursos.Add(curso);

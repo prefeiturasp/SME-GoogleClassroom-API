@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioCurso : IRepositorioCurso
+    public class RepositorioCurso : RepositorioGoogle, IRepositorioCurso
     {
-        private readonly ConnectionStrings ConnectionStrings;
-
         public RepositorioCurso(ConnectionStrings connectionStrings)
+            :base(connectionStrings)
         {
-            this.ConnectionStrings = connectionStrings ?? throw new ArgumentNullException(nameof(connectionStrings));
         }
+
         private string MontaQueryObterTodosOsCursos(bool ehParaPaginacao, Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {
             var queryCompleta = new StringBuilder("SELECT ");
@@ -54,6 +53,7 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
+
         public async Task<PaginacaoResultadoDto<CursoGoogle>> ObterTodosCursosAsync(Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {
             var queryCompleta = new StringBuilder();
@@ -63,7 +63,7 @@ namespace SME.GoogleClassroom.Dados
 
             var retorno = new PaginacaoResultadoDto<CursoGoogle>();
 
-            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             var parametros = new
             {
@@ -100,7 +100,7 @@ namespace SME.GoogleClassroom.Dados
                 dataAtualizacao
             };
 
-            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return await conn.ExecuteAsync(query, parametros);
         }
 
@@ -114,7 +114,7 @@ namespace SME.GoogleClassroom.Dados
                 componenteCurricularId
             };
 
-            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             return (await conn.QueryFirstOrDefaultAsync<long>(query, parametros)) > 0;
         }
@@ -139,7 +139,7 @@ namespace SME.GoogleClassroom.Dados
                 componenteCurricularId
             };
 
-            using var conn = new NpgsqlConnection(ConnectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
 
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
         }
