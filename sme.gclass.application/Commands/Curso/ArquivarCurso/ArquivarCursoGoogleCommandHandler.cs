@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<AsyncRetryPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
         }
 
         protected override async Task<bool> ExecutarAsync(ArquivarCursoGoogleCommand request, CancellationToken cancellationToken)

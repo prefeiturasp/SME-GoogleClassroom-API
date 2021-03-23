@@ -17,47 +17,37 @@ namespace SME.GoogleClassroom.Aplicacao
         public DateTime? DataAtualizacao { get; set; }
 
         public IncluirUsuarioCommand(FuncionarioGoogle funcionarioGoogle)
+            : this(usuarioGoogle: funcionarioGoogle)
         {
             Id = funcionarioGoogle.Rf;
-            Nome = funcionarioGoogle.Nome;
-            Email = funcionarioGoogle.Email;
-            Tipo = UsuarioTipo.Funcionario;
-            OrganizationPath = funcionarioGoogle.OrganizationPath;
-            DataInclusao = funcionarioGoogle.DataInclusao;
-            DataAtualizacao = funcionarioGoogle.DataAtualizacao;
         }
 
         public IncluirUsuarioCommand(ProfessorGoogle professorGoogle)
+            : this(usuarioGoogle: professorGoogle)
         {
             Id = professorGoogle.Rf;
-            Nome = professorGoogle.Nome;
-            Email = professorGoogle.Email;
-            Tipo = UsuarioTipo.Professor;
-            OrganizationPath = professorGoogle.OrganizationPath;
-            DataInclusao = professorGoogle.DataInclusao;
-            DataAtualizacao = professorGoogle.DataAtualizacao;
         }
 
         public IncluirUsuarioCommand(AlunoGoogle alunoGoogle)
+            : this(usuarioGoogle: alunoGoogle)
         {
             Id = alunoGoogle.Codigo;
-            Nome = alunoGoogle.Nome;
-            Email = alunoGoogle.Email;
-            Tipo = UsuarioTipo.Aluno;
-            OrganizationPath = alunoGoogle.OrganizationPath;
-            DataInclusao = alunoGoogle.DataInclusao;
-            DataAtualizacao = alunoGoogle.DataAtualizacao;
         }
 
         public IncluirUsuarioCommand(FuncionarioIndiretoGoogle funcionarioIndiretoGoogle)
+            :this(usuarioGoogle: funcionarioIndiretoGoogle)
         {
             Cpf = funcionarioIndiretoGoogle.Cpf;
-            Nome = funcionarioIndiretoGoogle.Nome;
-            Email = funcionarioIndiretoGoogle.Email;
-            Tipo = UsuarioTipo.FuncionarioIndireto;
-            OrganizationPath = funcionarioIndiretoGoogle.OrganizationPath;
-            DataInclusao = funcionarioIndiretoGoogle.DataInclusao;
-            DataAtualizacao = funcionarioIndiretoGoogle.DataAtualizacao;
+        }
+
+        private IncluirUsuarioCommand(UsuarioGoogle usuarioGoogle)
+        {
+            Nome = usuarioGoogle.Nome;
+            Email = usuarioGoogle.Email;
+            Tipo = usuarioGoogle.UsuarioTipo;
+            OrganizationPath = usuarioGoogle.OrganizationPath;
+            DataInclusao = usuarioGoogle.DataInclusao;
+            DataAtualizacao = usuarioGoogle.DataAtualizacao;
         }
     }
 
