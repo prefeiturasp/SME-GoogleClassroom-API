@@ -25,8 +25,9 @@ namespace SME.GoogleClassroom.Dominio
             DataInclusao = DateTime.Now;
         }
 
-        public CursoUsuarioErro(string email, long? turmaId, long? componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo tipo, string mensagem)
+        public CursoUsuarioErro(long? rf, string email, long? turmaId, long? componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo tipo, string mensagem)
         {
+            Rf = rf;
             Email = email;
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;

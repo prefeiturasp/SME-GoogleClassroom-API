@@ -3,7 +3,6 @@ using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -20,31 +19,27 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<bool> Executar(AtribuirFuncionarioSemRfCursoDto atribuirFuncionarioSemRfCurso)
-        {
-            //TODO : Verficar se usuario já existe na nossa base
+        {          
+
             var funcionarioGoogle = await ObterFuncionario(atribuirFuncionarioSemRfCurso.Email);
+            
+            var curso = await ObterCurso(atribuirFuncionarioSemRfCurso.TurmaId, atribuirFuncionarioSemRfCurso.ComponenteCurricularId);
+
+            if (curso is null)
+                throw new NegocioException("Curso ainda não inserido no google classroom");
+           
+            var existe = await mediator.Send(new ExisteFuncionarioCursoGoogleQuery(funcionarioGoogle.Indice, curso.Id));
+
+            if (existe)
+                throw new NegocioException("Curso já associado para o funcionário");
 
             try
-            {
-                // TODO : Verificar se o curso existe na base
-                var curso = await ObterCurso(atribuirFuncionarioSemRfCurso.TurmaId, atribuirFuncionarioSemRfCurso.ComponenteCurricularId);
-
-                if (curso != null)
-                    throw new NegocioException("Curso ainda não inserido no google classroom");
-
-                //TODO : Verficar se relacionamento já existe na nossa base
-                var existe = await mediator.Send(new ExisteFuncionarioCursoGoogleQuery(funcionarioGoogle.Indice, curso.Id));
-
-                if (existe)
-                    throw new NegocioException("Curso já associado para o funcionário");
-
-                //TODO : Se relacionamento não existir na nossa base inserir relacionameto no google e depois na nossa base de curso usuario.
+            {                
                 await InserirFuncionarioCursoGoogleAsync(funcionarioGoogle, curso);
                 return true;
             }
             catch (Exception ex)
-            {
-                //TODO : qualquer erro inserir na tabela de erro
+            {                
                 await IncluirCursoDoFuncionarioComErroAsync(atribuirFuncionarioSemRfCurso.Email, atribuirFuncionarioSemRfCurso.TurmaId, atribuirFuncionarioSemRfCurso.ComponenteCurricularId,
                     $"ex.: {ex.Message}");
                 throw;
@@ -64,27 +59,32 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task<FuncionarioGoogle> ObterFuncionario(string email)
         {
-            var paginacao = new Paginacao(0, 0);
-            var funcionario = await mediator.Send(new ObterFuncionariosGoogleQuery(paginacao, null, email));
+            var funcionario = await mediator.Send(new ObterFuncionarioPorEmailQuery(email));
 
-            if (funcionario.Items is null)
-            {
-                //TODO : Se não existir consulta usuario no google, se tiver cadastrado retorna o usuario e cadastra na nossa base, se não retorna erro
+            if (funcionario is null)
+            {                
                 try
                 {
                     var usuarioGoogle = await mediator.Send(new ObterUsuarioGoogleQuery(email));
+                    if (usuarioGoogle is null)
+                        throw new NegocioException("Funcionário não localizado no google classroom e nem na base de dados");
                     var funcionarioGoogle = new FuncionarioGoogle(null, usuarioGoogle.Nome, usuarioGoogle.Email, usuarioGoogle.OrganizationPath);
                     await InserirFuncionarioAsync(funcionarioGoogle);
 
                     return funcionarioGoogle;
                 }
-                catch (Exception)
+                catch (GoogleApiException gEx)
                 {
-                    throw new NegocioException("Funcionário não encontrado no google classroom");
+                    if (gEx.RegistroNaoEncontrado())
+                        throw new NegocioException("Funcionário não localizado no Google Classroom e nem na base de dados");
+                    if (gEx.AcessoNaoAutorizado())
+                        throw new NegocioException("Acesso ao Google Classroom não autorizado");
+                    if (gEx.EmailContaServicoInvalido())
+                        throw new NegocioException("Email ou id de acesso ao Google Classrom inválido");
                 }
             }
 
-            return funcionario.Items.First();
+            return funcionario;
         }
 
         private async Task InserirFuncionarioCursoGoogleAsync(FuncionarioGoogle funcionarioGoogle, CursoGoogle cursoGoogle)
@@ -102,6 +102,8 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 if (gEx.EhErroDeDuplicidade())
                     await InserirFuncionarioCursoAsync(funcionarioCursoGoogle);
+                if (gEx.RegistroNaoEncontrado())
+                    throw new NegocioException("Funcionário não localizado no Google Classroom");
                 else
                     throw;
             }

@@ -19,6 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var cursoUsuarioErro = new CursoUsuarioErro(
                 request.Rf,
+                request.Email,
                 request.TurmaId,
                 request.ComponenteCurricularId,
                 request.ExecucaoTipo,
