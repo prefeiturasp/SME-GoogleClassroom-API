@@ -4,7 +4,7 @@ using Xunit;
 
 namespace SME.GoogleClassroom.Testes
 {
-    public class AlunoTeste
+    public class AlunoEolTeste
     {
         [Theory(DisplayName = "Geração de Email"), MemberData(nameof(CorrectData))]
         public void GeracaoDeEmail(string nome, DateTime dataNascimento, string emailEsperado)
