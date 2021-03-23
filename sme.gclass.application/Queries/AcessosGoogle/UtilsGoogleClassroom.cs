@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Aplicacao
     public class UtilsGoogleClassroom
     {
        public static readonly string[] Escopos = {
-            DirectoryService.Scope.AdminDirectoryUser,
+            DirectoryService.Scope.AdminDirectoryUser,            
             ClassroomService.Scope.ClassroomCourses,
             ClassroomService.Scope.ClassroomCoursesReadonly,
             ClassroomService.Scope.ClassroomRosters,

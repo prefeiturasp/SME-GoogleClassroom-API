@@ -41,7 +41,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long rf, int anoLetivo)
+		public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo)
 		{
 			using var conn = ObterConexao();
 

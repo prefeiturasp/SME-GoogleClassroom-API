@@ -32,5 +32,6 @@ namespace SME.GoogleClassroom.Dados
         
         Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] codigosEol);
         Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosPaginadoPorCodigos(Paginacao paginacao, long[] codigosAluno);
+        Task<FuncionarioGoogle> ObterFuncionarioPorEmail(string email);
     }
 }
