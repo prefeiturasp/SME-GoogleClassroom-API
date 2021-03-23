@@ -426,7 +426,7 @@ namespace SME.GoogleClassroom.Dados
                 tipo = UsuarioTipo.Funcionario
             };
 
-            using var conn = new NpgsqlConnection(connectionStrings.ConnectionStringGoogleClassroom);
+            using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, parametros);
         }
 
