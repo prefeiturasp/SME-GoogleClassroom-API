@@ -7,14 +7,15 @@ namespace SME.GoogleClassroom.Aplicacao
     public class IncluirCursoUsuarioErroCommand : IRequest<long>
     {
         public long? Rf { get; set; }
+        public string Email { get; set; }
         public long? TurmaId { get; set; }
         public long? ComponenteCurricularId { get; set; }
         public ErroTipo ErroTipo { get; set; }
         public ExecucaoTipo ExecucaoTipo { get; set; }
         public string Mensagem { get; set; }
-        public IncluirCursoUsuarioErroCommand(long rf, long turmaId, long componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
+        public IncluirCursoUsuarioErroCommand(long? rf, long turmaId, long componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
         {
-            Rf = rf;
+            Rf = rf;            
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
             ExecucaoTipo = execucaoTipo;
@@ -22,7 +23,18 @@ namespace SME.GoogleClassroom.Aplicacao
             Mensagem = mensagem;
         }
 
-        public IncluirCursoUsuarioErroCommand(long rf, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
+        public IncluirCursoUsuarioErroCommand(long? rf, string email, long turmaId, long componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
+        {
+            Rf = rf;
+            Email = email;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            ExecucaoTipo = execucaoTipo;
+            ErroTipo = erroTipo;
+            Mensagem = mensagem;
+        }
+
+        public IncluirCursoUsuarioErroCommand(long? rf, ExecucaoTipo execucaoTipo, ErroTipo erroTipo, string mensagem)
         {
             Rf = rf;
             ExecucaoTipo = execucaoTipo;
@@ -44,11 +56,6 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public IncluirCursoUsuarioErroCommandValidator()
         {
-            RuleFor(x => x.Rf)
-                .NotEmpty()
-                .When(x => !(x.Rf is null))
-                .WithMessage("O RF do professor deve ser informado para inserir um regitro na tabela de erro.");
-
             RuleFor(x => x.TurmaId)
                 .NotEmpty()
                 .When(x => !(x.TurmaId is null))

@@ -6,6 +6,7 @@ namespace SME.GoogleClassroom.Dominio
     {
         public long Id { get; set; }
         public long? Rf { get; set; }
+        public string Email { get; set; }
         public long? TurmaId { get; set; }
         public long? ComponenteCurricularId { get; set; }
         public ExecucaoTipo ExecucaoTipo { get; set; }
@@ -15,7 +16,19 @@ namespace SME.GoogleClassroom.Dominio
 
         public CursoUsuarioErro(long? rf, long? turmaId, long? componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo tipo, string mensagem)
         {
+            Rf = rf;            
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            ExecucaoTipo = execucaoTipo;
+            Tipo = tipo;
+            Mensagem = mensagem;
+            DataInclusao = DateTime.Now;
+        }
+
+        public CursoUsuarioErro(long? rf, string email, long? turmaId, long? componenteCurricularId, ExecucaoTipo execucaoTipo, ErroTipo tipo, string mensagem)
+        {
             Rf = rf;
+            Email = email;
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
             ExecucaoTipo = execucaoTipo;

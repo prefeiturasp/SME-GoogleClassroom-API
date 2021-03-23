@@ -55,16 +55,6 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public IncluirUsuarioCommandValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .When(x => string.IsNullOrWhiteSpace(x.Cpf))
-                .WithMessage("A identificação do usuário deve ser informada.");
-
-            RuleFor(x => x.Cpf)
-                .NotEmpty()
-                .When(x => x.Id is null)
-                .WithMessage("A identificação do usuário deve ser informada.");
-
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage("O nome do usuário deve ser informado.");
@@ -72,6 +62,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .WithMessage("O email do usuário deve ser informado.");
+
+            RuleFor(x => x.Email)
+                .EmailAddress()
+                .WithMessage("Email inválido"); 
 
             RuleFor(x => x.OrganizationPath)
                 .NotEmpty()

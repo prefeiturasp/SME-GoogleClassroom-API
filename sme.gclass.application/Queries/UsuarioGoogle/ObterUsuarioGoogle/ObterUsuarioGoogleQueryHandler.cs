@@ -2,7 +2,6 @@
 using MediatR;
 using Polly;
 using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using System;
 using System.Threading;
@@ -25,14 +24,12 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             return await policy.ExecuteAsync(() => ObterUsuarioNoGoogle(request.Email, diretorioClassroom));
-
         }
 
         private async Task<UsuarioGoogleDto> ObterUsuarioNoGoogle(string email, DirectoryService diretorioClassroom)
         {
-
             var requestCreate = diretorioClassroom.Users.Get(email);
-            var usuario = await requestCreate.ExecuteAsync();            
+            var usuario = await requestCreate.ExecuteAsync();
 
             return new UsuarioGoogleDto()
             {

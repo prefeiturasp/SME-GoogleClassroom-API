@@ -9,6 +9,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
     public interface IRepositorioFuncionarioEol
     {
         Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao, string rf);
-        Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long rf, int anoLetivo);
+        Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo);
     }
 }
