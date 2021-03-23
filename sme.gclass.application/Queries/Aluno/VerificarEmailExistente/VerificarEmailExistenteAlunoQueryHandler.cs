@@ -14,6 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
         }
+
         public async Task<AlunoEol> Handle(VerificarEmailExistenteAlunoQuery request, CancellationToken cancellationToken)
         {
             return await ObterEmailValido(request.AlunoEol);
@@ -22,9 +23,9 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<AlunoEol> ObterEmailValido(AlunoEol aluno, int tentativa = 0)
         {
             aluno.DefinirEmail(tentativa);
-            var emailExistente = await repositorioUsuario.ObterEmailUsuarioPorTipo(aluno.Email, 1);
+            var emailExistente = await repositorioUsuario.ExisteEmailUsuarioPorTipo(aluno.Email, UsuarioTipo.Aluno);
 
-            if (string.IsNullOrEmpty(emailExistente))
+            if (!emailExistente)
                 return aluno;
             else
                 return await ObterEmailValido(aluno, tentativa + 1);

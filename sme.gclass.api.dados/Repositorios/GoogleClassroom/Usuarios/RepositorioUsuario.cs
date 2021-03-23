@@ -79,11 +79,11 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { rf, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
         }
 
-        public async Task<string> ObterEmailUsuarioPorTipo(string email, int usuarioTipo)
+        public async Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo)
         {
-            var query = @"SELECT email from usuarios where email = @email and usuario_tipo = @usuarioTipo";
+            var query = @"SELECT exists(SELECT 1 from usuarios where email = @email and usuario_tipo = @usuarioTipo limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryFirstOrDefaultAsync<string>(query, new { email, usuarioTipo }));
+            return (await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo }));
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)

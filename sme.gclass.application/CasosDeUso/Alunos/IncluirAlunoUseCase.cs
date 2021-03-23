@@ -26,6 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
+                await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
                 var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
                 var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoGoogle.Codigo));
