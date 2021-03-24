@@ -5,6 +5,8 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class AlunoEol : UsuarioEol
     {
+        private const int MaximoTentativasGerarEmail = 3;
+
         public int Codigo { get; set; }
         public DateTime DataNascimento { get; set; }
 
@@ -22,6 +24,9 @@ namespace SME.GoogleClassroom.Dominio
 
         public void DefinirEmail(int? tentativa = 0)
         {
+            if (tentativa.HasValue && tentativa > MaximoTentativasGerarEmail)
+                throw new NegocioException("Não foi possível definir um e-mail para o usuário. Máximo de tentivas realizadas.");
+
             DefinirComplementoParaTratativaEmail(tentativa);
             GerarEmail();
         }
@@ -58,7 +63,7 @@ namespace SME.GoogleClassroom.Dominio
             email = $"{primeiroNome}{iniciaisMeio}{complementoTratativa}{ultimoNome}.{DataNascimento:ddMMyyyy}{SufixoEmail}".ToLower();
         }
 
-        private void DefinirComplementoParaTratativaEmail(int? tentativa = 0)
+        private void DefinirComplementoParaTratativaEmail(int? tentativa)
         {
             if (tentativa.HasValue)
             {

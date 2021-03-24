@@ -1,5 +1,3 @@
-ALTER TABLE public.usuarios ADD CONSTRAINT email_unique UNIQUE (email);
-
 ALTER TABLE public.usuarios  ALTER column id DROP NOT NULL;    
 
 CREATE INDEX usuarios_id_idx ON public.usuarios USING btree (id);
