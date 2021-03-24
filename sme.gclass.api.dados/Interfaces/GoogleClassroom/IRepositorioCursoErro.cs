@@ -7,6 +7,7 @@ namespace SME.GoogleClassroom.Dados
     public interface IRepositorioCursoErro
     {
         Task<long> SalvarAsync(CursoErro dto);
+        Task<IEnumerable<CursoErro>> ObterTodos();
         //Task<IEnumerable<CursoErro>> ObterTodosComEmail();
     }
 }
