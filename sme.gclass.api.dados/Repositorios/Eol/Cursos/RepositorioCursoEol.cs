@@ -1082,5 +1082,17 @@ namespace SME.GoogleClassroom.Dados
 
 			return query.ToString();
 		}
-    }
+
+		public async Task<bool> ExisteTurmaAtivaPorId(long turmaId)
+		{
+			using var conn = ObterConexao();
+
+			const string query = @"select 1
+								  	 from turma_escola te 
+								 	where te.cd_turma_escola = @turmaId
+								 	  and te.st_turma_escola in ('O', 'A')";
+
+			return await conn.QueryFirstOrDefaultAsync<bool>(query, new { turmaId });
+		}
+	}
 }
