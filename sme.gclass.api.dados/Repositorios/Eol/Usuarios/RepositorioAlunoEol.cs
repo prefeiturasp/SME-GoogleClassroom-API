@@ -47,7 +47,7 @@ namespace SME.GoogleClassroom.Dados
 			var query = MontaQueryAlunosParaInclusao(null, null, codigoEol);
 
 			using var conn = ObterConexao();
-			return await conn.QuerySingleAsync<AlunoEol>(query,
+			return await conn.QuerySingleOrDefaultAsync<AlunoEol>(query,
 				new
 				{
 					anoLetivo = anoLetivo,

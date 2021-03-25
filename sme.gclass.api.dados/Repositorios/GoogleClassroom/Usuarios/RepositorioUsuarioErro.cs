@@ -28,7 +28,12 @@ namespace SME.GoogleClassroom.Dados
         public async Task<IEnumerable<UsuarioErro>> ObtemUsuariosErrosPorTipoAsync(UsuarioTipo usuarioTipo)
         {
             const string query = @"SELECT
-                                    id, usuario_id, email, mensagem, usuario_tipo, execucao_tipo, data_inclusao
+                                    id, 
+                                    usuario_id AS UsuarioId, 
+                                    email, mensagem, 
+                                    usuario_tipo AS UsuarioTipo, 
+                                    execucao_tipo AS ExecucaoTipo, 
+                                    data_inclusao AS DataInclusao
                                  FROM
                                     public.usuarios_erro
                                  WHERE

@@ -21,5 +21,9 @@ namespace SME.GoogleClassroom.Dominio
             ExecucaoTipo = execucaoTipo;
             DataInclusao = DateTime.Now;
         }
+
+        protected UsuarioErro()
+        {
+        }
     }
 }
