@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(professorParaIncluir?.Rf, professorParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar, DateTime.Now));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar));
                 throw;
             }
         }
@@ -55,7 +55,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!professorSincronizado)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
-                        $"Não foi possível incluir o professor no Google Classroom. {professorGoogle}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar, DateTime.Now));
+                        $"Não foi possível incluir o professor no Google Classroom. {professorGoogle}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar));
                     return;
                 }
 
@@ -83,7 +83,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!publicarCursosDoProfessor)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
-                    $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));
+                    $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar));
             }
         }
     }

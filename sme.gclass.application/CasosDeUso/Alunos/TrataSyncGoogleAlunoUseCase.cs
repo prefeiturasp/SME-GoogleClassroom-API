@@ -60,8 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                 alunoParaIncluirGoogle.Email,
                                 mensagem,
                                 UsuarioTipo.Aluno,
-                                ExecucaoTipo.AlunoAdicionar,
-                                DateTime.Now);
+                                ExecucaoTipo.AlunoAdicionar);
             await mediator.Send(alunoComErro);
         }
 
