@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -10,6 +11,31 @@ namespace SME.GoogleClassroom.Dados
         public RepositorioUsuarioErro(ConnectionStrings connectionStrings)
             : base(connectionStrings)
         {
+        }
+
+        public async Task<int> ExcluirAsync(long usuarioErroId)
+        {
+            const string command = @"DELETE
+                                        FROM
+                                    public.usuarios_erro
+                                    WHERE
+                                        id = @usuarioErroId;";
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(command, new { usuarioErroId });
+        }
+
+        public async Task<IEnumerable<UsuarioErro>> ObtemUsuariosErrosPorTipoAsync(UsuarioTipo usuarioTipo)
+        {
+            const string query = @"SELECT
+                                    id, usuario_id, email, mensagem, usuario_tipo, execucao_tipo, data_inclusao
+                                 FROM
+                                    public.usuarios_erro
+                                 WHERE
+                                    usuario_tipo = @usuarioTipo;";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<UsuarioErro>(query, new { usuarioTipo });
         }
 
         public async Task<long> SalvarAsync(UsuarioErro usuarioErro)

@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
 
                 var paginacao = new Paginacao(0, 0);
-                var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, default));
+                var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao));
 
                 alunosParaIncluirGoogle.Items
                     .AsParallel()

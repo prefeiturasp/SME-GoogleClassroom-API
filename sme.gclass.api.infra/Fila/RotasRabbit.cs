@@ -21,6 +21,7 @@
         public static string FilaAlunoCursoSync => "googleclass.aluno.curso.sync";
         public static string FilaAlunoCursoIncluir => "googleclass.aluno.curso.incluir";
         public static string FilaAlunoErroSync => "googleclass.aluno.erro.sync";
+        public static string FilaAlunoErroTratar => "googleclass.aluno.erro.tratar";
         #endregion
 
         #region Funcionário
@@ -41,9 +42,6 @@
         #region Funcionário indireto
         public static string FilaFuncionarioIndiretoSync => "googleclass.funcionario.indireto.sync";
         public static string FilaFuncionarioIndiretoIncluir => "googleclass.funcionario.indireto.incluir";
-        #endregion
-
-        #region Erros
         #endregion
     }
 }
