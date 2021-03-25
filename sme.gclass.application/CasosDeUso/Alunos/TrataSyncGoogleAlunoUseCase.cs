@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
 
                 var paginacao = new Paginacao(0, 0);
-                var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, default));
+                var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao));
 
                 alunosParaIncluirGoogle.Items
                     .AsParallel()
@@ -60,8 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                 alunoParaIncluirGoogle.Email,
                                 mensagem,
                                 UsuarioTipo.Aluno,
-                                ExecucaoTipo.AlunoAdicionar,
-                                DateTime.Now);
+                                ExecucaoTipo.AlunoAdicionar);
             await mediator.Send(alunoComErro);
         }
 

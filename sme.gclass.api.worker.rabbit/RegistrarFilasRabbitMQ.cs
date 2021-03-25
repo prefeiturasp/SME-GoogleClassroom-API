@@ -52,6 +52,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoCursoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoCursoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoErroSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoErroSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoErroSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoErroTratar);
         }
 
         private static void RegistrarFilasProfessorSync(IModel canalRabbit)
@@ -80,7 +86,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         #endregion Filas Sync
 
-        #region Filas de Inclusão
+        #region Filas de Inclusão/Tratamento
 
         private static void RegistrarFilasDeInclusao(IModel canalRabbit)
         {

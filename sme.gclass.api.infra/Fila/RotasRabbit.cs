@@ -20,6 +20,8 @@
         public static string FilaAlunoSync => "googleclass.aluno.sync";
         public static string FilaAlunoCursoSync => "googleclass.aluno.curso.sync";
         public static string FilaAlunoCursoIncluir => "googleclass.aluno.curso.incluir";
+        public static string FilaAlunoErroSync => "googleclass.aluno.erro.sync";
+        public static string FilaAlunoErroTratar => "googleclass.aluno.erro.tratar";
         #endregion
 
         #region Funcionário
