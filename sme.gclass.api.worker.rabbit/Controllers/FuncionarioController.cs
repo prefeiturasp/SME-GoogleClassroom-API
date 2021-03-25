@@ -81,6 +81,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
+        /// Inicia o tratamento de erros de funcionários do EOL para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("erros/tratamento")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleFuncionarioErrosUseCase iniciarSyncGoogleFuncionarioErrosUseCase)
+        {
+            var retorno = await iniciarSyncGoogleFuncionarioErrosUseCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Retorna os cursos do funcionário do EOL que serão incluídos no Google Classroom.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>

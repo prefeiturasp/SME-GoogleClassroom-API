@@ -29,6 +29,8 @@
         public static string FilaFuncionarioSync => "googleclass.funcionario.sync";
         public static string FilaFuncionarioCursoIncluir => "googleclass.funcionario.curso.incluir";
         public static string FilaFuncionarioCursoSync => "googleclass.funcionario.curso.sync";
+        public static string FilaFuncionarioErroSync => "googleclass.funcionario.erro.sync";
+        public static string FilaFuncionarioErroTratar => "googleclass.funcionario.erro.tratar";
         #endregion
 
         #region Professores

@@ -86,7 +86,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
-        [HttpPost("erros/tratamento")]
+        [HttpPost("erros/tratamentos")]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleProfessorErrosUseCase iniciarSyncGoogleProfessorErrosUseCase)
         {
