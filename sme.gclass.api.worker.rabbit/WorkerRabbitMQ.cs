@@ -208,7 +208,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroSync, false, consumer);
-                //canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroTratar, false, consumer);
             }
 
             if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
