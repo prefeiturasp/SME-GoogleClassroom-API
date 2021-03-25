@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, rf);
+            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferencia, rf);
             var parametros = new
             {
                 anoLetivo = dataReferencia.Year,
@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Dados
 
 		public async Task<ProfessorEol> ObterProfessorParaTratamentoDeErroAsync(long rf, int anoLetivo)
 		{
-			var query = MontaQueryProfessorParaInclusao(false, rf.ToString());
+			var query = MontaQueryProfessorParaInclusao(false, null, rf.ToString());
 			var parametros = new
 			{
 				anoLetivo = anoLetivo,
@@ -230,7 +230,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, string rf)
+        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf)
         {
             var queryBase = @$"IF OBJECT_ID('tempdb..#tempCargosProfessores') IS NOT NULL
 	                                        DROP TABLE #tempCargosProfessores;
@@ -242,7 +242,7 @@ namespace SME.GoogleClassroom.Dados
 	                                        atribuicao_aula atr
                                         WHERE 
                                             an_atribuicao = @anoLetivo
-                                            AND dt_atribuicao_aula >= @dataReferencia
+											{(dataReferencia.HasValue ? "AND dt_atribuicao_aula >= @dataReferencia " : "")}
 	                                        AND dt_cancelamento is null AND (dt_disponibilizacao_aulas is null OR dt_disponibilizacao_aulas > GETDATE());
 
                                         IF OBJECT_ID('tempdb..#tempProfessoresAtivos') IS NOT NULL
