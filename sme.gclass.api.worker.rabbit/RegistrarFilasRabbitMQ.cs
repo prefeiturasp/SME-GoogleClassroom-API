@@ -70,6 +70,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoAtribuicaoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorErroSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorErroSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorErroSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorErroTratar);
         }
 
         private static void RegistrarFilasFuncionarioSync(IModel canalRabbit)

@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarSyncGooglAlunoErrosUseCase : IIniciarSyncGooglAlunoErrosUseCase
+    public class IniciarSyncGoogleAlunoUseCase : IIniciarSyncGoogleAlunoUseCase
     {
         private readonly IMediator mediator;
 
-        public IniciarSyncGooglAlunoErrosUseCase(IMediator mediator)
+        public IniciarSyncGoogleAlunoUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         public async Task<bool> Executar()
         {
-            var publicarSyncAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroSync, RotasRabbit.FilaAlunoErroSync, true));
+            var publicarSyncAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoSync, RotasRabbit.FilaAlunoSync, true));
             if (!publicarSyncAluno)
             {
-                throw new NegocioException("Não foi possível iniciar o tratamento de erros de alunos.");
+                throw new NegocioException("Não foi possível iniciar a sincronização de alunos.");
             }
 
             return publicarSyncAluno;

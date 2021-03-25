@@ -40,7 +40,20 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<IEnumerable<ProfessorCursoEol>> ObterCursosDoProfessorParaInclusaoAsync(long rf, int anoLetivo)
+		public async Task<ProfessorEol> ObterProfessorParaTratamentoDeErroAsync(long rf, int anoLetivo)
+		{
+			var query = MontaQueryProfessorParaInclusao(false, rf.ToString());
+			var parametros = new
+			{
+				anoLetivo = anoLetivo,
+				rf
+			};
+
+			using var conn = ObterConexao();
+			return await conn.QuerySingleOrDefaultAsync<ProfessorEol>(query, parametros);
+		}
+
+		public async Task<IEnumerable<ProfessorCursoEol>> ObterCursosDoProfessorParaInclusaoAsync(long rf, int anoLetivo)
         {
             using var conn = ObterConexao();
 

@@ -76,7 +76,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGooglAlunoUseCase iniciarSyncGoogleAlunoUseCase)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAlunoUseCase iniciarSyncGoogleAlunoUseCase)
         {
             var retorno = await iniciarSyncGoogleAlunoUseCase.Executar();
             return Ok(retorno);
@@ -92,7 +92,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("erros/tratamento")]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGooglAlunoErrosUseCase iniciarSyncGooglAlunoErrosUseCase)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAlunoErrosUseCase iniciarSyncGooglAlunoErrosUseCase)
         {
             var retorno = await iniciarSyncGooglAlunoErrosUseCase.Executar();
             return Ok(retorno);

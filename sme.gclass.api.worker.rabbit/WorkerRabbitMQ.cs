@@ -77,6 +77,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaFuncionarioIndiretoIncluir, new ComandoRabbit("Incluir funcionários indiretos novos no Google", typeof(IInserirFuncionarioIndiretoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaAlunoErroSync, new ComandoRabbit("Tratamento de erros na inclusão de alunos", typeof(ITrataSyncGoogleAlunoErrosUseCase)));
             comandos.Add(RotasRabbit.FilaAlunoErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um aluno.", typeof(IRealizarTratamentoAlunoErroUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorErroSync, new ComandoRabbit("Tratamento de erros na inclusão de professores", typeof(ITrataSyncGoogleProfessorErrosUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um professor.", typeof(IRealizarTratamentoProfessorErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -201,6 +203,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoErroSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoErroTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroTratar, false, consumer);
             }
 
             if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
