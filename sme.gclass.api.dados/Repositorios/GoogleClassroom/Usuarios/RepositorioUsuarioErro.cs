@@ -37,7 +37,8 @@ namespace SME.GoogleClassroom.Dados
                                  FROM
                                     public.usuarios_erro
                                  WHERE
-                                    usuario_tipo = @usuarioTipo;";
+                                    usuario_tipo = @usuarioTipo
+                                    AND usuario_id is not null;";
 
             using var conn = ObterConexao();
             return await conn.QueryAsync<UsuarioErro>(query, new { usuarioTipo });
