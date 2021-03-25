@@ -8,6 +8,7 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<long> SalvarAsync(CursoErro dto);
         Task<IEnumerable<CursoErro>> ObterTodos();
+        Task Excluir(long id);
         //Task<IEnumerable<CursoErro>> ObterTodosComEmail();
     }
 }

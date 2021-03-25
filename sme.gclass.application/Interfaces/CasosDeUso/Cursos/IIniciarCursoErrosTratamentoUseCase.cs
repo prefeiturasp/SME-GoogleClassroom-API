@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using SME.GoogleClassroom.Infra;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarCursoErrosTratamentoUseCase
     {
-        public Task Executar();
+        Task<bool> Executar(MensagemRabbit mensagemRabbit);
     }
 }

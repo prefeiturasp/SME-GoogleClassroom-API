@@ -51,5 +51,18 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(query, parametros);
         }
+
+        public async Task Excluir(long id)
+        {
+            var query = @" delete from cursos_erro where id = @id";
+
+            var parametros = new
+            {
+                id
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query, parametros);
+        }
     }
 }
