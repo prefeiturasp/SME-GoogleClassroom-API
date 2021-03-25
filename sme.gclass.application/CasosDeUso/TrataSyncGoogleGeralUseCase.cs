@@ -27,6 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarFuncionarioIndireto = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoSync, RotasRabbit.FilaFuncionarioIndiretoSync, resposta));
             var publicarTratamentoDeErrosAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroSync, RotasRabbit.FilaAlunoErroSync, resposta));
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
+            var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
 
             if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");
@@ -50,10 +51,13 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Erro ao enviar a sync de funcionários indiretos.");
 
             if (!publicarTratamentoDeErrosAlunos)
-                throw new NegocioException("Erro ao enviar o tratamento de erros de alunos");
+                throw new NegocioException("Erro ao enviar o tratamento de erros de alunos.");
 
             if (!publicarTratamentoDeErrosProfessores)
-                throw new NegocioException("Erro ao enviar o tratamento de erros de professores");
+                throw new NegocioException("Erro ao enviar o tratamento de erros de professores.");
+
+            if (!publicarTratamentoDeErrosFuncionarios)
+                throw new NegocioException("Erro ao enviar o tratamento de erros de funcionarios.");
 
             return await Task.FromResult(true);
         }
