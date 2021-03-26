@@ -100,9 +100,9 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (GoogleApiException gEx)
             {
-                if (gEx.EhErroDeDuplicidade())
+                if (gEx.EhErroDeDuplicidade())            
                     await InserirFuncionarioCursoAsync(funcionarioCursoGoogle);
-                if (gEx.RegistroNaoEncontrado())
+                else if (gEx.RegistroNaoEncontrado())
                     throw new NegocioException("Funcionário não localizado no Google Classroom");
                 else
                     throw;
