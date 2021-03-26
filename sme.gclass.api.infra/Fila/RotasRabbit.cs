@@ -20,6 +20,8 @@
         public static string FilaAlunoSync => "googleclass.aluno.sync";
         public static string FilaAlunoCursoSync => "googleclass.aluno.curso.sync";
         public static string FilaAlunoCursoIncluir => "googleclass.aluno.curso.incluir";
+        public static string FilaAlunoErroSync => "googleclass.aluno.erro.sync";
+        public static string FilaAlunoErroTratar => "googleclass.aluno.erro.tratar";
         #endregion
 
         #region Funcionário
@@ -27,6 +29,8 @@
         public static string FilaFuncionarioSync => "googleclass.funcionario.sync";
         public static string FilaFuncionarioCursoIncluir => "googleclass.funcionario.curso.incluir";
         public static string FilaFuncionarioCursoSync => "googleclass.funcionario.curso.sync";
+        public static string FilaFuncionarioErroSync => "googleclass.funcionario.erro.sync";
+        public static string FilaFuncionarioErroTratar => "googleclass.funcionario.erro.tratar";
         #endregion
 
         #region Professores
@@ -35,6 +39,8 @@
         public static string FilaProfessorCursoIncluir => "googleclass.professor.curso.incluir";
         public static string FilaProfessorCursoSync => "googleclass.professor.curso.sync";
         public static string FilaProfessorCursoAtribuicaoSync => "googleclass.professor.curso.atribuicao.sync";
+        public static string FilaProfessorErroSync => "googleclass.professor.erro.sync";
+        public static string FilaProfessorErroTratar => "googleclass.professor.erro.tratar";
         #endregion
 
         #region Funcionário indireto

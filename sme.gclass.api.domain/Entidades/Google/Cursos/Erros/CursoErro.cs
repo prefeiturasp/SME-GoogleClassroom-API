@@ -16,16 +16,6 @@ namespace SME.GoogleClassroom.Dominio
             Tipo = tipo;
         }
 
-        public CursoErro(long turmaId, long componenteCurricularId, string mensagem, ExecucaoTipo execucaoTipo, long? cursoId, DateTime dataInclusao)
-        {
-            TurmaId = turmaId;
-            ComponenteCurricularId = componenteCurricularId;
-            Mensagem = mensagem;
-            ExecucaoTipo = execucaoTipo;
-            CursoId = cursoId;
-            DataInclusao = dataInclusao;
-        }
-
         public long TurmaId { get; set; }
 
         public long ComponenteCurricularId { get; set; }

@@ -59,8 +59,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                 funcionarioIndiretoParaIncluirGoogle.Email,
                                 mensagem,
                                 UsuarioTipo.FuncionarioIndireto,
-                                ExecucaoTipo.FuncionarioIndiretoAdicionar,
-                                DateTime.Now);
+                                ExecucaoTipo.FuncionarioIndiretoAdicionar);
             await mediator.Send(funcionarioComErro);
         }
 
