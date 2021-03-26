@@ -34,19 +34,24 @@ namespace SME.GoogleClassroom.Aplicacao
                 var alunoEol = await mediator.Send(new ObterAlunoParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault()));
                 if (alunoEol is null)
                 {
-                    SentrySdk.CaptureMessage($"Não foi possível realizar o tratamento de erro do aluno RA{usuarioErro.UsuarioId} na fila. Aluno não encontrado no Eol.");
+                    var mensagem = $"Não foi possível realizar o tratamento de erro do aluno RA{usuarioErro.UsuarioId} na fila. Aluno não encontrado no Eol.";
+                    SentrySdk.CaptureMessage(mensagem);
+                    await mediator.Send(new IncluirUsuarioErroCommand(usuarioErro.UsuarioId, usuarioErro.Email, mensagem, usuarioErro.UsuarioTipo, usuarioErro.ExecucaoTipo));
                     return false;
                 }
 
                 var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoEol));
                 if (!publicarFuncionario)
                 {
-                    SentrySdk.CaptureMessage($"Não foi possível inserir o aluno RA{usuarioErro.UsuarioId} na fila de inclusão.");
+                    var mensagem = $"Não foi possível inserir o aluno RA{usuarioErro.UsuarioId} na fila de inclusão.";
+                    SentrySdk.CaptureMessage(mensagem);
+                    await mediator.Send(new IncluirUsuarioErroCommand(usuarioErro.UsuarioId, usuarioErro.Email, mensagem, usuarioErro.UsuarioTipo, usuarioErro.ExecucaoTipo));
                 }
             }
             catch (Exception ex)
             {
                 SentrySdk.CaptureException(ex);
+                await mediator.Send(new IncluirUsuarioErroCommand(usuarioErro.UsuarioId, usuarioErro.Email, ex.InnerException?.Message ?? ex.Message, usuarioErro.UsuarioTipo, usuarioErro.ExecucaoTipo));
             }
 
             return false;
