@@ -10,10 +10,11 @@ namespace SME.GoogleClassroom.Dominio
         public long TurmaId { get; set; }
         public long ComponenteCurricularId { get; set; }
         public string Email { get; set; }
+        public TurmaTipo TurmaTipo { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
-        public CursoGoogle(string nome, string secao, long turmaId, long componenteCurricularId, string email)
+        public CursoGoogle(string nome, string secao, long turmaId, long componenteCurricularId, string email, TurmaTipo turmaTipo)
         {
             Nome = nome;
             Secao = secao;
@@ -21,6 +22,7 @@ namespace SME.GoogleClassroom.Dominio
             ComponenteCurricularId = componenteCurricularId;
             Email = email;
             DataInclusao = DateTime.Now;
+            TurmaTipo = turmaTipo;
         }
 
         protected CursoGoogle()

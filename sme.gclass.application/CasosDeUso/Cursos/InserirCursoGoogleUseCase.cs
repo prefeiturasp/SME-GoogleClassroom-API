@@ -36,7 +36,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     cursoParaIncluir.Secao,
                     cursoParaIncluir.TurmaId,
                     cursoParaIncluir.ComponenteCurricularId,
-                    cursoParaIncluir.Email);
+                    cursoParaIncluir.Email,
+                    cursoParaIncluir.TurmaTipo);
 
                 var existeCurso = await mediator.Send(new ExisteCursoPorTurmaComponenteCurricularQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId));
                 if (existeCurso)
@@ -47,16 +48,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
 
-                if(_deveExecutarIntegracao) await InserirCursoAsync(cursoGoogle);
+                if (_deveExecutarIntegracao) await InserirCursoAsync(cursoGoogle);
                 await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
                 return true;
             }
             catch (Exception ex)
             {
-                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, 
+                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId,
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
                 throw;
-            }            
+            }
         }
 
         private async Task InserirCursoAsync(CursoGoogle cursoGoogle)
@@ -76,7 +77,8 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
             await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
-            await IniciarSyncGoogleFuncionariosDoCursoAsync(cursoGoogle);
+            if (cursoGoogle.TurmaTipo != TurmaTipo.Programa)
+                await IniciarSyncGoogleFuncionariosDoCursoAsync(cursoGoogle);
         }
 
         private async Task IniciarSyncGoogleProfessoresDoCursoAsync(CursoGoogle cursoGoogle)
