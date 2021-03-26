@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Aplicacao
                         }
                         catch (Exception ex)
                         {
-                            await mediator.Send(new InserirCursoErroCommand(cursoErroParaTratar.TurmaId, cursoErroParaTratar.ComponenteCurricularId, $"ex.: {ex.Message}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                            SentrySdk.CaptureException(ex);
                         }                        
                     }
                 }

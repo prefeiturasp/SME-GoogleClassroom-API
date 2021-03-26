@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Dados
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
             var paginar = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryCursosParaInclusao(dataReferencia, dataReferencia.Year, paginar, componenteCurricularId, turmaId);
+            var query = MontaQueryCursosParaInclusao(dataReferencia, paginar, componenteCurricularId, turmaId);
 
             using var conn = ObterConexao();
 
@@ -38,14 +38,14 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId)
+        public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo)
         {
             var paginar = false;
-            var query = MontaQueryCursosParaInclusao(null, null, paginar, componenteCurricularId, turmaId);
+            var query = MontaQueryCursosParaInclusao(null, paginar, componenteCurricularId, turmaId);
 
             using var conn = ObterConexao();
 
-            var parametros = new { componenteCurricularId, turmaId };
+            var parametros = new { componenteCurricularId, turmaId, anoLetivo};
 
             return await conn.QuerySingleOrDefaultAsync<CursoEol>(query, parametros, commandTimeout: 300);
         }
@@ -409,7 +409,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<FuncionarioCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
         }
 
-        private static string MontaQueryCursosParaInclusao(DateTime? dataReferencia, int? anoLetivo, bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
+        private static string MontaQueryCursosParaInclusao(DateTime? dataReferencia, bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
         {
             var query = new StringBuilder();
             query.AppendLine(@$"-- 2) Busca os cursos regulares
@@ -504,10 +504,10 @@ namespace SME.GoogleClassroom.Dados
 								ON tep.cd_experiencia_pedagogica = tgt.cd_experiencia_pedagogica
 							--- Território
 							WHERE
-									  te.st_turma_escola in ('O', 'A', 'C')
+								      te.an_letivo = @anoLetivo
+								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
-								{(anoLetivo != null ? "AND   te.an_letivo = @anoLetivo" : "")}
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}								
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
@@ -545,9 +545,9 @@ namespace SME.GoogleClassroom.Dados
 								v_servidor_cotic serv (NOLOCK)
 								ON cbc.cd_servidor = serv.cd_servidor
 							WHERE
-								    atr.dt_cancelamento IS NULL
-								AND atr.dt_disponibilizacao_aulas IS NULL
-								{(anoLetivo != null ? "AND atr.an_atribuicao = @anoLetivo;" : ";")}								
+								    atr.an_atribuicao = @anoLetivo						
+								AND atr.dt_cancelamento IS NULL
+								AND atr.dt_disponibilizacao_aulas IS NULL;
 
 							--- 2.2) Define a tabela final de cursos regulares com responsáveis
 							IF OBJECT_ID('tempdb..#tempCursosRegulares') IS NOT NULL
@@ -609,10 +609,10 @@ namespace SME.GoogleClassroom.Dados
 								componente_curricular pcc (NOLOCK)
 								ON pgcc.cd_componente_curricular = pcc.cd_componente_curricular and pcc.dt_cancelamento is null
 							WHERE
-									  te.st_turma_escola in ('O', 'A', 'C')
+								      te.an_letivo = @anoLetivo
+								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
-								{(anoLetivo != null ? "AND   te.an_letivo = @anoLetivo" : "")}
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
@@ -649,9 +649,9 @@ namespace SME.GoogleClassroom.Dados
 								v_servidor_cotic serv (NOLOCK)
 								ON cbc.cd_servidor = serv.cd_servidor
 							WHERE
-								    atr.dt_cancelamento IS NULL
-								AND atr.dt_disponibilizacao_aulas IS NULL							
-							{(anoLetivo != null ? "AND atr.an_atribuicao = @anoLetivo;" : ";")}
+							        atr.an_atribuicao = @anoLetivo
+								AND atr.dt_cancelamento IS NULL
+								AND atr.dt_disponibilizacao_aulas IS NULL;							
 
 							-- - 3.2) Define a tabela final de cursos de programa com responsáveis
 							IF OBJECT_ID('tempdb..#tempCursosPrograma') IS NOT NULL
