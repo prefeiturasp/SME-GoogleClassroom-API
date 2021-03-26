@@ -106,6 +106,12 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleFuncionarioErrosUseCase, TrataSyncGoogleFuncionarioErrosUseCase>();
             services.TryAddScoped<IRealizarTratamentoFuncionarioErroUseCase, RealizarTratamentoFuncionarioErroUseCase>();
             services.TryAddScoped<IIniciarSyncGoogleFuncionarioErrosUseCase, IniciarSyncGoogleFuncionarioErrosUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleCursoUseCase, TrataSyncGoogleCursoUseCase>();
+            services.TryAddScoped<IRealizarTratamentoCursoErroUseCase, RealizarTratamentoCursoErroUseCase>();
+            services.TryAddScoped<IIniciarSyncGoogleCursoErrosUseCase, IniciarSyncGoogleCursoErrosUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
+
+            
         }
     }
 }

@@ -28,6 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarTratamentoDeErrosAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroSync, RotasRabbit.FilaAlunoErroSync, resposta));
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
+            var publicarCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroSync, RotasRabbit.FilaCursoErroSync, resposta));
 
             if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");
@@ -58,6 +59,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (!publicarTratamentoDeErrosFuncionarios)
                 throw new NegocioException("Erro ao enviar o tratamento de erros de funcionarios.");
+
+            if (!publicarCursoErro)
+                throw new NegocioException("Erro ao enviar a sync de cursos erro.");
 
             return await Task.FromResult(true);
         }

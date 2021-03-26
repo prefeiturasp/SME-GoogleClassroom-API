@@ -81,6 +81,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaProfessorErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um professor.", typeof(IRealizarTratamentoProfessorErroUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioErroSync, new ComandoRabbit("Tratamento de erros na inclusão de funcionários", typeof(ITrataSyncGoogleFuncionarioErrosUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um funcionários.", typeof(IRealizarTratamentoFuncionarioErroUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoErroSync, new ComandoRabbit("Tratamento de erros cursos novos no sync com google", typeof(ITrataSyncGoogleCursoErroUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoErroTratar, new ComandoRabbit("Tratamento de erros cursos novos ao inserir no google", typeof(IRealizarTratamentoCursoErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -209,6 +211,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroTratar, false, consumer);
             }
 
             if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -220,7 +224,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);                
             }
 
             return Task.CompletedTask;
