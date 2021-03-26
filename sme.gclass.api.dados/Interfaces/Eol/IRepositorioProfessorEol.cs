@@ -12,5 +12,6 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<ProfessorCursoEol>> ObterCursosDoProfessorParaInclusaoAsync(long rf, int anoLetivo);
         Task<PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>> ObterAtribuicoesDeCursosDoProfessorAsync(DateTime dataReferencia, Paginacao paginacao, string rf,
             long? turmaId, long? componenteCurricularId);
+        Task<ProfessorEol> ObterProfessorParaTratamentoDeErroAsync(long rf, int anoLetivo);
     }
 }

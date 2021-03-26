@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Infra
 {
     public class FiltroObterAlunosIncluirGoogleDto : FiltroPaginacaoBaseDto
     {
-        public long CodigoEol { get; set; }
+        public long? CodigoEol { get; set; }
 
         [Required]
         [DefaultValue("2021-02-20")]
