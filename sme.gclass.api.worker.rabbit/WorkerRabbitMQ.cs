@@ -92,19 +92,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     {
                         using var scope = serviceScopeFactory.CreateScope();
 
-                        var dataHoraInicio = DateTime.Now;
-                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - EXECUTANDO - {ea.RoutingKey} - {DateTime.Now:dd/MM/yyyy HH:mm:ss}", SentryLevel.Debug);
                         var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
                         metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
-                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
 
-                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - SUCESSO - {ea.RoutingKey}", SentryLevel.Info);
+                        var tempoExecucao = System.Diagnostics.Stopwatch.StartNew();
+
+                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
+                        tempoExecucao.Stop();
+
+                        
                         canalRabbit.BasicAck(ea.DeliveryTag, false);
 
-                        var dataHoraFim = DateTime.Now;
-                        var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
-                        metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, mensagemRabbit.Mensagem, dataHoraInicio, dataHoraFim, tempoDeExecucao);
+                        metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, tempoExecucao.Elapsed);
 
                     }
                     catch (NegocioException nex)
@@ -181,7 +181,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
             };
 
-            if(consumoDeFilasOptions.ConsumirFilasSync)
+            if (consumoDeFilasOptions.ConsumirFilasSync)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
@@ -199,7 +199,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoSync, false, consumer);
             }
 
-            if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
+            if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
