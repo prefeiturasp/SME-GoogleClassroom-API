@@ -19,39 +19,31 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            try
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoGradesAdicionar));
+
+            var paginacao = new Paginacao(0, 0);
+            var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosQuery(ultimaAtualizacao, paginacao));
+
+            foreach (var gradeDeCurso in gradesDeCursosAlunos.Items)
             {
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoGradesAdicionar));
+                var cursoDoAlunoParaIncluir = new CursoEol(gradeDeCurso.Nome, gradeDeCurso.Secao, gradeDeCurso.TurmaId, gradeDeCurso.ComponenteCurricularId, gradeDeCurso.UeCodigo, gradeDeCurso.Email);
 
-                var paginacao = new Paginacao(0, 0);
-                var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosQuery(ultimaAtualizacao, paginacao));
-
-                foreach (var gradeDeCurso in gradesDeCursosAlunos.Items)
+                try
                 {
-                    var cursoDoAlunoParaIncluir = new CursoEol(gradeDeCurso.Nome, gradeDeCurso.Secao, gradeDeCurso.TurmaId, gradeDeCurso.ComponenteCurricularId, gradeDeCurso.UeCodigo, gradeDeCurso.Email);
-
-                    try
+                    var publicarGradeAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoDoAlunoParaIncluir));
+                    if (!publicarGradeAlunoCurso)
                     {
-                        var publicarGradeAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoDoAlunoParaIncluir));
-                        if (!publicarGradeAlunoCurso)
-                        {
-                            await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso, ex));
+                        await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso));
                     }
                 }
+                catch (Exception ex)
+                {
+                    await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso, ex));
+                }
+            }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoGradesAdicionar, DateTime.Today));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de novas grades no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
-            }
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoGradesAdicionar, DateTime.Today));
+            return true;
         }
 
         private async Task IncluirGradeDeCursoComErroAsync(GradeCursoEol gradeCursoEol, string mensagem)

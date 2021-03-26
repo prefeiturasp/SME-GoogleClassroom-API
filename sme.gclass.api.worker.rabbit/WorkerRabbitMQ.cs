@@ -118,22 +118,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     catch (NegocioException nex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
-                        SentrySdk.CaptureException(nex);
                         RegistrarSentry(ea, mensagemRabbit, nex);
                     }
                     catch (ValidacaoException vex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, vex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
-                        SentrySdk.CaptureException(vex);
                         RegistrarSentry(ea, mensagemRabbit, vex);
                     }
                     catch (Exception ex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
-                        SentrySdk.CaptureException(ex);
                         RegistrarSentry(ea, mensagemRabbit, ex);
                     }
                 }

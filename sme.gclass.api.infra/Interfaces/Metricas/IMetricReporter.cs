@@ -1,5 +1,4 @@
-﻿using Prometheus;
-using System;
+﻿using System;
 
 namespace SME.GoogleClassroom.Infra.Interfaces.Metricas
 {
@@ -7,6 +6,8 @@ namespace SME.GoogleClassroom.Infra.Interfaces.Metricas
     {
         void RegistrarExecucao(string casoDeUso);
 
-        void RegistrarTempoDeExecucao(string casoDeUso, TimeSpan elapsed);      
+        void RegistrarErro(string casoDeUso, string erro);
+
+        void RegistrarTempoDeExecucao(string casoDeUso, TimeSpan elapsed);
     }
 }

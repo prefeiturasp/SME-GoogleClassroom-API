@@ -8,6 +8,7 @@ namespace SME.GoogleClassroom.Infra.Metricas
     public class MetricReporter : IMetricReporter
     {
         private readonly Counter contadorDeExecucao;
+        private readonly Counter contadorDeErros;
         private readonly Histogram histogramaDeTempoDeExcucao;
 
         public MetricReporter()
@@ -16,6 +17,12 @@ namespace SME.GoogleClassroom.Infra.Metricas
                 new CounterConfiguration
                 {
                     LabelNames = new[] { "caso_de_uso" }
+                });
+
+            contadorDeErros = Metrics.CreateCounter("sincronizacao_quantidade_erros", "Quantidade de erros nas sincronizações realizadas.",
+                new CounterConfiguration
+                {
+                    LabelNames = new[] { "caso_de_uso", "erro" }
                 });
 
             histogramaDeTempoDeExcucao = Metrics.CreateHistogram("sincronizacao_duracao_segundos",
@@ -27,6 +34,8 @@ namespace SME.GoogleClassroom.Infra.Metricas
         }
 
         public void RegistrarExecucao(string casoDeUso) => contadorDeExecucao.WithLabels(casoDeUso).Inc();
+
+        public void RegistrarErro(string casoDeUso, string erro) => contadorDeErros.WithLabels(casoDeUso, erro).Inc();
 
         public void RegistrarTempoDeExecucao(string casoDeUso, TimeSpan elapsed)
         {
