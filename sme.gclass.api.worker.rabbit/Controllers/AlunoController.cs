@@ -70,15 +70,31 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// Inicia a sincronização de alunos do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos alunos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGooglAlunoUseCase iniciarSyncGoogleAlunoUseCase)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAlunoUseCase iniciarSyncGoogleAlunoUseCase)
         {
             var retorno = await iniciarSyncGoogleAlunoUseCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de alunos do EOL para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAlunoErrosUseCase iniciarSyncGooglAlunoErrosUseCase)
+        {
+            var retorno = await iniciarSyncGooglAlunoErrosUseCase.Executar();
             return Ok(retorno);
         }
 

@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
 			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-			var query = MontaQueryCursosParaInclusao(aplicarPaginacao, rf);
+			var query = MontaQueryCursosParaInclusao(aplicarPaginacao, dataReferencia, rf);
 			var parametros = new
 			{
 				dataReferencia = dataReferencia.Date,
@@ -40,6 +40,19 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+		public async Task<FuncionarioEol> ObterFuncionarioParaTratamentoDeErroAsync(long rf, int anoLetivo)
+        {
+			var query = MontaQueryCursosParaInclusao(false, null, rf.ToString());
+			var parametros = new
+			{
+				anoLetivo = anoLetivo,
+				rf
+			};
+
+			using var conn = ObterConexao();
+			return await conn.QuerySingleOrDefaultAsync<FuncionarioEol>(query, parametros);
+		}
 
 		public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo)
 		{
@@ -300,7 +313,7 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<FuncionarioCursoEol>(query, new { rf, anoLetivo });
 		}
 
-		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, string rf)
+		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf)
         {
 			string queryBase = @$"
                 DECLARE @cargoCP AS INT = 3379;
@@ -334,7 +347,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE())
-					AND cbc.dt_nomeacao >= @dataReferencia;
+					{(dataReferencia.HasValue ? "AND cbc.dt_nomeacao >= @dataReferencia; " : ";")}
 
 				-- 2. Cargos sobrepostos fixos
 				IF OBJECT_ID('tempdb..#tempCargosSobrepostosFuncionarios_Fixos') IS NOT NULL
@@ -364,7 +377,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND css.dt_nomeacao_cargo_sobreposto >= @dataReferencia
+					{(dataReferencia.HasValue ? "AND css.dt_nomeacao_cargo_sobreposto >= @dataReferencia " : "")}
 					{(!string.IsNullOrEmpty(rf) ? $"AND serv.cd_registro_funcional = @rf;" : ";")}
 
 				-- 3. União das tabelas de cargo fixo
@@ -408,7 +421,7 @@ namespace SME.GoogleClassroom.Dados
 					facs.cd_tipo_funcao IN (@tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
 					AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
 					AND dt_fim_nomeacao IS NULL
-					AND facs.dt_designacao >= @dataReferencia;
+					{(dataReferencia.HasValue ? "AND facs.dt_designacao >= @dataReferencia; " : ";")}
 
 				-- 5. União das tabelas de cargo fixo e função
 				IF OBJECT_ID('tempdb..#tempCargosFuncionarios') IS NOT NULL

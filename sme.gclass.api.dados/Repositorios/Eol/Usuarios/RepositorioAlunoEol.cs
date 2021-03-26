@@ -14,11 +14,11 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusao(DateTime dataReferencia, Paginacao paginacao, long codigoEol)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusaoAsync(Paginacao paginacao, DateTime dataReferencia, long? codigoEol)
         {
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryAlunosParaInclusao(paginacao, codigoEol);
+            var query = MontaQueryAlunosParaInclusao(paginacao, dataReferencia, codigoEol);
 
             using var conn = ObterConexao();
 
@@ -39,11 +39,23 @@ namespace SME.GoogleClassroom.Dados
             };
 
             retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
-
             return retorno;
         }
 
-        public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
+		public async Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo)
+		{
+			var query = MontaQueryAlunosParaInclusao(null, null, codigoEol);
+
+			using var conn = ObterConexao();
+			return await conn.QuerySingleOrDefaultAsync<AlunoEol>(query,
+				new
+				{
+					anoLetivo = anoLetivo,
+					codigoEol
+				}, commandTimeout: 6000);
+		}
+
+		public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
         {
             using var conn = ObterConexao();
 
@@ -242,7 +254,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
         }
 
-        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, long codigoEol)
+        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, DateTime? dataReferecia, long? codigoEol)
         {
             return $@"DECLARE @situacaoAtivo AS CHAR = 1;
 					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
@@ -280,17 +292,17 @@ namespace SME.GoogleClassroom.Dados
 						escola esc (NOLOCK)
 						ON te.cd_escola = esc.cd_escola
 					WHERE
-						matr.dt_status_matricula >= @dataReferencia
-						AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
+						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
+						{(dataReferecia.HasValue ? "AND matr.dt_status_matricula >= @dataReferencia " : "")}
 						AND te.st_turma_escola in ('O', 'A', 'C')
 						AND te.cd_tipo_turma in (1,2,3,5,6,7)
 						AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
 						AND te.an_letivo = @anoLetivo
 						AND NOT cd_serie_ensino IS NULL
 
-						{(codigoEol > 0 ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
+						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
 
 					--- 1.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasDatasMaisRecentes') IS NOT NULL
@@ -388,17 +400,17 @@ namespace SME.GoogleClassroom.Dados
 						escola esc (NOLOCK)
 						ON te.cd_escola = esc.cd_escola
 					WHERE
-						matr.dt_status_matricula >= @dataReferencia
-						AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
+						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
+						{(dataReferecia.HasValue ? "AND matr.dt_status_matricula >= @dataReferencia " : "")}
 						AND te.st_turma_escola in ('O', 'A', 'C')
 						AND te.cd_tipo_turma in (1,2,3,5,6,7)
 						AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
 						AND te.an_letivo = @anoLetivo
 						AND NOT matr.cd_tipo_programa IS NULL
 
-						{(codigoEol > 0 ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
+						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
 
 					--- 2.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes') IS NOT NULL
@@ -503,7 +515,7 @@ namespace SME.GoogleClassroom.Dados
 						ON temp.cd_aluno_eol = aluno.cd_aluno
 					ORDER BY
 						cd_aluno_eol
-					{(paginacao.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
+					{(paginacao?.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
 					FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";")}
 
 					-- Totalizacao

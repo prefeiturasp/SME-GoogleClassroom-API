@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(null, funcionarioIndiretoParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar));
                 throw;
             }
         }
@@ -51,7 +51,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!funcionarioSincronizado)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(null, funcionarioIndiretoGoogle?.Email,
-                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioIndiretoGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioIndiretoGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar));
                     return;
                 }
 
