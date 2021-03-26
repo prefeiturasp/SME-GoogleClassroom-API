@@ -377,7 +377,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					{(dataReferencia.HasValue ? "css.dt_nomeacao_cargo_sobreposto >= @dataReferencia " : "")}
+					{(dataReferencia.HasValue ? "AND css.dt_nomeacao_cargo_sobreposto >= @dataReferencia " : "")}
 					{(!string.IsNullOrEmpty(rf) ? $"AND serv.cd_registro_funcional = @rf;" : ";")}
 
 				-- 3. União das tabelas de cargo fixo
