@@ -25,7 +25,6 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {                
                 var cursoEol = await mediator.Send(new ObterCursoIncluirGooglePorIdQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, DateTime.Now.Year));
-
                 if (cursoEol is null)
                 {
                     SentrySdk.CaptureMessage($"Não foi possível realizar o tratamento de erro do curso de turma id {cursoParaIncluir.TurmaId} e Componente Curricular id {cursoParaIncluir.ComponenteCurricularId} na fila. Curso não encontrado no Eol.");

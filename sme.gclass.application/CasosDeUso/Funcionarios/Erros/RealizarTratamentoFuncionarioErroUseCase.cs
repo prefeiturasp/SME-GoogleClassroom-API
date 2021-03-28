@@ -36,7 +36,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     var mensagem = $"Não foi possível realizar o tratamento de erro do funcionário RF{usuarioErro.UsuarioId} na fila. Funcionario não encontrado no Eol.";
                     SentrySdk.CaptureMessage(mensagem);
-                    await mediator.Send(new IncluirUsuarioErroCommand(usuarioErro.UsuarioId, usuarioErro.Email, mensagem, usuarioErro.UsuarioTipo, usuarioErro.ExecucaoTipo));
                     return false;
                 }
 
