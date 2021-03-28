@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -13,21 +12,21 @@ namespace SME.GoogleClassroom.Dados
     public class RepositorioUsuario : RepositorioGoogle, IRepositorioUsuario
     {
         public RepositorioUsuario(ConnectionStrings connectionStrings)
-            :base(connectionStrings)
+            : base(connectionStrings)
         {
         }
 
         public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
         {
-            var query = new StringBuilder(@"SELECT 
+            var query = new StringBuilder(@"SELECT
                                                    u.indice,
-                                                   u.id AS Codigo, 
+                                                   u.id AS Codigo,
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as organizationpath,
                                                    u.data_inclusao as datainclusao,
                                                    u.data_atualizacao as dataatualizacao
-                                              FROM usuarios u 
+                                              FROM usuarios u
                                              WHERE u.usuario_tipo = @tipo ");
 
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
@@ -88,15 +87,15 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
         {
-            var query = new StringBuilder(@"SELECT 
+            var query = new StringBuilder(@"SELECT
                                                    u.indice,
-                                                   u.id AS Rf, 
+                                                   u.id AS Rf,
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
                                                    u.data_atualizacao as DataAtualizacao
-                                              FROM usuarios u 
+                                              FROM usuarios u
                                              WHERE usuario_tipo = @tipo ");
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u where usuario_tipo = @tipo ");
 
@@ -143,15 +142,15 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao, long? rf, string email)
         {
-            var query = new StringBuilder(@"SELECT 
+            var query = new StringBuilder(@"SELECT
                                                    u.indice,
-                                                   u.id AS Rf, 
+                                                   u.id AS Rf,
                                                    u.nome AS Nome,
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
                                                    u.data_atualizacao as DataAtualizacao
-                                              FROM usuarios u 
+                                              FROM usuarios u
                                              WHERE usuario_tipo = @tipo ");
 
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo ");
@@ -197,18 +196,17 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-
         public async Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorRfs(long[] rfs)
         {
-            var query = @"SELECT 
+            var query = @"SELECT
                                  u.indice,
-                                 u.id as Rf, 
+                                 u.id as Rf,
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
                                  u.data_atualizacao as dataatualizacao
-                            FROM usuarios u 
+                            FROM usuarios u
                            WHERE usuario_tipo = @tipo
                              and id = any(@rfs)";
 
@@ -220,12 +218,11 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.QueryAsync<FuncionarioGoogle>(query, parametros);
-
         }
 
         public async Task<bool> ExisteFuncionarioPorRf(long rf)
         {
-            var query = @"SELECT count(id) from usuarios where id = @rf and usuario_tipo = @tipo";
+            var query = @"SELECT exists(SELECT 1 from usuarios where id = @rf and usuario_tipo = @usuarioTipo limit 1)";
             var parametros = new
             {
                 rf,
@@ -235,18 +232,17 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
-
         public async Task<IEnumerable<ProfessorGoogle>> ObterProfessoresPorRfs(long[] rfs)
         {
-            var query = @"SELECT 
+            var query = @"SELECT
                                  u.indice,
-                                 u.id as Rf, 
+                                 u.id as Rf,
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
                                  u.data_atualizacao as dataatualizacao
-                            FROM usuarios u 
+                            FROM usuarios u
                            WHERE usuario_tipo = any(@tipos)
                              and id = any(@rfs)";
 
@@ -263,22 +259,21 @@ namespace SME.GoogleClassroom.Dados
         // TO DO: Alterar para utilizar classe abstrata quando fizermos a separação
         public async Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresFuncionariosPaginadoPorRfs(Paginacao paginacao, long[] rfs)
         {
-            var query = new StringBuilder(@"SELECT 
+            var query = new StringBuilder(@"SELECT
                                                  u.indice,
                                                  u.nome,
-                                                 u.id as Rf, 
+                                                 u.id as Rf,
                                                  u.usuario_tipo as usuariotipo,
                                                  u.email,
                                                  u.organization_path as organizationpath,
                                                  u.data_inclusao as datainclusao,
                                                  u.data_atualizacao as dataatualizacao
-                                            FROM usuarios u 
+                                            FROM usuarios u
                                            WHERE usuario_tipo = any(@tipos)
                                              and id = any(@rfs)");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
-
 
             query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = any(@tipos) and id = any(@rfs)");
 
@@ -289,7 +284,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
                 rfs,
-                tipos = new [] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = ObterConexao();
@@ -305,7 +300,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> ExisteProfessorPorRf(long rf)
         {
-            var query = @"SELECT count(id) from usuarios where id = @rf and usuario_tipo = @tipo";
+            var query = @"SELECT exists(SELECT 1 from usuarios where id = @rf and usuario_tipo = @usuarioTipo limit 1)";
             var parametros = new
             {
                 rf,
@@ -341,15 +336,15 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] CodigosAluno)
         {
-            var query = @"SELECT 
+            var query = @"SELECT
                                  u.indice,
-                                 u.id as Codigo, 
+                                 u.id as Codigo,
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
                                  u.data_atualizacao as dataatualizacao
-                            FROM usuarios u 
+                            FROM usuarios u
                            WHERE usuario_tipo = @tipo
                              and id = any(@CodigosAluno)";
 
@@ -366,22 +361,21 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosPaginadoPorCodigos(Paginacao paginacao, long[] codigosAluno)
         {
-            var query = new StringBuilder(@"SELECT 
+            var query = new StringBuilder(@"SELECT
                                                  u.indice,
                                                  u.nome,
-                                                 u.id as Codigo, 
+                                                 u.id as Codigo,
                                                  u.usuario_tipo as usuariotipo,
                                                  u.email,
                                                  u.organization_path as organizationpath,
                                                  u.data_inclusao as datainclusao,
                                                  u.data_atualizacao as dataatualizacao
-                                            FROM usuarios u 
+                                            FROM usuarios u
                                            WHERE usuario_tipo = @tipo
                                              and id = any(@codigosAluno)");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
-
 
             query.AppendLine("SELECT count(*) from usuarios u WHERE usuario_tipo = @tipo and id = any(@codigosAluno)");
 
@@ -408,15 +402,15 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<FuncionarioGoogle> ObterFuncionarioPorEmail(string email)
         {
-            var query = @"SELECT 
+            var query = @"SELECT
                                  u.indice,
-                                 u.id as Rf, 
+                                 u.id as Rf,
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
                                  u.data_atualizacao as dataatualizacao
-                            FROM usuarios u 
+                            FROM usuarios u
                            WHERE usuario_tipo = @tipo
                              and email = @email";
 
@@ -439,7 +433,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretoAsync(Paginacao paginacao, string cpf, string email)
         {
-            var query = new StringBuilder(@"SELECT 
+            var query = new StringBuilder(@"SELECT
                                                    u.indice,
                                                    u.id AS Rf,
                                                    u.cpf AS Cpf,
@@ -448,7 +442,7 @@ namespace SME.GoogleClassroom.Dados
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
                                                    u.data_atualizacao as DataAtualizacao
-                                              FROM usuarios u 
+                                              FROM usuarios u
                                              WHERE usuario_tipo = @tipo ");
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u where usuario_tipo = @tipo ");
 
