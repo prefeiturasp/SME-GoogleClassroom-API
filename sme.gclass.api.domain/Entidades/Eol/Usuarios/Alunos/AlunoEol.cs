@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SME.GoogleClassroom.Infra;
+using System;
 using System.Linq;
 
 namespace SME.GoogleClassroom.Dominio
@@ -40,7 +41,8 @@ namespace SME.GoogleClassroom.Dominio
                 return;
             }
 
-            string[] splitNome = Nome.Split(' ');
+            var nomeFormatado = Nome.RemoverAcentosECaracteresEspeciais();
+            string[] splitNome = nomeFormatado.Split(' ');
             string primeiroNome = splitNome[0];
             string ultimoNome = "", iniciaisMeio = "";
 
