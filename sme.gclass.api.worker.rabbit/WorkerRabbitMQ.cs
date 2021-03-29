@@ -96,45 +96,42 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                     SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
+                    var tempoExecucao = System.Diagnostics.Stopwatch.StartNew();
                     try
                     {
                         using var scope = serviceScopeFactory.CreateScope();
-
-                        var dataHoraInicio = DateTime.Now;
-                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - EXECUTANDO - {ea.RoutingKey} - {DateTime.Now:dd/MM/yyyy HH:mm:ss}", SentryLevel.Debug);
                         var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
                         metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
                         await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
 
-                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - SUCESSO - {ea.RoutingKey}", SentryLevel.Info);
                         canalRabbit.BasicAck(ea.DeliveryTag, false);
-
-                        var dataHoraFim = DateTime.Now;
-                        var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
-                        metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, mensagemRabbit.Mensagem, dataHoraInicio, dataHoraFim, tempoDeExecucao);
-
                     }
                     catch (NegocioException nex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
-                        SentrySdk.CaptureException(nex);
                         RegistrarSentry(ea, mensagemRabbit, nex);
                     }
                     catch (ValidacaoException vex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
-                        SentrySdk.CaptureException(vex);
                         RegistrarSentry(ea, mensagemRabbit, vex);
                     }
                     catch (Exception ex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
-                        SentrySdk.CaptureException(ex);
                         RegistrarSentry(ea, mensagemRabbit, ex);
+                    }
+                    finally
+                    {
+                        tempoExecucao.Stop();
+                        metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                     }
                 }
             }
@@ -189,7 +186,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
             };
 
-            if(consumoDeFilasOptions.ConsumirFilasSync)
+            if (consumoDeFilasOptions.ConsumirFilasSync)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
@@ -215,7 +212,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroTratar, false, consumer);
             }
 
-            if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
+            if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);

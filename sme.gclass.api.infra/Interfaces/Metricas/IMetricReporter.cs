@@ -6,6 +6,8 @@ namespace SME.GoogleClassroom.Infra.Interfaces.Metricas
     {
         void RegistrarExecucao(string casoDeUso);
 
-        void RegistrarTempoDeExecucao(string casoDeUso, object parametros, DateTime dataHoraInicio, DateTime dataHoraFim, TimeSpan elapsed);
+        void RegistrarErro(string casoDeUso, string erro);
+
+        void RegistrarTempoDeExecucao(string casoDeUso, TimeSpan elapsed);
     }
 }

@@ -8,6 +8,7 @@ namespace SME.GoogleClassroom.Infra.Metricas
     public class MetricReporter : IMetricReporter
     {
         private readonly Counter contadorDeExecucao;
+        private readonly Counter contadorDeErros;
         private readonly Histogram histogramaDeTempoDeExcucao;
 
         public MetricReporter()
@@ -18,19 +19,27 @@ namespace SME.GoogleClassroom.Infra.Metricas
                     LabelNames = new[] { "caso_de_uso" }
                 });
 
+            contadorDeErros = Metrics.CreateCounter("sincronizacao_quantidade_erros", "Quantidade de erros nas sincronizações realizadas.",
+                new CounterConfiguration
+                {
+                    LabelNames = new[] { "caso_de_uso", "erro" }
+                });
+
             histogramaDeTempoDeExcucao = Metrics.CreateHistogram("sincronizacao_duracao_segundos",
                 "Duração em segundos de uma sincronização", new HistogramConfiguration
                 {
                     Buckets = Histogram.ExponentialBuckets(0.01, 2, 10),
-                    LabelNames = new[] { "caso_de_uso", "parametros", "data_hora_inicio", "data_hora_fim" }
+                    LabelNames = new[] { "caso_de_uso" }
                 });
         }
 
         public void RegistrarExecucao(string casoDeUso) => contadorDeExecucao.WithLabels(casoDeUso).Inc();
 
-        public void RegistrarTempoDeExecucao(string casoDeUso, object parametros, DateTime dataHoraInicio, DateTime dataHoraFim, TimeSpan elapsed)
+        public void RegistrarErro(string casoDeUso, string erro) => contadorDeErros.WithLabels(casoDeUso, erro).Inc();
+
+        public void RegistrarTempoDeExecucao(string casoDeUso, TimeSpan elapsed)
         {
-            histogramaDeTempoDeExcucao.WithLabels(casoDeUso, parametros.ToString(), dataHoraInicio.ToString(), dataHoraFim.ToString()).Observe(elapsed.TotalSeconds);
+            histogramaDeTempoDeExcucao.WithLabels(casoDeUso).Observe(elapsed.TotalSeconds);
         }
     }
 

@@ -20,37 +20,28 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            try
-            {
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar));
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar));
+            var paginacao = new Paginacao(0, 0);
+            var funcionariosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
 
-                var paginacao = new Paginacao(0, 0);
-                var funcionariosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
-                
-                foreach (var funcionarioParaIncluirGoogle in funcionariosParaIncluirGoogle.Items)
+            foreach (var funcionarioParaIncluirGoogle in funcionariosParaIncluirGoogle.Items)
+            {
+                try
                 {
-                    try
+                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.FilaFuncionarioIncluir, funcionarioParaIncluirGoogle));
+                    if (!publicarFuncionario)
                     {
-                        var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.FilaFuncionarioIncluir, funcionarioParaIncluirGoogle));
-                        if (!publicarFuncionario)
-                        {
-                            await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.Rf));
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.Rf, ex));
+                        await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.Rf));
                     }
                 }
+                catch (Exception ex)
+                {
+                    await IncluirFuncionarioComErroAsync(funcionarioParaIncluirGoogle, ObterMensagemDeErro(funcionarioParaIncluirGoogle.Rf, ex));
+                }
+            }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioAdicionar, DateTime.Today));
-                return true;
-            }
-            catch(Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de novos funcionários no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
-            }
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioAdicionar, DateTime.Today));
+            return true;
         }
 
         private async Task IncluirFuncionarioComErroAsync(FuncionarioEol funcionarioParaIncluirGoogle, string mensagem)

@@ -19,37 +19,29 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            try
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioIndiretoAdicionar));
+
+            var paginacao = new Paginacao(0, 0);
+            var funcionariosIndiretosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosIndiretosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao));
+
+            foreach (var funcionarioIndiretosParaIncluirGoogle in funcionariosIndiretosParaIncluirGoogle.Items)
             {
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioIndiretoAdicionar));
-
-                var paginacao = new Paginacao(0, 0);
-                var funcionariosIndiretosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosIndiretosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao));
-
-                foreach (var funcionarioIndiretosParaIncluirGoogle in funcionariosIndiretosParaIncluirGoogle.Items)
+                try
                 {
-                    try
+                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoIncluir, RotasRabbit.FilaFuncionarioIndiretoIncluir, funcionarioIndiretosParaIncluirGoogle));
+                    if (!publicarFuncionario)
                     {
-                        var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoIncluir, RotasRabbit.FilaFuncionarioIndiretoIncluir, funcionarioIndiretosParaIncluirGoogle));
-                        if (!publicarFuncionario)
-                        {
-                            await IncluirFuncionarioIndiretoComErroAsync(funcionarioIndiretosParaIncluirGoogle, ObterMensagemDeErro(funcionarioIndiretosParaIncluirGoogle.Cpf));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirFuncionarioIndiretoComErroAsync(funcionarioIndiretosParaIncluirGoogle, ObterMensagemDeErro(funcionarioIndiretosParaIncluirGoogle.Cpf, ex));
+                        await IncluirFuncionarioIndiretoComErroAsync(funcionarioIndiretosParaIncluirGoogle, ObterMensagemDeErro(funcionarioIndiretosParaIncluirGoogle.Cpf));
                     }
                 }
+                catch (Exception ex)
+                {
+                    await IncluirFuncionarioIndiretoComErroAsync(funcionarioIndiretosParaIncluirGoogle, ObterMensagemDeErro(funcionarioIndiretosParaIncluirGoogle.Cpf, ex));
+                }
+            }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioIndiretoAdicionar, DateTime.Today));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de novos funcionários indiretos no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
-            }
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.FuncionarioIndiretoAdicionar, DateTime.Today));
+            return true;
         }
 
         private async Task IncluirFuncionarioIndiretoComErroAsync(FuncionarioIndiretoEol funcionarioIndiretoParaIncluirGoogle, string mensagem)
