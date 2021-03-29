@@ -96,36 +96,28 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                     SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
+                    var tempoExecucao = System.Diagnostics.Stopwatch.StartNew();
                     try
                     {
                         using var scope = serviceScopeFactory.CreateScope();
-
                         var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
                         metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
-
-                        var tempoExecucao = System.Diagnostics.Stopwatch.StartNew();
-
                         await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
-                        tempoExecucao.Stop();
 
-                        
                         canalRabbit.BasicAck(ea.DeliveryTag, false);
-
-                        metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, tempoExecucao.Elapsed);
-
                     }
                     catch (NegocioException nex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
-                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nex.GetType().Name);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
                         RegistrarSentry(ea, mensagemRabbit, nex);
                     }
                     catch (ValidacaoException vex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
-                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, vex.GetType().Name);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
                         RegistrarSentry(ea, mensagemRabbit, vex);
                     }
@@ -135,6 +127,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
                         RegistrarSentry(ea, mensagemRabbit, ex);
+                    }
+                    finally
+                    {
+                        tempoExecucao.Stop();
+                        metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                     }
                 }
             }
