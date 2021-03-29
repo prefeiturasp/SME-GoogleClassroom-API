@@ -28,7 +28,8 @@ namespace SME.GoogleClassroom.Testes
             new object[] { "Maria Jesus", new DateTime(1992, 06, 06), "mariajesus.06061992@edu.sme.prefeitura.sp.gov.br" },
             new object[] { "Maria Tereza Jesus", new DateTime(2017, 2, 1), "mariatjesus.01022017@edu.sme.prefeitura.sp.gov.br" },
             new object[] { "Maria Tereza Santos Jesus", new DateTime(2017,3,1), "mariatsjesus.01032017@edu.sme.prefeitura.sp.gov.br" },
-            new object[] { "Maria Tereza de Santos Jesus", new DateTime(1992, 06, 06),"mariatsjesus.06061992@edu.sme.prefeitura.sp.gov.br" }
+            new object[] { "Maria Tereza de Santos Jesus", new DateTime(1992, 06, 06),"mariatsjesus.06061992@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { "José da Silva", new DateTime(1992, 06, 06) , "josesilva.06061992@edu.sme.prefeitura.sp.gov.br" }
         };
 
         public static readonly object[][] WrongData =
