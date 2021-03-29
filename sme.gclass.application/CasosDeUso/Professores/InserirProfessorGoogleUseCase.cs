@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(professorParaIncluir?.Rf, professorParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace:{ex.StackTrace}.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorAdicionar));
                 throw;
             }
         }
