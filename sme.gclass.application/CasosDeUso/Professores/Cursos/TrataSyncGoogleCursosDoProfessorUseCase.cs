@@ -28,34 +28,26 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            try
-            {
-                var cursosDoProfessorParaIncluir = await mediator.Send(new ObterCursosDoProfessorParaIncluirGoogleQuery(professorParaIncluirCursos.Rf, DateTime.Now.Year));
-                if (!cursosDoProfessorParaIncluir?.Any() ?? true) return true;
+            var cursosDoProfessorParaIncluir = await mediator.Send(new ObterCursosDoProfessorParaIncluirGoogleQuery(professorParaIncluirCursos.Rf, DateTime.Now.Year));
+            if (!cursosDoProfessorParaIncluir?.Any() ?? true) return true;
 
-                foreach (var cursoDoProfessorParaIncluir in cursosDoProfessorParaIncluir)
+            foreach (var cursoDoProfessorParaIncluir in cursosDoProfessorParaIncluir)
+            {
+                try
                 {
-                    try
+                    var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
+                    if (!publicarProfessor)
                     {
-                        var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
-                        if (!publicarProfessor)
-                        {
-                            await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
                     }
                 }
+                catch (Exception ex)
+                {
+                    await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                }
+            }
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de cursos professores no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
-            }
+            return true;
         }
 
         private async Task IncluirCursoDoProfessorComErroAsync(ProfessorGoogle professorEol, string mensagem)

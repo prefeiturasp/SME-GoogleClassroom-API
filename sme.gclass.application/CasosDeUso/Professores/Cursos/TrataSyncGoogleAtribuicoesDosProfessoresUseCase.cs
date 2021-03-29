@@ -19,39 +19,31 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            try
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
+
+            var paginacao = new Paginacao(0, 0);
+            var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao));
+
+            foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
             {
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
+                var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId);
 
-                var paginacao = new Paginacao(0, 0);
-                var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao));
-
-                foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
+                try
                 {
-                    var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId);
-
-                    try
+                    var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
+                    if (!publicarProfessor)
                     {
-                        var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
-                        if (!publicarProfessor)
-                        {
-                            await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
                     }
                 }
+                catch (Exception ex)
+                {
+                    await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                }
+            }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar, DateTime.Today));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de novos professores no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
-            }
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar, DateTime.Today));
+            return true;
         }
 
         private async Task IncluirCursoDoProfessorComErroAsync(ProfessorCursoEol cursoDoprofessorParaIncluirGoogle, string mensagem)
