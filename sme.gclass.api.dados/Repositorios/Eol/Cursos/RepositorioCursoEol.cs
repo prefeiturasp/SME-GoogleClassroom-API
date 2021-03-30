@@ -21,13 +21,13 @@ namespace SME.GoogleClassroom.Dados
             dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
 
             var paginar = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryCursosParaInclusao(dataReferencia, paginar, componenteCurricularId, turmaId);
+            var query = MontaQueryCursosParaInclusao(null, paginar, componenteCurricularId, turmaId);
 
             using var conn = ObterConexao();
 
             var parametros = new { anoLetivo = dataReferencia.Year, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
 
-            using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
+            using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 900);
 
             var retorno = new PaginacaoResultadoDto<CursoEol>();
 
