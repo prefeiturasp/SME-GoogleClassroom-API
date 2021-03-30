@@ -92,9 +92,6 @@ namespace SME.GoogleClassroom.Testes
             mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new CursoGoogle("Nome do curso", "Secao do curso", 1234, 43, "emaildocriador@teste.com.br"));
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
             //Act
             var professorCursoGoogle = new ProfessorCursoGoogle(123456, 1234);
             var inserido = await inserirProfessorCursoGoogleCommandHandler.Handle(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, "josesilva.7777777@teste.com.br"), new CancellationToken());
