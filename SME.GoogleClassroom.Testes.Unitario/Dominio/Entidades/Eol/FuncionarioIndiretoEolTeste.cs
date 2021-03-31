@@ -1,7 +1,7 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using Xunit;
 
-namespace SME.GoogleClassroom.Testes.Unitario
+namespace SME.GoogleClassroom.Testes.Unitario.Dominio.Entidades.Eol
 {
     public class FuncionarioIndiretoEolTeste
     {

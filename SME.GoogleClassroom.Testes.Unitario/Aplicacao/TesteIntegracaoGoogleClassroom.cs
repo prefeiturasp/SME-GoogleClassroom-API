@@ -3,7 +3,7 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Testes
+namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao
 {
     public abstract class TesteIntegracaoGoogleClassroom
     {

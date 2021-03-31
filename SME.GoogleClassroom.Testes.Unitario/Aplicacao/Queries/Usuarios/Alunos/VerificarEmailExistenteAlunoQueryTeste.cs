@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SME.GoogleClassroom.Testes
+namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.Queries.Usuarios.Alunos
 {
     public class VerificarEmailExistenteAlunoQueryTeste
     {

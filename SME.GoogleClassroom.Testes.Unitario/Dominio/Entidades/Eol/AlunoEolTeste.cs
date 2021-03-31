@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace SME.GoogleClassroom.Testes
+namespace SME.GoogleClassroom.Testes.Unitario.Dominio.Entidades.Eol
 {
     public class AlunoEolTeste
     {

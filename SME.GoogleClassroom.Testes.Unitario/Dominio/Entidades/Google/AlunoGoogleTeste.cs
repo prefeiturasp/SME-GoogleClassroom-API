@@ -1,7 +1,7 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using Xunit;
 
-namespace SME.GoogleClassroom.Testes.Unitario.Usuarios.Google
+namespace SME.GoogleClassroom.Testes.Unitario.Dominio.Entidades.Google
 {
     public class AlunoGoogleTeste
     {
