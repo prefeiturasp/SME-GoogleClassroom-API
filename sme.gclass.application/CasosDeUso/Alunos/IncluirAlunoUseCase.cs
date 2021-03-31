@@ -21,12 +21,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if(mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
+
             var alunoParaIncluir = JsonConvert.DeserializeObject<AlunoEol>(mensagemRabbit.Mensagem.ToString());
-            if (alunoParaIncluir is null) return true;
+            if (alunoParaIncluir is null)
+                throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
 
             try
             {
-                await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
+                alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
                 var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
                 var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoGoogle.Codigo));

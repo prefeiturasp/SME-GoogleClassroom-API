@@ -3,7 +3,7 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Testes
+namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao
 {
     public abstract class TesteIntegracaoGoogleClassroom
     {
@@ -15,6 +15,6 @@ namespace SME.GoogleClassroom.Testes
         }
 
         protected static VariaveisGlobaisOptions GerarVariaveisGlobais()
-            => new VariaveisGlobaisOptions { DeveExecutarIntegracao = false };
+            => new VariaveisGlobaisOptions { DeveExecutarIntegracao = true };
     }
 }
