@@ -6,6 +6,18 @@ namespace SME.GoogleClassroom.Testes
 {
     public class AlunoEolTeste
     {
+        [Theory(DisplayName = "Valida a definição do nome e e-mail tratando nome social."), MemberData(nameof(DadosParaValidacaoDefinicaoDeNome))]
+        public void Valida_Definicao_Do_Nome_E_Email_Valido_Passando_Os_Resultados_Esperados(int codigoAluno, string nomePessoa, string nomeSocial, DateTime dataNascimento, string nomeEsperado, string emailEsperado)
+        {
+            // Arrange
+            var alunoEol = new AlunoEol(codigoAluno, nomePessoa, nomeSocial, string.Empty, dataNascimento);
+
+            // Assert
+            Assert.NotNull(alunoEol);
+            Assert.Equal(nomeEsperado, alunoEol.Nome);
+            Assert.Equal(emailEsperado, alunoEol.Email);
+        }
+
         [Theory(DisplayName = "Valida a geração de e-mail válido de aluno."), MemberData(nameof(DadosParaValidacaoDeEmailValido))]
         private void Valida_Geracao_Email_Valido_Passando_O_Resultado_Esperado(string nome, DateTime dataNascimento, string emailEsperado)
         {
@@ -64,6 +76,15 @@ namespace SME.GoogleClassroom.Testes
             new object[] { 1, "José da Silva", new DateTime(1992, 06, 06) , "jose.silva.06061992@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 2, "José da Silva", new DateTime(1992, 06, 06) , "jose_silva.06061992@edu.sme.prefeitura.sp.gov.br" },
             new object[] { 3, "José da Silva", new DateTime(1992, 06, 06) , "jose-silva.06061992@edu.sme.prefeitura.sp.gov.br" }
+        };
+
+        public static readonly object[][] DadosParaValidacaoDefinicaoDeNome =
+        {
+            new object[] { 1234567, "Maria de Jesus", "", new DateTime(1992, 06, 06), "Maria de Jesus", "mariajesus.06061992@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "Maria de Jesus", "José da Silva", new DateTime(1992, 06, 06), "José da Silva", "josesilva.06061992@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "Maria de Jesus", "Maria Jesus", new DateTime(1992, 06, 06), "Maria de Jesus", "mariajesus.06061992@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "Maria de Jesus", "Maria", new DateTime(1992, 06, 06), "Maria de Jesus", "mariajesus.06061992@edu.sme.prefeitura.sp.gov.br" },
+            new object[] { 1234567, "José da Silva", "José Gonçalves", new DateTime(1992, 06, 06), "José da Silva", "josesilva.06061992@edu.sme.prefeitura.sp.gov.br" }
         };
     }
 }

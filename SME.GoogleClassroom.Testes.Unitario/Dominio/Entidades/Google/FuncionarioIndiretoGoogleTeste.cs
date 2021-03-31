@@ -5,17 +5,19 @@ namespace SME.GoogleClassroom.Testes
 {
     public class FuncionarioIndiretoGoogleTeste
     {
-        [Theory(DisplayName = "Formatação de nomes")]
+        [Theory(DisplayName = "Valida o tratamento da formatação de nomes.")]
         [InlineData("", "", "")]
         [InlineData("Carlos Augusto Ferreira Dias", "Augusto Ferreira Dias", "Carlos Augusto Ferreira Dias")]
         [InlineData("Maria Aparecida da Silva Agnaldo José Kentucky Gonçalvez de Lemos Fischer", "Aparecida da Silva Agnaldo José Kentucky Gonçalvez de Lemos", "Maria Aparecida da Silva Agnaldo José Kentucky Gonçalvez de Lemos")]
-        public void FormatacaoNomes(string nome, string sobrenomeEsperado, string nomeEsperado)
+        public void Valida_Tratamento_Da_Formatacao_De_Nomes_Passandos_Os_Resultados_Esperados(string nome, string sobrenomeEsperado, string nomeEsperado)
         {
-            var professor = new FuncionarioIndiretoGoogle("28541640086", nome, "email", "organizationPath");
+            // Arrange
+            var funcionarioIndireto = new FuncionarioIndiretoGoogle("28541640086", nome, "email", "organizationPath");
 
-            Assert.NotNull(professor);
-            Assert.Equal(sobrenomeEsperado, professor.Sobrenome);
-            Assert.Equal(nomeEsperado, professor.Nome);
+            // Assert
+            Assert.NotNull(funcionarioIndireto);
+            Assert.Equal(sobrenomeEsperado, funcionarioIndireto.Sobrenome);
+            Assert.Equal(nomeEsperado, funcionarioIndireto.Nome);
         }
     }
 }
