@@ -1,7 +1,9 @@
-﻿using Moq;
+﻿using Google;
+using Moq;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
+using System.Net;
 
 namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao
 {
@@ -16,5 +18,18 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao
 
         protected static VariaveisGlobaisOptions GerarVariaveisGlobais()
             => new VariaveisGlobaisOptions { DeveExecutarIntegracao = true };
+
+        protected static GoogleApiException GerarExcecaoDeDuplicidadeDoGoogle()
+        {
+            var googleDuplicidadeException = new GoogleApiException(string.Empty, GoogleApiExceptionMensagens.Erro409EntityAlreadyExists);
+            googleDuplicidadeException.HttpStatusCode = HttpStatusCode.Conflict;
+            googleDuplicidadeException.Error = new Google.Apis.Requests.RequestError
+            {
+                Code = (int)HttpStatusCode.Conflict,
+                Message = GoogleApiExceptionMensagens.Erro409EntityAlreadyExists
+            };
+
+            return googleDuplicidadeException;
+        }
     }
 }
