@@ -22,6 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o funcionário. A mensagem enviada é inválida.");
+
             var funcionarioParaIncluir = JsonConvert.DeserializeObject<FuncionarioEol>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioParaIncluir is null) return true;
 
@@ -42,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(funcionarioParaIncluir?.Rf, funcionarioParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace:{ex.StackTrace}.", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar));
                 throw;
             }
         }
@@ -55,7 +58,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!funcionarioSincronizado)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(funcionarioGoogle?.Rf, funcionarioGoogle?.Email,
-                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar));
                     return;
                 }
 
@@ -83,7 +86,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!publicarCursosDoFuncionario)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(funcionarioGoogle?.Rf, funcionarioGoogle?.Email,
-                    $"O funionário RF{funcionarioGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste funcionário.", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioCursoAdicionar, DateTime.Now));
+                    $"O funionário RF{funcionarioGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste funcionário.", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioCursoAdicionar));
             }
         }
     }

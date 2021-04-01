@@ -22,6 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o funcionário no curso. A mensagem enviada é inválida.");
+
             var funcionarioCursoEolParaIncluir = JsonConvert.DeserializeObject<FuncionarioCursoEol>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioCursoEolParaIncluir is null) return true;
 
@@ -42,7 +45,8 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirCursoUsuarioErroCommand(funcionarioCursoEolParaIncluir.Rf, funcionarioCursoEolParaIncluir.TurmaId,
-                    funcionarioCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.FuncionarioAdicionar, ErroTipo.Interno, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}"));
+                    funcionarioCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.FuncionarioAdicionar, ErroTipo.Interno, 
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace: {ex.StackTrace}."));
                 throw;
             }
         }

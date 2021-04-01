@@ -43,6 +43,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoFuncionarioSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoFuncionarioSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoFuncionarioSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoErroSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoErroSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoErroSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoErroTratar);
         }
 
         private static void RegistrarFilasAlunoSync(IModel canalRabbit)
@@ -52,6 +58,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoCursoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaAlunoCursoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoCursoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoErroSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoErroSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoErroSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaAlunoErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaAlunoErroTratar);
         }
 
         private static void RegistrarFilasProfessorSync(IModel canalRabbit)
@@ -64,6 +76,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoAtribuicaoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorErroSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorErroSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorErroSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorErroTratar);
         }
 
         private static void RegistrarFilasFuncionarioSync(IModel canalRabbit)
@@ -76,11 +94,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioIndiretoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioIndiretoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioIndiretoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioErroSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioErroSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioErroTratar);
         }
 
         #endregion Filas Sync
 
-        #region Filas de Inclusão
+        #region Filas de Inclusão/Tratamento
 
         private static void RegistrarFilasDeInclusao(IModel canalRabbit)
         {
@@ -93,7 +117,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private static void RegistrarFilasCursoDeInclusao(IModel canalRabbit)
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoIncluir);            
         }
 
         private static void RegistrarFilasAlunoDeInclusao(IModel canalRabbit)

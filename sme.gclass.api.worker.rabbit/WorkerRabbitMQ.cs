@@ -75,6 +75,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoFuncionarioSync, new ComandoRabbit("Tratamento de funcionários do curso do sync com Google", typeof(ITrataSyncGoogleFuncionariosDoCursoUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIndiretoSync, new ComandoRabbit("Tratamento de funcionários indiretos do sync com Google", typeof(ITrataSyncGoogleFuncionarioIndiretoUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIndiretoIncluir, new ComandoRabbit("Incluir funcionários indiretos novos no Google", typeof(IInserirFuncionarioIndiretoGoogleUseCase)));
+            comandos.Add(RotasRabbit.FilaAlunoErroSync, new ComandoRabbit("Tratamento de erros na inclusão de alunos", typeof(ITrataSyncGoogleAlunoErrosUseCase)));
+            comandos.Add(RotasRabbit.FilaAlunoErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um aluno.", typeof(IRealizarTratamentoAlunoErroUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorErroSync, new ComandoRabbit("Tratamento de erros na inclusão de professores", typeof(ITrataSyncGoogleProfessorErrosUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um professor.", typeof(IRealizarTratamentoProfessorErroUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioErroSync, new ComandoRabbit("Tratamento de erros na inclusão de funcionários", typeof(ITrataSyncGoogleFuncionarioErrosUseCase)));
+            comandos.Add(RotasRabbit.FilaFuncionarioErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um funcionários.", typeof(IRealizarTratamentoFuncionarioErroUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoErroSync, new ComandoRabbit("Tratamento de erros cursos novos no sync com google", typeof(ITrataSyncGoogleCursoErroUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoErroTratar, new ComandoRabbit("Tratamento de erros cursos novos ao inserir no google", typeof(IRealizarTratamentoCursoErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -88,45 +96,42 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                     SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
+                    var tempoExecucao = System.Diagnostics.Stopwatch.StartNew();
                     try
                     {
                         using var scope = serviceScopeFactory.CreateScope();
-
-                        var dataHoraInicio = DateTime.Now;
-                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - EXECUTANDO - {ea.RoutingKey} - {DateTime.Now:dd/MM/yyyy HH:mm:ss}", SentryLevel.Debug);
                         var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
                         metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
                         await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
 
-                        //SentrySdk.CaptureMessage($"{mensagemRabbit.UsuarioLogadoRF} - {mensagemRabbit.CodigoCorrelacao.ToString().Substring(0, 3)} - SUCESSO - {ea.RoutingKey}", SentryLevel.Info);
                         canalRabbit.BasicAck(ea.DeliveryTag, false);
-
-                        var dataHoraFim = DateTime.Now;
-                        var tempoDeExecucao = dataHoraFim.Subtract(dataHoraInicio);
-                        metricReporter.RegistrarTempoDeExecucao(casoDeUso.GetType().Name, mensagemRabbit.Mensagem, dataHoraInicio, dataHoraFim, tempoDeExecucao);
-
                     }
                     catch (NegocioException nex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
-                        SentrySdk.CaptureException(nex);
                         RegistrarSentry(ea, mensagemRabbit, nex);
                     }
                     catch (ValidacaoException vex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
-                        SentrySdk.CaptureException(vex);
                         RegistrarSentry(ea, mensagemRabbit, vex);
                     }
                     catch (Exception ex)
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
+                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
-                        SentrySdk.CaptureException(ex);
                         RegistrarSentry(ea, mensagemRabbit, ex);
+                    }
+                    finally
+                    {
+                        tempoExecucao.Stop();
+                        metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                     }
                 }
             }
@@ -181,7 +186,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
             };
 
-            if(consumoDeFilasOptions.ConsumirFilasSync)
+            if (consumoDeFilasOptions.ConsumirFilasSync)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
@@ -197,9 +202,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoFuncionarioSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoErroSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaAlunoErroTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorErroTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioErroTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroTratar, false, consumer);
             }
 
-            if(consumoDeFilasOptions.ConsumirFilasDeInclusao)
+            if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
@@ -208,7 +221,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);                
             }
 
             return Task.CompletedTask;

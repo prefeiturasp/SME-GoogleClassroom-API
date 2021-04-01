@@ -20,37 +20,28 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            try
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+            var paginacao = new Paginacao(0, 0);
+            var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
+
+            foreach (var professorParaIncluirGoogle in professoresParaIncluirGoogle.Items)
             {
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
-
-                var paginacao = new Paginacao(0, 0);
-                var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
-
-                foreach (var professorParaIncluirGoogle in professoresParaIncluirGoogle.Items)
+                try
                 {
-                    try
+                    var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorIncluir, RotasRabbit.FilaProfessorIncluir, professorParaIncluirGoogle));
+                    if (!publicarProfessor)
                     {
-                        var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorIncluir, RotasRabbit.FilaProfessorIncluir, professorParaIncluirGoogle));
-                        if (!publicarProfessor)
-                        {
-                            await IncluirProfessorComErroAsync(professorParaIncluirGoogle, ObterMensagemDeErro(professorParaIncluirGoogle.Rf));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirProfessorComErroAsync(professorParaIncluirGoogle, ObterMensagemDeErro(professorParaIncluirGoogle.Rf, ex));
+                        await IncluirProfessorComErroAsync(professorParaIncluirGoogle, ObterMensagemDeErro(professorParaIncluirGoogle.Rf));
                     }
                 }
+                catch (Exception ex)
+                {
+                    await IncluirProfessorComErroAsync(professorParaIncluirGoogle, ObterMensagemDeErro(professorParaIncluirGoogle.Rf, ex));
+                }
+            }
 
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw new NegocioException($"Não foi possível iniciar a inclusão de novos professores no Google Classroom. {ex.InnerException?.Message ?? ex.Message}");
-            }
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+            return true;
         }
 
         private async Task IncluirProfessorComErroAsync(ProfessorEol professorParaIncluirGoogle, string mensagem)
@@ -60,8 +51,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                 professorParaIncluirGoogle.Email,
                                 mensagem,
                                 UsuarioTipo.Professor,
-                                ExecucaoTipo.ProfessorAdicionar,
-                                DateTime.Now);
+                                ExecucaoTipo.ProfessorAdicionar);
             await mediator.Send(professorComErro);
         }
 

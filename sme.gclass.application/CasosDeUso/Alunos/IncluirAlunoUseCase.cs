@@ -21,12 +21,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if(mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
+
             var alunoParaIncluir = JsonConvert.DeserializeObject<AlunoEol>(mensagemRabbit.Mensagem.ToString());
-            if (alunoParaIncluir is null) return true;
+            if (alunoParaIncluir is null)
+                throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
 
             try
             {
-                await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
+                alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
                 var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
                 var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoGoogle.Codigo));
@@ -42,7 +46,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoParaIncluir?.Codigo, alunoParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace:{ex.StackTrace}.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                 throw;
             }
         }
@@ -55,7 +59,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!incluiuAlunoGoogle)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                        $"Não foi possível incluir o professor no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar, DateTime.Now));
+                        $"Não foi possível incluir o professor no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                     return;
                 }
 
@@ -83,7 +87,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!publicarCursosDoAluno)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                    $"O aluno RA{alunoGoogle.Codigo} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste aluno.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar, DateTime.Now));
+                    $"O aluno RA{alunoGoogle.Codigo} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste aluno.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar));
             }
         }
     }

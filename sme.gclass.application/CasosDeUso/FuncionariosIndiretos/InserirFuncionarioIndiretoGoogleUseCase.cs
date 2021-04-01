@@ -22,6 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o funcionário indireto. A mensagem enviada é inválida.");
+
             var funcionarioIndiretoParaIncluir = JsonConvert.DeserializeObject<FuncionarioIndiretoEol>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioIndiretoParaIncluir is null) return true;
 
@@ -38,7 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(null, funcionarioIndiretoParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace:{ex.StackTrace}.", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar));
                 throw;
             }
         }
@@ -51,7 +54,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!funcionarioSincronizado)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(null, funcionarioIndiretoGoogle?.Email,
-                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioIndiretoGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar, DateTime.Now));
+                        $"Não foi possível incluir o funcionário no Google Classroom. {funcionarioIndiretoGoogle}", UsuarioTipo.Funcionario, ExecucaoTipo.FuncionarioAdicionar));
                     return;
                 }
 
