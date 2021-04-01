@@ -77,8 +77,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task IniciarSyncGoogleUsuariosDoCursoAsync(CursoGoogle cursoGoogle)
         {
-            await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
-            await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
+            //await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
+            //await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
             await IniciarSyncGoogleFuncionariosDoCursoAsync(cursoGoogle);
         }
 
