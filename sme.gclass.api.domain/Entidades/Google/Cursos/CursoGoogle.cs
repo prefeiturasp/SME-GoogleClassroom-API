@@ -14,6 +14,16 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
 
+        public CursoGoogle(string nome, string secao, long turmaId, long componenteCurricularId, string email)
+        {
+            Nome = nome;
+            Secao = secao;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            Email = email;
+            DataInclusao = DateTime.Now;            
+        }
+
         public CursoGoogle(string nome, string secao, long turmaId, long componenteCurricularId, string email, TurmaTipo turmaTipo)
         {
             Nome = nome;
