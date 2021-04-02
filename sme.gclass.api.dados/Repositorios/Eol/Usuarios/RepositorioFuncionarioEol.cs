@@ -239,66 +239,7 @@ namespace SME.GoogleClassroom.Dados
 					AND	  te.st_turma_escola in ('O', 'A', 'C')
 					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
 					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE());
-
-				IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL 
-					DROP TABLE #tempTurmasComponentesPrograma
-				SELECT
-					DISTINCT
-					pcc.cd_componente_curricular AS ComponenteCurricularId,
-					te.cd_turma_escola TurmaId,
-					ue.cd_unidade_educacao AS CdUe	
-				INTO #tempTurmasComponentesPrograma
-				FROM
-					#tempServidorCargoFinal temp
-				INNER JOIN
-					turma_escola te (NOLOCK)
-					ON temp.CdUe = te.cd_escola
-				INNER JOIN
-					escola esc (NOLOCK) 
-					ON te.cd_escola = esc.cd_escola
-				INNER JOIN
-					v_cadastro_unidade_educacao ue (NOLOCK) 
-					ON ue.cd_unidade_educacao = esc.cd_escola
-				INNER JOIN
-					tipo_escola tpe (NOLOCK) 
-					ON esc.tp_escola = tpe.tp_escola
-				INNER JOIN
-					unidade_administrativa dre (NOLOCK) 
-					ON ue.cd_unidade_administrativa_referencia = dre.cd_unidade_administrativa	
-				LEFT JOIN 
-					tipo_programa tp (NOLOCK) 
-					ON te.cd_tipo_programa = tp.cd_tipo_programa
-				INNER JOIN 
-					turma_escola_grade_programa tegp (NOLOCK) 
-					ON tegp.cd_turma_escola = te.cd_turma_escola
-				INNER JOIN 
-					escola_grade teg (NOLOCK) 
-					ON teg.cd_escola_grade = tegp.cd_escola_grade
-				INNER JOIN 
-					grade pg (NOLOCK) ON pg.cd_grade = teg.cd_grade
-				INNER JOIN 
-					grade_componente_curricular pgcc (NOLOCK) 
-					ON pgcc.cd_grade = teg.cd_grade
-				INNER JOIN 
-					componente_curricular pcc (NOLOCK) 
-					ON pgcc.cd_componente_curricular = pcc.cd_componente_curricular and pcc.dt_cancelamento is null
-				WHERE  
-					te.an_letivo = @anoLetivo
-					AND   te.st_turma_escola in ('O', 'A', 'C')
-					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
-					AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE());
-
-				IF OBJECT_ID('tempdb..#tempTurmasComponentes') IS NOT NULL 
-					DROP TABLE #tempTurmasComponentes
-				SELECT
-					*
-				INTO #tempTurmasComponentes
-				FROM
-					(SELECT * FROM #tempTurmasComponentesRegulares) AS Regulares
-				UNION
-					(SELECT * FROM #tempTurmasComponentesPrograma);
+					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE());				
 
 				SELECT
 					servidor.Rf,
@@ -308,7 +249,7 @@ namespace SME.GoogleClassroom.Dados
 				FROM
 					#tempServidorCargoFinal servidor
 				INNER JOIN
-					#tempTurmasComponentes cursos
+					#tempTurmasComponentesRegulares cursos
 					ON servidor.CdUe = cursos.CdUe;";
 			return await conn.QueryAsync<FuncionarioCursoEol>(query, new { rf, anoLetivo });
 		}

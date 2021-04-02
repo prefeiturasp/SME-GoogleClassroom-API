@@ -452,7 +452,8 @@ namespace SME.GoogleClassroom.Dados
 								te.cd_turma_escola TurmaId,
 								grade.cd_grade,
 								serie_turma_grade.cd_serie_grade,
-								ue.cd_unidade_educacao
+								ue.cd_unidade_educacao,
+								te.cd_tipo_turma TurmaTipo
 							INTO #tempTurmasComponentesRegulares
 							FROM
 								turma_escola te (NOLOCK)
@@ -575,7 +576,8 @@ namespace SME.GoogleClassroom.Dados
 								te.cd_turma_escola TurmaId,
 								pg.cd_grade,
 								tegp.cd_turma_escola_grade_programa,
-								ue.cd_unidade_educacao
+								ue.cd_unidade_educacao,
+								te.cd_tipo_turma TurmaTipo
 							INTO #tempTurmasComponentesPrograma
 							FROM
 								turma_escola te (NOLOCK)
@@ -635,7 +637,8 @@ namespace SME.GoogleClassroom.Dados
 							SELECT
 								temp.TurmaId,
 								temp.ComponenteCurricularId,
-								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email
+								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email,
+								temp.TurmaTipo
 							INTO #tempTurmasComponentesProgramaProfessores
 							FROM
 								#tempTurmasComponentesPrograma temp
@@ -674,9 +677,9 @@ namespace SME.GoogleClassroom.Dados
 								*
 							INTO #tempCursosDre
 							FROM
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email  FROM #tempCursosRegulares temp) AS Regulares
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo  FROM #tempCursosRegulares temp) AS Regulares
 							UNION
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email FROM #tempCursosPrograma temp);
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo FROM #tempCursosPrograma temp);
 
 								-- 4.1) Paginacao
 								IF OBJECT_ID('tempdb..#tempCursosDrePaginado') IS NOT NULL
@@ -737,7 +740,8 @@ namespace SME.GoogleClassroom.Dados
 								temp.ComponenteCurricularId,
 								temp.TurmaId,
 								temp.cd_unidade_educacao as UeCodigo,
-								temp.Email
+								temp.Email,
+								temp.TurmaTipo
 							FROM
 								#tempCursosDrePaginado temp;
 
