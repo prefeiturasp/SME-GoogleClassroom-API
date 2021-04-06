@@ -129,7 +129,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE  
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  serv.cd_registro_funcional = @rf;
 
@@ -189,7 +189,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE  
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  serv.cd_registro_funcional = @rf;
 
@@ -361,7 +361,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE  
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  atb_ser.dt_atribuicao_aula >= @dataReferencia ";
 
@@ -423,7 +423,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE  
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  atb_pro.dt_atribuicao_aula >= @dataReferencia ";
 
