@@ -126,7 +126,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
 									AND   gcc.cd_componente_curricular = @componenteCurricularId;
@@ -187,7 +187,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
 									AND   pgcc.cd_componente_curricular = @componenteCurricularId;
@@ -305,7 +305,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					dt_fim_nomeacao IS NULL
 					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
 
 				-- 2. Busca os funcionários por cargo sobreposto fixo
 				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
@@ -332,7 +332,7 @@ namespace SME.GoogleClassroom.Dados
 					ON css.cd_unidade_local_servico = esc.cd_escola
 				WHERE
 					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
 
 				-- 3. Busca os funcionários por função
 				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
@@ -360,7 +360,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					(facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
 					AND dt_fim_nomeacao IS NULL
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
 
 				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
 					DROP TABLE #tempServidorCargos;
@@ -508,7 +508,7 @@ namespace SME.GoogleClassroom.Dados
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}								
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
@@ -614,7 +614,7 @@ namespace SME.GoogleClassroom.Dados
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
@@ -853,7 +853,7 @@ namespace SME.GoogleClassroom.Dados
 								te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
 								AND   serie_turma_grade.dt_inicio >= @dataReferencia
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
@@ -959,7 +959,7 @@ namespace SME.GoogleClassroom.Dados
 								te.an_letivo = @anoLetivo
 								AND   te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
 								AND   tegp.dt_inicio >= @dataReferencia
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
