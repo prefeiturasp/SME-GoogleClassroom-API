@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível iniciar a sincronização de alunos. A mensagem enviada é inválida.");
 
             var codigoAlunoFiltro = ObterCodigoAlunoFiltro(mensagemRabbit);
-            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
+            var ultimaAtualizacao = codigoAlunoFiltro is null ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar)) : default(DateTime?);
             var paginacao = new Paginacao(0, 0);
             var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro));
 
@@ -46,7 +46,9 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 });
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoAdicionar, DateTime.Today));
+            if(codigoAlunoFiltro is null)
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoAdicionar, DateTime.Today));
+
             return true;
         }
 

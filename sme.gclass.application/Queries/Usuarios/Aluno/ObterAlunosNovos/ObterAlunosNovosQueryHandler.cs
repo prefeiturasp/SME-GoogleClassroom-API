@@ -16,9 +16,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.repositorioAlunoEol = repositorioAlunoEol ?? throw new ArgumentNullException(nameof(repositorioAlunoEol));
         }
+
         public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(ObterAlunosNovosQuery request, CancellationToken cancellationToken)
         {
-            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusaoAsync(request.Paginacao, request.DataReferencia, request.CodigoEol);
+            var anoLetivo = request.DataReferencia?.Year ?? DateTime.Now.Year;
+            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusaoAsync(request.Paginacao, anoLetivo, request.DataReferencia, request.CodigoEol);
             return alunos;
         }
     }
