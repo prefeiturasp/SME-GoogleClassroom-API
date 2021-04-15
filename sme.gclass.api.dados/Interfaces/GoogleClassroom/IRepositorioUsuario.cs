@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email);
 
         Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao, long? rf, string email);
-
+        Task<int> AtualizarAsync(long id, string nome, string organizationPath);
         Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorRfs(long[] rfs);
         Task<bool> ExisteFuncionarioIndiretoPorCpf(string cpf);
         Task<bool> ExisteFuncionarioPorRf(long rf);
