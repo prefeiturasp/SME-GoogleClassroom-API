@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -18,9 +19,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível iniciar a sincronização de alunos. A mensagem enviada é inválida.");
+
+            var codigoAlunoFiltro = ObterCodigoAlunoFiltro(mensagemRabbit);
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
             var paginacao = new Paginacao(0, 0);
-            var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao));
+            var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro));
 
             alunosParaIncluirGoogle.Items
                 .AsParallel()
@@ -43,6 +48,19 @@ namespace SME.GoogleClassroom.Aplicacao
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoAdicionar, DateTime.Today));
             return true;
+        }
+
+        private long? ObterCodigoAlunoFiltro(MensagemRabbit mensagemRabbit)
+        {
+            try
+            {
+                var alunoParaIncluir = JsonConvert.DeserializeObject<IniciarSyncGoogleAlunoDto>(mensagemRabbit.Mensagem.ToString());
+                return alunoParaIncluir?.CodigoAluno;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private async Task IncluirAlunoComErroAsync(AlunoEol alunoParaIncluirGoogle, string mensagem)
