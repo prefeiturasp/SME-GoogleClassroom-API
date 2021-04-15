@@ -14,9 +14,9 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusaoAsync(Paginacao paginacao, DateTime dataReferencia, long? codigoEol)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusaoAsync(Paginacao paginacao, int anoLetivo, DateTime? dataReferencia, long? codigoEol)
         {
-            dataReferencia = dataReferencia.Add(new TimeSpan(0, 0, 0));
+            dataReferencia = dataReferencia?.Add(new TimeSpan(0, 0, 0));
 
             var query = MontaQueryAlunosParaInclusao(paginacao, dataReferencia, codigoEol);
 
@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(query,
                 new
                 {
-                    anoLetivo = dataReferencia.Year,
+                    anoLetivo = anoLetivo,
                     dataReferencia,
                     paginacao.QuantidadeRegistros,
                     paginacao.QuantidadeRegistrosIgnorados,

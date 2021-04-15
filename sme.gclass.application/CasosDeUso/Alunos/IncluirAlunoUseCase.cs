@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -21,20 +22,24 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if(mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
+
             var alunoParaIncluir = JsonConvert.DeserializeObject<AlunoEol>(mensagemRabbit.Mensagem.ToString());
-            if (alunoParaIncluir is null) return true;
+            if (alunoParaIncluir is null)
+                throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
 
             try
             {
-                await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
-                var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
-
-                var alunoJaIncluido = await mediator.Send(new ExisteAlunoPorRfQuery(alunoGoogle.Codigo));
-                if (alunoJaIncluido)
+                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));
+                if (alunoJaIncluido?.Any() ?? false)
                 {
-                    await IniciarSyncGoogleCursosDoAlunoAsync(alunoGoogle);
+                    await AtualizarAlunoGoogleSync(alunoParaIncluir, alunoJaIncluido.First());
                     return true;
                 }
+
+                alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
+                var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
                 await InserirAlunoGoogleAsync(alunoGoogle);
                 return true;
@@ -55,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!incluiuAlunoGoogle)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                        $"Não foi possível incluir o professor no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                        $"Não foi possível incluir o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                     return;
                 }
 
@@ -74,6 +79,30 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (_deveExecutarIntegracao)
                 alunoGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(alunoGoogle));
+            await IniciarSyncGoogleCursosDoAlunoAsync(alunoGoogle);
+        }
+
+        private async Task AtualizarAlunoGoogleSync(AlunoEol alunoEol, AlunoGoogle alunoGoogle)
+        {
+            alunoGoogle.Nome = alunoEol.Nome;
+            alunoGoogle.OrganizationPath = alunoEol.OrganizationPath;
+
+            var incluiuAlunoGoogle = await mediator.Send(new AtualizarAlunoGoogleCommand(alunoGoogle));
+            if (!incluiuAlunoGoogle)
+            {
+                await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
+                    $"Não foi possível atualizar o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                return;
+            }
+
+            var usuarioAlterado = await mediator.Send(new AtualizarUsuarioCommand(alunoGoogle.Indice, alunoGoogle.Nome, alunoGoogle.OrganizationPath));
+            if(!usuarioAlterado)
+            {
+                await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
+                    $"Não foi possível atualizar o aluno {alunoGoogle} no Google Classroom. O aluno não foi encontrado na base.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                return;
+            }
+
             await IniciarSyncGoogleCursosDoAlunoAsync(alunoGoogle);
         }
 

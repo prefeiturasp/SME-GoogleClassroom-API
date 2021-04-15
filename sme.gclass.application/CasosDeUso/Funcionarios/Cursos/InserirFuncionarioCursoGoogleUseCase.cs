@@ -22,6 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o funcionário no curso. A mensagem enviada é inválida.");
+
             var funcionarioCursoEolParaIncluir = JsonConvert.DeserializeObject<FuncionarioCursoEol>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioCursoEolParaIncluir is null) return true;
 
