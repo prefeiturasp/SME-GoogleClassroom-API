@@ -15,9 +15,14 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar()
+        public async Task<bool> Executar(long? codigoAluno)
         {
-            var publicarSyncAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoSync, RotasRabbit.FilaAlunoSync, true));
+            var dto = new IniciarSyncGoogleAlunoDto
+            {
+                CodigoAluno = codigoAluno
+            };
+
+            var publicarSyncAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoSync, RotasRabbit.FilaAlunoSync, dto));
             if (!publicarSyncAluno)
             {
                 throw new NegocioException("Não foi possível iniciar a sincronização de alunos.");

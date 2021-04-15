@@ -8,13 +8,13 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosNovosQuery : IRequest<PaginacaoResultadoDto<AlunoEol>>
     {
-        public ObterAlunosNovosQuery(Paginacao paginacao, DateTime dataReferencia)
+        public ObterAlunosNovosQuery(Paginacao paginacao, DateTime? dataReferencia)
         {
             Paginacao = paginacao;
             DataReferencia = dataReferencia;
         }
 
-        public ObterAlunosNovosQuery(Paginacao paginacao, DateTime dataReferencia, long? codigoEol)
+        public ObterAlunosNovosQuery(Paginacao paginacao, DateTime? dataReferencia, long? codigoEol)
             :this(paginacao, dataReferencia)
         {
             CodigoEol = codigoEol;
@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public Paginacao Paginacao { get; set; }
 
-        public DateTime DataReferencia { get; set; }
+        public DateTime? DataReferencia { get; set; }
 
         public long? CodigoEol { get; set; }
     }
@@ -31,9 +31,9 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public ObterAlunosNovosQueryValidator()
         {
-            RuleFor(x => x.DataReferencia)
+            RuleFor(x => x.Paginacao)
                 .NotEmpty()
-                .WithMessage("A data de referência deve ser informada.");
+                .WithMessage("A definição da paginação deve ser informada.");
         }
     }
 }
