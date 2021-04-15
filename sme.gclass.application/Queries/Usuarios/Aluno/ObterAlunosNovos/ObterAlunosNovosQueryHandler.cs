@@ -11,15 +11,16 @@ namespace SME.GoogleClassroom.Aplicacao
     public class ObterAlunosNovosQueryHandler : IRequestHandler<ObterAlunosNovosQuery, PaginacaoResultadoDto<AlunoEol>>
     {
         private readonly IRepositorioAlunoEol repositorioAlunoEol;
-        private readonly IRepositorioExecucaoControle repositorioExecucaoControle;
-        public ObterAlunosNovosQueryHandler(IRepositorioAlunoEol repositorioAlunoEol, IRepositorioExecucaoControle repositorioExecucaoControle)
+
+        public ObterAlunosNovosQueryHandler(IRepositorioAlunoEol repositorioAlunoEol)
         {
             this.repositorioAlunoEol = repositorioAlunoEol ?? throw new ArgumentNullException(nameof(repositorioAlunoEol));
-            this.repositorioExecucaoControle = repositorioExecucaoControle ?? throw new ArgumentNullException(nameof(repositorioExecucaoControle));
         }
+
         public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(ObterAlunosNovosQuery request, CancellationToken cancellationToken)
         {
-            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusaoAsync(request.Paginacao, request.DataReferencia, request.CodigoEol);
+            var anoLetivo = request.DataReferencia?.Year ?? DateTime.Now.Year;
+            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusaoAsync(request.Paginacao, anoLetivo, request.DataReferencia, request.CodigoEol);
             return alunos;
         }
     }

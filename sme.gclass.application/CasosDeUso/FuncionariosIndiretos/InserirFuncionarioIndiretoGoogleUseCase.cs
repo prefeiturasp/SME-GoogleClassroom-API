@@ -22,6 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível incluir o funcionário indireto. A mensagem enviada é inválida.");
+
             var funcionarioIndiretoParaIncluir = JsonConvert.DeserializeObject<FuncionarioIndiretoEol>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioIndiretoParaIncluir is null) return true;
 

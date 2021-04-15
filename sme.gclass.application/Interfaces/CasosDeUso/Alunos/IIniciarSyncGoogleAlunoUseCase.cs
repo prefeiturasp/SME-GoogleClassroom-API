@@ -4,6 +4,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IIniciarSyncGoogleAlunoUseCase
     {
-        Task<bool> Executar();
+        Task<bool> Executar(long? codigoAluno);
     }
 }

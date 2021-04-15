@@ -126,7 +126,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
 									AND   gcc.cd_componente_curricular = @componenteCurricularId;
@@ -187,7 +187,7 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
 									AND   pgcc.cd_componente_curricular = @componenteCurricularId;
@@ -305,7 +305,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					dt_fim_nomeacao IS NULL
 					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
 
 				-- 2. Busca os funcionários por cargo sobreposto fixo
 				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
@@ -332,7 +332,7 @@ namespace SME.GoogleClassroom.Dados
 					ON css.cd_unidade_local_servico = esc.cd_escola
 				WHERE
 					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
 
 				-- 3. Busca os funcionários por função
 				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
@@ -360,7 +360,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					(facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
 					AND dt_fim_nomeacao IS NULL
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31);
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
 
 				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
 					DROP TABLE #tempServidorCargos;
@@ -452,7 +452,8 @@ namespace SME.GoogleClassroom.Dados
 								te.cd_turma_escola TurmaId,
 								grade.cd_grade,
 								serie_turma_grade.cd_serie_grade,
-								ue.cd_unidade_educacao
+								ue.cd_unidade_educacao,
+								te.cd_tipo_turma TurmaTipo
 							INTO #tempTurmasComponentesRegulares
 							FROM
 								turma_escola te (NOLOCK)
@@ -507,7 +508,7 @@ namespace SME.GoogleClassroom.Dados
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}								
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
@@ -575,7 +576,8 @@ namespace SME.GoogleClassroom.Dados
 								te.cd_turma_escola TurmaId,
 								pg.cd_grade,
 								tegp.cd_turma_escola_grade_programa,
-								ue.cd_unidade_educacao
+								ue.cd_unidade_educacao,
+								te.cd_tipo_turma TurmaTipo
 							INTO #tempTurmasComponentesPrograma
 							FROM
 								turma_escola te (NOLOCK)
@@ -612,7 +614,7 @@ namespace SME.GoogleClassroom.Dados
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
@@ -635,7 +637,8 @@ namespace SME.GoogleClassroom.Dados
 							SELECT
 								temp.TurmaId,
 								temp.ComponenteCurricularId,
-								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email
+								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email,
+								temp.TurmaTipo
 							INTO #tempTurmasComponentesProgramaProfessores
 							FROM
 								#tempTurmasComponentesPrograma temp
@@ -674,9 +677,9 @@ namespace SME.GoogleClassroom.Dados
 								*
 							INTO #tempCursosDre
 							FROM
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email  FROM #tempCursosRegulares temp) AS Regulares
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo  FROM #tempCursosRegulares temp) AS Regulares
 							UNION
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email FROM #tempCursosPrograma temp);
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo FROM #tempCursosPrograma temp);
 
 								-- 4.1) Paginacao
 								IF OBJECT_ID('tempdb..#tempCursosDrePaginado') IS NOT NULL
@@ -737,7 +740,8 @@ namespace SME.GoogleClassroom.Dados
 								temp.ComponenteCurricularId,
 								temp.TurmaId,
 								temp.cd_unidade_educacao as UeCodigo,
-								temp.Email
+								temp.Email,
+								temp.TurmaTipo
 							FROM
 								#tempCursosDrePaginado temp;
 
@@ -849,7 +853,7 @@ namespace SME.GoogleClassroom.Dados
 								te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
 								AND   serie_turma_grade.dt_inicio >= @dataReferencia
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
@@ -955,7 +959,7 @@ namespace SME.GoogleClassroom.Dados
 								te.an_letivo = @anoLetivo
 								AND   te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,25,28,31)	
+								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
 								AND   tegp.dt_inicio >= @dataReferencia
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 

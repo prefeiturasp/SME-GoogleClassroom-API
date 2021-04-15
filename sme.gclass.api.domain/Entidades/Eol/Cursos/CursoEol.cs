@@ -8,6 +8,7 @@
         public long TurmaId { get; set; }
         public string UeCodigo { get; set; }
         public string Email { get; set; }
+        public TurmaTipo TurmaTipo { get; set; }
 
         public CursoEol(string nome, string secao, long turmaId, long componenteCurricularId, string ueCodigo, string email)
         {
@@ -16,7 +17,18 @@
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
             Email = email;
+            UeCodigo = ueCodigo;            
+        }
+
+        public CursoEol(string nome, string secao, long turmaId, long componenteCurricularId, string ueCodigo, string email, TurmaTipo turmaTipo)
+        {
+            Nome = nome;
+            Secao = secao;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            Email = email;
             UeCodigo = ueCodigo;
+            TurmaTipo = turmaTipo;
         }
 
         protected CursoEol()
