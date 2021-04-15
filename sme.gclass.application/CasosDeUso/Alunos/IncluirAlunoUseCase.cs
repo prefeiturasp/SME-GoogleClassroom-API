@@ -31,15 +31,15 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
-                var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
-
-                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoGoogle.Codigo));
+                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));
                 if (alunoJaIncluido?.Any() ?? false)
                 {
-                    await AtualizarAlunoGoogleSync(alunoParaIncluir, alunoGoogle);
+                    await AtualizarAlunoGoogleSync(alunoParaIncluir, alunoJaIncluido.First());
                     return true;
                 }
+
+                alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
+                var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
                 await InserirAlunoGoogleAsync(alunoGoogle);
                 return true;
