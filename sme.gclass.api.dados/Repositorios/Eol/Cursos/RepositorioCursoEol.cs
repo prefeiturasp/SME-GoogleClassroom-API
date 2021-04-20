@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            var parametros = new { anoLetivo = anoLetivo, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
+            var parametros = new { anoLetivo, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
 
             using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 600);
 
