@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<CursoEol>>
     {
-        public ObterCursosIncluirGoogleQuery(DateTime ultimaExecucao, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+        public ObterCursosIncluirGoogleQuery(DateTime? ultimaExecucao, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             UltimaExecucao = ultimaExecucao;
             Paginacao = paginacao;
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
             TurmaId = turmaId;
         }
         public Paginacao Paginacao { get; set; }
-        public DateTime UltimaExecucao { get; set; }
+        public DateTime? UltimaExecucao { get; set; }
         public long? ComponenteCurricularId { get; set; }
         public long? TurmaId { get; set; }
     }
@@ -25,10 +25,6 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public ObterCursosIncluirGoogleQueryValidator()
         {
-            RuleFor(x => x.UltimaExecucao)
-                .NotEmpty()
-                .WithMessage("A última data de execução deve ser informada.");
-
             RuleFor(x => x.Paginacao)
                 .NotEmpty()
                 .WithMessage("A página e a quantidade de registros devem ser informados.");

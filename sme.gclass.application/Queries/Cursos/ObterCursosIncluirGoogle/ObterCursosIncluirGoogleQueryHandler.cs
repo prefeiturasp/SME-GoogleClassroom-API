@@ -18,7 +18,10 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoEol = repositorioCursoEol ?? throw new ArgumentNullException(nameof(repositorioCursoEol));
         }
 
-        public async Task<PaginacaoResultadoDto<CursoEol>> Handle(ObterCursosIncluirGoogleQuery request, CancellationToken cancellationToken) 
-            => await repositorioCursoEol.ObterCursosParaInclusao(request.UltimaExecucao, request.Paginacao, request.ComponenteCurricularId, request.TurmaId);
+        public async Task<PaginacaoResultadoDto<CursoEol>> Handle(ObterCursosIncluirGoogleQuery request, CancellationToken cancellationToken)
+        {
+            var anoLetivo = request.UltimaExecucao?.Year ?? DateTime.Now.Year;
+            return await repositorioCursoEol.ObterCursosParaInclusao(request.UltimaExecucao, anoLetivo, request.Paginacao, request.ComponenteCurricularId, request.TurmaId);
+        }
     }
 }
