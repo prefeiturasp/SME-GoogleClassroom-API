@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -16,11 +17,20 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+            if (mensagemRabbit.Mensagem is null)
+                throw new NegocioException("Não foi possível iniciar a sincronização de cursos. A mensagem enviada é inválida.");
 
-            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), null, null));
+            var filtro = ObterFiltro(mensagemRabbit);
+            var aplicarFiltro = filtro?.Valido ?? false;
+
+            var ultimaExecucaoCursosIncluir = !aplicarFiltro
+                ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar))
+                : default(DateTime?);
+
+            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
             if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
             {
                 foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)
@@ -37,8 +47,24 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
+            if(!aplicarFiltro)
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
+
             return true;
+        }
+
+        private IniciarSyncGoogleCursoDto ObterFiltro(MensagemRabbit mensagemRabbit)
+        {
+            try
+            {
+                var filtro = JsonConvert.DeserializeObject<IniciarSyncGoogleCursoDto>(mensagemRabbit.Mensagem.ToString());
+                return filtro;
+            }
+            catch
+            {
+                SentrySdk.CaptureMessage("A mensagem enviada para sincronização de cursos é inválida. O filtro não será aplicado.");
+                return null;
+            }
         }
     }
 }
