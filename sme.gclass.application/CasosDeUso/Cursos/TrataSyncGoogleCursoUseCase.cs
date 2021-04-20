@@ -62,6 +62,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch
             {
+                SentrySdk.CaptureMessage("A mensagem enviada para sincronização de cursos é inválida. O filtro não será aplicado.");
                 return null;
             }
         }
