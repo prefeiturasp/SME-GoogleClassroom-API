@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  gca-rabbitmq:
+    container_name: gca_rabbitmq
+    image: rabbitmq:3.7-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=bitnami
+    ports:
+      - "5672:5672"
+      - "15672:15672"    
+    networks:
+      - gca-network
+networks:
+  gca-network:
+    external:
+      name: gca-network
+    driver: bridge
