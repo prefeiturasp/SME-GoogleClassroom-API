@@ -380,8 +380,8 @@ namespace SME.GoogleClassroom.Dados
                                                  u.data_atualizacao as dataatualizacao,
                                                  u.google_classroom_id as GoogleClassroomId
                                             FROM usuarios u
-                                           WHERE usuario_tipo = @tipo
-                                             and id = any(@codigosAluno)");
+                                            WHERE usuario_tipo = @tipo
+                                            and id = any(@codigosAluno)");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ;");
@@ -515,6 +515,54 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(updateQuery, parametros);
+        }
+
+        public async Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId)
+        {
+            const string updateQuery = @"update public.usuarios
+                                         set
+                                            google_classroom_id = @googleClassroomId
+                                         where
+                                            indice = @usuarioId";
+
+            var parametros = new
+            {
+                usuarioId,
+                googleClassroomId
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(updateQuery, parametros);
+        }
+
+        public async Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterUsuariosSemGoogleClassroomIdPorTipoAsync(Paginacao paginacao)
+        {
+            const string query = @"
+                SELECT
+                    u.indice AS UsuarioId,
+                    u.email
+                FROM usuarios u
+                WHERE u.google_classroom_id is null
+                OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;
+
+                SELECT count(*) FROM usuarios u WHERE u.google_classroom_id is null;";
+
+            var parametros = new
+            {
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros
+            };
+
+            using var conn = ObterConexao();
+
+            using var usuarios = await conn.QueryMultipleAsync(query, parametros);
+
+            var retorno = new PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
+            retorno.Items = usuarios.Read<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
+            retorno.TotalRegistros = usuarios.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
         }
     }
 }

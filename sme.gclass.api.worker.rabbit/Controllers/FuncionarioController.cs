@@ -158,6 +158,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         {
             var retorno = await atribuirFuncionarioSemRfCursoUseCase.Executar(atribuirFuncionarioSemRfCurso);
             return Ok(retorno);
-        }
+        } 
     }
 }

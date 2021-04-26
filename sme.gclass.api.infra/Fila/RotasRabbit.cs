@@ -48,6 +48,11 @@
         public static string FilaFuncionarioIndiretoSync => "googleclass.funcionario.indireto.sync";
         public static string FilaFuncionarioIndiretoIncluir => "googleclass.funcionario.indireto.incluir";
         #endregion
+
+        #region Usuários
+        public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
+        public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
+        #endregion
     }
 }
 
