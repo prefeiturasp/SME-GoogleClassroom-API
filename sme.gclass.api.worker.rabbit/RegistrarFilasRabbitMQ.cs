@@ -100,6 +100,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioErroTratar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioErroTratar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioGoogleIdSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioGoogleIdSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioGoogleIdSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioGoogleIdAtualizar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioGoogleIdAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioGoogleIdAtualizar);
         }
 
         #endregion Filas Sync

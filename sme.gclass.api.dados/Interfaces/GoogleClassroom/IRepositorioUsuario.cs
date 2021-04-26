@@ -43,5 +43,8 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosPaginadoPorCodigos(Paginacao paginacao, long[] codigosAluno);
 
         Task<FuncionarioGoogle> ObterFuncionarioPorEmail(string email);
+
+        Task<PaginacaoResultadoDto<TEntity>> ObterUsuariosSemGoogleClassroomIdPorTipoAsync<TEntity>(Paginacao paginacao, UsuarioTipo usuarioTipo)
+            where TEntity : UsuarioGoogle;
     }
 }

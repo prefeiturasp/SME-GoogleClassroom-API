@@ -159,5 +159,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await atribuirFuncionarioSemRfCursoUseCase.Executar(atribuirFuncionarioSemRfCurso);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Inicia a atualização dos funcionários sem o identificador do Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Esta funcionalidade é destinada para uso pelas equipes de desnvolvimento e infraestrutura responsáveis pela manutenção da aplicação.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("atualizacoes/google-id")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> IniciarAtualizacaoFuncionarioGoogleClassroomId(int registrosPorPagina, [FromServices] IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase iniciaAtualizacaoUsuarioGoogleClassroomIdUseCase)
+        {
+            var retorno = await iniciaAtualizacaoUsuarioGoogleClassroomIdUseCase.Executar(registrosPorPagina);
+            return Ok(retorno);
+        }
     }
 }
