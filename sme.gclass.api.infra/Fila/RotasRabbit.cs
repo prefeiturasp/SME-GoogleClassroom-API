@@ -32,8 +32,6 @@
         public static string FilaFuncionarioCursoSync => "googleclass.funcionario.curso.sync";
         public static string FilaFuncionarioErroSync => "googleclass.funcionario.erro.sync";
         public static string FilaFuncionarioErroTratar => "googleclass.funcionario.erro.tratar";
-        public static string FilaFuncionarioGoogleIdSync => "googleclass.funcionario.googleid.sync";
-        public static string FilaFuncionarioGoogleIdAtualizar => "googleclass.funcionario.googleid.atualizar";
         #endregion
 
         #region Professores
@@ -49,6 +47,11 @@
         #region Funcionário indireto
         public static string FilaFuncionarioIndiretoSync => "googleclass.funcionario.indireto.sync";
         public static string FilaFuncionarioIndiretoIncluir => "googleclass.funcionario.indireto.incluir";
+        #endregion
+
+        #region Usuários
+        public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
+        public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
         #endregion
     }
 }

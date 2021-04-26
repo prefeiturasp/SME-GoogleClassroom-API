@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 RegistrosPorPagina = registrosPorPagina
             };
 
-            var publicarSyncFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioGoogleIdSync, RotasRabbit.FilaFuncionarioGoogleIdSync, dto));
+            var publicarSyncFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.FilaUsuarioGoogleIdSync, dto));
             if (!publicarSyncFuncionario)
             {
                 throw new NegocioException("Não foi possível iniciar a sincronização de funcionários.");

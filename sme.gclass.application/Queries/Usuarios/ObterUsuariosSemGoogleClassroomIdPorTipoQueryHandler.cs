@@ -1,13 +1,12 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios
 {
-    public class ObterUsuariosSemGoogleClassroomIdPorTipoQueryHandler : IRequestHandler<ObterUsuariosSemGoogleClassroomIdPorTipoQuery<FuncionarioGoogle>, PaginacaoResultadoDto<FuncionarioGoogle>>
+    public class ObterUsuariosSemGoogleClassroomIdPorTipoQueryHandler : IRequestHandler<ObterUsuariosSemGoogleClassroomIdPorTipoQuery, PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>>
     {
         private readonly IRepositorioUsuario repositorioUsuario;
 
@@ -16,9 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios
             this.repositorioUsuario = repositorioUsuario;
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> Handle(ObterUsuariosSemGoogleClassroomIdPorTipoQuery<FuncionarioGoogle> request, CancellationToken cancellationToken)
-        {
-            return await repositorioUsuario.ObterUsuariosSemGoogleClassroomIdPorTipoAsync<FuncionarioGoogle>(request.Paginacao, request.UsuarioTipo);
-        }
+        public async Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> Handle(ObterUsuariosSemGoogleClassroomIdPorTipoQuery request, CancellationToken cancellationToken)
+            => await repositorioUsuario.ObterUsuariosSemGoogleClassroomIdPorTipoAsync(request.Paginacao);
     }
 }

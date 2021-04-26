@@ -25,6 +25,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarFilasAlunoSync(canalRabbit);
             RegistrarFilasProfessorSync(canalRabbit);
             RegistrarFilasFuncionarioSync(canalRabbit);
+            RegistrarFilasUsuarioSync(canalRabbit);
         }
 
         private static void RegistrarFilasCursoSync(IModel canalRabbit)
@@ -100,17 +101,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioErroTratar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioErroTratar);
+        }
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioGoogleIdSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioGoogleIdSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioGoogleIdSync);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioGoogleIdAtualizar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioGoogleIdAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioGoogleIdAtualizar);
+        private static void RegistrarFilasUsuarioSync(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaUsuarioGoogleIdSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuarioGoogleIdSync);
         }
 
         #endregion Filas Sync
 
-        #region Filas de Inclusão/Tratamento
+        #region Filas de Inclusão/Atualização/Tratamento
 
         private static void RegistrarFilasDeInclusao(IModel canalRabbit)
         {
@@ -118,6 +119,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarFilasAlunoDeInclusao(canalRabbit);
             RegistrarFilasProfessorDeInclusao(canalRabbit);
             RegistrarFilasFuncionarioDeInclusao(canalRabbit);
+            RegistrarFilasUsuarioAtualizar(canalRabbit);
         }
 
         private static void RegistrarFilasCursoDeInclusao(IModel canalRabbit)
@@ -154,6 +156,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaFuncionarioIndiretoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaFuncionarioIndiretoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaFuncionarioIndiretoIncluir);
+        }
+
+        private static void RegistrarFilasUsuarioAtualizar(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaUsuarioGoogleIdAtualizar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaUsuarioGoogleIdAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuarioGoogleIdAtualizar);
         }
 
         #endregion Filas de Inclusão

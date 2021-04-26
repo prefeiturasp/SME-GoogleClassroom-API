@@ -535,42 +535,30 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(updateQuery, parametros);
         }
 
-        public async Task<PaginacaoResultadoDto<TEntity>> ObterUsuariosSemGoogleClassroomIdPorTipoAsync<TEntity>(Paginacao paginacao, UsuarioTipo usuarioTipo)
-            where TEntity : UsuarioGoogle
+        public async Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterUsuariosSemGoogleClassroomIdPorTipoAsync(Paginacao paginacao)
         {
             const string query = @"
                 SELECT
-                    u.indice,
-                    u.nome,
-                    u.id as Codigo,
-                    u.id as Rf,
-                    u.cpf AS Cpf,
-                    u.usuario_tipo as usuariotipo,
-                    u.email,
-                    u.organization_path as organizationpath,
-                    u.data_inclusao as datainclusao,
-                    u.data_atualizacao as dataatualizacao,
-                    u.google_classroom_id as GoogleClassroomId
+                    u.indice AS UsuarioId,
+                    u.email
                 FROM usuarios u
-                WHERE usuario_tipo = @usuarioTipo
-                and u.google_classroom_id is null
+                WHERE u.google_classroom_id is null
                 OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;
 
-                SELECT count(*) FROM usuarios u WHERE usuario_tipo = @usuarioTipo and u.google_classroom_id is null;";
+                SELECT count(*) FROM usuarios u WHERE u.google_classroom_id is null;";
 
             var parametros = new
             {
                 paginacao.QuantidadeRegistrosIgnorados,
-                paginacao.QuantidadeRegistros,
-                usuarioTipo
+                paginacao.QuantidadeRegistros
             };
 
             using var conn = ObterConexao();
 
             using var usuarios = await conn.QueryMultipleAsync(query, parametros);
 
-            var retorno = new PaginacaoResultadoDto<TEntity>();
-            retorno.Items = usuarios.Read<TEntity>();
+            var retorno = new PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
+            retorno.Items = usuarios.Read<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
             retorno.TotalRegistros = usuarios.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 

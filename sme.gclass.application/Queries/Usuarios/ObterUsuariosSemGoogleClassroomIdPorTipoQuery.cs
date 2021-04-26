@@ -5,21 +5,17 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosSemGoogleClassroomIdPorTipoQuery<TEntity> : IRequest<PaginacaoResultadoDto<TEntity>>
-        where TEntity : UsuarioGoogle
+    public class ObterUsuariosSemGoogleClassroomIdPorTipoQuery : IRequest<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>>
     {
         public Paginacao Paginacao { get; set; }
-        public UsuarioTipo UsuarioTipo { get; set; }
 
-        public ObterUsuariosSemGoogleClassroomIdPorTipoQuery(Paginacao paginacao, UsuarioTipo usuarioTipo)
+        public ObterUsuariosSemGoogleClassroomIdPorTipoQuery(Paginacao paginacao)
         {
             Paginacao = paginacao;
-            UsuarioTipo = usuarioTipo;
         }
     }
 
-    public class ObterUsuariosSemGoogleClassroomIdPorTipoQueryValidator<TEntity> : AbstractValidator<ObterUsuariosSemGoogleClassroomIdPorTipoQuery<TEntity>>
-        where TEntity : UsuarioGoogle
+    public class ObterUsuariosSemGoogleClassroomIdPorTipoQueryValidator : AbstractValidator<ObterUsuariosSemGoogleClassroomIdPorTipoQuery>
     {
         public ObterUsuariosSemGoogleClassroomIdPorTipoQueryValidator()
         {

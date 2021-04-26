@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public abstract class TrataAtualizacaoUsuarioGoogleClassroomIdUseCase<TEntity> : ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase
-        where TEntity : UsuarioGoogle
+    public class TrataAtualizacaoUsuarioGoogleClassroomIdUseCase : ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase
     {
         protected readonly IMediator mediator;
 
@@ -27,18 +26,12 @@ namespace SME.GoogleClassroom.Aplicacao
             var dto = JsonConvert.DeserializeObject<AtualizacaoUsuarioGoogleClassroomIdPaginadoDto>(mensagemRabbit.Mensagem.ToString());
             var paginacao = new Paginacao(dto.Pagina, dto.RegistrosPorPagina);
 
-            var resultadoPaginacao = await mediator.Send(new ObterUsuariosSemGoogleClassroomIdPorTipoQuery<TEntity>(paginacao, UsuarioTipo));
+            var resultadoPaginacao = await mediator.Send(new ObterUsuariosSemGoogleClassroomIdPorTipoQuery(paginacao));
             foreach (var usuario in resultadoPaginacao.Items)
             {
-                var usuarioAtualizacaoDto = new UsuarioParaAtualizacaoGoogleClassroomIdDto
-                {
-                    Email = usuario.Email,
-                    UsuarioId = usuario.Indice
-                };
-
                 try
                 {
-                    var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotaFilaRabbitAtualizar, RotaFilaRabbitAtualizar, usuarioAtualizacaoDto));
+                    var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioGoogleIdAtualizar, RotasRabbit.FilaUsuarioGoogleIdAtualizar, usuario));
                     if (!publicarAluno) continue;
                 }
                 catch (Exception ex)
@@ -54,13 +47,8 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        protected abstract UsuarioTipo UsuarioTipo { get; }
 
-        protected abstract string RotaFilaRabbitSync { get; }
-
-        protected abstract string RotaFilaRabbitAtualizar { get; }
-
-        protected virtual bool DeveBuscarAProximaPagina(AtualizacaoUsuarioGoogleClassroomIdPaginadoDto dto, PaginacaoResultadoDto<TEntity> resultadoPaginacao)
+        protected virtual bool DeveBuscarAProximaPagina(AtualizacaoUsuarioGoogleClassroomIdPaginadoDto dto, PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto> resultadoPaginacao)
             => resultadoPaginacao.TotalPaginas > (dto.Pagina + 1);
 
         protected virtual async Task PublicaProximaPaginaAsync(AtualizacaoUsuarioGoogleClassroomIdPaginadoDto dto)
@@ -69,7 +57,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotaFilaRabbitSync, RotaFilaRabbitSync, dto));
+                var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.FilaUsuarioGoogleIdSync, dto));
                 if (!publicarAluno)
                     SentrySdk.CaptureMessage("Não foi possível iniciar a próxima página da atualização de GoogleClassroomId.");
             }
