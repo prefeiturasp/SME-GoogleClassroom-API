@@ -1,4 +1,5 @@
-ALTER TABLE public.usuarios ADD if not exists google_classroom_id int8 NULL;
+ALTER TABLE public.usuarios ADD if not exists google_classroom_id varchar(50) NULL;
 
-CREATE index if not exists usuarios_google_classroom_id_idx ON public.usuarios USING btree (google_classroom_id);
+ALTER TABLE usuarios DROP CONSTRAINT if exists usuarios_google_classroom_id_unique;
+ALTER TABLE usuarios ADD CONSTRAINT usuarios_google_classroom_id_unique UNIQUE (google_classroom_id);
 

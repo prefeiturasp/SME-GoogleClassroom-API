@@ -19,7 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IConfiguration configuration;        
         private readonly IAsyncPolicy policy;
 
-        public InserirAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IConfiguration configuration, VariaveisGlobaisOptions variaveisGlobais ) : base(variaveisGlobais)
+        public InserirAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IConfiguration configuration, VariaveisGlobaisOptions variaveisGlobais ) 
+            : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));            
@@ -45,7 +46,12 @@ namespace SME.GoogleClassroom.Aplicacao
             };
 
             var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-            await requestCreate.ExecuteAsync();
+            var usuarioIncluido = await requestCreate.ExecuteAsync();
+
+            if (usuarioIncluido is null)
+                throw new NegocioException("Não foi possível obter o aluno incluído no Google Classroom.");
+
+            alunoGoogle.GoogleClassroomId = usuarioIncluido.Id;
         }
     }
 }
