@@ -516,5 +516,23 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(updateQuery, parametros);
         }
+
+        public async Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId)
+        {
+            const string updateQuery = @"update public.usuarios
+                                         set
+                                            google_classroom_id = @googleClassroomId
+                                         where
+                                            indice = @usuarioId";
+
+            var parametros = new
+            {
+                usuarioId,
+                googleClassroomId
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(updateQuery, parametros);
+        }
     }
 }
