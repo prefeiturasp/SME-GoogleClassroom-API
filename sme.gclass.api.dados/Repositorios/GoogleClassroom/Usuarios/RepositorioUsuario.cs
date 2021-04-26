@@ -25,7 +25,8 @@ namespace SME.GoogleClassroom.Dados
                                                    u.email AS Email,
                                                    u.organization_path as organizationpath,
                                                    u.data_inclusao as datainclusao,
-                                                   u.data_atualizacao as dataatualizacao
+                                                   u.data_atualizacao as dataatualizacao,
+                                                   u.google_classroom_id as GoogleClassroomId
                                               FROM usuarios u
                                              WHERE u.usuario_tipo = @tipo ");
 
@@ -94,7 +95,8 @@ namespace SME.GoogleClassroom.Dados
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
-                                                   u.data_atualizacao as DataAtualizacao
+                                                   u.data_atualizacao as DataAtualizacao,
+                                                   u.google_classroom_id as GoogleClassroomId
                                               FROM usuarios u
                                              WHERE usuario_tipo = @tipo ");
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u where usuario_tipo = @tipo ");
@@ -149,7 +151,8 @@ namespace SME.GoogleClassroom.Dados
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
-                                                   u.data_atualizacao as DataAtualizacao
+                                                   u.data_atualizacao as DataAtualizacao,
+                                                   u.google_classroom_id as GoogleClassroomId
                                               FROM usuarios u
                                              WHERE usuario_tipo = @tipo ");
 
@@ -205,7 +208,8 @@ namespace SME.GoogleClassroom.Dados
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
-                                 u.data_atualizacao as dataatualizacao
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
                            WHERE usuario_tipo = @tipo
                              and id = any(@rfs)";
@@ -226,7 +230,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rf,
-                tipo = UsuarioTipo.Funcionario
+                usuarioTipo = UsuarioTipo.Funcionario
             };
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
@@ -241,7 +245,8 @@ namespace SME.GoogleClassroom.Dados
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
-                                 u.data_atualizacao as dataatualizacao
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
                            WHERE usuario_tipo = any(@tipos)
                              and id = any(@rfs)";
@@ -267,7 +272,8 @@ namespace SME.GoogleClassroom.Dados
                                                  u.email,
                                                  u.organization_path as organizationpath,
                                                  u.data_inclusao as datainclusao,
-                                                 u.data_atualizacao as dataatualizacao
+                                                 u.data_atualizacao as dataatualizacao,
+                                                 u.google_classroom_id as GoogleClassroomId
                                             FROM usuarios u
                                            WHERE usuario_tipo = any(@tipos)
                                              and id = any(@rfs)");
@@ -304,18 +310,18 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rf,
-                tipo = UsuarioTipo.Professor
+                usuarioTipo = UsuarioTipo.Professor
             };
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao)
+        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId)
         {
             const string insertQuery = @"insert into public.usuarios
-                                        (id, cpf, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao)
+                                        (id, cpf, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao, google_classroom_id)
                                         values
-                                        (@id, @cpf, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao)
+                                        (@id, @cpf, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao, @googleClassroomId)
                                         RETURNING indice";
 
             var parametros = new
@@ -327,7 +333,8 @@ namespace SME.GoogleClassroom.Dados
                 tipo,
                 organizationPath,
                 dataInclusao,
-                dataAtualizacao
+                dataAtualizacao,
+                googleClassroomId
             };
 
             using var conn = ObterConexao();
@@ -343,7 +350,8 @@ namespace SME.GoogleClassroom.Dados
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
-                                 u.data_atualizacao as dataatualizacao
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
                            WHERE usuario_tipo = @tipo
                              and id = any(@CodigosAluno)";
@@ -369,7 +377,8 @@ namespace SME.GoogleClassroom.Dados
                                                  u.email,
                                                  u.organization_path as organizationpath,
                                                  u.data_inclusao as datainclusao,
-                                                 u.data_atualizacao as dataatualizacao
+                                                 u.data_atualizacao as dataatualizacao,
+                                                 u.google_classroom_id as GoogleClassroomId
                                             FROM usuarios u
                                            WHERE usuario_tipo = @tipo
                                              and id = any(@codigosAluno)");
@@ -409,7 +418,8 @@ namespace SME.GoogleClassroom.Dados
                                  u.email,
                                  u.organization_path as organizationpath,
                                  u.data_inclusao as datainclusao,
-                                 u.data_atualizacao as dataatualizacao
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
                            WHERE usuario_tipo = @tipo
                              and email = @email";
@@ -441,7 +451,8 @@ namespace SME.GoogleClassroom.Dados
                                                    u.email AS Email,
                                                    u.organization_path as OrganizationPath,
                                                    u.data_inclusao as DataInclusao,
-                                                   u.data_atualizacao as DataAtualizacao
+                                                   u.data_atualizacao as DataAtualizacao,
+                                                   u.google_classroom_id as GoogleClassroomId
                                               FROM usuarios u
                                              WHERE usuario_tipo = @tipo ");
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u where usuario_tipo = @tipo ");
