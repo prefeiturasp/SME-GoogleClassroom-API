@@ -8,6 +8,8 @@ namespace SME.GoogleClassroom.Dominio
 
         public long Indice { get; set; }
 
+        public long GoogleClassroomId { get; set; }
+
         private string nome;
 
         public string Nome
