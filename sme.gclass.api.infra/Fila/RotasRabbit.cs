@@ -49,6 +49,10 @@
         public static string FilaFuncionarioIndiretoSync => "googleclass.funcionario.indireto.sync";
         public static string FilaFuncionarioIndiretoIncluir => "googleclass.funcionario.indireto.incluir";
         #endregion
+
+        #region Usuarios
+        public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
+        #endregion
     }
 }
 
