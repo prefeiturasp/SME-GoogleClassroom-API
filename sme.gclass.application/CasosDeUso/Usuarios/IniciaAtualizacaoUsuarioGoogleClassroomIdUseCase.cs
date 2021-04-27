@@ -17,6 +17,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(int registrosPorPagina)
         {
+            var atualizaEmExecucao = await mediator.Send(new VerificarSeExistemMensagemNaFilaQuery(RotasRabbit.FilaUsuarioGoogleIdAtualizar));
+            if (atualizaEmExecucao)
+                throw new NegocioException("Já existe uma atualização em andamento. Por favor tente mais tarde.");
+
             var dto = new AtualizacaoUsuarioGoogleClassroomIdPaginadoDto
             {
                 Pagina = 0,
