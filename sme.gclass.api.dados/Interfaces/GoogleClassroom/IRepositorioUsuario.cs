@@ -44,6 +44,10 @@ namespace SME.GoogleClassroom.Dados
 
         Task<FuncionarioGoogle> ObterFuncionarioPorEmail(string email);
 
-        Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterUsuariosSemGoogleClassroomIdPorTipoAsync(Paginacao paginacao);
+        Task InciarAtualizacaoUsuarioGoogleClassroomIdAsync();
+
+        Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterAtualizacaoUsuarioGoogleClassroomIdAsync(Paginacao paginacao);
+
+        Task FinalizarAtualizacaoUsuarioGoogleClassroomIdAsync();
     }
 }
