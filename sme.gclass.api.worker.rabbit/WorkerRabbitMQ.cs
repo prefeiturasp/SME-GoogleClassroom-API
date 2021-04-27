@@ -54,6 +54,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private void RegistrarUseCases()
         {
             comandos.Add(RotasRabbit.FilaGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITrataSyncGoogleGeralUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativoGoogleSync, new ComandoRabbit("Tratamento geral do sync com google", typeof(ITratarSyncGoogleComparativoDadosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoIncluir, new ComandoRabbit("Incluir cursos novos no google", typeof(IIncluirCursoUseCase)));
             comandos.Add(RotasRabbit.FilaCursoSync, new ComandoRabbit("Incluir cursos novos no google", typeof(ITrataSyncGoogleCursoUseCase)));
             comandos.Add(RotasRabbit.FilaAlunoSync, new ComandoRabbit("Tratamento de alunos do sync com google", typeof(ITrataSyncGoogleAlunoUseCase)));

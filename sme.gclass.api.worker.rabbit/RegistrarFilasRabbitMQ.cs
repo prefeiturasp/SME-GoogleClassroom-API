@@ -21,6 +21,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGoogleSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGoogleSync);
 
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoGoogleSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativoGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoGoogleSync);
+
             RegistrarFilasCursoSync(canalRabbit);
             RegistrarFilasAlunoSync(canalRabbit);
             RegistrarFilasProfessorSync(canalRabbit);
