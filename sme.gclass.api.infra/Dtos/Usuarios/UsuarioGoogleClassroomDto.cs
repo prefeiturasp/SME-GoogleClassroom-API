@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Dominio
 {
-    public class UsuarioGoogleDto
+    public class UsuarioGoogleClassroomDto
     {
         public string Id { get; set; }
         public string Nome { get; set; }
