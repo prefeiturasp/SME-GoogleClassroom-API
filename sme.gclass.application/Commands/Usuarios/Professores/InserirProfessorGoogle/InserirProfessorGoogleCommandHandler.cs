@@ -46,7 +46,12 @@ namespace SME.GoogleClassroom.Aplicacao
             };
 
             var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-            await requestCreate.ExecuteAsync();
+            var usuarioIncluido = await requestCreate.ExecuteAsync();
+
+            if (usuarioIncluido is null)
+                throw new NegocioException("Não foi possível obter o professor incluído no Google Classroom.");
+
+            professorGoogle.GoogleClassroomId = usuarioIncluido.Id;
         }
     }
 }

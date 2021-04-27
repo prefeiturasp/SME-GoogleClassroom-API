@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuarioGoogleQueryHandler : IRequestHandler<ObterUsuarioGoogleQuery, UsuarioGoogleDto>
+    public class ObterUsuarioGoogleQueryHandler : IRequestHandler<ObterUsuarioGoogleQuery, UsuarioGoogleClassroomDto>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
@@ -20,18 +20,18 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
         }
 
-        public async Task<UsuarioGoogleDto> Handle(ObterUsuarioGoogleQuery request, CancellationToken cancellationToken)
+        public async Task<UsuarioGoogleClassroomDto> Handle(ObterUsuarioGoogleQuery request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             return await policy.ExecuteAsync(() => ObterUsuarioNoGoogle(request.Email, diretorioClassroom));
         }
 
-        private async Task<UsuarioGoogleDto> ObterUsuarioNoGoogle(string email, DirectoryService diretorioClassroom)
+        private async Task<UsuarioGoogleClassroomDto> ObterUsuarioNoGoogle(string email, DirectoryService diretorioClassroom)
         {
             var requestCreate = diretorioClassroom.Users.Get(email);
             var usuario = await requestCreate.ExecuteAsync();
 
-            return new UsuarioGoogleDto()
+            return new UsuarioGoogleClassroomDto()
             {
                 Id = usuario.Id,
                 Nome = usuario.Name.FullName,

@@ -15,6 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public string OrganizationPath { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
+        public string GoogleClassroomId { get; set; }
 
         public IncluirUsuarioCommand(FuncionarioGoogle funcionarioGoogle)
             : this(usuarioGoogle: funcionarioGoogle)
@@ -48,6 +49,7 @@ namespace SME.GoogleClassroom.Aplicacao
             OrganizationPath = usuarioGoogle.OrganizationPath;
             DataInclusao = usuarioGoogle.DataInclusao;
             DataAtualizacao = usuarioGoogle.DataAtualizacao;
+            GoogleClassroomId = usuarioGoogle.GoogleClassroomId;
         }
     }
 
@@ -74,6 +76,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.DataInclusao)
                 .NotEmpty()
                 .WithMessage("A data de inclusão do usuário deve ser informada.");
+
+            RuleFor(x => x.GoogleClassroomId)
+                .NotEmpty()
+                .WithMessage("O identificador do usuário no Google Classroom é inválido.");
         }
     }
 }
