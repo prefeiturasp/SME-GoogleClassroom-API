@@ -85,6 +85,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoErroTratar, new ComandoRabbit("Tratamento de erros cursos novos ao inserir no google", typeof(IRealizarTratamentoCursoErroUseCase)));
             comandos.Add(RotasRabbit.FilaUsuarioGoogleIdSync, new ComandoRabbit("Tratamento de atualização de usuários GoogleClassroomId", typeof(ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase)));
             comandos.Add(RotasRabbit.FilaUsuarioGoogleIdAtualizar, new ComandoRabbit("Atualização de usuário GoogleClassroomId", typeof(IAtualizacaoUsuarioGoogleClassroomIdUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoComparativoSync, new ComandoRabbit("Sincroniza os cursos comparativos a serem adicionados na base", typeof(ITratarSyncCursosComparativosUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
