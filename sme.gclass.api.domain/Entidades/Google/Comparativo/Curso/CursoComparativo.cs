@@ -9,6 +9,7 @@ namespace SME.GoogleClassroom.Dominio
         public string Secao { get; set; }
         public string CriadorId { get; set; }
         public string Descricao { get; set; }
+        public bool InseridoManualmenteGoogle { get; set; }
         public DateTime DataInclusao { get; set; }
     }
 }
