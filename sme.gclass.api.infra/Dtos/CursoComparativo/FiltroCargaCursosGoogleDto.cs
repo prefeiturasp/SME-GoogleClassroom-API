@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class RetornoPadraoCursosGoogleDto
+    public class FiltroCargaCursosGoogleDto
     {
         public string NextToken { get; set; }
     }

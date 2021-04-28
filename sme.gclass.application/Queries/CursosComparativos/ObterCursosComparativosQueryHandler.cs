@@ -14,7 +14,7 @@ using static Google.Apis.Classroom.v1.CoursesResource.ListRequest;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComparativosQueryHandler : IRequestHandler<ObterCursosComparativosQuery, ListCoursesResponse>
+    public class ObterCursosComparativosQueryHandler : IRequestHandler<ObterCursosComparativosQuery, ResultadoCursoComparativoDto>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
@@ -25,10 +25,16 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
         }
 
-        public async Task<ListCoursesResponse> Handle(ObterCursosComparativosQuery request, CancellationToken cancellationToken)
+        public async Task<ResultadoCursoComparativoDto> Handle(ObterCursosComparativosQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            return await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
+            var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
+            var cursos = ConvertToDto(cursosGoogle.Courses);
+            return new ResultadoCursoComparativoDto()
+            {
+                NextToken = cursosGoogle.NextPageToken,
+                Cursos = cursos
+            };
         }
 
         private async Task<ListCoursesResponse> ObterCursosAtivosNoGoogle(string pageToken, ClassroomService servicoClassroom)
@@ -37,6 +43,25 @@ namespace SME.GoogleClassroom.Aplicacao
             request.CourseStates = CourseStatesEnum.ACTIVE;
             request.PageToken = pageToken;
             return await request.ExecuteAsync();
+        }
+
+        private IEnumerable<CursoComparativoDto> ConvertToDto(IList<Course> cursos)
+        {
+            var cursosDto = new List<CursoComparativoDto>();
+            foreach(var curso in cursos)
+            {
+                var dto = new CursoComparativoDto()
+                {
+                    Id = curso.Id,
+                    CriadorId = curso.OwnerId,
+                    Descricao = curso.Description,
+                    Nome = curso.Name,
+                    DataInclusao = (DateTime)curso.CreationTime,
+                    Secao = curso.Section
+                };
+                cursosDto.Add(dto);
+            }
+            return cursosDto;
         }
     }
 }

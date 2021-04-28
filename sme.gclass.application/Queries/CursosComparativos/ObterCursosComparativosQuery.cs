@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComparativosQuery : IRequest<ListCoursesResponse>
+    public class ObterCursosComparativosQuery : IRequest<ResultadoCursoComparativoDto>
     {
         public string  NextToken { get; set; }
 

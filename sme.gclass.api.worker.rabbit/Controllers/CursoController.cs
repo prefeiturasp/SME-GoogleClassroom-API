@@ -164,5 +164,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(turmaId, componenteCurricularId);
             return Ok(retorno);
         }
+
+        [HttpGet("cursos/comparativos")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosComparativos([FromServices] IIniciarCargaCursosUseCase useCase)
+        {
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
     }
 }
