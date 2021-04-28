@@ -40,6 +40,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoUsuarioErro, RepositorioCursoUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoUsuario, RepositorioCursoUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioIndiretoEol, RepositorioFuncionarioIndiretoEol>();
+            services.TryAddScoped<IRepositorioCursoComparativo, RepositorioCursoComparativo>();
+            
         }
 
 
