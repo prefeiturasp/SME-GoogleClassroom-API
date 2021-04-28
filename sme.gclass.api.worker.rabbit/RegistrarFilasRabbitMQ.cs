@@ -12,6 +12,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
                 RegistrarFilasDeInclusao(canalRabbit);
+
+            if (consumoDeFilasOptions.ConsumirFilasDeCarga)
+                RegistrarFilasDeCargas(canalRabbit);
         }
 
         #region Filas Sync
@@ -168,5 +171,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
 
         #endregion Filas de Inclusão
+
+        #region Filas Cargas
+        private static void RegistrarFilasDeCargas(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaUsuariosCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaUsuariosCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuariosCarregar);
+        }
+        #endregion
     }
 }

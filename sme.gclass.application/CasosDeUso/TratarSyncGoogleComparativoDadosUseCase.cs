@@ -17,8 +17,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var resposta = mensagemRabbit.Mensagem;
+            var mensagem = mensagemRabbit.Mensagem;
 
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuariosCarregar, RotasRabbit.FilaUsuariosCarregar, mensagem));
 
             return true;
         }
