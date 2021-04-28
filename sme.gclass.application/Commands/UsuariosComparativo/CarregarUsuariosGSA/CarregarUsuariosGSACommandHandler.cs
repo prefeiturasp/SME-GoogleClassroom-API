@@ -1,32 +1,30 @@
-﻿using MediatR;
+﻿using Google.Apis.Admin.Directory.directory_v1;
+using Google.Apis.Admin.Directory.directory_v1.Data;
+using MediatR;
 using Polly;
-using SME.GoogleClassroom.Aplicacao.Interfaces;
+using Polly.Registry;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Google.Apis.Admin.Directory.directory_v1;
-using Google.Apis.Admin.Directory.directory_v1.Data;
-using Polly.Registry;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class RealizarCargaUsuariosUseCase : IRealizarCargaUsuariosUseCase
+    public class CarregarUsuariosGSACommandHandler : IRequestHandler<CarregarUsuariosGSACommand, bool>
     {
-        private readonly IAsyncPolicy policy;
         private readonly IMediator mediator;
+        private readonly IAsyncPolicy policy;
 
-        public RealizarCargaUsuariosUseCase(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public CarregarUsuariosGSACommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
         }
 
-        public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
+        public async Task<bool> Handle(CarregarUsuariosGSACommand request, CancellationToken cancellationToken)
         {
-            var tokenPagina = mensagemRabbit.ObterObjetoMensagem<string>();
-
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-            await policy.ExecuteAsync(() => CarregarUsuariosAtivosDoGoogle(diretorioClassroom, tokenPagina));
+            await policy.ExecuteAsync(() => CarregarUsuariosAtivosDoGoogle(diretorioClassroom, request.TokenPagina));
 
             return true;
         }
@@ -42,18 +40,22 @@ namespace SME.GoogleClassroom.Aplicacao
             await ExecutaSyncUsuarios(listaUsuarios);
 
             if (PossuiProximaPagina(listaUsuarios))
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuariosCarregar, RotasRabbit.FilaUsuariosCarregar, listaUsuarios.NextPageToken));
+                await PublicaExecucaoProximaPagina(listaUsuarios.NextPageToken);
+        }
+
+        private async Task PublicaExecucaoProximaPagina(string tokenPagina)
+        {
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuariosCarregar, mensagem: new FiltroCargaUsuariosGoogleDto(tokenPagina)));
         }
 
         private async Task ExecutaSyncUsuarios(Users listaUsuarios)
         {
-            // TODO task 38508 Sincronizar Usuarios
-            //foreach (var usuario in listaUsuarios.UsersValue)
-            //    await mediator.Send(new )
-            
+            foreach (var usuario in listaUsuarios.UsersValue)
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuariosIncluir, mensagem: usuario));
         }
 
         private bool PossuiProximaPagina(Users exec)
             => !string.IsNullOrEmpty(exec.NextPageToken);
+
     }
 }
