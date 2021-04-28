@@ -29,6 +29,10 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
+            if(cursosGoogle.Courses is null)
+            {
+                cursosGoogle.Courses = new List<Course>();
+            }
             var cursos = ConvertToDto(cursosGoogle.Courses);
             return new ResultadoCursoComparativoDto()
             {
