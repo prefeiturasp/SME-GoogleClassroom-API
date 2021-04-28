@@ -5,9 +5,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -77,7 +75,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task RemoverProfessorCursoAsync(CursoUsuario cursoUsuario)
         {
             if (!_deveExecutarIntegracao) return;
-            if(!await mediator.Send(new RemoverCursoUsuarioCommand(cursoUsuario.Id)))
+            if (!await mediator.Send(new RemoverCursoUsuarioCommand(cursoUsuario.Id)))
             {
                 throw new NegocioException($"Não foi possível remover a atribuição do professor do curso {cursoUsuario.CursoId}");
             }
