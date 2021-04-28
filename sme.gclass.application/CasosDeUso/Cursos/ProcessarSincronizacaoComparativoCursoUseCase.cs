@@ -27,12 +27,9 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(comparativoCurso.Id)));
 
-                if(cursoGoogle == null)
-                {
-                    comparativoCurso.InseridoManualmenteGoogle = true;
-                    var command = new InserirComparativoCursoCommand(comparativoCurso);
-                    return await mediator.Send(command);
-                }
+                comparativoCurso.InseridoManualmenteGoogle = cursoGoogle is null;
+                var command = new InserirComparativoCursoCommand(comparativoCurso);
+                return await mediator.Send(command);
             }
             catch (Exception ex)
             {
