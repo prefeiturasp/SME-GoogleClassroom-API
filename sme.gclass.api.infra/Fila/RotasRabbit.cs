@@ -4,6 +4,7 @@
     {
         public static string ExchangeGoogleSync => "googleclass.exchange";
         public static string FilaGoogleSync => "googleclass.sync.geral";
+        public static string FilaComparativoGoogleSync => "googleclass.sync.comparativo";
 
         #region Cursos
         public static string FilaCursoIncluir => "googleclass.curso.incluir";
@@ -54,6 +55,7 @@
         #region Usuários
         public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
         public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
+        public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
         #endregion
     }
 }

@@ -47,6 +47,7 @@ namespace SME.GoogleClassroom.IoC
         {
             services.TryAddScoped<IIniciarSyncGoogleCursoUseCase, IniciarSyncGoogleCursoUseCase>();
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<ITratarSyncGoogleComparativoDadosUseCase, TratarSyncGoogleComparativoDadosUseCase>();
             services.TryAddScoped<IIncluirCursoUseCase, InserirCursoGoogleUseCase>();
             services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
             services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
@@ -110,6 +111,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarTratamentoCursoErroUseCase, RealizarTratamentoCursoErroUseCase>();
             services.TryAddScoped<IIniciarSyncGoogleCursoErrosUseCase, IniciarSyncGoogleCursoErrosUseCase>();
             services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
+            services.TryAddScoped<IProcessarSincronizacaoComparativoCursoUseCase, ProcessarSincronizacaoComparativoCursoUseCase>();
+
+
             services.TryAddScoped<ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase, TrataAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
