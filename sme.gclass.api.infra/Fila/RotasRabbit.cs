@@ -40,6 +40,7 @@
         public static string FilaProfessorCursoIncluir => "googleclass.professor.curso.incluir";
         public static string FilaProfessorCursoSync => "googleclass.professor.curso.sync";
         public static string FilaProfessorCursoAtribuicaoSync => "googleclass.professor.curso.atribuicao.sync";
+        public static string FilaProfessorCursoRemover => "googleclass.professor.curso.remover";
         public static string FilaProfessorErroSync => "googleclass.professor.erro.sync";
         public static string FilaProfessorErroTratar => "googleclass.professor.erro.tratar";
         #endregion
