@@ -111,6 +111,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoComparativoAtualizar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoComparativoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoComparativoAtualizar);
+        }
 
         private static void RegistrarFilasUsuarioSync(IModel canalRabbit)
         {
