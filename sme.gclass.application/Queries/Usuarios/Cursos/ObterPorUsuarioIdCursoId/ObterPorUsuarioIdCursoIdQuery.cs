@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public long CursoId { get; set; }
         public long UsuarioId { get; set; }
 
-        public ObterPorUsuarioIdCursoIdQuery(long cursoId, long usuarioId)
+        public ObterPorUsuarioIdCursoIdQuery(long usuarioId, long cursoId)
         {
             CursoId = cursoId;
             UsuarioId = usuarioId;
