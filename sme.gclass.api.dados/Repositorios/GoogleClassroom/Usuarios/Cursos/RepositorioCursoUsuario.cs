@@ -402,12 +402,17 @@ namespace SME.GoogleClassroom.Dados
         {
             const string query = @"
                 SELECT
-                    id, curso_id, usuario_id, data_inclusao, data_atualizacao, excluido
+                    id, 
+                    curso_id as CursoId,
+                    usuario_id as UsuarioId,
+                    data_inclusao as DatInclusao,
+                    data_atualizacao as DataAtualizacao,
+                    excluido
                 FROM
                     public.cursos_usuarios c
                 WHERE
                     c.usuario_id = @usuarioId
-                    and c.curso_id = cursoId
+                    and c.curso_id = @cursoId
                     and not excluido";
 
             var parametros = new
@@ -417,7 +422,7 @@ namespace SME.GoogleClassroom.Dados
             };
 
             using var conn = ObterConexao();
-            return await conn.QuerySingleAsync<CursoUsuario>(query, parametros);
+            return await conn.QuerySingleOrDefaultAsync<CursoUsuario>(query, parametros);
         }
     }
 }

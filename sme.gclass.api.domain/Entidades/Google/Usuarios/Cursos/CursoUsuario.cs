@@ -12,6 +12,10 @@ namespace SME.GoogleClassroom.Dominio
             Excluido = false;
         }
 
+        protected CursoUsuario()
+        {
+        }
+
         public long Id { get; set; }
         public long CursoId { get; set; }
         public long UsuarioId { get; set; }
