@@ -25,6 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 Secao = request.Secao,
                 Descricao = request.Descricao,
                 CriadorId = request.CriadorId,
+                InseridoManualmenteGoogle = request.InseridoManualmenteGoogle,
                 DataInclusao = request.DataInclusao
             };
 

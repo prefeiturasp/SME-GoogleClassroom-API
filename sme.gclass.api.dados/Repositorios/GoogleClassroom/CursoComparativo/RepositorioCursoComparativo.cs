@@ -15,10 +15,10 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> SalvarAsync(CursoComparativo cursoComparativo)
         {
             const string insertQuery = @"insert into public.curso_comparativo
-                                        (id, nome, secao, criador_id, descricao, data_inclusao)
+                                        (id, nome, secao, criador_id, descricao, data_inclusao, inserido_manualmente_google)
                                         values
-                                        (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao)
-                                        RETURNING indice";
+                                        (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inserido_manualmente_google)
+                                        RETURNING id";
 
             var parametros = new
             {
@@ -27,6 +27,7 @@ namespace SME.GoogleClassroom.Dados
                 secao = cursoComparativo.Secao,
                 criadorId = cursoComparativo.CriadorId,
                 descricao = cursoComparativo.Descricao,
+                inseridoManualmenteGoogle = cursoComparativo.InseridoManualmenteGoogle,
                 dataInclusao = cursoComparativo.DataInclusao
             };
 

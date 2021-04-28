@@ -29,6 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if(cursoGoogle == null)
                 {
+                    comparativoCurso.InseridoManualmenteGoogle = true;
                     var command = new InserirComparativoCursoCommand(comparativoCurso);
                     return await mediator.Send(command);
                 }
@@ -36,7 +37,6 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 SentrySdk.CaptureException(ex);
-                return false;
             }
             return false;
         }

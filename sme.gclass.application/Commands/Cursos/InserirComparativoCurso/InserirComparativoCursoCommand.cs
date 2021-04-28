@@ -15,9 +15,10 @@ namespace SME.GoogleClassroom.Aplicacao
             CriadorId = cursoComparativo.CriadorId;
             Descricao = cursoComparativo.Descricao;
             DataInclusao = cursoComparativo.DataInclusao;
+            InseridoManualmenteGoogle = cursoComparativo.InseridoManualmenteGoogle;
         }
 
-        public InserirComparativoCursoCommand(string id, string nome, string secao, string criadorId, string descricao, DateTime dataInclusao)
+        public InserirComparativoCursoCommand(string id, string nome, string secao, string criadorId, string descricao, DateTime dataInclusao, bool inseridoManualmenteGoogle)
         {
             Id = id;
             Nome = nome;
@@ -25,6 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             CriadorId = criadorId;
             Descricao = descricao;
             DataInclusao = dataInclusao;
+            InseridoManualmenteGoogle = inseridoManualmenteGoogle;
         }
 
         public string Id { get; set; }
@@ -32,6 +34,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public string Secao { get; set; }
         public string CriadorId { get; set; }
         public string Descricao { get; set; }
+        public bool InseridoManualmenteGoogle { get; set; }
         public DateTime DataInclusao { get; set; }
     }
 
@@ -39,6 +42,10 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public InserirComparativoCursoCommandValidator()
         {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("O ID do curso deve ser informado.");
+
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage("O nome do curso deve ser informado.");
