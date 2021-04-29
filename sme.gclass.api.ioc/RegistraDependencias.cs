@@ -121,6 +121,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciarCargaCursosUseCase, IniciarCargaCursosUseCase>();
             services.TryAddScoped<IRealizarCargaCursosUseCase, RealizarCargaCursosUseCase>();
+            services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
         }
     }
 }
