@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
@@ -25,6 +27,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> IniciarAtualizacaoUsuarioGoogleClassroomId(int registrosPorPagina, [FromServices] IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase iniciaAtualizacaoUsuarioGoogleClassroomIdUseCase)
         {
             var retorno = await iniciaAtualizacaoUsuarioGoogleClassroomIdUseCase.Executar(registrosPorPagina);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Valida se os usuários adicionados na base existem no google classroom
+        /// </summary>
+        /// <response code="200">O início da validação ocorreu com sucesso</response>
+        [HttpGet("valida")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ValidaUsuariosExistentes([FromServices] IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase useCase)
+        {
+            var retorno = await useCase.Executar();
             return Ok(retorno);
         }
     }

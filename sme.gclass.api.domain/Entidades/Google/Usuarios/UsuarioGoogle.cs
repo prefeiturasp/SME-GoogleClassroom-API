@@ -46,6 +46,7 @@ namespace SME.GoogleClassroom.Dominio
         public string OrganizationPath { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
+        public bool ExisteGoogle { get; set; }
 
         public UsuarioGoogle(string nome, string email, string organizationPath)
         {
@@ -53,6 +54,7 @@ namespace SME.GoogleClassroom.Dominio
             Email = email;
             OrganizationPath = organizationPath;
             DataInclusao = DateTime.Now;
+            ExisteGoogle = true;
         }
 
         protected UsuarioGoogle()

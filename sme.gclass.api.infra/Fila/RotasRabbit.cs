@@ -56,6 +56,7 @@
         public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
         public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
         public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
+        public static string FilaComparativosUsuariosValidar => "googleclass.comparativo.usuario.validar";
         #endregion
     }
 }

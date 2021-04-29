@@ -41,7 +41,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoUsuario, RepositorioCursoUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioIndiretoEol, RepositorioFuncionarioIndiretoEol>();
             services.TryAddScoped<IRepositorioCursoComparativo, RepositorioCursoComparativo>();
-            
+            services.TryAddScoped<IRepositorioUsuarioComparativo, RepositorioUsuarioComparativo>();
+
         }
 
 
@@ -121,6 +122,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciarCargaCursosUseCase, IniciarCargaCursosUseCase>();
             services.TryAddScoped<IRealizarCargaCursosUseCase, RealizarCargaCursosUseCase>();
+
+            services.TryAddScoped<IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase, IniciarValidarUsuariosExistentesUsuariosComparativosUseCase>();
+            services.TryAddScoped<IValidarUsuarioComparativoUseCase, ValidarUsuarioComparativoUseCase>();
         }
     }
 }
