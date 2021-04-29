@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -33,6 +35,68 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(insertQuery, parametros);
+        }
+
+        public async Task<PaginacaoResultadoDto<CursoComparativoDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao, string nome, string descricao)
+        {
+            var queryCompleta = new StringBuilder();
+
+            queryCompleta.AppendLine(MontaQueryObterCursosComparativos(false, paginacao, secao, nome, descricao));
+            queryCompleta.AppendLine(MontaQueryObterCursosComparativos(true, paginacao, secao, nome, descricao));
+
+            var retorno = new PaginacaoResultadoDto<CursoComparativoDto>();
+
+            using var conn = ObterConexao();
+
+            var parametros = new
+            {
+                paginacao,
+                secao
+            };
+
+            using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
+
+            retorno.Items = multi.Read<CursoComparativoDto>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
+
+        private string MontaQueryObterCursosComparativos(bool ehParaPaginacao, Paginacao paginacao, string secao, string nome, string descricao)
+        {
+            var queryCompleta = new StringBuilder("SELECT ");
+
+            if (ehParaPaginacao)
+                queryCompleta.AppendLine("count(*)");
+            else
+            {
+                queryCompleta.AppendLine(@"CC.ID, 
+                                  CC.NOME,
+                                  CC.SECAO,
+                                  CC.CRIADOR_ID AS CRIADORID,
+                                  CC.DESCRICAO,
+                                  CC.DATA_INCLUSAO AS DATAINCLUSAO,
+                                  CC.INSERIDO_MANUALMENTE_GOOGLE AS INSERIDOMANUALMENTEGOOGLE");
+            }
+
+            queryCompleta.AppendLine(@"FROM CURSO_COMPARATIVO CC");
+            queryCompleta.AppendLine(@"WHERE 1=1");
+
+
+            if (!string.IsNullOrEmpty(nome))
+                queryCompleta.AppendLine(@"AND CC.nome like('%" + nome?.Trim().ToLower() + "%')");
+
+            if (!string.IsNullOrEmpty(descricao))
+                queryCompleta.AppendLine(@"AND CC.descricao like('%" + descricao?.Trim().ToLower() + "%')");
+
+            if (!string.IsNullOrEmpty(secao))
+                queryCompleta.AppendLine(@"AND CC.secao like('%" + secao?.Trim().ToLower() + "%')");
+
+            if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
+                queryCompleta.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+
+            return queryCompleta.ToString();
         }
 
         public async Task<int> ValidarCursosExistentesCursosComparativosAsync()

@@ -41,7 +41,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoUsuario, RepositorioCursoUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioIndiretoEol, RepositorioFuncionarioIndiretoEol>();
             services.TryAddScoped<IRepositorioCursoComparativo, RepositorioCursoComparativo>();
-            
+            services.TryAddScoped<IRepositorioUsuarioComparativo, RepositorioUsuarioComparativo>();
+
         }
 
 
@@ -115,6 +116,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
             services.TryAddScoped<IProcessarSincronizacaoComparativoCursoUseCase, ProcessarSincronizacaoComparativoCursoUseCase>();
 
+            services.TryAddScoped<IObterComparativoDeCursosUseCase, ObterComparativoDeCursosUseCase>();
+            services.TryAddScoped<IObterComparativoDeUsuariosUseCase, ObterComparativoDeUsuariosUseCase>();
+            services.TryAddScoped<IIniciarCargaUsuariosUseCase, IniciarCargaUsuariosUseCase>();
 
             services.TryAddScoped<ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase, TrataAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();
