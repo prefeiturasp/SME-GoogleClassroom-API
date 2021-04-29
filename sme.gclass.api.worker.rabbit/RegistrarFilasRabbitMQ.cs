@@ -32,6 +32,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarFilasProfessorSync(canalRabbit);
             RegistrarFilasFuncionarioSync(canalRabbit);
             RegistrarFilasUsuarioSync(canalRabbit);
+            RegistrarFilasValidarComparativoUsuarios(canalRabbit);
         }
 
         private static void RegistrarFilasCursoSync(IModel canalRabbit)
@@ -56,12 +57,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoErroTratar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoErroTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoErroTratar);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoCarregar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoCarregar);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoComparativoAtualizar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoComparativoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoComparativoAtualizar);
         }
 
         private static void RegistrarFilasAlunoSync(IModel canalRabbit)
@@ -128,6 +123,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueBind(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuarioGoogleIdSync);
         }
 
+        private static void RegistrarFilasValidarComparativoUsuarios(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativosUsuariosValidar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativosUsuariosValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativosUsuariosValidar);
+        }
+
         #endregion Filas Sync
 
         #region Filas de Inclusão/Atualização/Tratamento
@@ -164,6 +165,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaProfessorCursoRemover, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaProfessorCursoRemover, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaProfessorCursoRemover);
         }
 
         private static void RegistrarFilasFuncionarioDeInclusao(IModel canalRabbit)
@@ -186,9 +190,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         #endregion Filas de Inclusão
 
-        #region Filas Cargas
+        #region Filas Comparativo
         private static void RegistrarFilasDeCargas(IModel canalRabbit)
         {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoCarregar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoComparativoAtualizar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoComparativoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoComparativoAtualizar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoCursoValidar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativoCursoValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoCursoValidar);
+
             canalRabbit.QueueDeclare(RotasRabbit.FilaUsuariosCarregar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaUsuariosCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuariosCarregar);
         }

@@ -4,7 +4,6 @@
     {
         public static string ExchangeGoogleSync => "googleclass.exchange";
         public static string FilaGoogleSync => "googleclass.sync.geral";
-        public static string FilaComparativoGoogleSync => "googleclass.sync.comparativo";
 
         #region Cursos
         public static string FilaCursoIncluir => "googleclass.curso.incluir";
@@ -15,8 +14,6 @@
         public static string FilaCursoAlunoSync => "googleclass.curso.aluno.sync";
         public static string FilaCursoGradeSync => "googleclass.curso.grade.sync";
         public static string FilaCursoFuncionarioSync => "googleclass.curso.funcionario.sync";
-        public static string FilaCursoCarregar => "googleclass.curso.carregar";
-        public static string FilaCursoComparativoAtualizar => "googleclass.curso.comparativo.atualizar";
         #endregion
 
         #region Alunos
@@ -43,6 +40,7 @@
         public static string FilaProfessorCursoIncluir => "googleclass.professor.curso.incluir";
         public static string FilaProfessorCursoSync => "googleclass.professor.curso.sync";
         public static string FilaProfessorCursoAtribuicaoSync => "googleclass.professor.curso.atribuicao.sync";
+        public static string FilaProfessorCursoRemover => "googleclass.professor.curso.remover";
         public static string FilaProfessorErroSync => "googleclass.professor.erro.sync";
         public static string FilaProfessorErroTratar => "googleclass.professor.erro.tratar";
         #endregion
@@ -55,7 +53,15 @@
         #region Usuários
         public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
         public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
+        #endregion
+
+        #region Comparativo de dados
+        public static string FilaComparativoGoogleSync => "googleclass.comparativo.sync";
+        public static string FilaCursoCarregar => "googleclass.curso.carregar";
+        public static string FilaCursoComparativoAtualizar => "googleclass.curso.comparativo.atualizar";
+        public static string FilaComparativoCursoValidar => "googleclass.comparativo.curso.validar";
         public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
+        public static string FilaComparativosUsuariosValidar => "googleclass.comparativo.usuario.validar";
         public static string FilaUsuariosIncluir => "googleclass.usuario.incluir";
         #endregion
     }

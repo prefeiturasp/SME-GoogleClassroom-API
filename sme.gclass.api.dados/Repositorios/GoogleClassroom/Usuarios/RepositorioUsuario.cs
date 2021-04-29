@@ -535,17 +535,42 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(updateQuery, parametros);
         }
 
-        public async Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterUsuariosSemGoogleClassroomIdPorTipoAsync(Paginacao paginacao)
+        public async Task InciarAtualizacaoUsuarioGoogleClassroomIdAsync()
         {
             const string query = @"
+                CREATE TABLE IF NOT EXISTS __atualizacao_usuario_googleclassroom_id
+                (
+                    usuario_id int8 not null,
+                    email varchar(200) not null
+                );
+
+                INSERT INTO __atualizacao_usuario_googleclassroom_id
                 SELECT
-                    u.indice AS UsuarioId,
+                    u.indice,
                     u.email
                 FROM usuarios u
-                WHERE u.google_classroom_id is null
-                OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;
+                WHERE u.google_classroom_id is null;";
 
-                SELECT count(*) FROM usuarios u WHERE u.google_classroom_id is null;";
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query);
+        }
+
+        public async Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterAtualizacaoUsuarioGoogleClassroomIdAsync(Paginacao paginacao)
+        {
+            const string queryBase = @"
+                SELECT
+                    u.usuario_id AS UsuarioId,
+                    u.email
+                FROM __atualizacao_usuario_googleclassroom_id u ";
+
+            var realizarPaginacao = paginacao.QuantidadeRegistros > 0;
+
+            var query = new StringBuilder(queryBase);
+            query.AppendLine(realizarPaginacao
+                ? "OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY; "
+                : "; ");
+
+            query.AppendLine("SELECT count(*) FROM __atualizacao_usuario_googleclassroom_id;");
 
             var parametros = new
             {
@@ -555,14 +580,22 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            using var usuarios = await conn.QueryMultipleAsync(query, parametros);
+            using var usuarios = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
             var retorno = new PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
             retorno.Items = usuarios.Read<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
             retorno.TotalRegistros = usuarios.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = realizarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : default;
 
             return retorno;
+        }
+
+        public async Task FinalizarAtualizacaoUsuarioGoogleClassroomIdAsync()
+        {
+            const string query = "DROP TABLE IF EXISTS __atualizacao_usuario_googleclassroom_id;";
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query);
         }
     }
 }

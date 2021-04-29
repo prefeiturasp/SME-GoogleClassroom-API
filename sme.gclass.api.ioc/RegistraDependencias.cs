@@ -116,12 +116,20 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
             services.TryAddScoped<IProcessarSincronizacaoComparativoCursoUseCase, ProcessarSincronizacaoComparativoCursoUseCase>();
 
+            services.TryAddScoped<IObterComparativoDeCursosUseCase, ObterComparativoDeCursosUseCase>();
+            services.TryAddScoped<IObterComparativoDeUsuariosUseCase, ObterComparativoDeUsuariosUseCase>();
+            services.TryAddScoped<IIniciarCargaUsuariosUseCase, IniciarCargaUsuariosUseCase>();
 
             services.TryAddScoped<ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase, TrataAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciarCargaCursosUseCase, IniciarCargaCursosUseCase>();
             services.TryAddScoped<IRealizarCargaCursosUseCase, RealizarCargaCursosUseCase>();
+
+            services.TryAddScoped<IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase, IniciarValidarUsuariosExistentesUsuariosComparativosUseCase>();
+            services.TryAddScoped<IValidarUsuarioComparativoUseCase, ValidarUsuarioComparativoUseCase>();
+            services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
+            services.TryAddScoped<IValidarCursosComparativoUseCase, ValidarCursosComparativoUseCase>();
             services.TryAddScoped<IRealizarCargaUsuariosUseCase, RealizarCargaUsuariosUseCase>();
             services.TryAddScoped<IRealizarInclusaoUsuarioUseCase, RealizarInclusaoUsuarioUseCase>();
         }
