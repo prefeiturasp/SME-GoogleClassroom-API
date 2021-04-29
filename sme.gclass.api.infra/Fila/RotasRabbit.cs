@@ -15,6 +15,8 @@
         public static string FilaCursoAlunoSync => "googleclass.curso.aluno.sync";
         public static string FilaCursoGradeSync => "googleclass.curso.grade.sync";
         public static string FilaCursoFuncionarioSync => "googleclass.curso.funcionario.sync";
+        public static string FilaCursoCarregar => "googleclass.curso.carregar";
+        public static string FilaCursoComparativoAtualizar => "googleclass.curso.comparativo.atualizar";
         #endregion
 
         #region Alunos
