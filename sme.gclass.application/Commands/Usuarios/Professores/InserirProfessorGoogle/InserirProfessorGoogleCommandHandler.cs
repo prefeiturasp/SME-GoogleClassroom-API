@@ -7,6 +7,7 @@ using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
         }
 
         protected override async Task<bool> ExecutarAsync(InserirProfessorGoogleCommand request, CancellationToken cancellationToken)

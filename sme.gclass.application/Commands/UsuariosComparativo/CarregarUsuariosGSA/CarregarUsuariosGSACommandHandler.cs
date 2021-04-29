@@ -4,6 +4,7 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public CarregarUsuariosGSACommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
         }
 
         public async Task<bool> Handle(CarregarUsuariosGSACommand request, CancellationToken cancellationToken)

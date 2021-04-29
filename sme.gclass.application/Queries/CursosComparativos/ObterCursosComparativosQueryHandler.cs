@@ -5,6 +5,7 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public ObterCursosComparativosQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
         }
 
         public async Task<ResultadoCursoComparativoDto> Handle(ObterCursosComparativosQuery request, CancellationToken cancellationToken)
