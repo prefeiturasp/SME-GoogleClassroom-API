@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterComparativoDeCursosUseCase : IObterComparativoDeCursosUseCase
+    public class ObterComparativoDeUsuariosUseCase : IObterComparativoDeUsuariosUseCase
     {
         private readonly IMediator mediator;
 
-        public ObterComparativoDeCursosUseCase(IMediator mediator)
+        public ObterComparativoDeUsuariosUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<CursoComparativoDto>> Executar(FiltroObterComparativoCursoDto filtro)
+        public async Task<PaginacaoResultadoDto<UsuarioComparativo>> Executar(FiltroObterComparativoUsuarioDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
-            return await mediator.Send(new ObterCursosComparativosPaginadosQuery(paginacao, filtro.Secao, filtro.Descricao, filtro.Nome));
+            return await mediator.Send(new ObterUsuariosComparativosPaginadosQuery(paginacao, filtro.Email, filtro.Nome, filtro.OrganizationPath));
         }
     }
 }

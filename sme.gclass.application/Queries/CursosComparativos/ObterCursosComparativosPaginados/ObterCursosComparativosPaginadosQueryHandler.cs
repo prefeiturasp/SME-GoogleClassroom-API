@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
         public async Task<PaginacaoResultadoDto<CursoComparativoDto>> Handle(ObterCursosComparativosPaginadosQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursoComparativo.ObterCursosComparativosAsync(request.Paginacao, request.Secao);
+            return await repositorioCursoComparativo.ObterCursosComparativosAsync(request.Paginacao, request.Secao, request.Nome, request.Descricao);
         }
     }
 }

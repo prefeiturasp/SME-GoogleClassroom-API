@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
 
@@ -25,6 +29,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> IniciarAtualizacaoUsuarioGoogleClassroomId(int registrosPorPagina, [FromServices] IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase iniciaAtualizacaoUsuarioGoogleClassroomIdUseCase)
         {
             var retorno = await iniciaAtualizacaoUsuarioGoogleClassroomIdUseCase.Executar(registrosPorPagina);
+            return Ok(retorno);
+        }
+
+        [HttpGet("comparativo")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioComparativo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterComparativoDeUsuarios([FromQuery] FiltroObterComparativoUsuarioDto filtro, [FromServices] IObterComparativoDeUsuariosUseCase useCase)
+        {
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
     }

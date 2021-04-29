@@ -8,6 +8,6 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<long> SalvarAsync(CursoComparativo cursoComparativo);
 
-        Task<PaginacaoResultadoDto<CursoComparativoDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao);
+        Task<PaginacaoResultadoDto<CursoComparativoDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao, string nome, string descricao);
     }
 }

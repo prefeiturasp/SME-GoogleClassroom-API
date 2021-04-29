@@ -37,12 +37,12 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
 
-        public async Task<PaginacaoResultadoDto<CursoComparativoDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao)
+        public async Task<PaginacaoResultadoDto<CursoComparativoDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao, string nome, string descricao)
         {
             var queryCompleta = new StringBuilder();
 
-            queryCompleta.AppendLine(MontaQueryObterCursosComparativos(false, paginacao, secao));
-            queryCompleta.AppendLine(MontaQueryObterCursosComparativos(true, paginacao, secao));
+            queryCompleta.AppendLine(MontaQueryObterCursosComparativos(false, paginacao, secao, nome, descricao));
+            queryCompleta.AppendLine(MontaQueryObterCursosComparativos(true, paginacao, secao, nome, descricao));
 
             var retorno = new PaginacaoResultadoDto<CursoComparativoDto>();
 
@@ -63,7 +63,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private string MontaQueryObterCursosComparativos(bool ehParaPaginacao, Paginacao paginacao, string secao)
+        private string MontaQueryObterCursosComparativos(bool ehParaPaginacao, Paginacao paginacao, string secao, string nome, string descricao)
         {
             var queryCompleta = new StringBuilder("SELECT ");
 
@@ -74,17 +74,24 @@ namespace SME.GoogleClassroom.Dados
                 queryCompleta.AppendLine(@"CC.ID, 
                                   CC.NOME,
                                   CC.SECAO,
-                                  C.CRIADOR_ID AS CRIADORID,
-                                  C.DESCRICAO,
-                                  C.DATA_INCLUSAO AS DATAINCLUSAO,
-                                  C.INSERIDO_MANUALMENTE_GOOGLE AS INSERIDOMANUALMENTEGOOGLE");
+                                  CC.CRIADOR_ID AS CRIADORID,
+                                  CC.DESCRICAO,
+                                  CC.DATA_INCLUSAO AS DATAINCLUSAO,
+                                  CC.INSERIDO_MANUALMENTE_GOOGLE AS INSERIDOMANUALMENTEGOOGLE");
             }
 
             queryCompleta.AppendLine(@"FROM CURSO_COMPARATIVO CC");
             queryCompleta.AppendLine(@"WHERE 1=1");
 
+
+            if (!string.IsNullOrEmpty(nome))
+                queryCompleta.AppendLine(@"AND CC.nome like('%" + nome?.Trim().ToLower() + "%')");
+
+            if (!string.IsNullOrEmpty(descricao))
+                queryCompleta.AppendLine(@"AND CC.descricao like('%" + descricao?.Trim().ToLower() + "%')");
+
             if (!string.IsNullOrEmpty(secao))
-                queryCompleta.AppendLine(@"AND C.secao like('%" + secao?.Trim().ToLower() + "%')");
+                queryCompleta.AppendLine(@"AND CC.secao like('%" + secao?.Trim().ToLower() + "%')");
 
             if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
                 queryCompleta.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
