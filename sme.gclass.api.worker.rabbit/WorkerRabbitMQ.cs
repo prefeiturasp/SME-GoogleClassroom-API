@@ -87,6 +87,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoComparativoAtualizar, new ComandoRabbit("Processar o comparativo de cursos a serem adicionados na base", typeof(IProcessarSincronizacaoComparativoCursoUseCase)));
             comandos.Add(RotasRabbit.FilaUsuarioGoogleIdSync, new ComandoRabbit("Tratamento de atualização de usuários GoogleClassroomId", typeof(ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase)));
             comandos.Add(RotasRabbit.FilaUsuarioGoogleIdAtualizar, new ComandoRabbit("Atualização de usuário GoogleClassroomId", typeof(IAtualizacaoUsuarioGoogleClassroomIdUseCase)));
+            comandos.Add(RotasRabbit.FilaProfessorCursoRemover, new ComandoRabbit("Remover professores novos no Google", typeof(IRemoverProfessorCursoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaCursoCarregar, new ComandoRabbit("Sincroniza os cursos comparativos a serem adicionados na base", typeof(IRealizarCargaCursosUseCase)));
             comandos.Add(RotasRabbit.FilaUsuariosCarregar, new ComandoRabbit("Realiza carga de usuários do GSA para comparativo de dados", typeof(IRealizarCargaUsuariosUseCase)));
         }
@@ -232,6 +233,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoComparativoAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdAtualizar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoRemover, false, consumer);
             }
 
             return Task.CompletedTask;

@@ -385,5 +385,44 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+        public async Task<int> RemoverAsync(long id)
+        {
+            const string query = "DELETE FROM public.cursos_usuarios WHERE id = @id";
+            var parametros = new
+            {
+                id
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, parametros);
+        }
+
+        public async Task<CursoUsuario> ObterPorUsuarioIdCursoIdAsync(long usuarioId, long cursoId)
+        {
+            const string query = @"
+                SELECT
+                    id, 
+                    curso_id as CursoId,
+                    usuario_id as UsuarioId,
+                    data_inclusao as DatInclusao,
+                    data_atualizacao as DataAtualizacao,
+                    excluido
+                FROM
+                    public.cursos_usuarios c
+                WHERE
+                    c.usuario_id = @usuarioId
+                    and c.curso_id = @cursoId
+                    and not excluido";
+
+            var parametros = new
+            {
+                usuarioId,
+                cursoId
+            };
+
+            using var conn = ObterConexao();
+            return await conn.QuerySingleOrDefaultAsync<CursoUsuario>(query, parametros);
+        }
     }
 }

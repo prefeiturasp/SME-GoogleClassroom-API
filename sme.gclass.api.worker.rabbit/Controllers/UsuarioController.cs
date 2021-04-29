@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
     /// <summary>
-    /// Alunos
+    /// Usuários
     /// </summary>
     [ApiController]
     [ChaveIntegracaoGoogleClassroomApi]
@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// Inicia a atualização dos usuários sem o identificador do Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Esta funcionalidade é destinada para uso pelas equipes de desnvolvimento e infraestrutura responsáveis pela manutenção da aplicação.
+        /// **Importante:** Esta funcionalidade é destinada para uso apenas pelas equipes de desenvolvimento e infraestrutura responsáveis pela manutenção da aplicação.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("atualizacoes/google-id")]
