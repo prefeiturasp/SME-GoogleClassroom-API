@@ -3,10 +3,8 @@ using Google.Apis.Classroom.v1.Data;
 using MediatR;
 using Polly;
 using Polly.Registry;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,11 +27,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
-            if(cursosGoogle.Courses is null)
+            if (cursosGoogle.Courses is null)
             {
                 cursosGoogle.Courses = new List<Course>();
             }
-            var cursos = ConvertToDto(cursosGoogle.Courses);
+            var cursos = ConvertToDto(cursosGoogle);
             return new ResultadoCursoComparativoDto()
             {
                 NextToken = cursosGoogle.NextPageToken,
@@ -49,10 +47,10 @@ namespace SME.GoogleClassroom.Aplicacao
             return await request.ExecuteAsync();
         }
 
-        private IEnumerable<CursoComparativoDto> ConvertToDto(IList<Course> cursos)
+        private IEnumerable<CursoComparativoDto> ConvertToDto(ListCoursesResponse cursosGoogle)
         {
             var cursosDto = new List<CursoComparativoDto>();
-            foreach(var curso in cursos)
+            foreach (var curso in cursosGoogle.Courses)
             {
                 var dto = new CursoComparativoDto()
                 {
@@ -61,7 +59,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     Descricao = curso.Description,
                     Nome = curso.Name,
                     DataInclusao = (DateTime)curso.CreationTime,
-                    Secao = curso.Section
+                    Secao = curso.Section,
+                    UltimoItemDaFila = string.IsNullOrEmpty(cursosGoogle.NextPageToken)
                 };
                 cursosDto.Add(dto);
             }
