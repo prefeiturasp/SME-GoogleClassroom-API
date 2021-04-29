@@ -12,5 +12,6 @@ namespace SME.GoogleClassroom.Infra
 
         public bool InseridoManualmenteGoogle { get; set; }
         public DateTime DataInclusao { get; set; }
+        public bool UltimoItemDaFila { get; set; }
     }
 }

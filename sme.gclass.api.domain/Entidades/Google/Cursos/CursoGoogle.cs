@@ -13,6 +13,7 @@ namespace SME.GoogleClassroom.Dominio
         public TurmaTipo TurmaTipo { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
+        public bool ExisteGoogle { get; set; }
 
         public CursoGoogle(string nome, string secao, long turmaId, long componenteCurricularId, string email)
         {
@@ -21,7 +22,8 @@ namespace SME.GoogleClassroom.Dominio
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
             Email = email;
-            DataInclusao = DateTime.Now;            
+            DataInclusao = DateTime.Now;
+            ExisteGoogle = true;
         }
 
         public CursoGoogle(string nome, string secao, long turmaId, long componenteCurricularId, string email, TurmaTipo turmaTipo)
@@ -33,6 +35,7 @@ namespace SME.GoogleClassroom.Dominio
             Email = email;
             DataInclusao = DateTime.Now;
             TurmaTipo = turmaTipo;
+            ExisteGoogle = true;
         }
 
         protected CursoGoogle()

@@ -20,6 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = mensagemRabbit.Mensagem;
 
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuariosCarregar, RotasRabbit.FilaUsuariosCarregar, mensagem));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoGoogleSync, RotasRabbit.FilaComparativoGoogleSync, mensagem));
 
             return true;
         }

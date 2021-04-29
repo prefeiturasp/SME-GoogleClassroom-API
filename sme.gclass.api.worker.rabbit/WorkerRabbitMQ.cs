@@ -91,6 +91,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoCarregar, new ComandoRabbit("Sincroniza os cursos comparativos a serem adicionados na base", typeof(IRealizarCargaCursosUseCase)));
             comandos.Add(RotasRabbit.FilaUsuariosCarregar, new ComandoRabbit("Realiza carga de usuários do GSA para comparativo de dados", typeof(IRealizarCargaUsuariosUseCase)));
             comandos.Add(RotasRabbit.FilaComparativosUsuariosValidar, new ComandoRabbit("Valida se os usuários existem na no google e atualiza o campo existe_google", typeof(IValidarUsuarioComparativoUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativoCursoValidar, new ComandoRabbit("Realiza validação de cursos comparativos", typeof(IValidarCursosComparativoUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -219,8 +220,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdSync, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaCursoCarregar, false, consumer); 
-                canalRabbit.BasicConsume(RotasRabbit.FilaComparativosUsuariosValidar, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -233,9 +232,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaCursoComparativoAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoRemover, false, consumer);
+            }
+
+            if(consumoDeFilasOptions.ConsumirFilasDeCarga)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoComparativoAtualizar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaComparativoCursoValidar, false, consumer);
             }
 
             return Task.CompletedTask;

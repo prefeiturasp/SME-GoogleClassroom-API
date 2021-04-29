@@ -58,10 +58,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 .NotEmpty()
                 .WithMessage("O ID do criador do curso deve ser informado.");
 
-            RuleFor(x => x.Descricao)
-                .NotEmpty()
-                .WithMessage("A Descrição do curso deve ser informada.");
-
             RuleFor(x => x.DataInclusao)
                 .NotEmpty()
                 .WithMessage("A data de inclusão do curso deve ser informado.");

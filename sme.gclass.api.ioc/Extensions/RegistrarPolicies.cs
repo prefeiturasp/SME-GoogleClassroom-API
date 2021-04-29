@@ -4,7 +4,6 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Dominio;
 using System;
-using System.Net.Http;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -21,6 +20,7 @@ namespace SME.GoogleClassroom.IoC
                       + TimeSpan.FromMilliseconds(jitterer.Next(0, 30)));
 
             registry.Add("RetryPolicy", policy);
+
             RegistrarPolicyComparativoDeDados(registry);
         }
 
