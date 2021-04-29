@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
@@ -11,6 +9,8 @@ namespace SME.GoogleClassroom.Infra
         public string Secao { get; set; }
         public string CriadorId { get; set; }
         public string Descricao { get; set; }
+
+        public bool InseridoManualmenteGoogle { get; set; }
         public DateTime DataInclusao { get; set; }
     }
 }
