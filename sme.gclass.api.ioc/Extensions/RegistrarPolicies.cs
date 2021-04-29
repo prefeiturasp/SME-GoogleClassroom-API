@@ -21,13 +21,11 @@ namespace SME.GoogleClassroom.IoC
 
             registry.Add("RetryPolicy", policy);
 
-            RegistrarPolicyComparativoDeDados(services);
+            RegistrarPolicyComparativoDeDados(registry);
         }
 
-        private static void RegistrarPolicyComparativoDeDados(IServiceCollection services)
+        private static void RegistrarPolicyComparativoDeDados(IPolicyRegistry<string> registry)
         {
-            IPolicyRegistry<string> registry = services.AddPolicyRegistry();
-
             var policy = Policy.Handle<Exception>(ex => !(ex is GoogleApiException))
               .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
 

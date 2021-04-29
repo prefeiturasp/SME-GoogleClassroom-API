@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Dados
             const string insertQuery = @"insert into public.curso_comparativo
                                         (id, nome, secao, criador_id, descricao, data_inclusao, inserido_manualmente_google)
                                         values
-                                        (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inserido_manualmente_google)
+                                        (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inseridoManualmenteGoogle)
                                         RETURNING id";
 
             var parametros = new
@@ -40,23 +40,23 @@ namespace SME.GoogleClassroom.Dados
             const string updateQuery = @"
                 drop table if exists tempCursosValidacao;
                 select 
-	                c.id,
-	                not cc.id is null as existe_google
+                    c.id,
+                    not cc.id is null as existe_google
                 into tempCursosValidacao
                 from 
-	                cursos c
+                    cursos c
                 left join
-	                curso_comparativo cc
-	                on cast(c.id as varchar) = cc.id;
-	
+                    curso_comparativo cc
+                    on cast(c.id as varchar) = cc.id;
+   
                 update 
-	                cursos c
+                    cursos c
                 set
-	                c.existe_google = t1.existe_google
+                    existe_google = t1.existe_google
                 from 
-	                tempCursosValidacao t1
+                    tempCursosValidacao t1
                 where
-	                c.id = t1.id;";
+                    c.id = t1.id;";
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(updateQuery);

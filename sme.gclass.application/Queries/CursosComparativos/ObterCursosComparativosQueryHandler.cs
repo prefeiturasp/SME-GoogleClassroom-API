@@ -6,6 +6,7 @@ using Polly.Registry;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static Google.Apis.Classroom.v1.CoursesResource.ListRequest;
@@ -59,11 +60,14 @@ namespace SME.GoogleClassroom.Aplicacao
                     Descricao = curso.Description,
                     Nome = curso.Name,
                     DataInclusao = (DateTime)curso.CreationTime,
-                    Secao = curso.Section,
-                    UltimoItemDaFila = string.IsNullOrEmpty(cursosGoogle.NextPageToken)
+                    Secao = curso.Section
                 };
                 cursosDto.Add(dto);
             }
+
+            if (string.IsNullOrEmpty(cursosGoogle.NextPageToken))
+                cursosDto.Last().UltimoItemDaFila = true;
+
             return cursosDto;
         }
     }
