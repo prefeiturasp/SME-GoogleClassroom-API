@@ -57,12 +57,12 @@
 
         #region Comparativo de dados
         public static string FilaComparativoGoogleSync => "googleclass.comparativo.sync";
-        public static string FilaCursoCarregar => "googleclass.curso.carregar";
-        public static string FilaCursoComparativoAtualizar => "googleclass.curso.comparativo.atualizar";
+        public static string FilaComparativoCursoCarregar => "googleclass.comparativo.curso.carregar";
+        public static string FilaComparativoCursoAtualizar => "googleclass.comparativo.curso.incluir";
         public static string FilaComparativoCursoValidar => "googleclass.comparativo.curso.validar";
-        public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
-        public static string FilaComparativosUsuariosValidar => "googleclass.comparativo.usuario.validar";
-        public static string FilaUsuariosIncluir => "googleclass.usuario.incluir";
+        public static string FilaComparativoUsuarioCarregar => "googleclass.comparativo.usuario.carregar";
+        public static string FilaComparativoUsuarioValidar => "googleclass.comparativo.usuario.validar";
+        public static string FilaComparativoUsuarioIncluir => "googleclass.comparativo.usuario.incluir";
         #endregion
     }
 }

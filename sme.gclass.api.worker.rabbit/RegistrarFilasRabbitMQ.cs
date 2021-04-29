@@ -113,8 +113,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static void RegistrarFilasComparativoCursosSync(IModel canalRabbit)
         {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoComparativoAtualizar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoComparativoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoComparativoAtualizar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoCursoAtualizar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativoCursoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoCursoAtualizar);
         }
 
         private static void RegistrarFilasUsuarioSync(IModel canalRabbit)
@@ -125,8 +125,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static void RegistrarFilasValidarComparativoUsuarios(IModel canalRabbit)
         {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativosUsuariosValidar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaComparativosUsuariosValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativosUsuariosValidar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoUsuarioValidar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativoUsuarioValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoUsuarioValidar);
         }
 
         #endregion Filas Sync
@@ -196,14 +196,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoCarregar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoCarregar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoComparativoAtualizar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoComparativoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaCursoComparativoAtualizar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoCursoAtualizar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativoCursoAtualizar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoCursoAtualizar);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoCursoValidar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaComparativoCursoValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoCursoValidar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaUsuariosCarregar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaUsuariosCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuariosCarregar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativoUsuarioCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativoUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativoUsuarioCarregar);
         }
         #endregion
     }

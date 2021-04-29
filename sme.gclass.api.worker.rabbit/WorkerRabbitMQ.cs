@@ -84,15 +84,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaFuncionarioErroTratar, new ComandoRabbit("Realiza o tratamento de erro na inclusão de um funcionários.", typeof(IRealizarTratamentoFuncionarioErroUseCase)));
             comandos.Add(RotasRabbit.FilaCursoErroSync, new ComandoRabbit("Tratamento de erros cursos novos no sync com google", typeof(ITrataSyncGoogleCursoErroUseCase)));
             comandos.Add(RotasRabbit.FilaCursoErroTratar, new ComandoRabbit("Tratamento de erros cursos novos ao inserir no google", typeof(IRealizarTratamentoCursoErroUseCase)));
-            comandos.Add(RotasRabbit.FilaCursoComparativoAtualizar, new ComandoRabbit("Processar o comparativo de cursos a serem adicionados na base", typeof(IProcessarSincronizacaoComparativoCursoUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativoCursoAtualizar, new ComandoRabbit("Processar o comparativo de cursos a serem adicionados na base", typeof(IProcessarSincronizacaoComparativoCursoUseCase)));
             comandos.Add(RotasRabbit.FilaUsuarioGoogleIdSync, new ComandoRabbit("Tratamento de atualização de usuários GoogleClassroomId", typeof(ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase)));
             comandos.Add(RotasRabbit.FilaUsuarioGoogleIdAtualizar, new ComandoRabbit("Atualização de usuário GoogleClassroomId", typeof(IAtualizacaoUsuarioGoogleClassroomIdUseCase)));
             comandos.Add(RotasRabbit.FilaProfessorCursoRemover, new ComandoRabbit("Remover professores novos no Google", typeof(IRemoverProfessorCursoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaCursoCarregar, new ComandoRabbit("Sincroniza os cursos comparativos a serem adicionados na base", typeof(IRealizarCargaCursosUseCase)));
-            comandos.Add(RotasRabbit.FilaUsuariosCarregar, new ComandoRabbit("Realiza carga de usuários do GSA para comparativo de dados", typeof(IRealizarCargaUsuariosUseCase)));
-            comandos.Add(RotasRabbit.FilaComparativosUsuariosValidar, new ComandoRabbit("Valida se os usuários existem na no google e atualiza o campo existe_google", typeof(IValidarUsuarioComparativoUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativoUsuarioCarregar, new ComandoRabbit("Realiza carga de usuários do GSA para comparativo de dados", typeof(IRealizarCargaUsuariosUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativoUsuarioValidar, new ComandoRabbit("Valida se os usuários existem na no google e atualiza o campo existe_google", typeof(IValidarUsuarioComparativoUseCase)));
             comandos.Add(RotasRabbit.FilaComparativoCursoValidar, new ComandoRabbit("Realiza validação de cursos comparativos", typeof(IValidarCursosComparativoUseCase)));
-            comandos.Add(RotasRabbit.FilaUsuariosIncluir, new ComandoRabbit("Realiza inclusão do usuário do GSA na entidade de comparativo de dados", typeof(IRealizarInclusaoUsuarioUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativoUsuarioIncluir, new ComandoRabbit("Realiza inclusão do usuário do GSA na entidade de comparativo de dados", typeof(IRealizarInclusaoUsuarioUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -241,14 +241,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if(consumoDeFilasOptions.ConsumirFilasDeCarga)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoCarregar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaCursoComparativoAtualizar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaComparativoCursoAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaComparativoCursoValidar, false, consumer);
             }
 
 
             if (consumoDeFilasOptions.ConsumirFilasDeCarga)
             {
-                canalRabbit.BasicConsume(RotasRabbit.FilaUsuariosCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaComparativoUsuarioCarregar, false, consumer);
             }
             return Task.CompletedTask;
         }

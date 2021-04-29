@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 try
                 {
-                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoComparativoAtualizar, RotasRabbit.FilaCursoComparativoAtualizar, curso));
+                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoCursoAtualizar, RotasRabbit.FilaComparativoCursoAtualizar, curso));
                     if (!publicarCurso) continue;
                 }
                 catch (Exception ex)

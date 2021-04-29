@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task<bool> ValidarCursosComparativoAsync()
         {
-            if (await mediator.Send(new VerificarSeExistemMensagemNaFilaQuery(RotasRabbit.FilaCursoComparativoAtualizar)))
+            if (await mediator.Send(new VerificarSeExistemMensagemNaFilaQuery(RotasRabbit.FilaComparativoCursoAtualizar)))
                 throw new NegocioException("Não é possível iniciar a validação de usuarios comparativos. Ainda existem itens na fila de atualização.");
 
             await mediator.Send(new ValidarUsuariosExistentesUsuariosComparativosCommand());
