@@ -90,6 +90,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaProfessorCursoRemover, new ComandoRabbit("Remover professores novos no Google", typeof(IRemoverProfessorCursoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaCursoCarregar, new ComandoRabbit("Sincroniza os cursos comparativos a serem adicionados na base", typeof(IRealizarCargaCursosUseCase)));
             comandos.Add(RotasRabbit.FilaUsuariosCarregar, new ComandoRabbit("Realiza carga de usuários do GSA para comparativo de dados", typeof(IRealizarCargaUsuariosUseCase)));
+            comandos.Add(RotasRabbit.FilaComparativosUsuariosValidar, new ComandoRabbit("Valida se os usuários existem na no google e atualiza o campo existe_google", typeof(IValidarUsuarioComparativoUseCase)));
             comandos.Add(RotasRabbit.FilaComparativoCursoValidar, new ComandoRabbit("Realiza validação de cursos comparativos", typeof(IValidarCursosComparativoUseCase)));
         }
 

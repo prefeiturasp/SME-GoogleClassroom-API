@@ -61,6 +61,7 @@
         public static string FilaCursoComparativoAtualizar => "googleclass.curso.comparativo.atualizar";
         public static string FilaComparativoCursoValidar => "googleclass.comparativo.curso.validar";
         public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
+        public static string FilaComparativosUsuariosValidar => "googleclass.comparativo.usuario.validar";
         #endregion
     }
 }

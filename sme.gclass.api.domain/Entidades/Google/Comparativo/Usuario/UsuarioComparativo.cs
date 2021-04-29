@@ -11,5 +11,6 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public bool EhAdmin { get; set; }
         public string OrganizationPath { get; set; }
+        public bool UltimoItemDaFila { get; set; }
     }
 }

@@ -1,0 +1,1 @@
+alter table  public.usuarios add if not exists existe_google BOOLEAN NULL;

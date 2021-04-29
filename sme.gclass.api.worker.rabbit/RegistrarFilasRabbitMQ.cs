@@ -32,6 +32,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarFilasProfessorSync(canalRabbit);
             RegistrarFilasFuncionarioSync(canalRabbit);
             RegistrarFilasUsuarioSync(canalRabbit);
+            RegistrarFilasValidarComparativoUsuarios(canalRabbit);
         }
 
         private static void RegistrarFilasCursoSync(IModel canalRabbit)
@@ -120,6 +121,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaUsuarioGoogleIdSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaUsuarioGoogleIdSync);
+        }
+
+        private static void RegistrarFilasValidarComparativoUsuarios(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaComparativosUsuariosValidar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaComparativosUsuariosValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaComparativosUsuariosValidar);
         }
 
         #endregion Filas Sync
