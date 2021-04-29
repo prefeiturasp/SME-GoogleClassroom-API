@@ -16,6 +16,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios
         }
 
         public async Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> Handle(ObterUsuariosSemGoogleClassroomIdPorTipoQuery request, CancellationToken cancellationToken)
-            => await repositorioUsuario.ObterUsuariosSemGoogleClassroomIdPorTipoAsync(request.Paginacao);
+            => await repositorioUsuario.ObterAtualizacaoUsuarioGoogleClassroomIdAsync(request.Paginacao);
     }
 }

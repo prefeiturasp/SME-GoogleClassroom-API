@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioUsuarioComparativo
     {
-        Task<int> ValidarCursosExistentesCursosComparativosAsync();
+        Task<int> ValidarUsuariosExistentesUsuariosComparativosAsync();
+        Task<PaginacaoResultadoDto<UsuarioComparativo>> ObterUsuariosComparativosAsync(Paginacao paginacao,  string nome, string email, string organizationPath);
     }
 }

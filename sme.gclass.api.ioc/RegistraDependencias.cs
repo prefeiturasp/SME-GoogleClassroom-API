@@ -116,6 +116,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
             services.TryAddScoped<IProcessarSincronizacaoComparativoCursoUseCase, ProcessarSincronizacaoComparativoCursoUseCase>();
 
+            services.TryAddScoped<IObterComparativoDeCursosUseCase, ObterComparativoDeCursosUseCase>();
+            services.TryAddScoped<IObterComparativoDeUsuariosUseCase, ObterComparativoDeUsuariosUseCase>();
+            services.TryAddScoped<IIniciarCargaUsuariosUseCase, IniciarCargaUsuariosUseCase>();
 
             services.TryAddScoped<ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase, TrataAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();
@@ -125,6 +128,7 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase, IniciarValidarUsuariosExistentesUsuariosComparativosUseCase>();
             services.TryAddScoped<IValidarUsuarioComparativoUseCase, ValidarUsuarioComparativoUseCase>();
+            services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
         }
     }
 }

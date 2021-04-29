@@ -15,6 +15,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         protected override async Task Handle(ValidarUsuariosExistentesUsuariosComparativosCommand request, CancellationToken cancellationToken) 
-            => await repositorioUsuarioComparativo.ValidarCursosExistentesCursosComparativosAsync();
+            => await repositorioUsuarioComparativo.ValidarUsuariosExistentesUsuariosComparativosAsync();
     }
 }

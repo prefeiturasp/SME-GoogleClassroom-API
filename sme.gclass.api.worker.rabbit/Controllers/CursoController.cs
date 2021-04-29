@@ -171,13 +171,28 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet("comparativos")]
+        [HttpGet("comparativos/carga")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterCursosComparativos([FromServices] IIniciarCargaCursosUseCase useCase)
         {
             var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
+        /// <summary>
+        /// Retorna os comparativos de cursos que foram criados pelo Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("comparativos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoComparativoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterComparativoDeCursos([FromQuery] FiltroObterComparativoCursoDto filtro, [FromServices] IObterComparativoDeCursosUseCase useCase)
+        {
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
     }
