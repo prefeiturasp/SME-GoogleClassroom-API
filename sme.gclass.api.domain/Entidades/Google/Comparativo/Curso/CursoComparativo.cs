@@ -11,5 +11,6 @@ namespace SME.GoogleClassroom.Dominio
         public string Descricao { get; set; }
         public bool InseridoManualmenteGoogle { get; set; }
         public DateTime DataInclusao { get; set; }
+        public bool UltimoItemDaFila { get; set; }
     }
 }

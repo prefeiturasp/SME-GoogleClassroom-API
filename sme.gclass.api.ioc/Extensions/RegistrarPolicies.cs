@@ -4,7 +4,6 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Dominio;
 using System;
-using System.Net.Http;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -21,6 +20,18 @@ namespace SME.GoogleClassroom.IoC
                       + TimeSpan.FromMilliseconds(jitterer.Next(0, 30)));
 
             registry.Add("RetryPolicy", policy);
+
+            RegistrarPolicyComparativoDeDados(services);
+        }
+
+        private static void RegistrarPolicyComparativoDeDados(IServiceCollection services)
+        {
+            IPolicyRegistry<string> registry = services.AddPolicyRegistry();
+
+            var policy = Policy.Handle<Exception>(ex => !(ex is GoogleApiException || ex is NegocioException))
+              .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
+
+            registry.Add("RetryComparativoDeDadosPolicy", policy);
         }
     }
 }
