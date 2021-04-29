@@ -194,6 +194,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if (consumoDeFilasOptions.ConsumirFilasSync)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaComparativoGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorSync, false, consumer);
@@ -231,6 +232,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdAtualizar, false, consumer);
             }
 
+
+            if (consumoDeFilasOptions.ConsumirFilasDeCarga)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaUsuariosCarregar, false, consumer);
+            }
             return Task.CompletedTask;
         }
     }

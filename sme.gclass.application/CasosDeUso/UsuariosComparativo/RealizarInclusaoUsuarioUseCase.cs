@@ -1,4 +1,5 @@
-﻿using Google.Apis.Admin.Directory.directory_v1.Data;
+﻿using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
@@ -7,15 +8,26 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class RealizarInclusaoUsuarioUseCase : IRealizarInclusaoUsuarioUseCase
     {
-        public RealizarInclusaoUsuarioUseCase()
+        private readonly IMediator mediator;
+
+        public RealizarInclusaoUsuarioUseCase(IMediator mediator)
         {
+            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var usuarioGsa = mensagemRabbit.ObterObjetoMensagem<User>();
+            try
+            {
+                var usuarioGsa = mensagemRabbit.ObterObjetoMensagem<Google.Apis.Admin.Directory.directory_v1.Data.User>();
 
-            return true;
+                return await mediator.Send(new IncluirUsuarioComparativoCommand(usuarioGsa));
+            }
+            catch (System.Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+                throw;
+            }        
         }
     }
 }

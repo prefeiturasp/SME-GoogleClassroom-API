@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCargaUsuariosGoogleDto>();
+                var filtro = mensagemRabbit.Mensagem != null ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaUsuariosGoogleDto>() : null;
 
                 return await mediator.Send(new CarregarUsuariosGSACommand(filtro?.TokenProximaPagina));
             }
