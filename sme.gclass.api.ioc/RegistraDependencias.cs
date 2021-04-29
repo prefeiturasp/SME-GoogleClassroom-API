@@ -115,6 +115,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
             services.TryAddScoped<IProcessarSincronizacaoComparativoCursoUseCase, ProcessarSincronizacaoComparativoCursoUseCase>();
 
+            services.TryAddScoped<IObterComparativoDeCursosUseCase, ObterComparativoDeCursosUseCase>();
+
 
             services.TryAddScoped<ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase, TrataAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();

@@ -165,13 +165,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             return Ok(retorno);
         }
 
-        [HttpGet("cursos/comparativos")]
+        [HttpGet("comparativos/carga")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterCursosComparativos([FromServices] IIniciarCargaCursosUseCase useCase)
         {
             var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
+
+        [HttpGet("comparativos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoComparativoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterComparativoDeCursos([FromQuery] FiltroObterComparativoCursoDto filtro, [FromServices] IObterComparativoDeCursosUseCase useCase)
+        {
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
     }
