@@ -4,6 +4,7 @@ using Polly.Registry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Politicas;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -16,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public ValidarCursosGsaUseCase(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator;
-            this.policy = registry.Get<IAsyncPolicy>("RetryComparativoDeDadosPolicy");
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)

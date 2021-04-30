@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.IoC
                 retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
                       + TimeSpan.FromMilliseconds(jitterer.Next(0, 30)));
 
-            registry.Add("RetryPolicy", policy);
+            registry.Add(PoliticaPolly.PolicyGoogleSync, policy);
 
             RegistrarPolicyComparativoDeDados(registry);
         }
@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.IoC
             var policy = Policy.Handle<Exception>(ex => !(ex is GoogleApiException))
               .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
 
-            registry.Add("RetryComparativoDeDadosPolicy", policy);
+            registry.Add(PoliticaPolly.PolicyCargaGsa, policy);
         }
     }
 }
