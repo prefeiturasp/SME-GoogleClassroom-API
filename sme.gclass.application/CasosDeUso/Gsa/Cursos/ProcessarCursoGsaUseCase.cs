@@ -27,29 +27,20 @@ namespace SME.GoogleClassroom.Aplicacao
             if (cursoGsaDto is null)
                 throw new NegocioException("Não foi possível processaor o curso GSA. A mensagem enviada é inválida.");
 
-            try
+            var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(cursoGsaDto.Id)));
+
+            var cursoInseridoManualmente = cursoGoogle is null;
+            var cursoGsa = new CursoGsa(cursoGsaDto.Id, cursoGsaDto.Nome, cursoGsaDto.Secao, cursoGsaDto.CriadorId, cursoGsaDto.Descricao, cursoInseridoManualmente, cursoGsaDto.DataInclusao);
+
+            var retorno = await mediator.Send(new InserirCursoGsaCommand(cursoGsa));
+
+            if (cursoGsaDto.UltimoItemDaFila)
             {
-                var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(cursoGsaDto.Id)));
-
-                var cursoInseridoManualmente = cursoGoogle is null;
-                var cursoGsa = new CursoGsa(cursoGsaDto.Id, cursoGsaDto.Nome, cursoGsaDto.Secao, cursoGsaDto.CriadorId, cursoGsaDto.Descricao, cursoInseridoManualmente, cursoGsaDto.DataInclusao);
-
-                var retorno =  await mediator.Send(new InserirCursoGsaCommand(cursoGsa));
-
-                if (cursoGsaDto.UltimoItemDaFila)
-                {
-                    await IniciarCargaDeUsuariosAsync();
-                    await IniciarValidacaoAsync();
-                }
-
-                return retorno;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
+                await IniciarCargaDeUsuariosAsync();
+                await IniciarValidacaoAsync();
             }
 
-            return false;
+            return retorno;
         }
 
         private async Task IniciarValidacaoAsync()
@@ -70,7 +61,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var iniciarCargaUsuarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, true));
+                var filtro = new FiltroCargaUsuariosGoogleDto();
+
+                var iniciarCargaUsuarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, filtro));
                 if (!iniciarCargaUsuarios)
                     SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de cursos.");
             }

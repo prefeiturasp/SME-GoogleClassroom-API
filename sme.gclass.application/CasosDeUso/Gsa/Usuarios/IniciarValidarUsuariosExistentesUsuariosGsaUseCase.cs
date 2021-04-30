@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarValidarUsuariosExistentesUsuariosComparativosUseCase : IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase
+    public class IniciarValidarUsuariosExistentesUsuariosGsaUseCase : IIniciarValidarUsuariosExistentesUsuariosGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public IniciarValidarUsuariosExistentesUsuariosComparativosUseCase(IMediator mediator)
+        public IniciarValidarUsuariosExistentesUsuariosGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }

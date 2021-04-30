@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
+            var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.TokenPagina, servicoClassroom));
             if (cursosGoogle.Courses is null)
             {
                 cursosGoogle.Courses = new List<Course>();

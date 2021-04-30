@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">O início da validação ocorreu com sucesso</response>
         [HttpGet("valida")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ValidaUsuariosExistentes([FromServices] IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase useCase)
+        public async Task<IActionResult> ValidaUsuariosExistentes([FromServices] IIniciarValidarUsuariosExistentesUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar();
             return Ok(retorno);

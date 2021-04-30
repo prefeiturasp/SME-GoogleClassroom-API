@@ -242,6 +242,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeProcessamentoGsa)
@@ -250,6 +251,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoValidar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioValidar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoIncluir, false, consumer);
             }
 
             return Task.CompletedTask;

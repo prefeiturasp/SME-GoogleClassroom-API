@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginaConsultaUsuariosGsaDto> Handle(ObterUsuariosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-            var usuariosGoogle = await policy.ExecuteAsync(() => ObterUsuariosGsaGoogleAsync(diretorioClassroom, request.TokenProximaPagina));
+            var usuariosGoogle = await policy.ExecuteAsync(() => ObterUsuariosGsaGoogleAsync(diretorioClassroom, request.TokenPagina));
             return MapearParaDto(usuariosGoogle);
         }
 

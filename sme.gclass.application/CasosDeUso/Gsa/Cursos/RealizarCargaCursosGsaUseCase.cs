@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var dto = mensagemRabbit?.ObterObjetoMensagem<FiltroCagaCursosGsaDto>();
 
-            var resultado = await mediator.Send(new ObterCursosGsaGoogleQuery(dto?.NextToken));
+            var resultado = await mediator.Send(new ObterCursosGsaGoogleQuery(dto?.TokenProximaPagina));
             foreach (var curso in resultado.Cursos)
             {
                 try
@@ -39,8 +39,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            dto.NextToken = resultado.TokenProximaPagina;
-            if (!string.IsNullOrEmpty(dto.NextToken))
+            dto.TokenProximaPagina = resultado.TokenProximaPagina;
+            if (!string.IsNullOrEmpty(dto.TokenProximaPagina))
                 await PublicaProximaPaginaAsync(dto);
 
             return true;

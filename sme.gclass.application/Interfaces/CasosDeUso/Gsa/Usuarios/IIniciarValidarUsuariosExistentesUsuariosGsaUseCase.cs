@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IIniciarValidarUsuariosExistentesUsuariosComparativosUseCase
+    public interface IIniciarValidarUsuariosExistentesUsuariosGsaUseCase
     {
         Task<bool> Executar();
     }

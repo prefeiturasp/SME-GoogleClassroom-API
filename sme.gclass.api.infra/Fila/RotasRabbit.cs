@@ -63,6 +63,8 @@
         public static string FilaGsaUsuarioCarregar => "googleclass.gsa.usuario.carregar";
         public static string FilaGsaUsuarioValidar => "googleclass.gsa.usuario.validar";
         public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
+        public static string FilaGsaUsuarioCursoCarregar => "googleclass.gsa.usuario.curso.carregar";
+        public static string FilaGsaUsuarioCursoIncluir => "googleclass.gsa.usuario.curso.incluir";
         #endregion
     }
 }

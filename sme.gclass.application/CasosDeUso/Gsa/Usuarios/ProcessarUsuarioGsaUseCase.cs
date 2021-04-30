@@ -27,22 +27,14 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioGsaDto is null)
                 throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
 
-            try
-            {
-                var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
-                var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
+            var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
+            var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
 
-                var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
-                if (usuarioGsaDto.UltimoItemDaFila)
-                    await IniciarValidacaoAsync();
+            var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+            if (usuarioGsaDto.UltimoItemDaFila)
+                await IniciarValidacaoAsync();
 
-                return retorno;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw;
-            }        
+            return retorno;
         }
 
         private async Task IniciarValidacaoAsync()

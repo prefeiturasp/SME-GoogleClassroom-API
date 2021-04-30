@@ -186,6 +186,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCarregar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioCarregar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCursoCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCursoCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioCursoCarregar);
         }
         #endregion
 
@@ -203,6 +206,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioValidar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioValidar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioCursoIncluir);
         }
         #endregion
     }
