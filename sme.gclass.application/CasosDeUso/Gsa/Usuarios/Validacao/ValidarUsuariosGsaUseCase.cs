@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (await mediator.Send(new VerificarSeExistemMensagemNaFilaQuery(RotasRabbit.FilaGsaCursoIncluir)))
                 throw new NegocioException("Não é possível iniciar a validação de usuarios comparativos. Ainda existem itens na fila de atualização.");
 
-            await mediator.Send(new ValidarUsuariosExistentesUsuariosComparativosCommand());
+            await mediator.Send(new ValidarUsuariosExistentesCursosGsaCommand());
             return true;
         }
     }

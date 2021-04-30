@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
         protected override async Task<bool> ExecutarAsync(InserirFuncionarioIndiretoGoogleCommand request, CancellationToken cancellationToken)

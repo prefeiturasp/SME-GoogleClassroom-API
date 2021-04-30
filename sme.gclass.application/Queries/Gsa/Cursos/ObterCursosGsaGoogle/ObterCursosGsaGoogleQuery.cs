@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosGsaGoogleQuery : IRequest<ResultadoCursoGsaDto>
+    public class ObterCursosGsaGoogleQuery : IRequest<PaginaConsultaCursosGsaDto>
     {
         public string  NextToken { get; set; }
 

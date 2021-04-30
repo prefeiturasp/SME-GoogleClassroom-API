@@ -14,7 +14,7 @@ using static Google.Apis.Classroom.v1.CoursesResource.ListRequest;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosGsaGoogleQueryHandler : IRequestHandler<ObterCursosGsaGoogleQuery, ResultadoCursoGsaDto>
+    public class ObterCursosGsaGoogleQueryHandler : IRequestHandler<ObterCursosGsaGoogleQuery, PaginaConsultaCursosGsaDto>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
@@ -22,10 +22,10 @@ namespace SME.GoogleClassroom.Aplicacao
         public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
-        public async Task<ResultadoCursoGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
+        public async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
@@ -34,9 +34,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 cursosGoogle.Courses = new List<Course>();
             }
             var cursos = ConvertToDto(cursosGoogle);
-            return new ResultadoCursoGsaDto()
+            return new PaginaConsultaCursosGsaDto()
             {
-                NextToken = cursosGoogle.NextPageToken,
+                TokenProximaPagina = cursosGoogle.NextPageToken,
                 Cursos = cursos
             };
         }

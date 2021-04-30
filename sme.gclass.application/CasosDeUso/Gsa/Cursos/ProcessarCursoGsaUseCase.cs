@@ -20,17 +20,27 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var comparativoCurso = JsonConvert.DeserializeObject<CursoGsa>(mensagemRabbit.Mensagem.ToString());
-            if (comparativoCurso is null) return false;
+            if (mensagemRabbit?.Mensagem is null)
+                throw new NegocioException("Não foi possível processaor o curso GSA. A mensagem enviada é inválida.");
+
+            var cursoGsaDto = JsonConvert.DeserializeObject<CursoGsaDto>(mensagemRabbit.Mensagem.ToString());
+            if (cursoGsaDto is null)
+                throw new NegocioException("Não foi possível processaor o curso GSA. A mensagem enviada é inválida.");
 
             try
             {
-                var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(comparativoCurso.Id)));
-                comparativoCurso.InseridoManualmenteGoogle = cursoGoogle is null;
-                var retorno =  await mediator.Send(new InserirCursoGsaCommand(comparativoCurso));
+                var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(cursoGsaDto.Id)));
 
-                if (comparativoCurso.UltimoItemDaFila)
+                var cursoInseridoManualmente = cursoGoogle is null;
+                var cursoGsa = new CursoGsa(cursoGsaDto.Id, cursoGsaDto.Nome, cursoGsaDto.Secao, cursoGsaDto.CriadorId, cursoGsaDto.Descricao, cursoInseridoManualmente, cursoGsaDto.DataInclusao);
+
+                var retorno =  await mediator.Send(new InserirCursoGsaCommand(cursoGsa));
+
+                if (cursoGsaDto.UltimoItemDaFila)
+                {
+                    await IniciarCargaDeUsuariosAsync();
                     await IniciarValidacaoAsync();
+                }
 
                 return retorno;
             }
@@ -38,6 +48,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 SentrySdk.CaptureException(ex);
             }
+
             return false;
         }
 
@@ -47,6 +58,20 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoValidar, RotasRabbit.FilaGsaCursoValidar, true));
                 if (!iniciarFilaDeValidacao)
+                    SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de cursos.");
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+            }
+        }
+
+        private async Task IniciarCargaDeUsuariosAsync()
+        {
+            try
+            {
+                var iniciarCargaUsuarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, true));
+                if (!iniciarCargaUsuarios)
                     SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de cursos.");
             }
             catch (Exception ex)

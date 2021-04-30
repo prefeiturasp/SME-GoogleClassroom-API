@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao
         protected static IReadOnlyPolicyRegistry<string> GerarPolicy()
         {
             var registry = new Mock<IReadOnlyPolicyRegistry<string>>();
-            registry.Setup(x => x.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync)).Returns(Policy.NoOpAsync());
+            registry.Setup(x => x.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync)).Returns(Policy.NoOpAsync());
             return registry.Object;
         }
 

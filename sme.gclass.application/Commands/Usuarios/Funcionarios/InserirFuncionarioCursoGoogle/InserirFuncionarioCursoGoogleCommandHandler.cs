@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public InserirFuncionarioCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions) : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
         protected override async Task<bool> ExecutarAsync(InserirFuncionarioCursoGoogleCommand request, CancellationToken cancellationToken)

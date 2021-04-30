@@ -597,5 +597,12 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             await conn.ExecuteAsync(query);
         }
+
+        public async Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId)
+        {
+            var query = @"SELECT exists(SELECT 1 from usuarios where google_classroom_id = @googleClassroomIdS limit 1)";
+            using var conn = ObterConexao();
+            return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
+        }
     }
 }

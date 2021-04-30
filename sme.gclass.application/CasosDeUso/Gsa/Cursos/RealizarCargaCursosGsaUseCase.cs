@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             if (mensagemRabbit?.Mensagem is null)
-                throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de cursos para comparativo.");
+                throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de cursos GSA.");
 
             var dto = mensagemRabbit?.ObterObjetoMensagem<FiltroCagaCursosGsaDto>();
 
@@ -39,7 +39,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            dto.NextToken = resultado.NextToken;
+            dto.NextToken = resultado.TokenProximaPagina;
             if (!string.IsNullOrEmpty(dto.NextToken))
                 await PublicaProximaPaginaAsync(dto);
 
@@ -52,7 +52,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
                 if (!syncCursoComparativo)
-                    SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos para comparativo");
+                    SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos GSA.");
             }
             catch (Exception ex)
             {

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.GoogleClassroom.Infra.Politicas
+﻿namespace SME.GoogleClassroom.Infra.Politicas
 {
-    public abstract class PoliticaPolly
+    public static class PoliticaPolly
     {
-        public static string GoogleSync => "RetryPolicy";
+        public static string PolicyGoogleSync => "RetryPolicy";
+        public static string PolicyCargaGsa => "RetryComparativoDeDadosPolicy";
     }
 }

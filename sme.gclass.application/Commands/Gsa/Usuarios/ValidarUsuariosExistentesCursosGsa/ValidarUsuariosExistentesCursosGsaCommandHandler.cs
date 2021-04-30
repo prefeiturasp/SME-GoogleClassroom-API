@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ValidarUsuariosExistentesUsuariosComparativosCommandHandler : AsyncRequestHandler<ValidarUsuariosExistentesUsuariosComparativosCommand>
+    public class ValidarUsuariosExistentesCursosGsaCommandHandler : AsyncRequestHandler<ValidarUsuariosExistentesCursosGsaCommand>
     {
         private readonly IRepositorioUsuarioGsa repositorioUsuarioComparativo;
 
-        public ValidarUsuariosExistentesUsuariosComparativosCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioComparativo)
+        public ValidarUsuariosExistentesCursosGsaCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioComparativo)
         {
             this.repositorioUsuarioComparativo = repositorioUsuarioComparativo ?? throw new System.ArgumentNullException(nameof(repositorioUsuarioComparativo));
         }
 
-        protected override async Task Handle(ValidarUsuariosExistentesUsuariosComparativosCommand request, CancellationToken cancellationToken) 
+        protected override async Task Handle(ValidarUsuariosExistentesCursosGsaCommand request, CancellationToken cancellationToken) 
             => await repositorioUsuarioComparativo.ValidarUsuariosExistentesUsuariosComparativosAsync();
     }
 }

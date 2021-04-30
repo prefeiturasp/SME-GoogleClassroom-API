@@ -1,7 +1,10 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -12,22 +15,48 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public ProcessarUsuarioGsaUseCase(IMediator mediator)
         {
-            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (mensagemRabbit?.Mensagem is null)
+                throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
+
+            var usuarioGsaDto = JsonConvert.DeserializeObject<UsuarioGsaDto>(mensagemRabbit.Mensagem.ToString());
+            if (usuarioGsaDto is null)
+                throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
+
             try
             {
-                var usuarioGsa = mensagemRabbit.ObterObjetoMensagem<Google.Apis.Admin.Directory.directory_v1.Data.User>();
+                var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
+                var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
 
-                return await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+                var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+                if (usuarioGsaDto.UltimoItemDaFila)
+                    await IniciarValidacaoAsync();
+
+                return retorno;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 SentrySdk.CaptureException(ex);
                 throw;
             }        
+        }
+
+        private async Task IniciarValidacaoAsync()
+        {
+            try
+            {
+                var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.FilaGsaUsuarioValidar, true));
+                if (!iniciarFilaDeValidacao)
+                    SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de usuários.");
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+            }
         }
     }
 }

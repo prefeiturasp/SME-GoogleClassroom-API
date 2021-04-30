@@ -19,28 +19,29 @@ namespace SME.GoogleClassroom.Dados
         {
             const string updateQuery = @"
                drop table if exists tempUsuariosValidacao;
-                    select
+               select
                     u.id,
                     not uc.id is null as existe_google
-                    into tempUsuariosValidacao
-                    from
+               into tempUsuariosValidacao
+               from
                     usuarios u
-                    left join
-                    usuario_comparativo uc
+               left join
+                    usuario_gsa uc
                     on cast(u.id as varchar) = uc.id;
 
-                    update
+               update
                     usuarios c
-                    set
+               set
                     existe_google = t1.existe_google
-                    from
+               from
                     tempUsuariosValidacao t1
-                    where
+               where
                     c.id = t1.id;";
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(updateQuery);
         }
+
         public async Task<PaginacaoResultadoDto<UsuarioGsa>> ObterUsuariosComparativosAsync(Paginacao paginacao, string nome, string email, string organizationPath)
         {
             var queryCompleta = new StringBuilder();
@@ -105,10 +106,10 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> SalvarAsync(UsuarioGsa usuarioComparativo)
         {
-            const string insertQuery = @"insert into public.usuario_comparativo
-                                        (id, nome, email, data_inclusao, data_ultimo_login, eh_admin, organization_path)
+            const string insertQuery = @"insert into public.usuario_gsa
+                                        (id, nome, email, data_inclusao, data_ultimo_login, eh_admin, organization_path, inserido_manualmente_google)
                                         values
-                                        (@id, @nome, @email, @dataInclusao, @dataUltimoLogin, @EhAdmin, @OrganizationPath)
+                                        (@id, @nome, @email, @dataInclusao, @dataUltimoLogin, @EhAdmin, @OrganizationPath, @inseridoManualmenteGoogle)
                                         RETURNING id";
 
             var parametros = new
@@ -120,6 +121,7 @@ namespace SME.GoogleClassroom.Dados
                 usuarioComparativo.DataUltimoLogin,
                 usuarioComparativo.EhAdmin,
                 usuarioComparativo.OrganizationPath,
+                usuarioComparativo.InseridoManualmenteGoogle
             };
 
             using var conn = ObterConexao();

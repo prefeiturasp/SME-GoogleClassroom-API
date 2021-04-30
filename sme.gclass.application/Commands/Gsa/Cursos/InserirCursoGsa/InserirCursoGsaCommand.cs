@@ -1,66 +1,49 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
-using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class InserirCursoGsaCommand : IRequest<bool>
     {
-        public InserirCursoGsaCommand(CursoGsa cursoComparativo)
+        public InserirCursoGsaCommand(CursoGsa cursoGsa)
         {
-            Id = cursoComparativo.Id;
-            Nome = cursoComparativo.Nome;
-            Secao = cursoComparativo.Secao;
-            CriadorId = cursoComparativo.CriadorId;
-            Descricao = cursoComparativo.Descricao;
-            DataInclusao = cursoComparativo.DataInclusao;
-            InseridoManualmenteGoogle = cursoComparativo.InseridoManualmenteGoogle;
+            CursoGsa = cursoGsa;
         }
 
-        public InserirCursoGsaCommand(string id, string nome, string secao, string criadorId, string descricao, DateTime dataInclusao, bool inseridoManualmenteGoogle)
-        {
-            Id = id;
-            Nome = nome;
-            Secao = secao;
-            CriadorId = criadorId;
-            Descricao = descricao;
-            DataInclusao = dataInclusao;
-            InseridoManualmenteGoogle = inseridoManualmenteGoogle;
-        }
-
-        public string Id { get; set; }
-        public string Nome { get; set; }
-        public string Secao { get; set; }
-        public string CriadorId { get; set; }
-        public string Descricao { get; set; }
-        public bool InseridoManualmenteGoogle { get; set; }
-        public DateTime DataInclusao { get; set; }
+        public CursoGsa CursoGsa { get; set; }
     }
 
     public class InserirComparativoCursoCommandValidator : AbstractValidator<InserirCursoGsaCommand>
     {
         public InserirComparativoCursoCommandValidator()
         {
-            RuleFor(x => x.Id)
+            RuleFor(x => x.CursoGsa)
                 .NotEmpty()
-                .WithMessage("O ID do curso deve ser informado.");
+                .WithMessage("");
 
-            RuleFor(x => x.Nome)
-                .NotEmpty()
-                .WithMessage("O nome do curso deve ser informado.");
+            When(x => !(x.CursoGsa is null), () =>
+            {
+                RuleFor(x => x.CursoGsa.Id)
+                    .NotEmpty()
+                    .WithMessage("O ID do curso deve ser informado.");
 
-            RuleFor(x => x.Secao)
-                .NotEmpty()
-                .WithMessage("O nome da seção do curso deve ser informado.");
+                RuleFor(x => x.CursoGsa.Nome)
+                    .NotEmpty()
+                    .WithMessage("O nome do curso deve ser informado.");
 
-            RuleFor(x => x.CriadorId)
-                .NotEmpty()
-                .WithMessage("O ID do criador do curso deve ser informado.");
+                RuleFor(x => x.CursoGsa.Secao)
+                    .NotEmpty()
+                    .WithMessage("O nome da seção do curso deve ser informado.");
 
-            RuleFor(x => x.DataInclusao)
-                .NotEmpty()
-                .WithMessage("A data de inclusão do curso deve ser informado.");
+                RuleFor(x => x.CursoGsa.CriadorId)
+                    .NotEmpty()
+                    .WithMessage("O ID do criador do curso deve ser informado.");
+
+                RuleFor(x => x.CursoGsa.DataInclusao)
+                    .NotEmpty()
+                    .WithMessage("A data de inclusão do curso deve ser informado.");
+            });
         }
     }
 }

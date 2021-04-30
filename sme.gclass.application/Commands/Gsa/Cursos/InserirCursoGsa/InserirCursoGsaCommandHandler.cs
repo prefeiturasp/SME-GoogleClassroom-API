@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
-using SME.GoogleClassroom.Dominio;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,19 +17,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Handle(InserirCursoGsaCommand request, CancellationToken cancellationToken)
         {
-            var cursoComparativo = new CursoGsa
-            {
-                Id = request.Id,
-                Nome = request.Nome,
-                Secao = request.Secao,
-                Descricao = request.Descricao,
-                CriadorId = request.CriadorId,
-                InseridoManualmenteGoogle = request.InseridoManualmenteGoogle,
-                DataInclusao = request.DataInclusao
-            };
-
-            var curso = await repositorioCursoComparativo.SalvarAsync(cursoComparativo);
-            return curso > 0;
+            var cursoIncluido = await repositorioCursoComparativo.SalvarAsync(request.CursoGsa);
+            return cursoIncluido > 0;
         }
     }
 }
