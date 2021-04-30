@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoUsuarioValidar, RotasRabbit.FilaComparativoUsuarioValidar, true));
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.FilaGsaUsuarioValidar, true));
             }
             catch (Exception ex)
             {

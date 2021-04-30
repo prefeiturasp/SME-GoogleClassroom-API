@@ -9,11 +9,11 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComparativosQuery : IRequest<ResultadoCursoComparativoDto>
+    public class ObterCursosGsaGoogleQuery : IRequest<ResultadoCursoGsaDto>
     {
         public string  NextToken { get; set; }
 
-        public ObterCursosComparativosQuery(string nextToken)
+        public ObterCursosGsaGoogleQuery(string nextToken)
         {
             this.NextToken = nextToken;
         }

@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosComparativosPaginadosQueryHandler : IRequestHandler<ObterUsuariosComparativosPaginadosQuery, PaginacaoResultadoDto<UsuarioGsa>>
+    public class ObterUsuariosGsaPaginadosQueryHandler : IRequestHandler<ObterUsuariosGsaPaginadosQuery, PaginacaoResultadoDto<UsuarioGsa>>
     {
         private readonly IRepositorioUsuarioGsa repositorioUsuarioComparativo;
 
-        public ObterUsuariosComparativosPaginadosQueryHandler(IRepositorioUsuarioGsa repositorioUsuarioComparativo)
+        public ObterUsuariosGsaPaginadosQueryHandler(IRepositorioUsuarioGsa repositorioUsuarioComparativo)
         {
             this.repositorioUsuarioComparativo = repositorioUsuarioComparativo ?? throw new System.ArgumentNullException(nameof(repositorioUsuarioComparativo));
         }
-        public async Task<PaginacaoResultadoDto<UsuarioGsa>> Handle(ObterUsuariosComparativosPaginadosQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<UsuarioGsa>> Handle(ObterUsuariosGsaPaginadosQuery request, CancellationToken cancellationToken)
         {
             return await repositorioUsuarioComparativo.ObterUsuariosComparativosAsync(request.Paginacao, request.Nome, request.Email, request.OrganizationPath);
         }

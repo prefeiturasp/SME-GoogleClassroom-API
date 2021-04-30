@@ -5,26 +5,25 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosComparativosPaginadosQuery : IRequest<PaginacaoResultadoDto<UsuarioGsa>>
+    public class ObterCursosComparativosPaginadosQuery : IRequest<PaginacaoResultadoDto<CursoGsaDto>>
     {
-        public ObterUsuariosComparativosPaginadosQuery(Paginacao paginacao, string email, string nome, string organizationPath)
+        public ObterCursosComparativosPaginadosQuery(Paginacao paginacao, string secao, string descricao, string nome)
         {
             Paginacao = paginacao;
-            Email = email;
+            Secao = secao;
+            Descricao = descricao;
             Nome = nome;
-            OrganizationPath = organizationPath;
         }
 
         public Paginacao Paginacao { get; set; }
-        public string Id { get; set; }
-        public string Email { get; set; }
+        public string Secao { get; set; }
+        public string Descricao { get; set; }
         public string Nome { get; set; }
-        public string OrganizationPath { get; set; }
     }
 
-    public class ObterUsuariosComparativosPaginadosQueryValidator : AbstractValidator<ObterUsuariosComparativosPaginadosQuery>
+    public class ObterCursosComparativosPaginadosQueryValidator : AbstractValidator<ObterCursosComparativosPaginadosQuery>
     {
-        public ObterUsuariosComparativosPaginadosQueryValidator()
+        public ObterCursosComparativosPaginadosQueryValidator()
         {
             RuleFor(x => x.Paginacao)
                 .NotEmpty()

@@ -22,14 +22,14 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de cursos para comparativo.");
 
-            var dto = mensagemRabbit?.ObterObjetoMensagem<FiltroCargaCursosGoogleDto>();
+            var dto = mensagemRabbit?.ObterObjetoMensagem<FiltroCagaCursosGsaDto>();
 
-            var resultado = await mediator.Send(new ObterCursosComparativosQuery(dto?.NextToken));
+            var resultado = await mediator.Send(new ObterCursosGsaGoogleQuery(dto?.NextToken));
             foreach (var curso in resultado.Cursos)
             {
                 try
                 {
-                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoCursoAtualizar, RotasRabbit.FilaComparativoCursoAtualizar, curso));
+                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoIncluir, RotasRabbit.FilaGsaCursoIncluir, curso));
                     if (!publicarCurso) continue;
                 }
                 catch (Exception ex)
@@ -46,11 +46,11 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicaProximaPaginaAsync(FiltroCargaCursosGoogleDto dto)
+        private async Task PublicaProximaPaginaAsync(FiltroCagaCursosGsaDto dto)
         {
             try
             {
-                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoCarregar, RotasRabbit.FilaCursoCarregar, dto));
+                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
                 if (!syncCursoComparativo)
                     SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos para comparativo");
             }

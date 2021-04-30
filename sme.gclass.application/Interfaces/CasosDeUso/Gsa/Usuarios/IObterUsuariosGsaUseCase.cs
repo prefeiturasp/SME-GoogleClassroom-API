@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterUsuariosGsaUseCase
     {
-        Task<PaginacaoResultadoDto<UsuarioGsa>> Executar(FiltroObterComparativoUsuarioDto filtro);
+        Task<PaginacaoResultadoDto<UsuarioGsa>> Executar(FiltroObterUsuariosGsaDto filtro);
     }
 }

@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.IoC
         {
             services.TryAddScoped<IIniciarSyncGoogleCursoUseCase, IniciarSyncGoogleCursoUseCase>();
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
-            services.TryAddScoped<ITratarSyncGoogleComparativoDadosUseCase, TratarSyncGoogleComparativoDadosUseCase>();
+            services.TryAddScoped<ITratarSyncGsaUseCase, TratarSyncGsaUseCase>();
             services.TryAddScoped<IIncluirCursoUseCase, InserirCursoGoogleUseCase>();
             services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
             services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();

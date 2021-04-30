@@ -9,19 +9,18 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IncluirUsuarioComparativoCommandHandler : IRequestHandler<IncluirUsuarioComparativoCommand, bool>
+    public class IncluirUsuarioGsaCommandHandler : IRequestHandler<IncluirUsuarioGsaCommand, bool>
     {
         private readonly IRepositorioUsuarioGsa repositorio;
 
-        public IncluirUsuarioComparativoCommandHandler(IRepositorioUsuarioGsa repositorio)
+        public IncluirUsuarioGsaCommandHandler(IRepositorioUsuarioGsa repositorio)
         {
             this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
         }
 
-        public async Task<bool> Handle(IncluirUsuarioComparativoCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(IncluirUsuarioGsaCommand request, CancellationToken cancellationToken)
         {
             var usuarioComparativo = MapearParaEntidade(request.UsuarioGsa);
-
             return await repositorio.SalvarAsync(usuarioComparativo);
         }
 

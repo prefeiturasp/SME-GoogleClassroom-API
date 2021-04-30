@@ -5,9 +5,9 @@ using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirComparativoCursoCommand : IRequest<bool>
+    public class InserirCursoGsaCommand : IRequest<bool>
     {
-        public InserirComparativoCursoCommand(CursoGsa cursoComparativo)
+        public InserirCursoGsaCommand(CursoGsa cursoComparativo)
         {
             Id = cursoComparativo.Id;
             Nome = cursoComparativo.Nome;
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
             InseridoManualmenteGoogle = cursoComparativo.InseridoManualmenteGoogle;
         }
 
-        public InserirComparativoCursoCommand(string id, string nome, string secao, string criadorId, string descricao, DateTime dataInclusao, bool inseridoManualmenteGoogle)
+        public InserirCursoGsaCommand(string id, string nome, string secao, string criadorId, string descricao, DateTime dataInclusao, bool inseridoManualmenteGoogle)
         {
             Id = id;
             Nome = nome;
@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public DateTime DataInclusao { get; set; }
     }
 
-    public class InserirComparativoCursoCommandValidator : AbstractValidator<InserirComparativoCursoCommand>
+    public class InserirComparativoCursoCommandValidator : AbstractValidator<InserirCursoGsaCommand>
     {
         public InserirComparativoCursoCommandValidator()
         {

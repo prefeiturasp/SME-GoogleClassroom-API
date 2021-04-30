@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarSyncGoogleComparativoDadosUseCase : ITratarSyncGoogleComparativoDadosUseCase
+    public class TratarSyncGsaUseCase : ITratarSyncGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public TratarSyncGoogleComparativoDadosUseCase(IMediator mediator)
+        public TratarSyncGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -19,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var mensagem = mensagemRabbit.Mensagem;
 
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoUsuarioCarregar, RotasRabbit.FilaComparativoUsuarioCarregar, mensagem));
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoUsuarioCarregar, RotasRabbit.FilaComparativoUsuarioCarregar, mensagem));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, mensagem));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, mensagem));
 
             return true;
         }

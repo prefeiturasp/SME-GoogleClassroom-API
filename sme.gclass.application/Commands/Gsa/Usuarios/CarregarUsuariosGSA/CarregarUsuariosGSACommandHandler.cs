@@ -46,13 +46,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task PublicaExecucaoProximaPagina(string tokenPagina)
         {
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoUsuarioCarregar, mensagem: new FiltroCargaUsuariosGoogleDto(tokenPagina)));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, mensagem: new FiltroCargaUsuariosGoogleDto(tokenPagina)));
         }
 
         private async Task ExecutaSyncUsuarios(Users listaUsuarios)
         {
             foreach (var usuario in listaUsuarios.UsersValue)
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoUsuarioIncluir, mensagem: usuario));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluir, mensagem: usuario));
         }
 
         private bool PossuiProximaPagina(Users exec)

@@ -19,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var dto = new FiltroCargaCursosGoogleDto();
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoCursoCarregar, RotasRabbit.FilaComparativoCursoCarregar, dto));
+                var dto = new FiltroCagaCursosGsaDto();
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
             }
             catch (Exception ex)
             {

@@ -14,18 +14,18 @@ using static Google.Apis.Classroom.v1.CoursesResource.ListRequest;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComparativosQueryHandler : IRequestHandler<ObterCursosComparativosQuery, ResultadoCursoComparativoDto>
+    public class ObterCursosGsaGoogleQueryHandler : IRequestHandler<ObterCursosGsaGoogleQuery, ResultadoCursoGsaDto>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursosComparativosQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.GoogleSync);
         }
 
-        public async Task<ResultadoCursoComparativoDto> Handle(ObterCursosComparativosQuery request, CancellationToken cancellationToken)
+        public async Task<ResultadoCursoGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
@@ -34,7 +34,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 cursosGoogle.Courses = new List<Course>();
             }
             var cursos = ConvertToDto(cursosGoogle);
-            return new ResultadoCursoComparativoDto()
+            return new ResultadoCursoGsaDto()
             {
                 NextToken = cursosGoogle.NextPageToken,
                 Cursos = cursos
@@ -49,12 +49,12 @@ namespace SME.GoogleClassroom.Aplicacao
             return await request.ExecuteAsync();
         }
 
-        private IEnumerable<CursoComparativoDto> ConvertToDto(ListCoursesResponse cursosGoogle)
+        private IEnumerable<CursoGsaDto> ConvertToDto(ListCoursesResponse cursosGoogle)
         {
-            var cursosDto = new List<CursoComparativoDto>();
+            var cursosDto = new List<CursoGsaDto>();
             foreach (var curso in cursosGoogle.Courses)
             {
-                var dto = new CursoComparativoDto()
+                var dto = new CursoGsaDto()
                 {
                     Id = curso.Id,
                     CriadorId = curso.OwnerId,

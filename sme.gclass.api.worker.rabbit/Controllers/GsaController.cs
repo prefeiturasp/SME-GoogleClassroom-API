@@ -22,10 +22,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("cursos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoComparativoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoGsaDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterCursosGsa([FromQuery] FiltroObterComparativoCursoDto filtro, [FromServices] IObterCursosGsaUseCase useCase)
+        public async Task<IActionResult> ObterCursosGsa([FromQuery] FiltroObterCursosGsaDto filtro, [FromServices] IObterCursosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
@@ -54,10 +54,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("usuarios")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoComparativoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoGsaDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterUsuariosGsa([FromQuery] FiltroObterComparativoUsuarioDto filtro, [FromServices] IObterUsuariosGsaUseCase useCase)
+        public async Task<IActionResult> ObterUsuariosGsa([FromQuery] FiltroObterUsuariosGsaDto filtro, [FromServices] IObterUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);

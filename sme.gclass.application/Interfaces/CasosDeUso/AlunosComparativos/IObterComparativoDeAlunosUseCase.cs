@@ -5,6 +5,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.AlunosComparativos
 {
     public interface IObterComparativoDeAlunosUseCase
     {
-        Task<PaginacaoResultadoDto<CursoComparativoDto>> Executar(FiltroObterComparativoUsuarioDto filtro);
+        Task<PaginacaoResultadoDto<CursoGsaDto>> Executar(FiltroObterUsuariosGsaDto filtro);
     }
 }

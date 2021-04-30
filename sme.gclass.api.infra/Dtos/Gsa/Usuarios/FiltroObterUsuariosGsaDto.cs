@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroObterComparativoUsuarioDto : FiltroPaginacaoBaseDto
+    public class FiltroObterUsuariosGsaDto : FiltroPaginacaoBaseDto
     {
         public string Id { get; set; }
         public string Email { get; set; }

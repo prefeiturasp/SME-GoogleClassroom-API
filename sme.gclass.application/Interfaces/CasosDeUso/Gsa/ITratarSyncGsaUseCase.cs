@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface ITratarSyncGoogleComparativoDadosUseCase : IUseCase<MensagemRabbit, bool>
+    public interface ITratarSyncGsaUseCase : IUseCase<MensagemRabbit, bool>
     {
     }
 }

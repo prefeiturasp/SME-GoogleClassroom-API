@@ -4,9 +4,9 @@ using MediatR;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IncluirUsuarioComparativoCommand : IRequest<bool>
+    public class IncluirUsuarioGsaCommand : IRequest<bool>
     {
-        public IncluirUsuarioComparativoCommand(User usuarioGsa)
+        public IncluirUsuarioGsaCommand(User usuarioGsa)
         {
             UsuarioGsa = usuarioGsa;
         }
@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public User UsuarioGsa { get; }
     }
 
-    public class IncluirUsuarioComparativoCommandValidator : AbstractValidator<IncluirUsuarioComparativoCommand>
+    public class IncluirUsuarioComparativoCommandValidator : AbstractValidator<IncluirUsuarioGsaCommand>
     {
         public IncluirUsuarioComparativoCommandValidator()
         {

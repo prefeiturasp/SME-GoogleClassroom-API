@@ -37,14 +37,14 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
 
-        public async Task<PaginacaoResultadoDto<CursoComparativoDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao, string nome, string descricao)
+        public async Task<PaginacaoResultadoDto<CursoGsaDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao, string nome, string descricao)
         {
             var queryCompleta = new StringBuilder();
 
             queryCompleta.AppendLine(MontaQueryObterCursosComparativos(false, paginacao, secao, nome, descricao));
             queryCompleta.AppendLine(MontaQueryObterCursosComparativos(true, paginacao, secao, nome, descricao));
 
-            var retorno = new PaginacaoResultadoDto<CursoComparativoDto>();
+            var retorno = new PaginacaoResultadoDto<CursoGsaDto>();
 
             using var conn = ObterConexao();
 
@@ -56,7 +56,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
 
-            retorno.Items = multi.Read<CursoComparativoDto>();
+            retorno.Items = multi.Read<CursoGsaDto>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 

@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class CursoComparativoDto
+    public class CursoGsaDto
     {
         public string Id { get; set; }
         public string Nome { get; set; }

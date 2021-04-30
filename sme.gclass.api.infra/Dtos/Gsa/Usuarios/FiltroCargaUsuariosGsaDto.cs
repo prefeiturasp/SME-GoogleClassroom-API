@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroCargaComparativoUsuariosGoogleDto
+    public class FiltroCargaUsuariosGsaDto
     {
         public string NextToken { get; set; }
     }

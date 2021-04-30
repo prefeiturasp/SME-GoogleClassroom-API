@@ -14,11 +14,11 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<UsuarioGsa>> Executar(FiltroObterComparativoUsuarioDto filtro)
+        public async Task<PaginacaoResultadoDto<UsuarioGsa>> Executar(FiltroObterUsuariosGsaDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
-            return await mediator.Send(new ObterUsuariosComparativosPaginadosQuery(paginacao, filtro.Email, filtro.Nome, filtro.OrganizationPath));
+            return await mediator.Send(new ObterUsuariosGsaPaginadosQuery(paginacao, filtro.Email, filtro.Nome, filtro.OrganizationPath));
         }
     }
 }

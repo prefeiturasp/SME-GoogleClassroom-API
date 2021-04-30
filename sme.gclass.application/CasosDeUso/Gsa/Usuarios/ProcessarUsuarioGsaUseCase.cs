@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var usuarioGsa = mensagemRabbit.ObterObjetoMensagem<Google.Apis.Admin.Directory.directory_v1.Data.User>();
 
-                return await mediator.Send(new IncluirUsuarioComparativoCommand(usuarioGsa));
+                return await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
             }
             catch (System.Exception ex)
             {

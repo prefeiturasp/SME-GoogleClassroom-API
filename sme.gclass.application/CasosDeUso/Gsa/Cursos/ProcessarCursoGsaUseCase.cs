@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(comparativoCurso.Id)));
                 comparativoCurso.InseridoManualmenteGoogle = cursoGoogle is null;
-                var retorno =  await mediator.Send(new InserirComparativoCursoCommand(comparativoCurso));
+                var retorno =  await mediator.Send(new InserirCursoGsaCommand(comparativoCurso));
 
                 if (comparativoCurso.UltimoItemDaFila)
                     await IniciarValidacaoAsync();
@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaComparativoCursoValidar, RotasRabbit.FilaComparativoCursoValidar, true));
+                var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoValidar, RotasRabbit.FilaGsaCursoValidar, true));
                 if (!iniciarFilaDeValidacao)
                     SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de cursos.");
             }

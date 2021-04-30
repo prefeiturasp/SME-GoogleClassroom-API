@@ -54,7 +54,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioGsa>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterComparativoDeUsuarios([FromQuery] FiltroObterComparativoUsuarioDto filtro, [FromServices] IObterUsuariosGsaUseCase useCase)
+        public async Task<IActionResult> ObterComparativoDeUsuarios([FromQuery] FiltroObterUsuariosGsaDto filtro, [FromServices] IObterUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
