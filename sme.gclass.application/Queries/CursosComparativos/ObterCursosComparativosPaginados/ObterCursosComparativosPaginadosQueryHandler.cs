@@ -8,9 +8,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosComparativosPaginadosQueryHandler : IRequestHandler<ObterCursosComparativosPaginadosQuery, PaginacaoResultadoDto<CursoComparativoDto>>
     {
-        private readonly IRepositorioCursoComparativo repositorioCursoComparativo;
+        private readonly IRepositorioCursoGsa repositorioCursoComparativo;
 
-        public ObterCursosComparativosPaginadosQueryHandler(IRepositorioCursoComparativo repositorioCursoComparativo)
+        public ObterCursosComparativosPaginadosQueryHandler(IRepositorioCursoGsa repositorioCursoComparativo)
         {
             this.repositorioCursoComparativo = repositorioCursoComparativo ?? throw new System.ArgumentNullException(nameof(repositorioCursoComparativo));
         }

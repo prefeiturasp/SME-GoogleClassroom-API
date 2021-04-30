@@ -7,9 +7,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ValidarUsuariosExistentesUsuariosComparativosCommandHandler : AsyncRequestHandler<ValidarUsuariosExistentesUsuariosComparativosCommand>
     {
-        private readonly IRepositorioUsuarioComparativo repositorioUsuarioComparativo;
+        private readonly IRepositorioUsuarioGsa repositorioUsuarioComparativo;
 
-        public ValidarUsuariosExistentesUsuariosComparativosCommandHandler(IRepositorioUsuarioComparativo repositorioUsuarioComparativo)
+        public ValidarUsuariosExistentesUsuariosComparativosCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioComparativo)
         {
             this.repositorioUsuarioComparativo = repositorioUsuarioComparativo ?? throw new System.ArgumentNullException(nameof(repositorioUsuarioComparativo));
         }

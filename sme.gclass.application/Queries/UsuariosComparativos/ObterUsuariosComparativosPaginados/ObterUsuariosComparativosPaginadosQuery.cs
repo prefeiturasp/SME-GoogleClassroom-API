@@ -5,7 +5,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosComparativosPaginadosQuery : IRequest<PaginacaoResultadoDto<UsuarioComparativo>>
+    public class ObterUsuariosComparativosPaginadosQuery : IRequest<PaginacaoResultadoDto<UsuarioGsa>>
     {
         public ObterUsuariosComparativosPaginadosQuery(Paginacao paginacao, string email, string nome, string organizationPath)
         {
