@@ -51,10 +51,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("comparativo")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioComparativo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioGsa>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterComparativoDeUsuarios([FromQuery] FiltroObterComparativoUsuarioDto filtro, [FromServices] IObterComparativoDeUsuariosUseCase useCase)
+        public async Task<IActionResult> ObterComparativoDeUsuarios([FromQuery] FiltroObterUsuariosGsaDto filtro, [FromServices] IObterUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
@@ -71,7 +71,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ProcessarCargaComparativoUsuarios([FromServices] IIniciarCargaUsuariosUseCase useCase)
+        public async Task<IActionResult> ProcessarCargaComparativoUsuarios([FromServices] IIniciarCargaUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar();
             return Ok(retorno);

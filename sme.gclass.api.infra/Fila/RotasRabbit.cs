@@ -55,13 +55,14 @@
         public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
         #endregion
 
-        #region Comparativo de dados
-        public static string FilaComparativoGoogleSync => "googleclass.comparativo.sync";
-        public static string FilaCursoCarregar => "googleclass.curso.carregar";
-        public static string FilaCursoComparativoAtualizar => "googleclass.curso.comparativo.atualizar";
-        public static string FilaComparativoCursoValidar => "googleclass.comparativo.curso.validar";
-        public static string FilaUsuariosCarregar => "googleclass.usuario.carregar";
-        public static string FilaComparativosUsuariosValidar => "googleclass.comparativo.usuario.validar";
+        #region GSA
+        public static string FilaGsaGoogleSync => "googleclass.gsa.sync";
+        public static string FilaGsaCursoCarregar => "googleclass.gsa.curso.carregar";
+        public static string FilaGsaCursoIncluir => "googleclass.gsa.curso.incluir";
+        public static string FilaGsaCursoValidar => "googleclass.gsa.curso.validar";
+        public static string FilaGsaUsuarioCarregar => "googleclass.gsa.usuario.carregar";
+        public static string FilaGsaUsuarioValidar => "googleclass.gsa.usuario.validar";
+        public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
         #endregion
     }
 }
