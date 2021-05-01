@@ -3,19 +3,19 @@ using MediatR;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ExisteCursoDoUsuarioPorUsuarioIdCursoIdQuery : IRequest<bool>
+    public class ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery : IRequest<bool>
     {
         public string UsuarioId { get; set; }
         public string CursoId { get; set; }
 
-        public ExisteCursoDoUsuarioPorUsuarioIdCursoIdQuery(string usuarioId, string cursoId)
+        public ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery(string usuarioId, string cursoId)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;
         }
     }
 
-    public class ExisteCursoDoUsuarioPorUsuarioIdCursoIdQueryValidator : AbstractValidator<ExisteCursoDoUsuarioPorUsuarioIdCursoIdQuery>
+    public class ExisteCursoDoUsuarioPorUsuarioIdCursoIdQueryValidator : AbstractValidator<ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery>
     {
         public ExisteCursoDoUsuarioPorUsuarioIdCursoIdQueryValidator()
         {

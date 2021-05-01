@@ -20,21 +20,13 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.CursoGsa)
                 .NotEmpty()
-                .WithMessage("");
+                .WithMessage("O curso GSA deve ser informado.");
 
             When(x => !(x.CursoGsa is null), () =>
             {
                 RuleFor(x => x.CursoGsa.Id)
                     .NotEmpty()
                     .WithMessage("O ID do curso deve ser informado.");
-
-                RuleFor(x => x.CursoGsa.Nome)
-                    .NotEmpty()
-                    .WithMessage("O nome do curso deve ser informado.");
-
-                RuleFor(x => x.CursoGsa.Secao)
-                    .NotEmpty()
-                    .WithMessage("O nome da seção do curso deve ser informado.");
 
                 RuleFor(x => x.CursoGsa.CriadorId)
                     .NotEmpty()

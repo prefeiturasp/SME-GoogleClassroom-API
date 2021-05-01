@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     public class GsaController : Controller
     {
         /// <summary>
-        /// Retorna os comparativos de cursos que foram criados pelo Google Classroom.
+        /// Retorna os cursos GSA sincronizados.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
@@ -32,7 +33,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna os cursos do GSA incluídos.
+        /// Inicia a sincronização de cursos GSA.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
@@ -48,7 +49,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna os comparativos de cursos que foram criados pelo Google Classroom.
+        /// Retorna os usuários GSA sincronizados.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
@@ -64,7 +65,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna os cursos do GSA incluídos.
+        /// Inicia a sincronização de usuários GSA.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
@@ -76,6 +77,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> IniciarCargaUsuariosGsa([FromServices] IIniciarCargaUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os cursos do usuário GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("usuarios/cursos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoGsaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosDoUsuarioGsa(string usuarioId, [FromServices] IObterCursosDoUsuarioGsaUseCase useCase)
+        {
+            var retorno = await useCase.Executar(usuarioId);
             return Ok(retorno);
         }
     }

@@ -14,6 +14,10 @@
             Usuario = usuario;
         }
 
+        public FiltroCargaUsuariosCursosGsaDto()
+        {
+        }
+
         public string TokenProximaPagina { get; set; }
         public UsuarioGsaDto Usuario { get; set; }
     }

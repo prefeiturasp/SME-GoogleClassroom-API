@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executart(MensagemRabbit mensagemRabbit)
+        public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível processar o curso do usuário GSA. A mensagem enviada é inválida.");
@@ -25,8 +25,13 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioCursoGsaDto is null)
                 throw new NegocioException("Não foi possível processar o curso do usuário GSA. A mensagem enviada é inválida.");
 
-            var usuarioCursoExiste = await mediator.Send(new ExisteCursoDoUsuarioPorUsuarioIdCursoIdQuery(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId));
+            var cursoExiste = await mediator.Send(new ExisteCursoGsaPorIdQuery(usuarioCursoGsaDto.CursoId));
+            if (!cursoExiste)
+                throw new NegocioException($"Não foi possível vincular o curso {usuarioCursoGsaDto.CursoId} ao usuário {usuarioCursoGsaDto.UsuarioId}. O curso não foi salvo na base.");
+
+            var usuarioCursoExiste = await mediator.Send(new ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId));
             if (usuarioCursoExiste) return true;
+
             var usuarioGsa = new UsuarioCursoGsa(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId);
 
             var retorno = await mediator.Send(new IncluirUsuarioCursoGsaCommand(usuarioGsa));

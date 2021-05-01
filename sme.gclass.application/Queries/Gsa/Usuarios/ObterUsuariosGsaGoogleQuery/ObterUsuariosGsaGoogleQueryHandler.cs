@@ -3,6 +3,7 @@ using Google.Apis.Admin.Directory.directory_v1.Data;
 using MediatR;
 using Polly;
 using Polly.Registry;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
@@ -34,6 +35,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var requestList = diretorioClassroom.Users.List();
             requestList.PageToken = tokenPagina;
+            requestList.Domain = "edu.sme.prefeitura.sp.gov.br";
             requestList.Query = "isSuspended=false";
 
             return await requestList.ExecuteAsync();
@@ -55,7 +57,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     EhAdmin = user.IsAdmin ?? false,
                     Email = user.PrimaryEmail,
                     Id = user.Id,
-                    Nome = user.Name.FullName,
+                    Nome = user.Name?.FullName,
                     OrganizationPath = user.OrgUnitPath,
                     DataUltimoLogin = user.LastLoginTime,
                     DataInclusao = user.CreationTime

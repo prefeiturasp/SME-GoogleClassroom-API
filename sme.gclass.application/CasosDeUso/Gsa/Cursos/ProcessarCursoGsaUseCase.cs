@@ -36,7 +36,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (cursoGsaDto.UltimoItemDaFila)
             {
-                await IniciarCargaDeUsuariosAsync();
+                if(cursoGsaDto.ExecutarCargaDeUsuariosGsa)
+                    await IniciarCargaDeUsuariosAsync();
+
                 await IniciarValidacaoAsync();
             }
 

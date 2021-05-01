@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface IProcessarUsuarioCursoGsaUseCase
+    public interface IObterCursosDoUsuarioGsaUseCase
     {
-        Task<bool> Executar(MensagemRabbit mensagemRabbit);
+        Task<ConsultaCursosDoUsuarioGsa> Executar(string usuarioId);
     }
 }

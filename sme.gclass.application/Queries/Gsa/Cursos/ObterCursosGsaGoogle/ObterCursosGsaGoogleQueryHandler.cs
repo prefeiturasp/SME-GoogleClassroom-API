@@ -44,6 +44,9 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<ListCoursesResponse> ObterCursosAtivosNoGoogle(string pageToken, ClassroomService servicoClassroom)
         {
             var request = servicoClassroom.Courses.List();
+
+            request.TeacherId = "daniellarubio.8207607@edu.sme.prefeitura.sp.gov.br";
+
             request.CourseStates = CourseStatesEnum.ACTIVE;
             request.PageToken = pageToken;
             return await request.ExecuteAsync();
@@ -60,7 +63,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     CriadorId = curso.OwnerId,
                     Descricao = curso.Description,
                     Nome = curso.Name,
-                    DataInclusao = (DateTime)curso.CreationTime,
+                    DataInclusao = (DateTime?)curso.CreationTime,
                     Secao = curso.Section
                 };
                 cursosDto.Add(dto);

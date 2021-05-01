@@ -11,6 +11,6 @@ namespace SME.GoogleClassroom.Infra
         }
 
         public string ConnectionStringEol => configuration.GetConnectionString("EolConnection");
-        public string ConnectionStringGoogleClassroom => configuration.GetConnectionString("GoogleClassroomConnection");
+        public string ConnectionStringGoogleClassroom => "User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=db_googleclassroom;Pooling=true;Command Timeout=300;";// configuration.GetConnectionString("GoogleClassroomConnection");
     }
 }

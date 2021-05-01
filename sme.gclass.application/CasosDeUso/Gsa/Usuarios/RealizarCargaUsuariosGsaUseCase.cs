@@ -22,35 +22,27 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de usuários GSA.");
 
-            try
+            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCargaUsuariosGoogleDto>();
+            var paginaUsiariosGoogle = await mediator.Send(new ObterUsuariosGsaGoogleQuery(filtro.TokenProximaPagina));
+            foreach (var usuario in paginaUsiariosGoogle.Usuarios)
             {
-                var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCargaUsuariosGoogleDto>();
-                var paginaUsiariosGoogle = await mediator.Send(new ObterUsuariosGsaGoogleQuery(filtro.TokenProximaPagina));
-                foreach (var usuario in paginaUsiariosGoogle.Usuarios)
+                try
                 {
-                    try
-                    {
-                        var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluir, RotasRabbit.FilaGsaUsuarioIncluir, usuario));
-                        if (!publicarCurso) continue;
-                    }
-                    catch (Exception ex)
-                    {
-                        SentrySdk.CaptureException(ex);
-                        continue;
-                    }
+                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluir, RotasRabbit.FilaGsaUsuarioIncluir, usuario));
+                    if (!publicarCurso) continue;
                 }
-
-                filtro.TokenProximaPagina = paginaUsiariosGoogle.TokenProximaPagina;
-                if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
-                    await PublicaProximaPaginaAsync(filtro);
-
-                return true;
+                catch (Exception ex)
+                {
+                    SentrySdk.CaptureException(ex);
+                    continue;
+                }
             }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                return false;
-            }
+
+            filtro.TokenProximaPagina = paginaUsiariosGoogle.TokenProximaPagina;
+            if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
+                await PublicaProximaPaginaAsync(filtro);
+
+            return true;
         }
 
         private async Task PublicaProximaPaginaAsync(FiltroCargaUsuariosGoogleDto filtro)

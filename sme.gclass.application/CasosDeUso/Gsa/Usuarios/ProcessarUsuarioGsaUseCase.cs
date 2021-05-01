@@ -34,6 +34,8 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioGsaDto.UltimoItemDaFila)
                 await IniciarValidacaoAsync();
 
+            await InicarCargaCursosDeUsuarioAsync(usuarioGsaDto);
+
             return retorno;
         }
 
@@ -42,6 +44,22 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.FilaGsaUsuarioValidar, true));
+                if (!iniciarFilaDeValidacao)
+                    SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de usuários.");
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+            }
+        }
+
+        private async Task InicarCargaCursosDeUsuarioAsync(UsuarioGsaDto usuarioGsaDto)
+        {
+            try
+            {
+                var filtro = new FiltroCargaUsuariosCursosGsaDto(usuarioGsaDto);
+
+                var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCursoCarregar, RotasRabbit.FilaGsaUsuarioCursoCarregar, filtro));
                 if (!iniciarFilaDeValidacao)
                     SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de usuários.");
             }

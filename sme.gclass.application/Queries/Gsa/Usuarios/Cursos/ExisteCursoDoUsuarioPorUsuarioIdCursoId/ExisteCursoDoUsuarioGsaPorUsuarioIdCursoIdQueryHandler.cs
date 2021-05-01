@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ExisteCursoDoUsuarioPorUsuarioIdCursoIdQueryHandler : IRequestHandler<ExisteCursoDoUsuarioPorUsuarioIdCursoIdQuery, bool>
+    public class ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQueryHandler : IRequestHandler<ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery, bool>
     {
         private readonly IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa;
 
-        public ExisteCursoDoUsuarioPorUsuarioIdCursoIdQueryHandler(IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa)
+        public ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQueryHandler(IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa)
         {
             this.repositorioUsuarioCursoGsa = repositorioUsuarioCursoGsa;
         }
 
-        public async Task<bool> Handle(ExisteCursoDoUsuarioPorUsuarioIdCursoIdQuery request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery request, CancellationToken cancellationToken)
             => await repositorioUsuarioCursoGsa.ExistePorUsuarioIdCursoIdAsync(request.UsuarioId, request.CursoId);
     }
 }
