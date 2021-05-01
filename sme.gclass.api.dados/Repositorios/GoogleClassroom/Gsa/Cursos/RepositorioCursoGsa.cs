@@ -132,5 +132,12 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(updateQuery);
         }
+
+        public async Task LimparAsync()
+        {
+            const string query = @"DELETE FROM cursos_gsa";
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query);
+        }
     }
 }

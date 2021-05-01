@@ -18,6 +18,8 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
+                await LimparTabelasAsync();
+
                 var dto = new FiltroCargaUsuariosGoogleDto();
                 return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, dto));
             }
@@ -26,6 +28,16 @@ namespace SME.GoogleClassroom.Aplicacao
                 SentrySdk.CaptureException(ex);
                 return false;
             }
+        }
+
+        private async Task LimparTabelasAsync()
+        {
+            var command = new LimparTabelasGsaCommand
+            {
+                UsuariosGsa = true
+            };
+
+            await mediator.Send(command);
         }
     }
 }
