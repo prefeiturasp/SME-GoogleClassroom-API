@@ -14,9 +14,16 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
+        public async Task<bool> ExistePorIdAsync(string cursoId)
+        {
+            var query = @"SELECT exists(SELECT 1 from public.cursos_gsa where id = @cursoId limit 1)";
+            using var conn = ObterConexao();
+            return (await conn.QuerySingleOrDefaultAsync<bool>(query, new { cursoId }));
+        }
+
         public async Task<long> SalvarAsync(CursoGsa cursoComparativo)
         {
-            const string insertQuery = @"insert into public.curso_gsa
+            const string insertQuery = @"insert into public.cursos_gsa
                                         (id, nome, secao, criador_id, descricao, data_inclusao, inserido_manualmente_google)
                                         values
                                         (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inseridoManualmenteGoogle)
@@ -80,7 +87,7 @@ namespace SME.GoogleClassroom.Dados
                                   CC.INSERIDO_MANUALMENTE_GOOGLE AS INSERIDOMANUALMENTEGOOGLE");
             }
 
-            queryCompleta.AppendLine(@"FROM curso_gsa CC");
+            queryCompleta.AppendLine(@"FROM cursos_gsa CC");
             queryCompleta.AppendLine(@"WHERE 1=1");
 
 
@@ -110,7 +117,7 @@ namespace SME.GoogleClassroom.Dados
                 from 
                     cursos c
                 left join
-                    curso_gsa cc
+                    cursos_gsa cc
                     on cast(c.id as varchar) = cc.id;
    
                 update 

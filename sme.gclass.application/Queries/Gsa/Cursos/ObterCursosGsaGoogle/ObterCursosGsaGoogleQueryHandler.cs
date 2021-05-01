@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.NextToken, servicoClassroom));
+            var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.TokenPagina, servicoClassroom));
             if (cursosGoogle.Courses is null)
             {
                 cursosGoogle.Courses = new List<Course>();
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     CriadorId = curso.OwnerId,
                     Descricao = curso.Description,
                     Nome = curso.Name,
-                    DataInclusao = (DateTime)curso.CreationTime,
+                    DataInclusao = (DateTime?)curso.CreationTime,
                     Secao = curso.Section
                 };
                 cursosDto.Add(dto);

@@ -93,6 +93,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaUsuarioCarregar, new ComandoRabbit("Sincroniza os usuários GSA a serem adicionados na base", typeof(IRealizarCargaUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioIncluir, new ComandoRabbit("Processar usuário GSA e adiciona na base", typeof(IProcessarUsuarioGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioValidar, new ComandoRabbit("Realiza validação de usuários GSA", typeof(IValidarUsuariosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaUsuarioCursoCarregar, new ComandoRabbit("Sincroniza os cursos do usuário GSA a serem adicionados na base", typeof(IRealizarCargaUsuariosCursosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaUsuarioCursoIncluir, new ComandoRabbit("Processar curso do usuário GSA e adiciona na base", typeof(IProcessarUsuarioCursoGsaUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -242,6 +244,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeProcessamentoGsa)
@@ -250,6 +253,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoValidar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioValidar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoIncluir, false, consumer);
             }
 
             return Task.CompletedTask;

@@ -28,10 +28,6 @@ namespace SME.GoogleClassroom.Aplicacao
                     .NotEmpty()
                     .WithMessage("O ID do usuário deve ser informado.");
 
-                RuleFor(x => x.UsuarioGsa.Nome)
-                    .NotEmpty()
-                    .WithMessage("O nome do usuário deve ser informado.");
-
                 RuleFor(x => x.UsuarioGsa.Email)
                     .NotEmpty()
                     .WithMessage("O e-mail do usuário deve ser informado.");

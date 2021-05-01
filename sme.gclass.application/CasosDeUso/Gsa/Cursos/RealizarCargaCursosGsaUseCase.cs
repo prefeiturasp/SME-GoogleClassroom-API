@@ -22,13 +22,14 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de cursos GSA.");
 
-            var dto = mensagemRabbit?.ObterObjetoMensagem<FiltroCagaCursosGsaDto>();
+            var filtro = mensagemRabbit?.ObterObjetoMensagem<FiltroCagaCursosGsaDto>();
 
-            var resultado = await mediator.Send(new ObterCursosGsaGoogleQuery(dto?.NextToken));
+            var resultado = await mediator.Send(new ObterCursosGsaGoogleQuery(filtro?.TokenProximaPagina));
             foreach (var curso in resultado.Cursos)
             {
                 try
                 {
+                    curso.ExecutarCargaDeUsuariosGsa = filtro.ExecutarCargaDeUsuariosGsa;
                     var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoIncluir, RotasRabbit.FilaGsaCursoIncluir, curso));
                     if (!publicarCurso) continue;
                 }
@@ -39,9 +40,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            dto.NextToken = resultado.TokenProximaPagina;
-            if (!string.IsNullOrEmpty(dto.NextToken))
-                await PublicaProximaPaginaAsync(dto);
+            filtro.TokenProximaPagina = resultado.TokenProximaPagina;
+            if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
+                await PublicaProximaPaginaAsync(filtro);
 
             return true;
         }

@@ -15,6 +15,13 @@ namespace SME.GoogleClassroom.Dados
 
         }
 
+        public async Task<bool> ExistePorIdAsync(string usuarioId)
+        {
+            var query = @"SELECT exists(SELECT 1 from public.usuarios_gsa where id = @usuarioId limit 1)";
+            using var conn = ObterConexao();
+            return (await conn.QuerySingleOrDefaultAsync<bool>(query, new { usuarioId }));
+        }
+
         public async Task<int> ValidarUsuariosExistentesUsuariosComparativosAsync()
         {
             const string updateQuery = @"
@@ -26,7 +33,7 @@ namespace SME.GoogleClassroom.Dados
                from
                     usuarios u
                left join
-                    usuario_gsa uc
+                    usuarios_gsa uc
                     on cast(u.id as varchar) = uc.id;
 
                update
@@ -87,7 +94,7 @@ namespace SME.GoogleClassroom.Dados
                                   UC.INSERIDO_MANUALMENTE_GOOGLE AS INSERIDOMANUALMENTEGOOGLE");
             }
 
-            queryCompleta.AppendLine(@"FROM USUARIO_COMPARATIVO UC");
+            queryCompleta.AppendLine(@"FROM usuarios_gsa UC");
             queryCompleta.AppendLine(@"WHERE 1=1");
 
             if (!string.IsNullOrEmpty(nome))
@@ -106,7 +113,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> SalvarAsync(UsuarioGsa usuarioComparativo)
         {
-            const string insertQuery = @"insert into public.usuario_gsa
+            const string insertQuery = @"insert into public.usuarios_gsa
                                         (id, nome, email, data_inclusao, data_ultimo_login, eh_admin, organization_path, inserido_manualmente_google)
                                         values
                                         (@id, @nome, @email, @dataInclusao, @dataUltimoLogin, @EhAdmin, @OrganizationPath, @inseridoManualmenteGoogle)

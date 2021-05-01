@@ -5,11 +5,11 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterUsuariosGsaGoogleQuery : IRequest<PaginaConsultaUsuariosGsaDto>
     {
-        public ObterUsuariosGsaGoogleQuery(string tokenProximaPagina)
+        public ObterUsuariosGsaGoogleQuery(string tokenPagina)
         {
-            TokenProximaPagina = tokenProximaPagina;
+            TokenPagina = tokenPagina;
         }
 
-        public string TokenProximaPagina { get; }
+        public string TokenPagina { get; }
     }
 }

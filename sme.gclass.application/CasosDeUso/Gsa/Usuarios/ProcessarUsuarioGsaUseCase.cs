@@ -27,22 +27,16 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioGsaDto is null)
                 throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
 
-            try
-            {
-                var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
-                var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
+            var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
+            var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
 
-                var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
-                if (usuarioGsaDto.UltimoItemDaFila)
-                    await IniciarValidacaoAsync();
+            var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+            if (usuarioGsaDto.UltimoItemDaFila)
+                await IniciarValidacaoAsync();
 
-                return retorno;
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                throw;
-            }        
+            await InicarCargaCursosDeUsuarioAsync(usuarioGsaDto);
+
+            return retorno;
         }
 
         private async Task IniciarValidacaoAsync()
@@ -50,6 +44,22 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.FilaGsaUsuarioValidar, true));
+                if (!iniciarFilaDeValidacao)
+                    SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de usuários.");
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+            }
+        }
+
+        private async Task InicarCargaCursosDeUsuarioAsync(UsuarioGsaDto usuarioGsaDto)
+        {
+            try
+            {
+                var filtro = new FiltroCargaUsuariosCursosGsaDto(usuarioGsaDto);
+
+                var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCursoCarregar, RotasRabbit.FilaGsaUsuarioCursoCarregar, filtro));
                 if (!iniciarFilaDeValidacao)
                     SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de usuários.");
             }

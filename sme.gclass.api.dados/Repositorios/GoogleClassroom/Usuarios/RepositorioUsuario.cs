@@ -600,7 +600,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId)
         {
-            var query = @"SELECT exists(SELECT 1 from usuarios where google_classroom_id = @googleClassroomIdS limit 1)";
+            var query = @"SELECT exists(SELECT 1 from usuarios where google_classroom_id = @googleClassroomId limit 1)";
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
