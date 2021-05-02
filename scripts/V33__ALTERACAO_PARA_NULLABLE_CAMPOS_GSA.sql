@@ -5,6 +5,7 @@ alter table cursos_gsa alter data_inclusao drop not null;
 alter table usuarios_gsa alter nome drop not null;
 alter table usuarios_gsa alter data_inclusao drop not null;
 alter table usuarios_gsa alter organization_path drop not null;
+alter table usuarios_gsa add unique(email); 
 
 alter table usuarios_gsa alter id type varchar(50);
 
