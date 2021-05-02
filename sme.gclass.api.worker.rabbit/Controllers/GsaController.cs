@@ -42,9 +42,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarCargaCursosGsa([FromServices] IIniciarCargaCursosGsaUseCase useCase)
+        public async Task<IActionResult> IniciarCargaCursosGsa(bool executarCargaDeUsuariosGsa, [FromServices] IIniciarCargaCursosGsaUseCase useCase)
         {
-            var retorno = await useCase.Executar();
+            var retorno = await useCase.Executar(executarCargaDeUsuariosGsa);
             return Ok(retorno);
         }
 
@@ -87,7 +87,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("usuarios/cursos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoGsaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ConsultaCursosDoUsuarioGsa), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterCursosDoUsuarioGsa(string usuarioId, [FromServices] IObterCursosDoUsuarioGsaUseCase useCase)

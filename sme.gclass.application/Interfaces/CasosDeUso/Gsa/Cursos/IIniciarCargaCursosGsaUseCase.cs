@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarCargaCursosGsaUseCase
     {
-        Task<bool> Executar();
+        Task<bool> Executar(bool executarCargaDeUsuariosGsa);
     }
 }

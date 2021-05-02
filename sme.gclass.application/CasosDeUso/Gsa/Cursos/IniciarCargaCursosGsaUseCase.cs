@@ -15,11 +15,13 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar()
+        public async Task<bool> Executar(bool executarCargaDeUsuariosGsa)
         {
             try
             {
-                var dto = new FiltroCagaCursosGsaDto(null, false);
+                await LimparTabelasAsync(executarCargaDeUsuariosGsa);
+
+                var dto = new FiltroCagaCursosGsaDto(null, executarCargaDeUsuariosGsa);
                 return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
             }
             catch (Exception ex)
@@ -27,6 +29,17 @@ namespace SME.GoogleClassroom.Aplicacao
                 SentrySdk.CaptureException(ex);
                 return false;
             }
+        }
+
+        private async Task LimparTabelasAsync(bool executarCargaDeUsuariosGsa)
+        {
+            var command = new LimparTabelasGsaCommand
+            {
+                UsuariosGsa = executarCargaDeUsuariosGsa,
+                CursosGsa = true
+            };
+
+            await mediator.Send(command);
         }
     }
 }

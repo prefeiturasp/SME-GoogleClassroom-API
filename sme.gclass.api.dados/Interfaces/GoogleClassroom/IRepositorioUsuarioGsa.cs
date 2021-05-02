@@ -13,5 +13,7 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<UsuarioGsa>> ObterUsuariosComparativosAsync(Paginacao paginacao, string nome, string email, string organizationPath);
 
         Task<bool> SalvarAsync(UsuarioGsa usuarioComparativo);
+
+        Task LimparAsync();
     }
 }
