@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using Sentry;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Text;
@@ -20,16 +21,24 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public Task<bool> Handle(PublicaFilaRabbitCommand request, CancellationToken cancellationToken)
         {
-            var mensagem = new MensagemRabbit(request.Mensagem);
+            try
+            {
+                var mensagem = new MensagemRabbit(request.Mensagem);
 
-            var mensagemJson = JsonConvert.SerializeObject(mensagem);
-            var body = Encoding.UTF8.GetBytes(mensagemJson);
+                var mensagemJson = JsonConvert.SerializeObject(mensagem);
+                var body = Encoding.UTF8.GetBytes(mensagemJson);
 
-            rabbitChannel.QueueBind(request.NomeFila, RotasRabbit.ExchangeGoogleSync, request.NomeRota);
-            
-            rabbitChannel.BasicPublish(RotasRabbit.ExchangeGoogleSync, request.NomeRota, null, body);
+                rabbitChannel.QueueBind(request.NomeFila, RotasRabbit.ExchangeGoogleSync, request.NomeRota);
 
-            return Task.FromResult(true);
+                rabbitChannel.BasicPublish(RotasRabbit.ExchangeGoogleSync, request.NomeRota, null, body);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+                return Task.FromResult(false);
+            }        
         }
     }
 }

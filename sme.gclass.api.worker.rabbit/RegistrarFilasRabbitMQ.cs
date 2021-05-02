@@ -12,6 +12,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
                 RegistrarFilasDeInclusao(canalRabbit);
+
+            if (consumoDeFilasOptions.ConsumirFilasDeCargaGsa)
+                RegistrarFilasDeCargasGsa(canalRabbit);
+
+            if (consumoDeFilasOptions.ConsumirFilasDeProcessamentoGsa)
+                RegistrarFilasDeProcessamentoGsa(canalRabbit);
         }
 
         #region Filas Sync
@@ -168,5 +174,42 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
 
         #endregion Filas de Inclusão
+
+        #region Filas carga GSA
+        private static void RegistrarFilasDeCargasGsa(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaGoogleSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaGoogleSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaGoogleSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoCarregar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioCarregar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCursoCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCursoCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioCursoCarregar);
+        }
+        #endregion
+
+        #region Filas processamento GSA
+        private static void RegistrarFilasDeProcessamentoGsa(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoValidar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoValidar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioValidar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioValidar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCursoIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCursoIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaUsuarioCursoIncluir);
+        }
+        #endregion
     }
 }

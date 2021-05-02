@@ -49,5 +49,7 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>> ObterAtualizacaoUsuarioGoogleClassroomIdAsync(Paginacao paginacao);
 
         Task FinalizarAtualizacaoUsuarioGoogleClassroomIdAsync();
+
+        Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId);
     }
 }
