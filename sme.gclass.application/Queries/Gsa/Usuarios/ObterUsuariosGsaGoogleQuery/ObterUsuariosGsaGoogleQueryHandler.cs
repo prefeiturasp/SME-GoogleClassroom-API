@@ -3,7 +3,6 @@ using Google.Apis.Admin.Directory.directory_v1.Data;
 using MediatR;
 using Polly;
 using Polly.Registry;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
@@ -16,42 +15,40 @@ namespace SME.GoogleClassroom.Aplicacao
     public class ObterUsuariosGsaGoogleQueryHandler : IRequestHandler<ObterUsuariosGsaGoogleQuery, PaginaConsultaUsuariosGsaDto>
     {
         private readonly IMediator mediator;
+        private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public ObterUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.gsaSyncOptions = gsaSyncOptions;
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);
         }
 
         public async Task<PaginaConsultaUsuariosGsaDto> Handle(ObterUsuariosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-            var usuariosGoogle = await policy.ExecuteAsync(() => ObterUsuariosGsaGoogleAsync(diretorioClassroom, request.TokenPagina));
-            return MapearParaDto(usuariosGoogle);
+            return await ObterUsuariosGsaGoogleAsync(diretorioClassroom, request.TokenPagina);
         }
 
-        private async Task<Users> ObterUsuariosGsaGoogleAsync(DirectoryService diretorioClassroom, string tokenPagina)
+        private async Task<PaginaConsultaUsuariosGsaDto> ObterUsuariosGsaGoogleAsync(DirectoryService diretorioClassroom, string tokenPagina)
         {
-            var requestList = diretorioClassroom.Users.List();
-            requestList.PageToken = tokenPagina;
-            requestList.Domain = "edu.sme.prefeitura.sp.gov.br";
-            requestList.Query = "isSuspended=false";
+            var contadorDePagina = 0;
+            var resultado = new PaginaConsultaUsuariosGsaDto(tokenPagina);
 
-            return await requestList.ExecuteAsync();
+            await ObterUsuariosGsaGoogleTotalDePaginasPorExecucaoAsync(diretorioClassroom, resultado, contadorDePagina);
+
+            if (string.IsNullOrWhiteSpace(resultado.TokenProximaPagina))
+                resultado.Usuarios.Last().UltimoItemDaFila = true;
+
+            return resultado;
         }
 
-        private PaginaConsultaUsuariosGsaDto MapearParaDto(Users usuariosGoogle)
+        private async Task ObterUsuariosGsaGoogleTotalDePaginasPorExecucaoAsync(DirectoryService diretorioClassroom, PaginaConsultaUsuariosGsaDto paginaConsulta, int contadorDePagina)
         {
-            var paginaConsultaUsuarios = new PaginaConsultaUsuariosGsaDto
-            {
-                TokenProximaPagina = usuariosGoogle?.NextPageToken
-            };
-
-            if (usuariosGoogle?.UsersValue is null)
-                return paginaConsultaUsuarios;
-
-            paginaConsultaUsuarios.Usuarios = usuariosGoogle.UsersValue
+            var resultadoPagina = await policy.ExecuteAsync(() => ObterUsuariosGsaGooglePaginadoAsync(diretorioClassroom, paginaConsulta.TokenProximaPagina));
+            paginaConsulta.TokenProximaPagina = resultadoPagina.NextPageToken;
+            paginaConsulta.Usuarios.AddRange(resultadoPagina.UsersValue
                 .Select(user => new UsuarioGsaDto
                 {
                     EhAdmin = user.IsAdmin ?? false,
@@ -62,12 +59,23 @@ namespace SME.GoogleClassroom.Aplicacao
                     DataUltimoLogin = user.LastLoginTime,
                     DataInclusao = user.CreationTime
                 })
-                .ToList();
+                .ToList());
 
-            if (string.IsNullOrEmpty(usuariosGoogle.NextPageToken))
-                paginaConsultaUsuarios.Usuarios.Last().UltimoItemDaFila = true;
+            contadorDePagina++;
 
-            return paginaConsultaUsuarios;
+            if (!string.IsNullOrWhiteSpace(paginaConsulta.TokenProximaPagina) && contadorDePagina < gsaSyncOptions.QuantidadeDePaginasConsultadasPorExecucao)
+                await ObterUsuariosGsaGoogleTotalDePaginasPorExecucaoAsync(diretorioClassroom, paginaConsulta, contadorDePagina);
+        }
+
+        private async Task<Users> ObterUsuariosGsaGooglePaginadoAsync(DirectoryService diretorioClassroom, string tokenPagina)
+        {
+            var requestList = diretorioClassroom.Users.List();
+            requestList.PageToken = tokenPagina;
+            requestList.Domain = "edu.sme.prefeitura.sp.gov.br";
+            requestList.Query = "isSuspended=false";
+            requestList.MaxResults = gsaSyncOptions.QuantidadeDeItensPorPagina;
+
+            return await requestList.ExecuteAsync();
         }
     }
 }
