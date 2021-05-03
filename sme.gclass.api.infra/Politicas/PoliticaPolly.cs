@@ -3,6 +3,6 @@
     public static class PoliticaPolly
     {
         public static string PolicyGoogleSync => "RetryPolicy";
-        public static string PolicyCargaGsa => "RetryComparativoDeDadosPolicy";
+        public static string PolicyCargaGsa => "RetryGsaPolicy";
     }
 }

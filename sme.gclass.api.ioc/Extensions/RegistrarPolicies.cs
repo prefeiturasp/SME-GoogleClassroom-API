@@ -22,12 +22,12 @@ namespace SME.GoogleClassroom.IoC
 
             registry.Add(PoliticaPolly.PolicyGoogleSync, policy);
 
-            RegistrarPolicyComparativoDeDados(registry);
+            RegistrarPolicyGsa(registry);
         }
 
-        private static void RegistrarPolicyComparativoDeDados(IPolicyRegistry<string> registry)
+        private static void RegistrarPolicyGsa(IPolicyRegistry<string> registry)
         {
-            var policy = Policy.Handle<Exception>(ex => !(ex is GoogleApiException))
+            var policy = Policy.Handle<Exception>()
               .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
 
             registry.Add(PoliticaPolly.PolicyCargaGsa, policy);
