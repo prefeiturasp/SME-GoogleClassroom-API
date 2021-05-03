@@ -80,8 +80,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var consumoDeFilasOptions = new ConsumoDeFilasOptions();
             Configuration.GetSection(nameof(ConsumoDeFilasOptions)).Bind(consumoDeFilasOptions, c => c.BindNonPublicProperties = true);
 
+            var gsaSyncOptions = new GsaSyncOptions();
+            Configuration.GetSection(nameof(GsaSyncOptions)).Bind(gsaSyncOptions, c => c.BindNonPublicProperties = true);
+
             services.AddSingleton(variaveisGlobais);
             services.AddSingleton(consumoDeFilasOptions);
+            services.AddSingleton(gsaSyncOptions);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

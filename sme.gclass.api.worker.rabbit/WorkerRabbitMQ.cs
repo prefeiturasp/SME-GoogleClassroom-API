@@ -244,7 +244,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaGoogleSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
+                //canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeProcessamentoGsa)
