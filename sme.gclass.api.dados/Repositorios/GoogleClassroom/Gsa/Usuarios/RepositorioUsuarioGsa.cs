@@ -27,14 +27,14 @@ namespace SME.GoogleClassroom.Dados
             const string updateQuery = @"
                drop table if exists tempUsuariosValidacao;
                select
-                    u.id,
+                    u.indice,
                     not uc.id is null as existe_google
                into tempUsuariosValidacao
                from
                     usuarios u
                left join
                     usuarios_gsa uc
-                    on cast(u.id as varchar) = uc.id;
+                    on u.google_classroom_id = uc.id;
 
                update
                     usuarios c
@@ -43,7 +43,7 @@ namespace SME.GoogleClassroom.Dados
                from
                     tempUsuariosValidacao t1
                where
-                    c.id = t1.id;";
+                    c.indice = t1.indice;";
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(updateQuery);

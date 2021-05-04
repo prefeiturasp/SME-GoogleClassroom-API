@@ -130,6 +130,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IProcessarCursoGsaUseCase, ProcessarCursoGsaUseCase>();
             services.TryAddScoped<IValidarCursosGsaUseCase, ValidarCursosGsaUseCase>();
             services.TryAddScoped<IObterCursosGsaUseCase, ObterCursosGsaUseCase>();
+            services.TryAddScoped<IIniciarValidacaoCursosGsaUseCase, IniciarValidacaoCursosGsaUseCase>();
 
             services.TryAddScoped<IIniciarCargaUsuariosGsaUseCase, IniciarCargaUsuariosGsaUseCase>();
             services.TryAddScoped<IRealizarCargaUsuariosGsaUseCase, RealizarCargaUsuariosGsaUseCase>();
@@ -137,6 +138,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IValidarUsuariosGsaUseCase, ValidarUsuariosGsaUseCase>();
             services.TryAddScoped<IIniciarValidarUsuariosExistentesUsuariosGsaUseCase, IniciarValidarUsuariosExistentesUsuariosGsaUseCase>();
             services.TryAddScoped<IObterUsuariosGsaUseCase, ObterUsuariosGsaUseCase>();
+            services.TryAddScoped<IIniciarValidacaoUsuariosGsaUseCase, IniciarValidacaoUsuariosGsaUseCase > ();
 
             services.TryAddScoped<IRealizarCargaUsuariosCursosGsaUseCase, RealizarCargaUsuariosCursosGsaUseCase>();
             services.TryAddScoped<IProcessarUsuarioCursoGsaUseCase, ProcessarUsuarioCursoGsaUseCase>();
