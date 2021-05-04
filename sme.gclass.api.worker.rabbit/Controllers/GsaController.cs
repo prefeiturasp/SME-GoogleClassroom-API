@@ -49,6 +49,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
+        /// Inicia a validação de cursos GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("cursos/validar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarValidacaoCursosGsa([FromServices] IIniciarValidacaoCursosGsaUseCase useCase)
+        {
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Retorna os usuários GSA sincronizados.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
@@ -75,6 +91,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> IniciarCargaUsuariosGsa([FromServices] IIniciarCargaUsuariosGsaUseCase useCase)
+        {
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia a validação de usuários GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("usuarios/validar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarValidacaoUsuariosGsa([FromServices] IIniciarValidacaoUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar();
             return Ok(retorno);
