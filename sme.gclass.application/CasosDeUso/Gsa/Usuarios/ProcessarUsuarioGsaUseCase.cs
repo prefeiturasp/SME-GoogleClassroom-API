@@ -32,9 +32,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
             if (usuarioGsaDto.UltimoItemDaFila)
+            {
                 await IniciarValidacaoAsync();
-
-            await InicarCargaCursosDeUsuarioAsync(usuarioGsaDto);
+                //await InicarCargaCursosDeUsuarioAsync(usuarioGsaDto);
+            }
 
             return retorno;
         }

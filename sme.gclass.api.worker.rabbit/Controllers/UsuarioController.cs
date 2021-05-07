@@ -33,18 +33,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Valida se os usuários adicionados na base existem no google classroom
-        /// </summary>
-        /// <response code="200">O início da validação ocorreu com sucesso</response>
-        [HttpGet("valida")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ValidaUsuariosExistentes([FromServices] IIniciarValidarUsuariosExistentesUsuariosGsaUseCase useCase)
-        {
-            var retorno = await useCase.Executar();
-            return Ok(retorno);
-        }
-
-        /// <summary>
         /// Retorna os comparativos de usuários que foram criados pelo Google Classroom.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>

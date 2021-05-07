@@ -19,8 +19,12 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             await LimparTabelasAsync();
 
-            var filtro = new FiltroCagaCursosGsaDto();
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, filtro));
+            var filtroCursoGsa = new FiltroCagaCursosGsaDto();
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, filtroCursoGsa));
+
+            var filtroUsuarioGsa = new FiltroCargaUsuariosGoogleDto();
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, filtroCursoGsa));
+
             return true;
         }
 

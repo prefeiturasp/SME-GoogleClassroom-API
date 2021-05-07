@@ -21,23 +21,22 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QuerySingleOrDefaultAsync<bool>(query, new { cursoId }));
         }
 
-        public async Task<long> SalvarAsync(CursoGsa cursoComparativo)
+        public async Task<int> SalvarAsync(CursoGsa cursoGsa)
         {
             const string insertQuery = @"insert into public.cursos_gsa
                                         (id, nome, secao, criador_id, descricao, data_inclusao, inserido_manualmente_google)
                                         values
-                                        (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inseridoManualmenteGoogle)
-                                        RETURNING id";
+                                        (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inseridoManualmenteGoogle)";
 
             var parametros = new
             {
-                id = cursoComparativo.Id,
-                nome = cursoComparativo.Nome,
-                secao = cursoComparativo.Secao,
-                criadorId = cursoComparativo.CriadorId,
-                descricao = cursoComparativo.Descricao,
-                inseridoManualmenteGoogle = cursoComparativo.InseridoManualmenteGoogle,
-                dataInclusao = cursoComparativo.DataInclusao
+                id = cursoGsa.Id,
+                nome = cursoGsa.Nome,
+                secao = cursoGsa.Secao,
+                criadorId = cursoGsa.CriadorId,
+                descricao = cursoGsa.Descricao,
+                inseridoManualmenteGoogle = cursoGsa.InseridoManualmenteGoogle,
+                dataInclusao = cursoGsa.DataInclusao
             };
 
             using var conn = ObterConexao();
