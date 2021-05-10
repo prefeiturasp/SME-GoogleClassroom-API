@@ -4,6 +4,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarCargaCursosGsaUseCase
     {
-        Task<bool> Executar(bool executarCargaDeUsuariosGsa);
+        Task<bool> Executar();
     }
 }

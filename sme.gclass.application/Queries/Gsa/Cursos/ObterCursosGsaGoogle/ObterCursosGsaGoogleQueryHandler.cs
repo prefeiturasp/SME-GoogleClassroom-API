@@ -4,9 +4,9 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,47 +14,45 @@ using static Google.Apis.Classroom.v1.CoursesResource.ListRequest;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosGsaGoogleQueryHandler : IRequestHandler<ObterCursosGsaGoogleQuery, PaginaConsultaCursosGsaDto>
+    public class ObterCursosGsaGoogleQueryHandler : BaseIntegracaoGoogleClassroomHandler<ObterCursosGsaGoogleQuery, PaginaConsultaCursosGsaDto>
     {
         private readonly IMediator mediator;
+        private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
+            :base(metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.gsaSyncOptions = gsaSyncOptions;
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
-        public async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
+        public override async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            var cursosGoogle = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(request.TokenPagina, servicoClassroom));
-            if (cursosGoogle.Courses is null)
-            {
-                cursosGoogle.Courses = new List<Course>();
-            }
-            var cursos = ConvertToDto(cursosGoogle);
-            return new PaginaConsultaCursosGsaDto()
-            {
-                TokenProximaPagina = cursosGoogle.NextPageToken,
-                Cursos = cursos
-            };
+            return await ObterCursosGsaGoogleAsync(servicoClassroom, request.TokenPagina);
         }
 
-        private async Task<ListCoursesResponse> ObterCursosAtivosNoGoogle(string pageToken, ClassroomService servicoClassroom)
+        private async Task<PaginaConsultaCursosGsaDto> ObterCursosGsaGoogleAsync(ClassroomService servicoClassroom, string tokenPagina)
         {
-            var request = servicoClassroom.Courses.List();
-            request.CourseStates = CourseStatesEnum.ACTIVE;
-            request.PageToken = pageToken;
-            return await request.ExecuteAsync();
+            var contadorDePagina = 0;
+            var resultado = new PaginaConsultaCursosGsaDto(tokenPagina);
+
+            await ObterCursosGsaGoogleTotalDePaginasPorExecucaoAsync(servicoClassroom, resultado, contadorDePagina);
+
+            if (string.IsNullOrWhiteSpace(resultado.TokenProximaPagina))
+                resultado.Cursos.Last().UltimoItemDaFila = true;
+
+            return resultado;
         }
 
-        private IEnumerable<CursoGsaDto> ConvertToDto(ListCoursesResponse cursosGoogle)
+        private async Task ObterCursosGsaGoogleTotalDePaginasPorExecucaoAsync(ClassroomService servicoClassroom, PaginaConsultaCursosGsaDto paginaConsulta, int contadorDePagina)
         {
-            var cursosDto = new List<CursoGsaDto>();
-            foreach (var curso in cursosGoogle.Courses)
-            {
-                var dto = new CursoGsaDto()
+            var resultadoPagina = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(servicoClassroom, paginaConsulta.TokenProximaPagina));
+            paginaConsulta.TokenProximaPagina = resultadoPagina.NextPageToken;
+            paginaConsulta.Cursos.AddRange(resultadoPagina.Courses
+                .Select(curso => new CursoGsaDto
                 {
                     Id = curso.Id,
                     CriadorId = curso.OwnerId,
@@ -62,14 +60,24 @@ namespace SME.GoogleClassroom.Aplicacao
                     Nome = curso.Name,
                     DataInclusao = (DateTime?)curso.CreationTime,
                     Secao = curso.Section
-                };
-                cursosDto.Add(dto);
-            }
+                })
+                .ToList());
 
-            if (string.IsNullOrEmpty(cursosGoogle.NextPageToken))
-                cursosDto.Last().UltimoItemDaFila = true;
+            contadorDePagina++;
 
-            return cursosDto;
+            if (!string.IsNullOrWhiteSpace(paginaConsulta.TokenProximaPagina) && contadorDePagina < gsaSyncOptions.QuantidadeDePaginasConsultadasPorExecucao)
+                await ObterCursosGsaGoogleTotalDePaginasPorExecucaoAsync(servicoClassroom, paginaConsulta, contadorDePagina);
+        }
+
+        private async Task<ListCoursesResponse> ObterCursosAtivosNoGoogle(ClassroomService servicoClassroom, string pageToken)
+        {
+            var request = servicoClassroom.Courses.List();
+            request.PageToken = pageToken;
+            request.CourseStates = CourseStatesEnum.ACTIVE;
+            request.PageSize = gsaSyncOptions.QuantidadeDeItensPorPagina;
+
+            RegistraRequisicaoGoogleClassroom();
+            return await request.ExecuteAsync();
         }
     }
 }

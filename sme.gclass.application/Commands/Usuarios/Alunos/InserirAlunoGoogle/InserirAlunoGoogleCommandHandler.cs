@@ -4,9 +4,9 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Polly;
 using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
@@ -14,17 +14,17 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirAlunoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirAlunoGoogleCommand>
+    public class InserirAlunoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<InserirAlunoGoogleCommand>
     {
         private readonly IMediator mediator;
-        private readonly IConfiguration configuration;        
+        private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IConfiguration configuration, VariaveisGlobaisOptions variaveisGlobais ) 
-            : base(variaveisGlobais)
+        public InserirAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IConfiguration configuration, VariaveisGlobaisOptions variaveisGlobais, IMetricReporter metricReporter)
+            : base(variaveisGlobais, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));            
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 

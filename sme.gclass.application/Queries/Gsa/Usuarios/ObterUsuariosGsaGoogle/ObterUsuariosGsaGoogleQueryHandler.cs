@@ -4,6 +4,7 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Linq;
@@ -12,20 +13,21 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosGsaGoogleQueryHandler : IRequestHandler<ObterUsuariosGsaGoogleQuery, PaginaConsultaUsuariosGsaDto>
+    public class ObterUsuariosGsaGoogleQueryHandler : BaseIntegracaoGoogleClassroomHandler<ObterUsuariosGsaGoogleQuery, PaginaConsultaUsuariosGsaDto>
     {
         private readonly IMediator mediator;
         private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions)
+        public ObterUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
+            :base(metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.gsaSyncOptions = gsaSyncOptions;
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);
         }
 
-        public async Task<PaginaConsultaUsuariosGsaDto> Handle(ObterUsuariosGsaGoogleQuery request, CancellationToken cancellationToken)
+        public override async Task<PaginaConsultaUsuariosGsaDto> Handle(ObterUsuariosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
             return await ObterUsuariosGsaGoogleAsync(diretorioClassroom, request.TokenPagina);
@@ -75,6 +77,7 @@ namespace SME.GoogleClassroom.Aplicacao
             requestList.Query = "isSuspended=false";
             requestList.MaxResults = gsaSyncOptions.QuantidadeDeItensPorPagina;
 
+            RegistraRequisicaoGoogleClassroom();
             return await requestList.ExecuteAsync();
         }
     }

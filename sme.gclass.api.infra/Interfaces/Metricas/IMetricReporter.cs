@@ -9,5 +9,7 @@ namespace SME.GoogleClassroom.Infra.Interfaces.Metricas
         void RegistrarErro(string casoDeUso, string erro);
 
         void RegistrarTempoDeExecucao(string casoDeUso, TimeSpan elapsed);
+
+        void RegistraRequisicaoGsa();
     }
 }

@@ -11,6 +11,5 @@ namespace SME.GoogleClassroom.Infra
         public string Descricao { get; set; }
         public DateTime? DataInclusao { get; set; }
         public bool UltimoItemDaFila { get; set; }
-        public bool ExecutarCargaDeUsuariosGsa { get; set; }
     }
 }

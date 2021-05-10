@@ -198,6 +198,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
             };
 
+            ConfigurarConsumoDeFilasRabbit(consumer);
+            return Task.CompletedTask;
+        }
+
+        private void ConfigurarConsumoDeFilasRabbit(EventingBasicConsumer consumer)
+        {
+            ConfigurarConsumoDeFilasSync(consumer);
+            ConfigurarConsumoDeFilasGsa(consumer);
+        }
+
+        private void ConfigurarConsumoDeFilasSync(EventingBasicConsumer consumer)
+        {
             if (consumoDeFilasOptions.ConsumirFilasSync)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGoogleSync, false, consumer);
@@ -238,25 +250,35 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoRemover, false, consumer);
             }
+        }
 
-            if(consumoDeFilasOptions.ConsumirFilasDeCargaGsa)
-            {
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaGoogleSync, false, consumer);
+        private void ConfigurarConsumoDeFilasGsa(EventingBasicConsumer consumer)
+        {
+            canalRabbit.BasicConsume(RotasRabbit.FilaGsaGoogleSync, false, consumer);
+
+            if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCarregar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
-            }
 
-            if (consumoDeFilasOptions.ConsumirFilasDeProcessamentoGsa)
+            if (consumoDeFilasOptions.Gsa.CargaUsuarioGsa)
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
+
+            if (consumoDeFilasOptions.Gsa.CargaUsuarioCursoGsa)
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
+
+            if (consumoDeFilasOptions.Gsa.ProcessarCursoGsa)
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoValidar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioValidar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoIncluir, false, consumer);
             }
 
-            return Task.CompletedTask;
+            if (consumoDeFilasOptions.Gsa.ProcessarUsuarioGsa)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioValidar, false, consumer);
+            }
+
+            if (consumoDeFilasOptions.Gsa.ProcessarUsuarioCursoGsa)
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoIncluir, false, consumer);
         }
     }
 }

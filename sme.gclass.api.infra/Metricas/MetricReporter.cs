@@ -10,6 +10,7 @@ namespace SME.GoogleClassroom.Infra.Metricas
         private readonly Counter contadorDeExecucao;
         private readonly Counter contadorDeErros;
         private readonly Histogram histogramaDeTempoDeExcucao;
+        private readonly Counter contadorRequisicoesGsa;
 
         public MetricReporter()
         {
@@ -31,6 +32,8 @@ namespace SME.GoogleClassroom.Infra.Metricas
                     Buckets = Histogram.ExponentialBuckets(0.01, 2, 10),
                     LabelNames = new[] { "caso_de_uso" }
                 });
+
+            contadorRequisicoesGsa = Metrics.CreateCounter("requisicoes_gsa_quantidade", "Quantidade de requisições à API Google realizadas.");
         }
 
         public void RegistrarExecucao(string casoDeUso) => contadorDeExecucao.WithLabels(casoDeUso).Inc();
@@ -41,6 +44,8 @@ namespace SME.GoogleClassroom.Infra.Metricas
         {
             histogramaDeTempoDeExcucao.WithLabels(casoDeUso).Observe(elapsed.TotalSeconds);
         }
+
+        public void RegistraRequisicaoGsa() => contadorRequisicoesGsa.Inc();
     }
 
     public static class MetricReporterRegister
