@@ -59,7 +59,7 @@ namespace SME.GoogleClassroom.Aplicacao
             contadorDePagina++;
 
             if (!string.IsNullOrWhiteSpace(paginaConsulta.TokenProximaPagina) && contadorDePagina < gsaSyncOptions.QuantidadeDePaginasConsultadasPorExecucao)
-                await ObterUsuarioCursosGsaGoogleTotalDePaginasPorExecucaoAsync(servicoClassroom, paginaConsulta, usuarioId, email, contadorDePagina);
+                await ObterUsuarioCursosGsaGoogleTotalDePaginasPorExecucaoAsync(servicoClassroom, paginaConsulta, email, usuarioId, contadorDePagina);
         }
 
         private async Task<ListCoursesResponse> ObterUsuariosGsaGoogleAsync(ClassroomService servicoClassroom, string email, string tokenPagina)
