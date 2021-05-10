@@ -25,8 +25,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (request.UsuariosGsa)
             {
-                await repositorioUsuarioGsa.LimparAsync();
                 await repositorioUsuarioCursoGsa.LimparAsync();
+                await repositorioUsuarioGsa.LimparAsync();
             }
 
             if (request.CursosGsa)
