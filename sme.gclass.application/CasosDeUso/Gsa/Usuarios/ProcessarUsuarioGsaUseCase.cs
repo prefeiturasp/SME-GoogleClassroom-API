@@ -34,9 +34,9 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioGsaDto.UltimoItemDaFila)
             {
                 await IniciarValidacaoAsync();
-                //await InicarCargaCursosDeUsuarioAsync(usuarioGsaDto);
             }
 
+            await InicarCargaCursosDeUsuarioAsync(usuarioGsaDto);
             return retorno;
         }
 
