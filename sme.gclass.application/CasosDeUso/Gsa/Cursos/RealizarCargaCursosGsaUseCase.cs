@@ -28,7 +28,6 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 try
                 {
-                    curso.ExecutarCargaDeUsuariosGsa = filtro.ExecutarCargaDeUsuariosGsa;
                     var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoIncluir, RotasRabbit.FilaGsaCursoIncluir, curso));
                     if (!publicarCurso) continue;
                 }

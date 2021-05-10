@@ -25,10 +25,6 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioCursoGsaDto is null)
                 throw new NegocioException("Não foi possível processar o curso do usuário GSA. A mensagem enviada é inválida.");
 
-            var cursoExiste = await mediator.Send(new ExisteCursoGsaPorIdQuery(usuarioCursoGsaDto.CursoId));
-            if (!cursoExiste)
-                throw new NegocioException($"Não foi possível vincular o curso {usuarioCursoGsaDto.CursoId} ao usuário {usuarioCursoGsaDto.UsuarioId}. O curso não foi salvo na base.");
-
             var usuarioCursoExiste = await mediator.Send(new ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId));
             if (usuarioCursoExiste) return true;
 
