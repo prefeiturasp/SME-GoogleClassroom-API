@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            RegistraRequisicaoGsa();
+            RegistraRequisicaoGoogleClassroom();
             return await ExecutarAsync(request, cancellationToken);
         }
 

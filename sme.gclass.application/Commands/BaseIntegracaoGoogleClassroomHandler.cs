@@ -17,12 +17,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            RegistraRequisicaoGsa();
+            RegistraRequisicaoGoogleClassroom();
             return OnHandleAsync(request, cancellationToken);
         }
 
         protected virtual Task<TResponse> OnHandleAsync(TRequest request, CancellationToken cancellationToken) => Task.FromResult((TResponse)default);
 
-        protected void RegistraRequisicaoGsa() => metricReporter.RegistraRequisicaoGsa();
+        protected void RegistraRequisicaoGoogleClassroom() => metricReporter.RegistraRequisicaoGsa();
     }
 }
