@@ -5,6 +5,11 @@ namespace SME.GoogleClassroom.Infra
     public class PaginaConsultaCursosGsaDto
     {
         public string TokenProximaPagina { get; set; }
-        public IEnumerable<CursoGsaDto> Cursos { get; set; }
+        public List<CursoGsaDto> Cursos { get; set; }
+        public PaginaConsultaCursosGsaDto(string tokenProximaPagina)
+        {
+            TokenProximaPagina = tokenProximaPagina;
+            Cursos = new List<CursoGsaDto>();
+        }
     }
 }
