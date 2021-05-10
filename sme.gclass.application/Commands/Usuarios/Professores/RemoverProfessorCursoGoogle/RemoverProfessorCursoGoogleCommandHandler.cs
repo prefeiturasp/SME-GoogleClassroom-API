@@ -3,6 +3,7 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
@@ -10,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Commands.Usuarios.Professores.RemoverProfessorCursoGoogle
 {
-    public class RemoverProfessorCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<RemoverProfessorCursoGoogleCommand>
+    public class RemoverProfessorCursoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<RemoverProfessorCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public RemoverProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
-            : base(variaveisGlobaisOptions)
+        public RemoverProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
+            : base(variaveisGlobaisOptions, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);

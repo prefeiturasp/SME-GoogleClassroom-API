@@ -4,6 +4,7 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Linq;
@@ -13,20 +14,21 @@ using static Google.Apis.Classroom.v1.CoursesResource.ListRequest;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosGsaGoogleQueryHandler : IRequestHandler<ObterCursosGsaGoogleQuery, PaginaConsultaCursosGsaDto>
+    public class ObterCursosGsaGoogleQueryHandler : BaseIntegracaoGoogleClassroomHandler<ObterCursosGsaGoogleQuery, PaginaConsultaCursosGsaDto>
     {
         private readonly IMediator mediator;
         private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions)
+        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
+            :base(metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.gsaSyncOptions = gsaSyncOptions;
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
-        public async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
+        protected override async Task<PaginaConsultaCursosGsaDto> OnHandleAsync(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             return await ObterCursosGsaGoogleAsync(servicoClassroom, request.TokenPagina);
