@@ -42,9 +42,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarCargaCursosGsa(bool executarCargaDeUsuariosGsa, [FromServices] IIniciarCargaCursosGsaUseCase useCase)
+        public async Task<IActionResult> IniciarCargaCursosGsa([FromServices] IIniciarCargaCursosGsaUseCase useCase)
         {
-            var retorno = await useCase.Executar(executarCargaDeUsuariosGsa);
+            var retorno = await useCase.Executar();
             return Ok(retorno);
         }
 

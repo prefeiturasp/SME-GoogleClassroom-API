@@ -15,13 +15,13 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar(bool executarCargaDeUsuariosGsa)
+        public async Task<bool> Executar()
         {
             try
             {
-                await LimparTabelasAsync(executarCargaDeUsuariosGsa);
+                await LimparTabelasAsync();
 
-                var dto = new FiltroCagaCursosGsaDto(null, executarCargaDeUsuariosGsa);
+                var dto = new FiltroCagaCursosGsaDto();
                 return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
             }
             catch (Exception ex)
@@ -31,11 +31,10 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task LimparTabelasAsync(bool executarCargaDeUsuariosGsa)
+        private async Task LimparTabelasAsync()
         {
             var command = new LimparTabelasGsaCommand
             {
-                UsuariosGsa = executarCargaDeUsuariosGsa,
                 CursosGsa = true
             };
 

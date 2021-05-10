@@ -15,13 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.metricReporter = metricReporter;
         }
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
-        {
-            RegistraRequisicaoGoogleClassroom();
-            return OnHandleAsync(request, cancellationToken);
-        }
-
-        protected virtual Task<TResponse> OnHandleAsync(TRequest request, CancellationToken cancellationToken) => Task.FromResult((TResponse)default);
+        public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
 
         protected void RegistraRequisicaoGoogleClassroom() => metricReporter.RegistraRequisicaoGsa();
     }

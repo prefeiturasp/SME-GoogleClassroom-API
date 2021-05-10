@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
             _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
         }
 
-        public new async Task<bool> Handle(TRequest request, CancellationToken cancellationToken)
+        public override async Task<bool> Handle(TRequest request, CancellationToken cancellationToken)
         {
             if (!_deveExecutarIntegracao)
             {

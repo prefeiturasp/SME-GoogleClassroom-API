@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);
         }
 
-        protected override async Task<PaginaConsultaUsuarioCursosGsaDto> OnHandleAsync(ObterUsuarioCursosGsaGoogleQuery request, CancellationToken cancellationToken)
+        public override async Task<PaginaConsultaUsuarioCursosGsaDto> Handle(ObterUsuarioCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             return await policy.ExecuteAsync(() => ObterUsuarioCursosGsaGoogleAsync(servicoClassroom, request));
@@ -69,6 +69,7 @@ namespace SME.GoogleClassroom.Aplicacao
             requestList.TeacherId = email;
             requestList.CourseStates = CoursesResource.ListRequest.CourseStatesEnum.ACTIVE;
 
+            RegistraRequisicaoGoogleClassroom();
             return await requestList.ExecuteAsync();
         }
     }

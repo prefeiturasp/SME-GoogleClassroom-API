@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
-        protected override async Task<PaginaConsultaCursosGsaDto> OnHandleAsync(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
+        public override async Task<PaginaConsultaCursosGsaDto> Handle(ObterCursosGsaGoogleQuery request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
             return await ObterCursosGsaGoogleAsync(servicoClassroom, request.TokenPagina);
@@ -75,6 +75,8 @@ namespace SME.GoogleClassroom.Aplicacao
             request.PageToken = pageToken;
             request.CourseStates = CourseStatesEnum.ACTIVE;
             request.PageSize = gsaSyncOptions.QuantidadeDeItensPorPagina;
+
+            RegistraRequisicaoGoogleClassroom();
             return await request.ExecuteAsync();
         }
     }
