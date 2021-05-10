@@ -4,9 +4,9 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Polly;
 using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
@@ -14,13 +14,14 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirFuncionarioGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirFuncionarioGoogleCommand>
+    public class InserirFuncionarioGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<InserirFuncionarioGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
+        public InserirFuncionarioGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais, IMetricReporter metricReporter)
+            : base(variaveisGlobais, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

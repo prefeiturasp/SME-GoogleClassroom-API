@@ -1,35 +1,28 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public abstract class BaseIntegracaoGoogleClassroomHandler<TRequest> : IRequestHandler<TRequest, bool>
-        where TRequest : IRequest<bool>
+    public abstract class BaseIntegracaoGoogleClassroomHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
     {
-        private readonly bool _deveExecutarIntegracao;
-        private const int TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento = 10000;
+        private readonly IMetricReporter metricReporter;
 
-        public BaseIntegracaoGoogleClassroomHandler(VariaveisGlobaisOptions variaveisGlobaisOptions)
+        public BaseIntegracaoGoogleClassroomHandler(IMetricReporter metricReporter)
         {
-            _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
+            this.metricReporter = metricReporter;
         }
 
-        public async Task<bool> Handle(TRequest request, CancellationToken cancellationToken)
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            if (!_deveExecutarIntegracao)
-            {
-                await ExecutarQuandoNaoRodarIntegracaoAsync(request, cancellationToken);
-                return true;
-            }
-
-            return await ExecutarAsync(request, cancellationToken);
+            RegistraRequisicaoGsa();
+            return OnHandleAsync(request, cancellationToken);
         }
 
-        protected abstract Task<bool> ExecutarAsync(TRequest request, CancellationToken cancellationToken);
+        protected virtual Task<TResponse> OnHandleAsync(TRequest request, CancellationToken cancellationToken) => Task.FromResult((TResponse)default);
 
-        protected virtual Task ExecutarQuandoNaoRodarIntegracaoAsync(TRequest request, CancellationToken cancellationToken)
-            => Task.Delay(TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento, cancellationToken);
+        protected void RegistraRequisicaoGsa() => metricReporter.RegistraRequisicaoGsa();
     }
 }
