@@ -49,6 +49,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task ObterUsuariosGsaGoogleTotalDePaginasPorExecucaoAsync(DirectoryService diretorioClassroom, PaginaConsultaUsuariosGsaDto paginaConsulta, int contadorDePagina)
         {
             var resultadoPagina = await policy.ExecuteAsync(() => ObterUsuariosGsaGooglePaginadoAsync(diretorioClassroom, paginaConsulta.TokenProximaPagina));
+            if (!resultadoPagina.UsersValue?.Any() ?? true) return;
+
             paginaConsulta.TokenProximaPagina = resultadoPagina.NextPageToken;
             paginaConsulta.Usuarios.AddRange(resultadoPagina.UsersValue
                 .Select(user => new UsuarioGsaDto

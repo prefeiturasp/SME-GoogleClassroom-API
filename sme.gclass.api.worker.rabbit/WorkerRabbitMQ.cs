@@ -153,7 +153,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private void RegistrarSentry(BasicDeliverEventArgs ea, MensagemRabbit mensagemRabbit, Exception ex)
         {
-            SentrySdk.CaptureMessage($"ERRO - {mensagemRabbit}", SentryLevel.Error);
+            SentrySdk.CaptureMessage($"ERRO - {ea.RoutingKey} - {mensagemRabbit?.Mensagem}", SentryLevel.Error);
             SentrySdk.CaptureException(ex);
         }
 

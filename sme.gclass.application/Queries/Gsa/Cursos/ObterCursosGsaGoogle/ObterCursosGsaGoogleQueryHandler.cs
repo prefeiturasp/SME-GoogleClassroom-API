@@ -50,6 +50,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task ObterCursosGsaGoogleTotalDePaginasPorExecucaoAsync(ClassroomService servicoClassroom, PaginaConsultaCursosGsaDto paginaConsulta, int contadorDePagina)
         {
             var resultadoPagina = await policy.ExecuteAsync(() => ObterCursosAtivosNoGoogle(servicoClassroom, paginaConsulta.TokenProximaPagina));
+            if (!resultadoPagina.Courses?.Any() ?? true) return;
+
             paginaConsulta.TokenProximaPagina = resultadoPagina.NextPageToken;
             paginaConsulta.Cursos.AddRange(resultadoPagina.Courses
                 .Select(curso => new CursoGsaDto
