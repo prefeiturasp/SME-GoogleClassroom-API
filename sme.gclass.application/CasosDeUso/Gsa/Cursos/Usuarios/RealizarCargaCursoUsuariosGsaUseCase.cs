@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class RealizarCargaUsuariosCursosGsaUseCase : IRealizarCargaUsuariosCursosGsaUseCase
+    public class RealizarCargaCursoUsuariosGsaUseCase : IRealizarCargaCursoUsuariosGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public RealizarCargaUsuariosCursosGsaUseCase(IMediator mediator)
+        public RealizarCargaCursoUsuariosGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -23,19 +23,24 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de cursos do usuário GSA.");
 
-            var filtro = JsonConvert.DeserializeObject<FiltroCargaUsuariosCursosGsaDto>(mensagemRabbit.Mensagem.ToString());
+            var filtro = JsonConvert.DeserializeObject<FiltroCargaCursoUsuariosGsaDto>(mensagemRabbit.Mensagem.ToString());
             if (filtro is null)
                 throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
 
-            if (filtro.Usuario is null)
+            if (filtro.Curso is null)
                 throw new NegocioException("Não foi possível processaor o usuário GSA. O usuário não foi enviado.");
 
-            var paginaConsultaCursosDoUsuario = await mediator.Send(new ObterUsuarioCursosGsaGoogleQuery(filtro.Usuario.Id, filtro.Usuario.Email, filtro.TokenProximaPagina));
+            var usuarioCursoTipo = Enum.Parse<UsuarioCursoGsaTipo>(filtro.UsuarioCursoTipo.ToString());
+
+            var paginaConsultaCursosDoUsuario = usuarioCursoTipo == UsuarioCursoGsaTipo.Estudante
+                ? await mediator.Send(new ObterCursoEstudantesGsaGoogleQuery(filtro.Curso.Id, filtro.TokenProximaPagina))
+                : await mediator.Send(new ObterCursoProfessoresGsaGoogleQuery(filtro.Curso.Id, filtro.TokenProximaPagina));
+
             foreach (var usuarioCurso in paginaConsultaCursosDoUsuario.CursosDoUsuario)
             {
                 try
                 {
-                    var publicarCursoUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCursoIncluir, RotasRabbit.FilaGsaUsuarioCursoIncluir, usuarioCurso));
+                    var publicarCursoUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioIncluir, RotasRabbit.FilaGsaCursoUsuarioIncluir, usuarioCurso));
                     if (!publicarCursoUsuario) continue;
                 }
                 catch (Exception ex)
@@ -52,11 +57,11 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicaProximaPaginaAsync(FiltroCargaUsuariosCursosGsaDto filtro)
+        private async Task PublicaProximaPaginaAsync(FiltroCargaCursoUsuariosGsaDto filtro)
         {
             try
             {
-                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCursoCarregar, RotasRabbit.FilaGsaUsuarioCursoCarregar, filtro));
+                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.FilaGsaCursoUsuarioCarregar, filtro));
                 if (!syncCursoComparativo)
                     SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos do usuário GSA.");
             }

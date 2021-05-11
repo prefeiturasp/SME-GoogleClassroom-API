@@ -4,5 +4,6 @@
     {
         public string UsuarioId { get; set; }
         public string CursoId { get; set; }
+        public short UsuarioCursoTipo { get; set; }
     }
 }

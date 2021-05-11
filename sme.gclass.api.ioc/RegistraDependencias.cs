@@ -139,8 +139,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterUsuariosGsaUseCase, ObterUsuariosGsaUseCase>();
             services.TryAddScoped<IIniciarValidacaoUsuariosGsaUseCase, IniciarValidacaoUsuariosGsaUseCase > ();
 
-            services.TryAddScoped<IRealizarCargaUsuariosCursosGsaUseCase, RealizarCargaUsuariosCursosGsaUseCase>();
-            services.TryAddScoped<IProcessarUsuarioCursoGsaUseCase, ProcessarUsuarioCursoGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();
+            services.TryAddScoped<IProcessarCursoUsuarioGsaUseCase, ProcessarCursoUsuarioGsaUseCase>();
             services.TryAddScoped<IObterCursosDoUsuarioGsaUseCase, ObterCursosDoUsuarioGsaUseCase>();
         }
     }

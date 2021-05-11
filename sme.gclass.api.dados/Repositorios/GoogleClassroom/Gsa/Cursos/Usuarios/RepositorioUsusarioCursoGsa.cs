@@ -23,14 +23,15 @@ namespace SME.GoogleClassroom.Dados
         public async Task<bool> SalvarAsync(UsuarioCursoGsa usuarioCursoGsa)
         {
             const string insertQuery = @"insert into public.cursos_usuarios_gsa
-                                        (usuario_id, curso_id)
+                                        (usuario_id, curso_id, usuario_curso_tipo)
                                         values
-                                        (@usuarioId, @cursoId)";
+                                        (@usuarioId, @cursoId, @usuarioCursoTipo)";
 
             var parametros = new
             {
                 usuarioCursoGsa.UsuarioId,
-                usuarioCursoGsa.CursoId
+                usuarioCursoGsa.CursoId,
+                usuarioCursoGsa.UsuarioCursoTipo
             };
 
             using var conn = ObterConexao();
@@ -48,7 +49,8 @@ namespace SME.GoogleClassroom.Dados
 	                ug.nome,
 	                cg.id ,
 	                cg.nome,
-	                cg.secao 
+	                cg.secao,
+                    cug.usuario_curso_tipo
                 from 
 	                usuarios_gsa ug 
                 left join

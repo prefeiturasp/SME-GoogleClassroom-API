@@ -3,15 +3,16 @@ using Newtonsoft.Json;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ProcessarUsuarioCursoGsaUseCase : IProcessarUsuarioCursoGsaUseCase
+    public class ProcessarCursoUsuarioGsaUseCase : IProcessarCursoUsuarioGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public ProcessarUsuarioCursoGsaUseCase(IMediator mediator)
+        public ProcessarCursoUsuarioGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -28,7 +29,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var usuarioCursoExiste = await mediator.Send(new ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId));
             if (usuarioCursoExiste) return true;
 
-            var usuarioGsa = new UsuarioCursoGsa(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId);
+            var usuarioCursoTipo = Enum.Parse<UsuarioCursoGsaTipo>(usuarioCursoGsaDto.UsuarioCursoTipo.ToString());
+            var usuarioGsa = new UsuarioCursoGsa(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId, usuarioCursoTipo);
 
             var retorno = await mediator.Send(new IncluirUsuarioCursoGsaCommand(usuarioGsa));
             return retorno;

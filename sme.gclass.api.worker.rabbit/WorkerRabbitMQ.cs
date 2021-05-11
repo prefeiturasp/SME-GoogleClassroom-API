@@ -93,8 +93,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaUsuarioCarregar, new ComandoRabbit("Sincroniza os usuários GSA a serem adicionados na base", typeof(IRealizarCargaUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioIncluir, new ComandoRabbit("Processar usuário GSA e adiciona na base", typeof(IProcessarUsuarioGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioValidar, new ComandoRabbit("Realiza validação de usuários GSA", typeof(IValidarUsuariosGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaUsuarioCursoCarregar, new ComandoRabbit("Sincroniza os cursos do usuário GSA a serem adicionados na base", typeof(IRealizarCargaUsuariosCursosGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaUsuarioCursoIncluir, new ComandoRabbit("Processar curso do usuário GSA e adiciona na base", typeof(IProcessarUsuarioCursoGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioCarregar, new ComandoRabbit("Sincroniza os cursos do usuário GSA a serem adicionados na base", typeof(IRealizarCargaCursoUsuariosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioIncluir, new ComandoRabbit("Processar curso do usuário GSA e adiciona na base", typeof(IProcessarCursoUsuarioGsaUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -262,8 +262,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             if (consumoDeFilasOptions.Gsa.CargaUsuarioGsa)
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
 
-            if (consumoDeFilasOptions.Gsa.CargaUsuarioCursoGsa)
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoCarregar, false, consumer);
+            if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioCarregar, false, consumer);
 
             if (consumoDeFilasOptions.Gsa.ProcessarCursoGsa)
             {
@@ -277,8 +277,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioValidar, false, consumer);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarUsuarioCursoGsa)
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCursoIncluir, false, consumer);
+            if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioGsa)
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioIncluir, false, consumer);
         }
     }
 }
