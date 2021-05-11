@@ -2,12 +2,12 @@
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class PaginaConsultaUsuarioCursosGsaDto
+    public class PaginaConsultaCursoUsuariosGsaDto
     {
         public string TokenProximaPagina { get; set; }
         public List<UsuarioCursoGsaDto> CursosDoUsuario { get; set; }
 
-        public PaginaConsultaUsuarioCursosGsaDto(string tokenProximaPagina)
+        public PaginaConsultaCursoUsuariosGsaDto(string tokenProximaPagina)
         {
             TokenProximaPagina = tokenProximaPagina;
             CursosDoUsuario = new List<UsuarioCursoGsaDto>();
