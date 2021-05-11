@@ -1,4 +1,4 @@
-ALTER TABLE cursos_usuarios_gsa ADD usuario_curso_tipo int4 NULL;
+ALTER TABLE cursos_usuarios_gsa ADD IF NOT EXISTS usuario_curso_tipo int4 NULL;
 
 ALTER TABLE cursos_usuarios_gsa DROP CONSTRAINT if exists curso_usuario_comparativo_usuario_fk;
 
