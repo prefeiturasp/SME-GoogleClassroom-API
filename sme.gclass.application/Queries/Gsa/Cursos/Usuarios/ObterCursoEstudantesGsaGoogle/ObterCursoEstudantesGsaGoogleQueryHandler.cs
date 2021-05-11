@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursoUsuariosGsaGoogleQueryHandler : BaseIntegracaoGoogleClassroomHandler<ObterCursoEstudantesGsaGoogleQuery, PaginaConsultaCursoUsuariosGsaDto>
+    public class ObterCursoEstudantesGsaGoogleQueryHandler : BaseIntegracaoGoogleClassroomHandler<ObterCursoEstudantesGsaGoogleQuery, PaginaConsultaCursoUsuariosGsaDto>
     {
         private readonly IMediator mediator;
         private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursoUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
+        public ObterCursoEstudantesGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
             :base(metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
