@@ -4,15 +4,12 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class AtribuirDonoCursoGoogleCommand : IRequest<bool>
     {
-        public AtribuirDonoCursoGoogleCommand(string email, long turmaId, long componenteCurricularId)
+        public AtribuirDonoCursoGoogleCommand(long cursoId, string usuarioId)
         {
-            Email = email;
-            TurmaId = turmaId;
-            ComponenteCurricularId = componenteCurricularId;
+            CursoId = cursoId;
+            UsuarioId = usuarioId;
         }
-
-        public string Email { get; set; }
-        public long TurmaId { get; set; }
-        public long ComponenteCurricularId { get; set; }
+        public long CursoId { get; set; }
+        public string UsuarioId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Dominio;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -14,7 +15,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(string email, long turmaId, long componenteCurricularId)
         {
-            return await mediator.Send(new AtribuirDonoCursoGoogleCommand(email, turmaId, componenteCurricularId));
+            var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(turmaId, componenteCurricularId));
+            if (curso == null)
+            {
+                throw new NegocioException("Não foi possível alterar o dono do curso, pois o curso não existe na base do GSA");
+            }
+            var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(email));
+            return await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
         }
     }
 }

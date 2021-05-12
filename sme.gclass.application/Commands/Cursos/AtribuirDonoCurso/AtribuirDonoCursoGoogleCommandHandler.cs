@@ -17,8 +17,8 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
-        public AtribuirDonoCursoGoogleCommandHandler(VariaveisGlobaisOptions variaveisGlobaisOptions, IReadOnlyPolicyRegistry<string> registry, IMetricReporter metricReporter)
-            : base(variaveisGlobaisOptions, metricReporter)
+        public AtribuirDonoCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais, IMetricReporter metricReporter)
+            : base(variaveisGlobais, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
@@ -27,18 +27,17 @@ namespace SME.GoogleClassroom.Aplicacao
         protected override async Task<bool> ExecutarAsync(AtribuirDonoCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(request.TurmaId, request.ComponenteCurricularId));
-            if(curso == null)
-            {
-                throw new NegocioException("Não foi possível alterar o dono do curso, pois o curso não existe na base do GSA");
-            }
-            var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(request.Email));
-            await policy.ExecuteAsync(() => AtribuirDonoCurso(curso.Id, usuario.Id, servicoClassroom));
+            await policy.ExecuteAsync(() => AtribuirDonoCurso(request.CursoId, request.UsuarioId, servicoClassroom));
             return true;
         }
 
         private async Task AtribuirDonoCurso(long cursoId, string ownerId, ClassroomService servicoClassroom)
         {
+            var professor = await servicoClassroom.Courses.Teachers.Get(cursoId.ToString(), ownerId).ExecuteAsync();
+            if (professor == null)
+            {
+                await servicoClassroom.Courses.Teachers.Create(new Teacher { UserId = ownerId }, cursoId.ToString()).ExecuteAsync();
+            }
             var requestUpdate = servicoClassroom.Courses.Patch(new Course() { OwnerId = ownerId, }, cursoId.ToString());
             requestUpdate.UpdateMask = "ownerId";
             await requestUpdate.ExecuteAsync();
