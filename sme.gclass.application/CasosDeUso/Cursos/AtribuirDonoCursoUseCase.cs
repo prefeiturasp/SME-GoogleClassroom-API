@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -20,8 +22,19 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 throw new NegocioException("Não foi possível alterar o dono do curso, pois o curso não existe na base do GSA");
             }
-            var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(email));
-            return await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
+            try
+            {
+                var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(email));
+                return await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.RegistroNaoEncontrado()) throw new NegocioException("Usuário não existe no Google Classroom");
+                else if(gEx.AcessoNaoAutorizado()) throw new NegocioException("Usuário sem acesso ao Google Classroom");
+                else if (gEx.EmailContaServicoInvalido()) throw new NegocioException("Email informado é inválido");
+                else
+                    throw new NegocioException(gEx.Message);
+            }
         }
     }
 }

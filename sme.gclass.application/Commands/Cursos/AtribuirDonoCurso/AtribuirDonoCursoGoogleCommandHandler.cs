@@ -1,4 +1,5 @@
-﻿using Google.Apis.Classroom.v1;
+﻿using Google;
+using Google.Apis.Classroom.v1;
 using Google.Apis.Classroom.v1.Data;
 using MediatR;
 using Polly;
@@ -34,18 +35,29 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task AtribuirDonoCurso(long cursoId, string ownerId, ClassroomService servicoClassroom)
         {
-            var professores = await servicoClassroom.Courses.Teachers.List(cursoId.ToString()).ExecuteAsync();
-            var professor = professores.Teachers.FirstOrDefault(p => p.UserId == ownerId);
-            if (professor == null)
+            try
             {
-                await servicoClassroom.Courses.Teachers.Create(new Teacher { UserId = ownerId }, cursoId.ToString()).ExecuteAsync();
-            }
-            var course = servicoClassroom.Courses.Get(cursoId.ToString()).Execute();
-            if (course != null && course.OwnerId != ownerId)
-            {
+                var course = servicoClassroom.Courses.Get(cursoId.ToString()).Execute();
+                if (course.OwnerId == ownerId)
+                {
+                    throw new NegocioException("Esse usuário já é o dono do curso");
+                }
+                var professores = await servicoClassroom.Courses.Teachers.List(cursoId.ToString()).ExecuteAsync();
+                var professor = professores.Teachers.FirstOrDefault(p => p.UserId == ownerId);
+                if (professor == null)
+                {
+                    await servicoClassroom.Courses.Teachers.Create(new Teacher { UserId = ownerId }, cursoId.ToString()).ExecuteAsync();
+                }
+
                 var requestUpdate = servicoClassroom.Courses.Patch(new Course() { OwnerId = ownerId, }, cursoId.ToString());
                 requestUpdate.UpdateMask = "ownerId";
                 await requestUpdate.ExecuteAsync();
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.RegistroNaoEncontrado()) throw new NegocioException("Curso não existe no Google Classroom");
+                else
+                    throw new NegocioException(gEx.Message);
             }
         }
     }
