@@ -164,5 +164,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(turmaId, componenteCurricularId);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Atribui dono do curso por email de um usuário cadastrado no GSA.
+        /// </summary>
+        /// <response code="200">O dono do curso foi atribuído com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante o comando.</response>
+        /// <response code="601">Houve uma falha de validação durante o comando.</response>
+        [HttpPost("atribuir-dono")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> AtribuirDonoCurso(string email, long turmaId, long componenteCurricularId, [FromServices] IAtribuirDonoCursoUseCase useCase)
+        {
+            var retorno = await useCase.Executar(email, turmaId, componenteCurricularId);
+            return Ok(retorno);
+        }
     }
 }
