@@ -13,8 +13,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// </summary>
     [ApiController]
     [ChaveIntegracaoGoogleClassroomApi]
-    [Route("api/v1/gsa")]
-    public class GsaController : Controller
+    [Route("api/v1/sincronizacoes/gsa")]
+    public class SincronizacaoGsaController : Controller
     {
         /// <summary>
         /// Retorna os cursos GSA sincronizados.

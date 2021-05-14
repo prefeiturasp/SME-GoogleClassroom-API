@@ -195,5 +195,19 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
         }
+
+        public async Task<int> ExcluirCursoAsync(long cursoId)
+        {
+            const string query = @"delete from cursos_usuarios where curso_id  = @cursoId;
+                                   delete from cursos where id  = @cursoId; ";
+
+            var parametros = new
+            {
+                cursoId
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, parametros);
+        }
     }
 }
