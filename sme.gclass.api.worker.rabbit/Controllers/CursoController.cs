@@ -70,8 +70,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// Inicia a sincronização de cursos do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        /// **Observação:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// **Importante: Utilizar a função de recriação do curso apenas no cenário em que o curso foi excluído fisicamente do Google Classroom, caso contrário poderá ocorrer
+        /// duplicidade de cursos nos registros.**
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("sincronizacao")]
