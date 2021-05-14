@@ -119,12 +119,20 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
-            services.TryAddScoped<IAtribuirDonoCursoUseCase, AtribuirDonoCursoUseCase>();
 
             RegistrarCasosDeUsoGsa(services);
         }
 
         private static void RegistrarCasosDeUsoGsa(IServiceCollection services)
+        {
+            services.TryAddScoped<IObterCursoGsaGoogleUseCase, ObterCursoGsaGoogleUseCase>();
+
+            services.TryAddScoped<IAtribuirDonoCursoUseCase, AtribuirDonoCursoUseCase>();
+
+            RegistrarCasosDeUsoSincronizacaoGsa(services);
+        }
+
+        private static void RegistrarCasosDeUsoSincronizacaoGsa(IServiceCollection services)
         {
             services.TryAddScoped<IIniciarCargaCursosGsaUseCase, IniciarCargaCursosGsaUseCase>();
             services.TryAddScoped<IRealizarCargaCursosGsaUseCase, RealizarCargaCursosGsaUseCase>();
