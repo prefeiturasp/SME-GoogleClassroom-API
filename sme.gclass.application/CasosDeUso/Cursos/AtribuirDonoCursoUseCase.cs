@@ -25,7 +25,12 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(email));
-                return await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
+                var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
+                if (retornoGoogle) { 
+                    curso.Email = email;
+                    await mediator.Send(new AlterarCursoCommand(curso));
+                }
+                return retornoGoogle;
             }
             catch (GoogleApiException gEx)
             {
