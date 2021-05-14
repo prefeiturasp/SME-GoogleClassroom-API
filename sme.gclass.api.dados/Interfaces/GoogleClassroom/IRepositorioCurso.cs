@@ -12,5 +12,6 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> ExisteCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId);
         Task<CursoGoogle> ObterCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId);
         Task<CursoGoogle> ObterCursoPorId(long id);
+        Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao);
     }
 }

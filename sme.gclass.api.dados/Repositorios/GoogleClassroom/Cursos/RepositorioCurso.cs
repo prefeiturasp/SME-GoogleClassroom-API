@@ -104,6 +104,35 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(query, parametros);
         }
 
+        public async Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao)
+        {
+            var query = @" UPDATE public.cursos set 
+                            email = @Email, 
+                            nome = @Nome, 
+                            secao = @Secao, 
+                            turma_id = @TurmaId, 
+                            componente_curricular_id = @ComponenteCurricularId, 
+                            data_inclusao = @DataInclusao, 
+                            data_atualizacao = @DataAtualizacao
+                            where id = @Id";
+
+            var parametros = new
+            {
+                id,
+                email,
+                nome,
+                secao,
+                turmaId,
+                componenteCurricularId,
+                dataInclusao,
+                dataAtualizacao
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query, parametros);
+            return true;
+        }
+
         public async Task<bool> ExisteCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId)
         {
             var query = @"select id from public.cursos where turma_id = @turmaId and componente_curricular_id = @componenteCurricularId";
