@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra.Politicas;
 using System;
-using System.Net.Http;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -20,7 +20,17 @@ namespace SME.GoogleClassroom.IoC
                 retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
                       + TimeSpan.FromMilliseconds(jitterer.Next(0, 30)));
 
-            registry.Add("RetryPolicy", policy);
+            registry.Add(PoliticaPolly.PolicyGoogleSync, policy);
+
+            RegistrarPolicyGsa(registry);
+        }
+
+        private static void RegistrarPolicyGsa(IPolicyRegistry<string> registry)
+        {
+            var policy = Policy.Handle<Exception>()
+              .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
+
+            registry.Add(PoliticaPolly.PolicyCargaGsa, policy);
         }
     }
 }

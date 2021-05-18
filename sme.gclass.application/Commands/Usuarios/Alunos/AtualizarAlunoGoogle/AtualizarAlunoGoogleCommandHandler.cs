@@ -5,22 +5,24 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
+using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class AtualizarAlunoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<AtualizarAlunoGoogleCommand>
+    public class AtualizarAlunoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<AtualizarAlunoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public AtualizarAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
-            : base(variaveisGlobaisOptions)
+        public AtualizarAlunoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
+            : base(variaveisGlobaisOptions, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
         protected override async Task<bool> ExecutarAsync(AtualizarAlunoGoogleCommand request, CancellationToken cancellationToken)

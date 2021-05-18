@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\UsuariosComparativos\**" />
     <Compile Remove="Queries\Execucao\**" />
+    <EmbeddedResource Remove="Commands\UsuariosComparativos\**" />
     <EmbeddedResource Remove="Queries\Execucao\**" />
+    <None Remove="Commands\UsuariosComparativos\**" />
     <None Remove="Queries\Execucao\**" />
   </ItemGroup>
 
@@ -24,5 +27,9 @@
     <ProjectReference Include="..\sme.gclass.api.dados\SME.GoogleClassroom.Dados.csproj" />
     <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Gsa\Cursos\Usuarios\" />
   </ItemGroup>
 </Project>

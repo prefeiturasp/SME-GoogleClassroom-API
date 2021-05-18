@@ -8,6 +8,13 @@ namespace SME.GoogleClassroom.Dominio
 
         public long Indice { get; set; }
 
+        private string googleClassroomId;
+        public string GoogleClassroomId 
+        {
+            get => googleClassroomId;
+            set => SetGoogleClassroomId(value);
+        }
+
         private string nome;
 
         public string Nome
@@ -39,6 +46,7 @@ namespace SME.GoogleClassroom.Dominio
         public string OrganizationPath { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
+        public bool ExisteGoogle { get; set; }
 
         public UsuarioGoogle(string nome, string email, string organizationPath)
         {
@@ -46,6 +54,7 @@ namespace SME.GoogleClassroom.Dominio
             Email = email;
             OrganizationPath = organizationPath;
             DataInclusao = DateTime.Now;
+            ExisteGoogle = true;
         }
 
         protected UsuarioGoogle()
@@ -61,6 +70,14 @@ namespace SME.GoogleClassroom.Dominio
             var sobrenomeTrucado = Sobrenome.Substring(0, TamanhoMaximoDoSobrenome);
             var nomeFormatado = nome.Replace(Sobrenome, sobrenomeTrucado).Trim(); ;
             this.nome = nomeFormatado;
+        }
+
+        private void SetGoogleClassroomId(string googleClassroomId)
+        {
+            if (string.IsNullOrWhiteSpace(googleClassroomId))
+                throw new NegocioException($"O identificador do usuário {nome} no Google Classroom informado é inválido.");
+
+            this.googleClassroomId = googleClassroomId;
         }
     }
 }

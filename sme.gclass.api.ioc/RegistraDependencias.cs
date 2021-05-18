@@ -40,13 +40,18 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoUsuarioErro, RepositorioCursoUsuarioErro>();
             services.TryAddScoped<IRepositorioCursoUsuario, RepositorioCursoUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioIndiretoEol, RepositorioFuncionarioIndiretoEol>();
+            services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
+            
+            services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
+            services.TryAddScoped<IRepositorioUsuarioGsa, RepositorioUsuarioGsa>();
+            services.TryAddScoped<IRepositorioUsuarioCursoGsa, RepositorioUsuarioCursoGsa>();
         }
-
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<IIniciarSyncGoogleCursoUseCase, IniciarSyncGoogleCursoUseCase>();
             services.TryAddScoped<ITrataSyncGoogleGeralUseCase, TrataSyncGoogleGeralUseCase>();
+            services.TryAddScoped<ITratarSyncGsaUseCase, TratarSyncGsaUseCase>();
             services.TryAddScoped<IIncluirCursoUseCase, InserirCursoGoogleUseCase>();
             services.TryAddScoped<IObterCursosCadastradosUseCase, ObterCursosCadastradosUseCase>();
             services.TryAddScoped<IObterCursosParaIncluirGoogleUseCase, ObterCursosParaIncluirGoogleUseCase>();
@@ -110,8 +115,42 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarTratamentoCursoErroUseCase, RealizarTratamentoCursoErroUseCase>();
             services.TryAddScoped<IIniciarSyncGoogleCursoErrosUseCase, IniciarSyncGoogleCursoErrosUseCase>();
             services.TryAddScoped<ITrataSyncGoogleCursoErroUseCase, TrataSyncGoogleCursoErroUseCase>();
+            services.TryAddScoped<ITrataAtualizacaoUsuarioGoogleClassroomIdUseCase, TrataAtualizacaoUsuarioGoogleClassroomIdUseCase>();
+            services.TryAddScoped<IIniciaAtualizacaoUsuarioGoogleClassroomIdUseCase, IniciaAtualizacaoUsuarioGoogleClassroomIdUseCase>();
+            services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
+            services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
 
-            
+            RegistrarCasosDeUsoGsa(services);
+        }
+
+        private static void RegistrarCasosDeUsoGsa(IServiceCollection services)
+        {
+            services.TryAddScoped<IObterCursoGsaGoogleUseCase, ObterCursoGsaGoogleUseCase>();
+
+            services.TryAddScoped<IAtribuirDonoCursoUseCase, AtribuirDonoCursoUseCase>();
+
+            RegistrarCasosDeUsoSincronizacaoGsa(services);
+        }
+
+        private static void RegistrarCasosDeUsoSincronizacaoGsa(IServiceCollection services)
+        {
+            services.TryAddScoped<IIniciarCargaCursosGsaUseCase, IniciarCargaCursosGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaCursosGsaUseCase, RealizarCargaCursosGsaUseCase>();
+            services.TryAddScoped<IProcessarCursoGsaUseCase, ProcessarCursoGsaUseCase>();
+            services.TryAddScoped<IValidarCursosGsaUseCase, ValidarCursosGsaUseCase>();
+            services.TryAddScoped<IObterCursosGsaUseCase, ObterCursosGsaUseCase>();
+            services.TryAddScoped<IIniciarValidacaoCursosGsaUseCase, IniciarValidacaoCursosGsaUseCase>();
+
+            services.TryAddScoped<IIniciarCargaUsuariosGsaUseCase, IniciarCargaUsuariosGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaUsuariosGsaUseCase, RealizarCargaUsuariosGsaUseCase>();
+            services.TryAddScoped<IProcessarUsuarioGsaUseCase, ProcessarUsuarioGsaUseCase>();
+            services.TryAddScoped<IValidarUsuariosGsaUseCase, ValidarUsuariosGsaUseCase>();
+            services.TryAddScoped<IObterUsuariosGsaUseCase, ObterUsuariosGsaUseCase>();
+            services.TryAddScoped<IIniciarValidacaoUsuariosGsaUseCase, IniciarValidacaoUsuariosGsaUseCase > ();
+
+            services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();
+            services.TryAddScoped<IProcessarCursoUsuarioGsaUseCase, ProcessarCursoUsuarioGsaUseCase>();
+            services.TryAddScoped<IObterCursosDoUsuarioGsaUseCase, ObterCursosDoUsuarioGsaUseCase>();
         }
     }
 }

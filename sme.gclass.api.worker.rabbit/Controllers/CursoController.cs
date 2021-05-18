@@ -70,15 +70,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// Inicia a sincronização de cursos do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        /// **Observação:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// **Importante: Utilizar a função de recriação do curso apenas no cenário em que o curso foi excluído fisicamente do Google Classroom, caso contrário poderá ocorrer
+        /// duplicidade de cursos nos registros.**
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleCursoUseCase iniciarSyncGoogleCursoUseCase, long? turmaId = null, long? componenteCurricularId = null)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleCursoUseCase iniciarSyncGoogleCursoUseCase, long? turmaId = null, long? componenteCurricularId = null, bool recriarCursoSeExistirNaBaseDeDados = false)
         {
-            var retorno = await iniciarSyncGoogleCursoUseCase.Executar(turmaId, componenteCurricularId);
+            var retorno = await iniciarSyncGoogleCursoUseCase.Executar(turmaId, componenteCurricularId, recriarCursoSeExistirNaBaseDeDados);
             return Ok(retorno);
         }
 
@@ -162,6 +164,42 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             [FromQuery][Required] long turmaId, [FromQuery][Required] long componenteCurricularId)
         {
             var retorno = await useCase.Executar(turmaId, componenteCurricularId);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna o registro de um curso cadastrado no GSA.
+        /// </summary>
+        /// <remarks>
+        /// **Observação:** Esta funcionalidade requisita diretamente ao Google Classroom o registro do curso para fins de comparação de dados.
+        /// </remarks>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("gsa")]
+        [ProducesResponseType(typeof(CursoGsaDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursoGsaGoogle([FromServices] IObterCursoGsaGoogleUseCase useCase,
+            [FromQuery][Required] long turmaId, [FromQuery][Required] long componenteCurricularId)
+        {
+            var retorno = await useCase.Executar(turmaId, componenteCurricularId);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Atribui dono do curso por email de um usuário cadastrado no GSA.
+        /// </summary>
+        /// <response code="200">O dono do curso foi atribuído com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante o comando.</response>
+        /// <response code="601">Houve uma falha de validação durante o comando.</response>
+        [HttpPost("gsa/atribuir-dono")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> AtribuirDonoCurso(string email, long turmaId, long componenteCurricularId, [FromServices] IAtribuirDonoCursoUseCase useCase)
+        {
+            var retorno = await useCase.Executar(email, turmaId, componenteCurricularId);
             return Ok(retorno);
         }
     }

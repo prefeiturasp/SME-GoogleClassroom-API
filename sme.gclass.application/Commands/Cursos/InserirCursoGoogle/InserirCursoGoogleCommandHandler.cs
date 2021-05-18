@@ -6,21 +6,24 @@ using Polly.Registry;
 using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Interfaces.Metricas;
+using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirCursoGoogleCommandHandler : BaseIntegracaoGoogleClassroomHandler<InserirCursoGoogleCommand>
+    public class InserirCursoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<InserirCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
+        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais, IMetricReporter metricReporter) 
+            : base(variaveisGlobais, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>("RetryPolicy");
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
         protected override async Task<bool> ExecutarAsync(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
@@ -45,10 +48,10 @@ namespace SME.GoogleClassroom.Aplicacao
             cursoGoogle.Id = long.Parse(cursoIncluido.Id);
         }
 
-        protected override Task ExecutarQuandoNaoRodarIntegracaoAsync(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
+        protected override Task ExecutarQuandoNaoHabilitarIntegracaoAsync(InserirCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             request.CursoGoogle.Id = new Random().Next(999999999);
-            return base.ExecutarQuandoNaoRodarIntegracaoAsync(request, cancellationToken);
+            return base.ExecutarQuandoNaoHabilitarIntegracaoAsync(request, cancellationToken);
         }
     }
 }

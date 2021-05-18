@@ -40,6 +40,7 @@
         public static string FilaProfessorCursoIncluir => "googleclass.professor.curso.incluir";
         public static string FilaProfessorCursoSync => "googleclass.professor.curso.sync";
         public static string FilaProfessorCursoAtribuicaoSync => "googleclass.professor.curso.atribuicao.sync";
+        public static string FilaProfessorCursoRemover => "googleclass.professor.curso.remover";
         public static string FilaProfessorErroSync => "googleclass.professor.erro.sync";
         public static string FilaProfessorErroTratar => "googleclass.professor.erro.tratar";
         #endregion
@@ -47,6 +48,23 @@
         #region Funcionário indireto
         public static string FilaFuncionarioIndiretoSync => "googleclass.funcionario.indireto.sync";
         public static string FilaFuncionarioIndiretoIncluir => "googleclass.funcionario.indireto.incluir";
+        #endregion
+
+        #region Usuários
+        public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
+        public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
+        #endregion
+
+        #region GSA
+        public static string FilaGsaGoogleSync => "googleclass.gsa.sync";
+        public static string FilaGsaCursoCarregar => "googleclass.gsa.curso.carregar";
+        public static string FilaGsaCursoIncluir => "googleclass.gsa.curso.incluir";
+        public static string FilaGsaCursoValidar => "googleclass.gsa.curso.validar";
+        public static string FilaGsaUsuarioCarregar => "googleclass.gsa.usuario.carregar";
+        public static string FilaGsaUsuarioValidar => "googleclass.gsa.usuario.validar";
+        public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
+        public static string FilaGsaCursoUsuarioCarregar => "googleclass.gsa.curso.usuario.carregar";
+        public static string FilaGsaCursoUsuarioIncluir => "googleclass.gsa.curso.usuario.incluir";
         #endregion
     }
 }

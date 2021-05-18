@@ -4,6 +4,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IIniciarSyncGoogleCursoUseCase
     {
-        Task<bool> Executar(long? turmaId, long? componenteCurricularId);
+        Task<bool> Executar(long? turmaId, long? componenteCurricularId, bool recriarCursoSeExistirNaBaseDeDados);
     }
 }

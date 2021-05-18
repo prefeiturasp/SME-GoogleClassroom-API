@@ -104,6 +104,35 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(query, parametros);
         }
 
+        public async Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao)
+        {
+            var query = @" UPDATE public.cursos set 
+                            email = @Email, 
+                            nome = @Nome, 
+                            secao = @Secao, 
+                            turma_id = @TurmaId, 
+                            componente_curricular_id = @ComponenteCurricularId, 
+                            data_inclusao = @DataInclusao, 
+                            data_atualizacao = @DataAtualizacao
+                            where id = @Id";
+
+            var parametros = new
+            {
+                id,
+                email,
+                nome,
+                secao,
+                turmaId,
+                componenteCurricularId,
+                dataInclusao,
+                dataAtualizacao
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query, parametros);
+            return true;
+        }
+
         public async Task<bool> ExisteCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId)
         {
             var query = @"select id from public.cursos where turma_id = @turmaId and componente_curricular_id = @componenteCurricularId";
@@ -142,6 +171,43 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
+        }
+
+        public async Task<CursoGoogle> ObterCursoPorId(long id)
+        {
+            var query = @"select c.id, 
+                                 c.nome,
+                                 c.secao,
+                                 c.turma_id AS TurmaId,
+                                 c.componente_curricular_id AS ComponenteCurricularId,
+                                 c.data_inclusao AS DataInclusao,
+                                 c.data_atualizacao AS DataAtualizacao,
+                                 c.Email       
+                            from public.cursos c 
+                           where id = @id";
+
+            var parametros = new
+            {
+                id
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
+        }
+
+        public async Task<int> ExcluirCursoAsync(long cursoId)
+        {
+            const string query = @"delete from cursos_usuarios where curso_id  = @cursoId;
+                                   delete from cursos where id  = @cursoId; ";
+
+            var parametros = new
+            {
+                cursoId
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, parametros);
         }
     }
 }
