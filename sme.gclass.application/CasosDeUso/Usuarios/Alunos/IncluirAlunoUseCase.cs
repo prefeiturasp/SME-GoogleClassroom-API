@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            if(mensagemRabbit.Mensagem is null)
+            if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
 
             var alunoParaIncluir = JsonConvert.DeserializeObject<AlunoEol>(mensagemRabbit.Mensagem.ToString());
@@ -41,6 +41,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
                 var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
+                if (alunoParaIncluir.Codigo > 0)
+                    alunoGoogle.GoogleClassroomId = alunoParaIncluir.Codigo.ToString();
+
                 await InserirAlunoGoogleAsync(alunoGoogle);
                 return true;
             }
@@ -56,14 +59,17 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var incluiuAlunoGoogle = await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
-                if (!incluiuAlunoGoogle)
+                if (alunoGoogle.Codigo == 0)
                 {
-                    await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                        $"Não foi possível incluir o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
-                    return;
-                }
+                    var incluiuAlunoGoogle = await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
+                    if (!incluiuAlunoGoogle)
+                    {
+                        await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
+                            $"Não foi possível incluir o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                        return;
+                    }
 
+                }
                 await InserirAlunoAsync(alunoGoogle);
             }
             catch (GoogleApiException gEx)
@@ -96,7 +102,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             var usuarioAlterado = await mediator.Send(new AtualizarUsuarioCommand(alunoGoogle.Indice, alunoGoogle.Nome, alunoGoogle.OrganizationPath));
-            if(!usuarioAlterado)
+            if (!usuarioAlterado)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
                     $"Não foi possível atualizar o aluno {alunoGoogle} no Google Classroom. O aluno não foi encontrado na base.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
