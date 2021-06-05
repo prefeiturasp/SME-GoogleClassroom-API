@@ -68,7 +68,10 @@ namespace SME.GoogleClassroom.Aplicacao
                     var usuarioGoogle = await mediator.Send(new ObterUsuarioGoogleQuery(email));
                     if (usuarioGoogle is null)
                         throw new NegocioException("Funcionário não localizado no google classroom e nem na base de dados");
+                    
                     var funcionarioGoogle = new FuncionarioGoogle(null, usuarioGoogle.Nome, usuarioGoogle.Email, usuarioGoogle.OrganizationPath);
+                    funcionarioGoogle.GoogleClassroomId = usuarioGoogle.Id;
+
                     await InserirFuncionarioAsync(funcionarioGoogle);
 
                     return funcionarioGoogle;
