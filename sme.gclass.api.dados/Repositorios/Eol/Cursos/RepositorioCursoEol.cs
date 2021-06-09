@@ -734,22 +734,31 @@ namespace SME.GoogleClassroom.Dados
 									t1.Email IS NULL;
 							END;
 
+			BEGIN
+							IF OBJECT_ID('tempdb..#tempResultadoFinalAgrupado') IS NOT NULL
+								DROP TABLE #tempResultadoFinalAgrupado
 							SELECT
 								temp.Nome,
 								temp.Secao,
-								temp.ComponenteCurricularId,
+								max(temp.ComponenteCurricularId) as ComponenteCurricularId,
 								temp.TurmaId,
 								temp.cd_unidade_educacao as UeCodigo,
 								temp.Email,
 								temp.TurmaTipo
+						    INTO #tempResultadoFinalAgrupado
 							FROM
-								#tempCursosDrePaginado temp;
+								#tempCursosDrePaginado temp
+							group by Nome, Secao, TurmaId, cd_unidade_educacao, Email, TurmaTipo;
+			END;
+			         
+					 
+					 select * from #tempResultadoFinalAgrupado;
 
 					-- Totalizacao
 						SELECT
 							COUNT(*)
 						FROM
-							#tempCursosDre temp;");
+							#tempResultadoFinalAgrupado ;");
 
             return query.ToString();
         }
