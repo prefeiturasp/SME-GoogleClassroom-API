@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            if(mensagemRabbit.Mensagem is null)
+            if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível incluir o aluno. A mensagem enviada é inválida.");
 
             var alunoParaIncluir = JsonConvert.DeserializeObject<AlunoEol>(mensagemRabbit.Mensagem.ToString());
@@ -96,7 +96,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             var usuarioAlterado = await mediator.Send(new AtualizarUsuarioCommand(alunoGoogle.Indice, alunoGoogle.Nome, alunoGoogle.OrganizationPath));
-            if(!usuarioAlterado)
+            if (!usuarioAlterado)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
                     $"Não foi possível atualizar o aluno {alunoGoogle} no Google Classroom. O aluno não foi encontrado na base.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
