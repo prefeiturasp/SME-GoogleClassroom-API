@@ -30,19 +30,17 @@ namespace SME.GoogleClassroom.Aplicacao
             alunosParaIncluirGoogle.Items
                 .AsParallel()
                 .WithDegreeOfParallelism(10)
-                .ForAll(async alunoParaIncluirGoogle =>
+                .ForAll(async alunoParaIncluirGoogleEol =>
                 {
                     try
                     {
-                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogle));
+                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogleEol));                        
                         if (!publicarAluno)
-                        {
-                            await IncluirAlunoComErroAsync(alunoParaIncluirGoogle, ObterMensagemDeErro(alunoParaIncluirGoogle.Codigo));
-                        }
+                            await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
                     }
                     catch (Exception ex)
                     {
-                        await IncluirAlunoComErroAsync(alunoParaIncluirGoogle, ObterMensagemDeErro(alunoParaIncluirGoogle.Codigo, ex));
+                        await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo, ex));
                     }
                 });
 
