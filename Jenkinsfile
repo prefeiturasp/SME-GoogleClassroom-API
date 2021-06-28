@@ -105,7 +105,7 @@ pipeline {
         steps {
           //Start JOB deploy Kubernetes 
             timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias, robson_silva'
             }
           script {
             step([$class: "RundeckNotifier",
@@ -133,7 +133,7 @@ pipeline {
          }
         steps {
             timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias, robson_silva'
           }    
           //Start JOB deploy kubernetes 
          
