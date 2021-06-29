@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly bool _deveExecutarIntegracao;
         private const int TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento = 10000;
 
-        public EnvioDeDadosIntegracaoGoogleClassroomHandler(VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
+        protected EnvioDeDadosIntegracaoGoogleClassroomHandler(VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
             :base(metricReporter)
         {
             _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
