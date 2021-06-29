@@ -38,6 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var usuarioParaIncluirNoGoogle = new User
             {
                 Name = new UserName { FamilyName = alunoGoogle.Sobrenome, GivenName = alunoGoogle.PrimeiroNome, FullName = alunoGoogle.Nome },
+                PrimaryEmail = alunoGoogle.Email,                
                 OrgUnitPath = alunoGoogle.OrganizationPath,
                 Suspended = false
             };
