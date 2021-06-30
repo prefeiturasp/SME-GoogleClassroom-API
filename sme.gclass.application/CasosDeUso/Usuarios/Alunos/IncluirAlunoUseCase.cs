@@ -1,6 +1,7 @@
 ﻿using Google;
 using MediatR;
 using Newtonsoft.Json;
+using SME.GoogleClassroom.Aplicacao.Commands.Usuarios.ConsultarUsuarioGoogleClassroom;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -31,8 +32,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));
-                if (alunoJaIncluido?.Any() ?? false)
+                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));                
+                if (alunoJaIncluido != null && alunoJaIncluido.Any() && !alunoJaIncluido.First().GoogleClassroomId.Equals(alunoParaIncluir.Codigo.ToString()))
                 {
                     await AtualizarAlunoGoogleSync(alunoParaIncluir, alunoJaIncluido.First());
                     return true;
@@ -41,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 alunoParaIncluir = await mediator.Send(new VerificarEmailExistenteAlunoQuery(alunoParaIncluir));
                 var alunoGoogle = new AlunoGoogle(alunoParaIncluir.Codigo, alunoParaIncluir.Nome, alunoParaIncluir.Email, alunoParaIncluir.OrganizationPath);
 
-                await InserirAlunoGoogleAsync(alunoGoogle);
+                await InserirAlunoGoogleAsync(alunoGoogle, alunoJaIncluido?.FirstOrDefault(), alunoParaIncluir);
                 return true;
             }
             catch (Exception ex)
@@ -52,7 +53,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task InserirAlunoGoogleAsync(AlunoGoogle alunoGoogle)
+        private async Task InserirAlunoGoogleAsync(AlunoGoogle alunoGoogle, AlunoGoogle alunoJaIncluido, AlunoEol alunoEol)
         {
             try
             {
@@ -64,7 +65,13 @@ namespace SME.GoogleClassroom.Aplicacao
                     return;
                 }
 
-                await InserirAlunoAsync(alunoGoogle);
+                if (alunoJaIncluido != null)
+                {
+                    alunoJaIncluido.GoogleClassroomId = alunoGoogle.GoogleClassroomId;
+                    await AtualizarAlunoGoogleSync(alunoEol, alunoJaIncluido);
+                }
+                else
+                    await InserirAlunoAsync(alunoGoogle);
             }
             catch (GoogleApiException gEx)
             {
@@ -100,6 +107,14 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
                     $"Não foi possível atualizar o aluno {alunoGoogle} no Google Classroom. O aluno não foi encontrado na base.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                return;
+            }
+
+            var idAlterado = await mediator.Send(new AtualizarUsuarioGoogleClassroomIdCommand(alunoGoogle.Indice, alunoGoogle.GoogleClassroomId));
+            if (!idAlterado)
+            {
+                await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
+                    $"Não foi possível atualizar o Id do aluno {alunoGoogle} no Google Classroom.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                 return;
             }
 

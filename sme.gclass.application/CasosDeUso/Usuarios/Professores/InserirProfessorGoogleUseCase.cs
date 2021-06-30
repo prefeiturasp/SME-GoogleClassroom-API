@@ -5,6 +5,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -35,6 +36,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 var professorJaIncluido = await mediator.Send(new ExisteProfessorPorRfQuery(professorGoogle.Rf));
                 if (professorJaIncluido)
                 {
+                    var professor = await mediator.Send(new ObterProfessoresPorRfsQuery(professorGoogle.Rf));
+                    professorGoogle.GoogleClassroomId = professor?.FirstOrDefault()?.GoogleClassroomId;
                     await IniciarSyncGoogleCursosDoProfessorAsync(professorGoogle);
                     return true;
                 }
@@ -82,11 +85,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task IniciarSyncGoogleCursosDoProfessorAsync(ProfessorGoogle professorGoogle)
         {
-            var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.FilaProfessorCursoSync, professorGoogle));
+            //var publicarCursosDoProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoSync, RotasRabbit.FilaProfessorCursoSync, professorGoogle));
+            var trataSyncGoogleCursosDoProfessorUseCase = new TrataSyncGoogleCursosDoProfessorUseCase(mediator);
+            var publicarCursosDoProfessor = await trataSyncGoogleCursosDoProfessorUseCase.Executar(new MensagemRabbit(JsonConvert.SerializeObject(professorGoogle)));
             if (!publicarCursosDoProfessor)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(professorGoogle?.Rf, professorGoogle?.Email,
-                    $"O professor RF{professorGoogle.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar));
+                    $"O professor RF {professorGoogle?.Rf} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos cursos deste professor.", UsuarioTipo.Professor, ExecucaoTipo.ProfessorCursoAdicionar));
             }
         }
     }
