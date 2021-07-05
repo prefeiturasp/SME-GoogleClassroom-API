@@ -1,159 +1,139 @@
+
 pipeline {
-    agent {
-      node { 
-        label 'dotnet5-sdk'
-	    }
+    environment {
+      branchname =  env.BRANCH_NAME.toLowerCase()
+      registryCredential = 'regsme'
+      imagename = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-sigpae-api"
+      kubeconfig = "${env.branchname == 'main' ? 'config_dev' : 'config_hom'}"
+      imagetag = "${env.branchname == 'main' ? 'latest' : 'release'}"
     }
-    
+  
+    agent {
+      node {
+        label 'python-36-rc'
+      }
+    }
+
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
       disableConcurrentBuilds()
-      skipDefaultCheckout()  
+      skipDefaultCheckout()
     }
-           
+  
     stages {
-       stage('CheckOut') {
-        steps {
-          checkout scm	
-        }
-       }
 
-       stage('Build projeto') {
-        steps {
-          sh "echo executando build de projeto"
-          sh 'dotnet build sme.gclass.api.worker.rabbit/'
+        stage('CheckOut') {            
+            steps {
+              checkout scm
+            }            
         }
-      }
 
-       stage('Analise Codigo') {
-          when {
-                branch 'release'
+        stage('AmbienteTestes') {
+            agent {
+                label 'master'
             }
-         steps {
-             sh 'echo Analise SonarQube API'
-             sh 'dotnet-sonarscanner begin /k:"SME-GoogleClassroom-API" /d:sonar.host.url="http://sonar.sme.prefeitura.sp.gov.br" /d:sonar.login="5372148e28da7a141a6a553951a6cfd26ed8e9ee"'
-             sh 'dotnet build sme.gclass.api.worker.rabbit/'
-             sh 'dotnet-sonarscanner end /d:sonar.login="5372148e28da7a141a6a553951a6cfd26ed8e9ee"'
-           
-         }
-       }
-
-      stage('Docker Build') {
-         		
-		    when { anyOf { branch 'master'; branch "story/*"; branch 'development'; branch 'release';  } }	
-        steps {
-	     
-	      
-        script {
-            def BRANCH_REPO = env.BRANCH_NAME.toLowerCase()
-            def BRANCH_NAME = env.BRANCH_NAME	
-            def GIT_URL = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
-          
-	    	
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "541b688a-fad2-499a-9c4d-56c8ffc4cff2",
-              nodeFilters: "",
-              options: """
-                    buildNumber=$BUILD_NUMBER
-                    branchName=$BRANCH_NAME
-                    gitUrl=$GIT_URL
-                    branchRepo=$BRANCH_REPO
-               
-                   """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-           }
+            steps {
+                script {
+                    CONTAINER_ID = sh (script: 'docker ps -q --filter "name=terceirizadas-db"',returnStdout: true).trim()
+                    if (CONTAINER_ID) {
+                        sh "echo nome é: ${CONTAINER_ID}"
+                        sh "docker rm -f ${CONTAINER_ID}"
+                        sh 'docker run -d --rm --cap-add SYS_TIME --name terceirizadas-db --network python-network -p 5432 -e TZ="America/Sao_Paulo" -e POSTGRES_DB=terceirizadas -e POSTGRES_PASSWORD=adminadmin -e POSTGRES_USER=postgres postgres:9-alpine'
+                    } 
+                    else {
+                        sh 'docker run -d --rm --cap-add SYS_TIME --name terceirizadas-db --network python-network -p 5432 -e TZ="America/Sao_Paulo" -e POSTGRES_DB=terceirizadas -e POSTGRES_PASSWORD=adminadmin -e POSTGRES_USER=postgres postgres:9-alpine'
+                    }
+                }
+            }
         }
-      }
-       
-        stage('Deploy DEV') {
-          when {
-            branch 'development'
-          }
-        steps {
-           //Start JOB de deploy Kubernetes 
-          sh 'echo Deploy ambiente desenvolvimento'
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "2692b141-52ba-4ab8-bc4f-47fc2d63f7bb",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
-        } 
-       }
-       
         
-
-      stage('Deploy HOM') {
-         when {
-           branch 'release'
-         }
-        steps {
-          //Start JOB deploy Kubernetes 
-            timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias, robson_silva'
+        stage('Testes') {
+          when { branch 'homolog' }
+          steps {
+             sh 'pip install --user pipenv'
+             sh 'pipenv install --dev'
+             sh 'pipenv run pytest'
+             sh 'pipenv run flake8'
+          }
+          post {
+            success{
+              //  Publicando arquivo de cobertura
+              publishCoverage adapters: [coberturaAdapter('coverage.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
             }
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "cda51939-84b0-4f7e-a11c-574c987b4896",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
           }
         }
-       }
 
-
-       stage('Deploy PROD') {
-         when {
-           branch 'master'
-         }
-        steps {
-            timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias, robson_silva'
-          }    
-          //Start JOB deploy kubernetes 
-         
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "907ea1f6-a4de-4669-ad12-cac567a34a42",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-              //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
+        stage('AnaliseCodigo') {
+	      when { branch 'homolog' }
+          steps {
+            sh 'echo "[ INFO ] Iniciando analise Sonar..." && sonar-scanner \
+              -Dsonar.projectKey=SME-Terceirizadas \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=http://sonar.sme.prefeitura.sp.gov.br \
+              -Dsonar.login=0d279825541065cf66a60cbdfe9b8a25ec357226'
           }
         }
-       }
-    } 
+
+        stage('Build') {
+          when { anyOf { branch 'main'; branch "story/*"; branch 'development'; branch 'release';  } } 
+          steps {
+            sh 'echo build docker image desenvolvimento'
+            script {
+                dockerImage = docker.build imagename
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push(imagetag)
+                    }
+            }
+            sh "docker rmi $imagename:$imagetag"
+          }
+        }
+	    
+        stage('Deploy'){
+            when { anyOf { branch 'main'; branch "story/*"; branch 'development'; branch 'release';  } }        
+            steps {
+                script{
+	            withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                      sh('cp $config '+"$home"+'/.kube/config')
+                      sh( 'kubectl get nodes')
+                      sh('rm -f '+"$home"+'/.kube/config')
+                    }
+                }
+            }           
+        }    
+    }
+
+  post {
+    always {
+      echo 'One way or another, I have finished'
+    }
+    success {
+      sendTelegram("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Esta ok !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n\n Uma nova versão da aplicação esta disponivel!!!")
+    }
+    unstable {
+      sendTelegram("O Build ${BUILD_DISPLAY_NAME} <${env.BUILD_URL}> - Esta instavel ...\nConsulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)")
+    }
+    failure {
+      sendTelegram("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME}  - Quebrou. \nConsulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)")
+    }
+    changed {
+      echo 'Things were different before...'
+    }
+    aborted {
+      sendTelegram ("O Build ${BUILD_DISPLAY_NAME} - Foi abortado.\nConsulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)")
+    }
+  }
 }
+    def sendTelegram(message) {
+        def encodedMessage = URLEncoder.encode(message, "UTF-8")
+
+        withCredentials([string(credentialsId: 'telegramToken', variable: 'TOKEN'),
+        string(credentialsId: 'telegramChatId', variable: 'CHAT_ID')]) {
+
+            response = httpRequest (consoleLogResponseBody: true,
+                    contentType: 'APPLICATION_JSON',
+                    httpMode: 'GET',
+                    url: "https://api.telegram.org/bot$TOKEN/sendMessage?text=$encodedMessage&chat_id=$CHAT_ID&disable_web_page_preview=true",
+                    validResponseCodes: '200')
+            return response
+        }
+    }
