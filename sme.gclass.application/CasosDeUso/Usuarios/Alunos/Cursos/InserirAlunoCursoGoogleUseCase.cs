@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirCursoUsuarioErroCommand(alunoCursoEolParaIncluir.CodigoAluno, alunoCursoEolParaIncluir.TurmaId,
-                    alunoCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.AlunoCursoAdicionar, ErroTipo.Interno, 
+                    alunoCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.AlunoCursoAdicionar, ErroTipo.Interno,
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace: {ex.StackTrace}."));
                 throw;
             }
