@@ -1,4 +1,5 @@
-﻿using Google.Apis.Admin.Directory.directory_v1;
+﻿using Google;
+using Google.Apis.Admin.Directory.directory_v1;
 using Google.Apis.Admin.Directory.directory_v1.Data;
 using MediatR;
 using Polly;
@@ -37,11 +38,12 @@ namespace SME.GoogleClassroom.Aplicacao
             var usuarioParaIncluirNoGoogle = new User
             {
                 Name = new UserName { FamilyName = alunoGoogle.Sobrenome, GivenName = alunoGoogle.PrimeiroNome, FullName = alunoGoogle.Nome },
+                PrimaryEmail = alunoGoogle.Email,                
                 OrgUnitPath = alunoGoogle.OrganizationPath,
                 Suspended = false
             };
 
-            var requestUpdate = diretorioClassroom.Users.Patch(usuarioParaIncluirNoGoogle, alunoGoogle.Email);
+            var requestUpdate = diretorioClassroom.Users.Patch(usuarioParaIncluirNoGoogle, alunoGoogle.GoogleClassroomId ?? alunoGoogle.Email);
             await requestUpdate.ExecuteAsync();
         }
     }
