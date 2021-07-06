@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
-using SME.GoogleClassroom.Dados.Interfaces.GoogleClassroom;
-using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
+using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Dados.Aviso
+namespace SME.GoogleClassroom.Dados
 {
     public class RepositorioAviso : RepositorioGoogle, IRepositorioAviso
     {
