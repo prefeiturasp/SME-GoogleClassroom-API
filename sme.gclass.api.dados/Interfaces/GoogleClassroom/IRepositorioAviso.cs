@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
 
-namespace SME.GoogleClassroom.Dados.Interfaces.GoogleClassroom
+namespace SME.GoogleClassroom.Dados.Interfaces
 {
     public interface IRepositorioAviso
     {
