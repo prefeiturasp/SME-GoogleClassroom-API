@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using SME.GoogleClassroom.Dominio;
 
-
 namespace SME.GoogleClassroom.Dados.Interfaces
 {
     public interface IRepositorioAviso
