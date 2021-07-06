@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural
+namespace SME.GoogleClassroom.Dominio.Entidades.Gsa.Aviso
 {
     public class AvisoGsa
     {
