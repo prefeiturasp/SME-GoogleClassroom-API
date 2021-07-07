@@ -201,6 +201,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioCarregar);
             }
+
+            if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioRemovidoGsa)
+            {
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemoverSync, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemoverSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemoverSync);
+            }
         }
 
         private static void RegistrarFilasDeProcessamentoGsa(IModel canalRabbit, ConsumoDeFilasOptions consumoDeFilasOptions)
