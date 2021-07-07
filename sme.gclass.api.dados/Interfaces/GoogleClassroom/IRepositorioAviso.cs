@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SME.GoogleClassroom.Dominio;
-using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Dados.Interfaces
