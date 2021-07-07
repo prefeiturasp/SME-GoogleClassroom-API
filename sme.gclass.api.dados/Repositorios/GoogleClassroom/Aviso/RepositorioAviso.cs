@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using SME.GoogleClassroom.Dados.Interfaces;
@@ -20,15 +22,12 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<AvisoGsa>("select * from avisos where usuario_id = @usuario_id");        
         }
 
-        public async Task<PaginacaoResultadoDto<AvisoGsa>> ObterAvisosPorData(Paginacao paginacao, DateTime dateReferencia, string usuarioId, long? cursoId)
+        public async Task<PaginacaoResultadoDto<AvisoGsa>> ObterAvisosPorData(Paginacao paginacao, DateTime dataReferencia, string usuarioId, long? cursoId)
         {
-            //using var conn = ObterConexao();
-            //return await conn.QueryAsync<AvisoGsa>("select * from avisos where usuario_id = @usuario_id");
+            var queryCompleta = new StringBuilder();
 
-            //var queryCompleta = new StringBuilder();
-
-            //queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(false, paginacao, turmaId, componenteCurricularId, cursoId, emailCriador));
-            //queryCompleta.AppendLine(MontaQueryObterTodosOsCursos(true, paginacao, turmaId, componenteCurricularId, cursoId, emailCriador));
+            queryCompleta.AppendLine(MontaQueryObterAvisosPorData(false, paginacao, usuarioId, cursoId));
+            queryCompleta.AppendLine(MontaQueryObterAvisosPorData(true, paginacao, usuarioId, cursoId));
 
             var retorno = new PaginacaoResultadoDto<AvisoGsa>();
 
@@ -36,24 +35,15 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-                dateReferencia,
+                dataReferencia,
                 usuarioId,
                 cursoId
             };
 
-            try
-            {
-
-                using var multi = await conn.QueryMultipleAsync("select * from avisos", parametros);
-                retorno.Items = multi.Read<AvisoGsa>();
-                retorno.TotalRegistros = multi.ReadFirst<int>();
-                retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            var multi = await conn.QueryAsync<AvisoGsa>(queryCompleta.ToString(), parametros);
+            retorno.Items = multi;
+            retorno.TotalRegistros = multi.ToList().Count();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -76,6 +66,36 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(insertQuery, parametros);
+        }
+
+        private string MontaQueryObterAvisosPorData(bool ehParaPaginacao, Paginacao paginacao, string usuarioId, long? cursoId)
+        {
+            var queryCompleta = new StringBuilder("SELECT ");
+
+            if (ehParaPaginacao)
+                queryCompleta.AppendLine("count(*)");
+            else
+            {
+                queryCompleta.AppendLine(@"A.id, 
+                                A.texto, 
+                                A.data_inclusao, 
+                                A.usuario_id, 
+                                A.curso_id");
+            }
+
+            queryCompleta.AppendLine("FROM AVISOS A");
+            queryCompleta.AppendLine("WHERE A.DATA_INCLUSAO = @dataReferencia");
+
+            if (!string.IsNullOrEmpty(usuarioId))
+                queryCompleta.AppendLine($"AND A.usuario_id = @usuarioId");
+
+            if (cursoId.HasValue)
+                queryCompleta.AppendLine(@"AND C.Id = @cursoId");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                queryCompleta.AppendLine($" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+
+            return queryCompleta.ToString();
         }
     }
 }

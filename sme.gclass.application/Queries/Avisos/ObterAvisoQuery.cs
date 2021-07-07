@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
-using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
 using SME.GoogleClassroom.Infra;
 using System;
 
