@@ -1,7 +1,11 @@
-﻿namespace SME.GoogleClassroom.Infra.Dtos.Aviso
+﻿using System;
+
+namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroObterAvisoDto
+    public class FiltroObterAvisoDto: FiltroPaginacaoBaseDto
     {
-        public long UsuarioId { get; set; }
+        public DateTime DataReferencia { get; set; }
+        public string UsuarioId { get; set; }
+        public long? CursoId { get; set; }
     }
 }

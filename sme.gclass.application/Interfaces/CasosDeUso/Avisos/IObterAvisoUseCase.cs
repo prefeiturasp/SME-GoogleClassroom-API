@@ -1,12 +1,11 @@
 ﻿using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
-using SME.GoogleClassroom.Infra.Dtos.Aviso;
-using System.Collections.Generic;
+using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Avisos
+namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IObterAvisoUseCase
     {
-        Task<IEnumerable<AvisoGsa>> Executar(FiltroObterAvisoDto filtro);
+        Task<PaginacaoResultadoDto<AvisoGsa>> Executar(FiltroObterAvisoDto filtro);
     }
 }

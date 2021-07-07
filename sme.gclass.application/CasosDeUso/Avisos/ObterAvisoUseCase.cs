@@ -1,13 +1,13 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Avisos;
-using SME.GoogleClassroom.Aplicacao.Queries.Avisos;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Aplicacao.Queries;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
-using SME.GoogleClassroom.Infra.Dtos.Aviso;
+using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.CasosDeUso.Avisos
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAvisoUseCase: IObterAvisoUseCase
     {
@@ -18,9 +18,11 @@ namespace SME.GoogleClassroom.Aplicacao.CasosDeUso.Avisos
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<IEnumerable<AvisoGsa>> Executar(FiltroObterAvisoDto filtro)
+        public async Task<PaginacaoResultadoDto<AvisoGsa>> Executar(FiltroObterAvisoDto filtro)
         {
-            return await mediator.Send(new ObterAvisoQuery(filtro.UsuarioId));
+            var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
+
+            return await mediator.Send(new ObterAvisoQuery(paginacao,  filtro.DataReferencia, filtro.UsuarioId, filtro.CursoId));
         }
     }
 }

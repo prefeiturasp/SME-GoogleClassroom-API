@@ -1,27 +1,35 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
-using System.Collections.Generic;
+using SME.GoogleClassroom.Infra;
+using System;
 
-namespace SME.GoogleClassroom.Aplicacao.Queries.Avisos
+namespace SME.GoogleClassroom.Aplicacao.Queries
 {
-    public class ObterAvisoQuery : IRequest<IEnumerable<AvisoGsa>>
+    public class ObterAvisoQuery : IRequest<PaginacaoResultadoDto<AvisoGsa>>
     {
-        public ObterAvisoQuery(long usuarioId)
+        public ObterAvisoQuery(Paginacao paginacao, DateTime dataReferencia, string usuarioId, long? cursoId)
         {
+            Paginacao = paginacao;
+            DataReferencia = dataReferencia;
             UsuarioId = usuarioId;
+            CursoId = cursoId;
         }
 
-        public long UsuarioId { get; set; }
+        public Paginacao Paginacao { get; set; }
+        public DateTime DataReferencia { get; set; }
+        public string UsuarioId { get; set; }
+        public long? CursoId { get; set; }
     }
 
     public class ObterAvisoQueryValidator : AbstractValidator<ObterAvisoQuery>
     {
         public ObterAvisoQueryValidator()
         {
-            RuleFor(x => x.UsuarioId)
+            RuleFor(x => x.DataReferencia)
                 .NotEmpty()
-                .WithMessage("Parâmetro de usuário não pode ser nulo");
+                .WithMessage("Parâmetro data de referência não pode ser nulo");
         }
     }
 }

@@ -1,23 +1,23 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Dados.Interfaces.GoogleClassroom;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
-using System.Collections.Generic;
+using SME.GoogleClassroom.Infra;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Queries.Avisos
+namespace SME.GoogleClassroom.Aplicacao.Queries
 {
-    public class ObterAvisoQueryHandler: IRequestHandler<ObterAvisoQuery, IEnumerable<AvisoGsa>>
+    public class ObterAvisoQueryHandler: IRequestHandler<ObterAvisoQuery, PaginacaoResultadoDto<AvisoGsa>>
     {
         private readonly IRepositorioAviso _repositorioAviso;
 
         public ObterAvisoQueryHandler(IRepositorioAviso repositorioAviso)
         {
-            _repositorioAviso = repositorioAviso;
+            _repositorioAviso = repositorioAviso ?? throw new System.ArgumentNullException(nameof(repositorioAviso));
         }
 
-        public async Task<IEnumerable<AvisoGsa>> Handle(ObterAvisoQuery request, CancellationToken cancellationToken)
-            => await _repositorioAviso.ObterAvisosAsync(request.UsuarioId);
+        public async Task<PaginacaoResultadoDto<AvisoGsa>> Handle(ObterAvisoQuery request, CancellationToken cancellationToken)
+            => await _repositorioAviso.ObterAvisosPorData(request.Paginacao, request.DataReferencia, request.UsuarioId, request.CursoId);
 
     }
 }
