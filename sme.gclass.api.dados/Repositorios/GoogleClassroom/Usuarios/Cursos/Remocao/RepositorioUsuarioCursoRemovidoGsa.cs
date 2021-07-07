@@ -57,5 +57,25 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
+
+        public async Task<long> SalvarAsync(UsuarioCursoRemovidoGsa entidade)
+        {
+            var query = @"INSERT INTO public.usuario_curso_removido_gsa
+                           (curso_id, usuario_id, removido_em, usuario_tipo)
+                         VALUES
+                           (@cursoId, @usuarioId, @removidoEm, @usuarioTipo)
+                         RETURNING id";
+
+            var parametros = new
+            {
+                entidade.CursoId,
+                entidade.UsuarioId,
+                entidade.RemovidoEm,
+                entidade.UsuarioTipo
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, parametros);
+        }
     }
 }

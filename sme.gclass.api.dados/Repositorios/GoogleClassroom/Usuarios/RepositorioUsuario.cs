@@ -604,5 +604,37 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
+
+        public async Task<PaginacaoResultadoDto<long>> ObterTurmasComCursoAlunoCadastrado(Paginacao paginacao)
+        {
+            var query = new StringBuilder(@"select distinct (c.turma_id) from cursos c ");
+
+            var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
+
+            query.AppendLine(";");
+            query.AppendLine(queryCount.ToString());
+
+            var retorno = new PaginacaoResultadoDto<long>();
+
+            using var conn = ObterConexao();
+
+            var parametros = new
+            {
+                tipo = UsuarioTipo.Aluno,
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros
+            };
+
+            using var alunos = await conn.QueryMultipleAsync(query.ToString(), new { parametros });
+
+            retorno.Items = alunos.Read<long>();
+            retorno.TotalRegistros = alunos.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
     }
 }
