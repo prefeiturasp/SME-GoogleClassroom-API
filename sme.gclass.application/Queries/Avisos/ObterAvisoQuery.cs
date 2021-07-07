@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
-using SME.GoogleClassroom.Dominio.Entidades.Gsa.Mural;
 using SME.GoogleClassroom.Infra;
 using System;
 
-namespace SME.GoogleClassroom.Aplicacao.Queries
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAvisoQuery : IRequest<PaginacaoResultadoDto<AvisoGsa>>
     {
