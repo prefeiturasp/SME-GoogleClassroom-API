@@ -124,6 +124,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
             services.TryAddScoped<IObterAlunosCursosRemovidosUseCase, ObterAlunosCursosRemovidosUseCase>();
 
+            services.TryAddScoped<IIniciarProcessoInativacaoUsuariosCursosGsaUseCase, IniciarProcessoInativacaoUsuariosCursosGsaUseCase>();
+
             RegistrarCasosDeUsoGsa(services);
         }
 
@@ -155,6 +157,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();
             services.TryAddScoped<IProcessarCursoUsuarioGsaUseCase, ProcessarCursoUsuarioGsaUseCase>();
             services.TryAddScoped<IObterCursosDoUsuarioGsaUseCase, ObterCursosDoUsuarioGsaUseCase>();
+            
+            // RemocaoUsuarioCursoGsa
+            services.TryAddScoped<ISincronizarRemocaoUsuarioCursoGsaUseCase, SincronizarRemocaoUsuarioCursoGsaUseCase>();
         }
     }
 }

@@ -13,5 +13,6 @@
         FuncionarioCursoAdicionar = 9,
         FuncionarioIndiretoAdicionar = 10,
         UsuarioCursoRemover = 11,
+        AlunoCursoRemover = 12,
     }
 }
