@@ -16,26 +16,6 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<IEnumerable<UsuarioCursoRemovidoGsa>> ObterAlunosCursosRemovidosPorCurso(string cursoId)
-        {
-            var whereCursoId = !string.IsNullOrEmpty(cursoId) ? " AND u.curso_id = @cursoId " : "";
-            var query = $@"SELECT
-                                    ucr.usuario_id UsuarioId,
-                                    ucr.curso_id CursoId,
-                                    ucr.removido_em RemovidoEm
-                                   FROM usuario_curso_removido_gsa ucr
-                                   WHERE ucr.usuario_tipo = @tipo 
-                                   {whereCursoId}";
-
-            var parametros = new
-            {
-                cursoId
-            };
-
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<UsuarioCursoRemovidoGsa>(query, parametros);
-        }
-
         public async Task<PaginacaoResultadoDto<UsuarioCursoRemovidoGsa>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, string cursoId)
         {
             var query = new StringBuilder(@"SELECT

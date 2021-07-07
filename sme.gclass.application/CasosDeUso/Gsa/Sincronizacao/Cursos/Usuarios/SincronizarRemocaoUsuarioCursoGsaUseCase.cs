@@ -53,6 +53,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         private async Task InserirMensagemErroIntegracaoAsync(FiltroRemocaoUsuarioCursoGsaDTO filtro, string mensagem)
-          => await mediator.Send(new IncluirCursoUsuarioRemocaoCommand(new UsuarioCursoRemovidoGsaErro(filtro.UsuarioIdGsa, filtro.CursoIdGsa, mensagem)));
+          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new UsuarioCursoRemovidoGsaErro(filtro.UsuarioIdGsa, filtro.CursoIdGsa, mensagem)));
     }
 }

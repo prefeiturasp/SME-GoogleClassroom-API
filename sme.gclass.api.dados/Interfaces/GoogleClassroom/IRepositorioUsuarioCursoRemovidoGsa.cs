@@ -8,7 +8,5 @@ namespace SME.GoogleClassroom.Dados.Interfaces
     public interface IRepositorioUsuarioCursoRemovidoGsa
     {
         Task<PaginacaoResultadoDto<UsuarioCursoRemovidoGsa>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, string cursoId);
-
-        Task<IEnumerable<UsuarioCursoRemovidoGsa>> ObterAlunosCursosRemovidosPorCurso(string cursoId);
     }
 }
