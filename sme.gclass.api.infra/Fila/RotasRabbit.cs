@@ -67,7 +67,6 @@
         public static string FilaGsaCursoUsuarioIncluir => "googleclass.gsa.curso.usuario.incluir";
 
         public static string FilaGsaCursoUsuarioRemoverSync => "googleclass.gsa.curso.usuario.remover.sync";
-        
         #endregion
     }
 }
