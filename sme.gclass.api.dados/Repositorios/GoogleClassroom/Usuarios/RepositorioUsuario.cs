@@ -604,5 +604,11 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
+
+        public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)
+        {
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new { googleClassroomId });
+        }
     }
 }

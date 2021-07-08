@@ -2,7 +2,6 @@
 {
     public static class RotasRabbit
     {
-        public static string ExchangeGoogleSync => "googleclass.exchange";
         public static string FilaGoogleSync => "googleclass.sync.geral";
 
         #region Cursos
@@ -65,6 +64,9 @@
         public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
         public static string FilaGsaCursoUsuarioCarregar => "googleclass.gsa.curso.usuario.carregar";
         public static string FilaGsaCursoUsuarioIncluir => "googleclass.gsa.curso.usuario.incluir";
+        public static string FilaGsaMuralAvisosCarregar => "googleclass.gsa.mural.avisos.carregar";
+        public static string FilaGsaMuralAvisosTratar => "googleclass.gsa.mural.avisos.tratar";
+        public static string FilaGsaMuralAvisosIncluir => "googleclass.gsa.mural.avisos.incluir";
         #endregion
     }
 }

@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de cursos GSA.");
 
-            var filtro = mensagemRabbit?.ObterObjetoMensagem<FiltroCagaCursosGsaDto>();
+            var filtro = mensagemRabbit?.ObterObjetoMensagem<FiltroCargaGsaDto>();
             var paginaCursosGoogle = await mediator.Send(new ObterCursosGsaGoogleQuery(filtro?.TokenProximaPagina));
             foreach (var curso in paginaCursosGoogle.Cursos)
             {
@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicaProximaPaginaAsync(FiltroCagaCursosGsaDto dto)
+        private async Task PublicaProximaPaginaAsync(FiltroCargaGsaDto dto)
         {
             try
             {

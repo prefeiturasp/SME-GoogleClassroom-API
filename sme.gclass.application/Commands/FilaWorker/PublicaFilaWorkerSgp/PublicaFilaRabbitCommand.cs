@@ -5,6 +5,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class PublicaFilaRabbitCommand : IRequest<bool>
     {
+        public PublicaFilaRabbitCommand(string nomeFila, object mensagem = null, string exchange = "")
+        {
+            Mensagem = mensagem;
+            Exchange = exchange;
+            NomeFila = nomeFila;
+            NomeRota = nomeFila;
+        }
+
         public PublicaFilaRabbitCommand(string nomeFila, string nomeRota = null, object mensagem = null)
         {
             Mensagem = mensagem;
@@ -15,6 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public string NomeFila { get; private set; }
         public string NomeRota { get; private set; }
         public object Mensagem { get; private set; }
+        public string Exchange { get; private set; }
     }
 
     public class PublicaFilaRabbitCommandValidator : AbstractValidator<PublicaFilaRabbitCommand>
