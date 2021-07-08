@@ -24,7 +24,7 @@ pipeline {
         stage('Build projeto') {
         steps {
           sh "echo executando build de projeto"
-          sh 'dotnet build'
+          sh 'dotnet build sme.gclass.api.worker.rabbit/'
         }
       }
 
