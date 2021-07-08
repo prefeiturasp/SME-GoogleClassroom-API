@@ -5,6 +5,13 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class PublicaFilaRabbitCommand : IRequest<bool>
     {
+        public PublicaFilaRabbitCommand(string nomeFila, object mensagem = null)
+        {
+            Mensagem = mensagem;
+            NomeFila = nomeFila;
+            NomeRota = nomeFila;
+        }
+
         public PublicaFilaRabbitCommand(string nomeFila, string nomeRota = null, object mensagem = null)
         {
             Mensagem = mensagem;
