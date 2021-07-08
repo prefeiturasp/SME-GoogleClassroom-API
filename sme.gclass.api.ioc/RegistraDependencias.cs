@@ -41,10 +41,10 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoUsuario, RepositorioCursoUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioIndiretoEol, RepositorioFuncionarioIndiretoEol>();
             services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
-            
             services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
             services.TryAddScoped<IRepositorioUsuarioGsa, RepositorioUsuarioGsa>();
             services.TryAddScoped<IRepositorioUsuarioCursoGsa, RepositorioUsuarioCursoGsa>();
+            services.TryAddScoped<IRepositorioAlunoInativoErro, RepositorioAlunoInativoErro>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)

@@ -127,5 +127,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(usuarioId);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Inicia a sincronização de Inativação alunos inativos turma GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("cursos/usuarios-inativos")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoInativacaoUsuariosCursosGsaUseCase useCase)
+        {
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
+        }
     }
 }
