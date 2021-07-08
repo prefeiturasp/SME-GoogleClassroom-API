@@ -7,9 +7,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IncluirUsuarioCursoRemovidoCommand : IRequest<long>
+    public class IncluirCursoUsuarioRemovidoCommand : IRequest<long>
     {
-        public IncluirUsuarioCursoRemovidoCommand(long usuarioId, long cursoId, UsuarioTipo usuarioTipo)
+        public IncluirCursoUsuarioRemovidoCommand(long usuarioId, long cursoId, UsuarioTipo usuarioTipo)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;
@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public UsuarioTipo UsuarioTipo { get; set; }
     }
 
-    public class IncluirUsuarioCursoRemovidoCommandValidator : AbstractValidator<IncluirUsuarioCursoRemovidoCommand>
+    public class IncluirUsuarioCursoRemovidoCommandValidator : AbstractValidator<IncluirCursoUsuarioRemovidoCommand>
     {
         public IncluirUsuarioCursoRemovidoCommandValidator()
         {

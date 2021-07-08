@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class CarregarTurmaRemoverUsuarioCursoDto
+    public class CarregarTurmaRemoverCursoUsuarioDto
     {
-        public CarregarTurmaRemoverUsuarioCursoDto(int anoLetivo, DateTime dataReferencia, int pagina, int totalRegistros)
+        public CarregarTurmaRemoverCursoUsuarioDto(int anoLetivo, DateTime dataReferencia, int pagina, int totalRegistros)
         {
             AnoLetivo = anoLetivo;
             DataReferencia = dataReferencia;

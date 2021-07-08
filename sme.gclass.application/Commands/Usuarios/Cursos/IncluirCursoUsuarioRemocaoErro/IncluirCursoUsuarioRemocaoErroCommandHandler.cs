@@ -7,9 +7,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirCursoUsuarioRemocaoErroCommandHandler : IRequestHandler<IncluirCursoUsuarioRemocaoErroCommand, long>
     {
-        private readonly IRepositorioUsuarioCursoRemovidoGsaErro repositorio;
+        private readonly IRepositorioCursoUsuarioRemovidoGsaErro repositorio;
 
-        public IncluirCursoUsuarioRemocaoErroCommandHandler(IRepositorioUsuarioCursoRemovidoGsaErro repositorio)
+        public IncluirCursoUsuarioRemocaoErroCommandHandler(IRepositorioCursoUsuarioRemovidoGsaErro repositorio)
         {
             this.repositorio = repositorio;
         }

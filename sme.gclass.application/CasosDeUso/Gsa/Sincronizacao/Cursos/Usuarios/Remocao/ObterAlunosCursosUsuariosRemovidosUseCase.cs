@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosCursosRemovidosUseCase : IObterAlunosCursosRemovidosUseCase
+    public class ObterAlunosCursosUsuariosRemovidosUseCase : IObterAlunosCursosUsuariosRemovidosUseCase
     {
         private readonly IMediator mediator;
 
-        public ObterAlunosCursosRemovidosUseCase(IMediator mediator)
+        public ObterAlunosCursosUsuariosRemovidosUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<UsuarioCursoRemovidoGsa>> Executar(FiltroObterAlunosCursosRemovidosDto filtro)
+        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>> Executar(FiltroObterAlunosCursosUsuariosRemovidosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterAlunosCursosRemovidosPorCursoIdQuery(paginacao, filtro.CursoId));
+            return await mediator.Send(new ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery(paginacao, filtro.CursoId));
         }
     }
 }

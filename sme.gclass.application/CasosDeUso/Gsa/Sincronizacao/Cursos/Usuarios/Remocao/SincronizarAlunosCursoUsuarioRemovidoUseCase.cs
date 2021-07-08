@@ -1,0 +1,31 @@
+﻿using MediatR;
+using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
+using System;
+using System.Threading.Tasks;
+
+namespace SME.GoogleClassroom.Aplicacao
+{
+    public class SincronizarAlunosCursoUsuarioRemovidoUseCase : ISincronizarAlunosCursoUsuarioRemovidoUseCase
+    {
+        private readonly IMediator mediator;
+
+        public SincronizarAlunosCursoUsuarioRemovidoUseCase(IMediator mediator)
+        {
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
+        {
+            var dto = mensagemRabbit.ObterObjetoMensagem<CursoUsuarioRemoverDto>();
+            await mediator.Send(new IncluirCursoUsuarioRemovidoCommand(dto.UsuarioId, dto.CursoId, UsuarioTipo.Aluno));
+            var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
+            var usuarioGsa = await diretorioClassroom.Users.Get(dto.EmailUsuario).ExecuteAsync();
+            dto.UsuarioGsaId = usuarioGsa.Id;
+
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, dto));
+
+            return true;
+        }
+    }
+}

@@ -2,9 +2,9 @@
 
 namespace SME.GoogleClassroom.Dominio
 {
-    public class UsuarioCursoRemovidoGsa
+    public class CursoUsuarioRemovidoGsa
     {
-        public UsuarioCursoRemovidoGsa(long usuarioId, long cursoId, UsuarioTipo usuarioTipo, DateTime removidoEm)
+        public CursoUsuarioRemovidoGsa(long usuarioId, long cursoId, UsuarioTipo usuarioTipo, DateTime removidoEm)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;

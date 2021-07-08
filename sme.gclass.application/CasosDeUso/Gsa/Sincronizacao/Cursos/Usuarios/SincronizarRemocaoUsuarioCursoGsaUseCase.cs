@@ -4,7 +4,6 @@ using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos;
 using System;
 using System.Threading.Tasks;
 
@@ -24,21 +23,21 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a remoção de cursos do usuário GSA.");
 
-            var filtro = mensagemRabbit?.ObterObjetoMensagem<FiltroRemocaoUsuarioCursoGsaDTO>();
+            var filtro = mensagemRabbit?.ObterObjetoMensagem<CursoUsuarioRemoverDto>();
             if (filtro is null)
                 throw new NegocioException("A mensagem enviada é inválida.");
 
             try
             {
                 // Usuario Curso GSA
-                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.CursoIdGsa, filtro.UsuarioIdGsa, UsuarioCursoGsaTipo.Estudante);
+                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.CursoGsaId, filtro.UsuarioGsaId, UsuarioCursoGsaTipo.Estudante);
                 var alunoCursoGsa = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
                 
                 // Usuario Curso 
                 var alunoCurso = await mediator.Send(new RemoverCursoUsuarioCommand(filtro.CursoId));
 
                 // Google API
-                var alunoCursoGoogle = new AlunoCursoGoogle(long.Parse(filtro.UsuarioIdGsa), long.Parse(filtro.CursoIdGsa));
+                var alunoCursoGoogle = new AlunoCursoGoogle(long.Parse(filtro.UsuarioGsaId), long.Parse(filtro.CursoGsaId));
                 var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
 
                 if (alunoCursoGoogleRemovido == false)
@@ -52,7 +51,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task InserirMensagemErroIntegracaoAsync(FiltroRemocaoUsuarioCursoGsaDTO filtro, string mensagem)
-          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new UsuarioCursoRemovidoGsaErro(filtro.UsuarioIdGsa, filtro.CursoIdGsa, mensagem)));
+        private async Task InserirMensagemErroIntegracaoAsync(CursoUsuarioRemoverDto filtro, string mensagem)
+          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new CursoUsuarioRemovidoGsaErro(filtro.UsuarioGsaId, filtro.CursoGsaId, mensagem)));
     }
 }

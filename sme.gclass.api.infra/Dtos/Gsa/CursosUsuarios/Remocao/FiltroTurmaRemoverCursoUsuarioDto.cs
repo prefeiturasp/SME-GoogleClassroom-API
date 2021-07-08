@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroTurmaRemoverUsuarioCursoDto
+    public class FiltroTurmaRemoverCursoUsuarioDto
     {
-        public FiltroTurmaRemoverUsuarioCursoDto(int anoLetivo, DateTime dataReferencia, IEnumerable<long> turmasIds)
+        public FiltroTurmaRemoverCursoUsuarioDto(int anoLetivo, DateTime dataReferencia, IEnumerable<long> turmasIds)
         {
             AnoLetivo = anoLetivo;
             DataReferencia = dataReferencia;

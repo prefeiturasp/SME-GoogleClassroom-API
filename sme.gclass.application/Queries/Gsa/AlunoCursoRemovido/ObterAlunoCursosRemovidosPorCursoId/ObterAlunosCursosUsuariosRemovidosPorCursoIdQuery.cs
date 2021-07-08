@@ -8,9 +8,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosCursosRemovidosPorCursoIdQuery : IRequest<PaginacaoResultadoDto<UsuarioCursoRemovidoGsa>>
+    public class ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery : IRequest<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>>
     {
-        public ObterAlunosCursosRemovidosPorCursoIdQuery(Paginacao paginacao, string cursoId)
+        public ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery(Paginacao paginacao, string cursoId)
         {
             CursoId = cursoId;
             Paginacao = paginacao;
@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public string CursoId { get; set; }
         public Paginacao Paginacao { get; set; }
 
-        public class ObterUsuariosCursosRemovidosPorCursoIdValidator : AbstractValidator<ObterAlunosCursosRemovidosPorCursoIdQuery>
+        public class ObterUsuariosCursosRemovidosPorCursoIdValidator : AbstractValidator<ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery>
         {
             public ObterUsuariosCursosRemovidosPorCursoIdValidator()
             {

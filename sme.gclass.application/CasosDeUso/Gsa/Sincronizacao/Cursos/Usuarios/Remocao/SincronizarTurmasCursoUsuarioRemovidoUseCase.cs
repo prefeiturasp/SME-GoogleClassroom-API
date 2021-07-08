@@ -5,26 +5,25 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SincronizarTurmasUsuarioCursoRemoverUseCase : ISincronizarTurmasUsuarioCursoRemoverUseCase
+    public class SincronizarTurmasCursoUsuarioRemovidoUseCase : ISincronizarTurmasCursoUsuarioRemovidoUseCase
     {
         private readonly IMediator mediator;
 
-        public SincronizarTurmasUsuarioCursoRemoverUseCase(IMediator mediator)
+        public SincronizarTurmasCursoUsuarioRemovidoUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverUsuarioCursoDto>();
+            var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
             foreach (var turmaId in dto.TurmasIds)
             {
                 var alunosCodigos = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(dto.AnoLetivo, turmaId, dto.DataReferencia));
                 if(alunosCodigos != null && alunosCodigos.Any())
                 {
-                    var alunos = new AlunosUsuarioTurmaRemoverDto(alunosCodigos, turmaId);
-                    /**TODO criar fila e associar o useCase*/
-                    //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuariosCursosRemoverTurmasSync, RotasRabbit.FilaGsaUsuariosCursosRemoverTurmasSync, alunos));
+                    var alunos = new AlunosCursoUsuarioRemovidoTurmaDto(alunosCodigos, turmaId);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, alunos));
                 }
             }
             return true;

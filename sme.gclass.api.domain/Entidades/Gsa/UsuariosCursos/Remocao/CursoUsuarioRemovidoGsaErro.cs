@@ -2,12 +2,12 @@
 
 namespace SME.GoogleClassroom.Dominio
 {
-    public class UsuarioCursoRemovidoGsaErro : BaseErro
+    public class CursoUsuarioRemovidoGsaErro : BaseErro
     {
         public string UsuarioId { get; set; }
         public string CursoId { get; set; }
 
-        public UsuarioCursoRemovidoGsaErro(string usuarioId, string cursoId, string mensagem)
+        public CursoUsuarioRemovidoGsaErro(string usuarioId, string cursoId, string mensagem)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class AlunosUsuarioTurmaRemoverDto
+    public class AlunosCursoUsuarioRemovidoTurmaDto
     {
-        public AlunosUsuarioTurmaRemoverDto(IEnumerable<long> alunosCodigos, long turmaId)
+        public AlunosCursoUsuarioRemovidoTurmaDto(IEnumerable<long> alunosCodigos, long turmaId)
         {
             AlunosCodigos = alunosCodigos;
             TurmaId = turmaId;

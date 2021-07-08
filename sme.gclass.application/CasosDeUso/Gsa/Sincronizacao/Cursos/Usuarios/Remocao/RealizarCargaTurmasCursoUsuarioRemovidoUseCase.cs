@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class RealizarCargaTurmasUsuarioCursoRemoverUseCase : IRealizarCargaTurmasUsuarioCursoRemoverUseCase
+    public class RealizarCargaTurmasCursoUsuarioRemovidoUseCase : IRealizarCargaTurmasCursoUsuarioRemovidoUseCase
     {
         private readonly IMediator mediator;
 
-        public RealizarCargaTurmasUsuarioCursoRemoverUseCase(IMediator mediator)
+        public RealizarCargaTurmasCursoUsuarioRemovidoUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverUsuarioCursoDto>();
+            var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
             var totalPorPagina = 50;
             var paginacao = new Paginacao(1, totalPorPagina);
 
@@ -34,13 +34,13 @@ namespace SME.GoogleClassroom.Aplicacao
             var turmasPaginadas = await mediator.Send(new ObterTurmasIsCadastradasQuery(paginacao));
             if (turmasPaginadas != null && turmasPaginadas.Items != null && turmasPaginadas.Items.Any())
             {
-                var filtroTurma = new FiltroTurmaRemoverUsuarioCursoDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items);
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuariosCursosRemoverTurmasSync, RotasRabbit.FilaGsaUsuariosCursosRemoverTurmasSync, filtroTurma));
+                var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items);
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, filtroTurma));
                 var proximaPagina = (paginacao.QuantidadeRegistrosIgnorados / totalPorPagina) + 1;
                 if (proximaPagina > turmasPaginadas.TotalPaginas)
                 {
-                    var novoDto = new CarregarTurmaRemoverUsuarioCursoDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuariosCursosRemoverTurmasCarregar, RotasRabbit.FilaGsaUsuariosCursosRemoverTurmasCarregar, novoDto));
+                    var novoDto = new CarregarTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, novoDto));
                 }
             }
             return true;
