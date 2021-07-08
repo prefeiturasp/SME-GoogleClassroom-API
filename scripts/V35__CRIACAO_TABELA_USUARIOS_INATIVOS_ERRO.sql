@@ -11,4 +11,4 @@ CREATE TABLE if not exists  public.aluno_inativo_erro (
 
 ALTER TABLE public.aluno_inativo_erro ADD constraint aluno_inativo_erro_usuarios_fk FOREIGN KEY (usuario_id) REFERENCES usuarios(indice);
 
-CREATE UNIQUE INDEX usuario_idx ON public.aluno_inativo_erro USING btree (usuario_id);
+CREATE INDEX aluno_inativo_erro_usuario_idx ON public.aluno_inativo_erro USING btree (usuario_id);
