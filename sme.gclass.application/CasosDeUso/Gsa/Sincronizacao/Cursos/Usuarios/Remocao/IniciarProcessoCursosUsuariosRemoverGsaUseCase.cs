@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarProcessoInativacaoUsuariosCursosGsaUseCase : IIniciarProcessoInativacaoUsuariosCursosGsaUseCase
+    public class IniciarProcessoCursosUsuariosRemoverGsaUseCase : IIniciarProcessoCursosUsuariosRemoverGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public IniciarProcessoInativacaoUsuariosCursosGsaUseCase(IMediator mediator)
+        public IniciarProcessoCursosUsuariosRemoverGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar()
+        public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             try
             {
