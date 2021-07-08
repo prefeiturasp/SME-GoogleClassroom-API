@@ -41,7 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
 
                 if (alunoCursoGoogleRemovido == false)
-                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível remover a associação de Curso x Usuário no Google API");
+                    throw new NegocioException("Não foi possível remover a associação de Curso x Usuário no Google API");
             }
             catch (Exception ex)
             {

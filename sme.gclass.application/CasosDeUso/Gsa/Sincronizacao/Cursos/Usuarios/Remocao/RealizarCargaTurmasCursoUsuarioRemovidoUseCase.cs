@@ -38,9 +38,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (turmasPaginadas != null && turmasPaginadas.Items != null && turmasPaginadas.Items.Any())
                 {
                     var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, filtroTurma));
-                    var proximaPagina = (paginacao.QuantidadeRegistrosIgnorados / totalPorPagina) + 1;
-                    if (proximaPagina > turmasPaginadas.TotalPaginas)
+                    //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, filtroTurma));
+                    var proximaPagina = ((paginacao.QuantidadeRegistrosIgnorados + totalPorPagina) / totalPorPagina) + 1;
+                    if (proximaPagina <= turmasPaginadas.TotalPaginas)
                     {
                         var novoDto = new CarregarTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, novoDto));
