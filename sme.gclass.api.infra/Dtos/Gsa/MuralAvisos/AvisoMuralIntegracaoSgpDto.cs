@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Infra
         public long ComponenteCurricularId { get; set; }
         public string UsuarioRf { get; set; }
         public DateTime DataCriacao { get; set; }
-        public DateTime DataAlteracao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
         public string Mensagem { get; set; }
     }
 }
