@@ -59,7 +59,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var avisoDto = new AvisoMuralIntegracaoSgpDto()
             {
                 TurmaId = curso.TurmaId.ToString(),
-                ComponenteCurricularId = curso.ComponenteCurricularId.ToString(),
+                ComponenteCurricularId = curso.ComponenteCurricularId,
                 UsuarioRf = usuarioId.ToString(),
                 Mensagem = avisoGsa.Mensagem,
                 DataCriacao = avisoGsa.CriadoEm,
