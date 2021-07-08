@@ -4,6 +4,7 @@ namespace SME.GoogleClassroom.Infra
 {
     public class AvisoMuralIntegracaoSgpDto
     {
+        public long AvisoClassroomId { get; set; }
         public string TurmaId { get; set; }
         public long ComponenteCurricularId { get; set; }
         public string UsuarioRf { get; set; }

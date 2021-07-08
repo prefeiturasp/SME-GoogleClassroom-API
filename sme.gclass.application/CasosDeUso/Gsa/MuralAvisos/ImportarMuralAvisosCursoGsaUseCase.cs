@@ -58,6 +58,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var avisoDto = new AvisoMuralIntegracaoSgpDto()
             {
+                AvisoClassroomId = avisoGsa.Id,
                 TurmaId = curso.TurmaId.ToString(),
                 ComponenteCurricularId = curso.ComponenteCurricularId,
                 UsuarioRf = usuarioId.ToString(),
@@ -66,7 +67,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 DataAlteracao = avisoGsa.AlteradoEm
             };
 
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbitSgp.RotaMuralAvisosSync, avisoDto, ExchangeRabbit.Sgp));
+            return await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaMuralAvisosSync, avisoDto));
         }
 
         private async Task GravarAvisoGsa(AvisoMuralGsaDto avisoGsa, long usuarioIndice)

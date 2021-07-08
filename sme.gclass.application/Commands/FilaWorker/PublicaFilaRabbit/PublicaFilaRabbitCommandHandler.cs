@@ -23,10 +23,6 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var exchange = !string.IsNullOrEmpty(request.Exchange) ?
-                        request.Exchange :
-                        ExchangeRabbit.GoogleSync;
-
                 var mensagem = new MensagemRabbit(request.Mensagem);
 
                 var mensagemJson = JsonConvert.SerializeObject(mensagem);
@@ -35,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var props = rabbitChannel.CreateBasicProperties();
                 props.Persistent = true;
 
-                rabbitChannel.BasicPublish(exchange, request.NomeRota, props, body);
+                rabbitChannel.BasicPublish(ExchangeRabbit.GoogleSync, request.NomeRota, props, body);
 
                 return Task.FromResult(true);
             }
