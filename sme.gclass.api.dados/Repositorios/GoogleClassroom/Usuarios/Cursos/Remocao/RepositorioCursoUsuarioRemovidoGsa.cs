@@ -79,5 +79,12 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(query, parametros);
         }
+
+        public async Task LimparAsync()
+        {
+            const string query = @"DELETE FROM curso_usuario_removido_gsa";
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query);
+        }
     }
 }

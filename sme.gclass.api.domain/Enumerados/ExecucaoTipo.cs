@@ -12,7 +12,6 @@
         CursoGradesAdicionar = 8,
         FuncionarioCursoAdicionar = 9,
         FuncionarioIndiretoAdicionar = 10,
-        UsuarioCursoRemover = 11,
-        AlunoCursoRemover = 12,
+        UsuarioCursoRemover = 11
     }
 }

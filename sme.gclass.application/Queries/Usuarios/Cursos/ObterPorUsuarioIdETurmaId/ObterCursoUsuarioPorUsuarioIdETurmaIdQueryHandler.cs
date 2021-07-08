@@ -1,14 +1,12 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Cursos.ObterPorUsuarioIdETurmaId
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursoUsuarioPorUsuarioIdETurmaIdQueryHandler : IRequestHandler<ObterCursoUsuarioPorUsuarioIdETurmaIdQuery, IEnumerable<CursoUsuarioRemoverDto>>
     {

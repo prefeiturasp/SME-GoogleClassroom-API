@@ -6,6 +6,10 @@ namespace SME.GoogleClassroom.Infra
 {
     public class CarregarTurmaRemoverCursoUsuarioDto
     {
+        public CarregarTurmaRemoverCursoUsuarioDto()
+        {
+        }
+
         public CarregarTurmaRemoverCursoUsuarioDto(int anoLetivo, DateTime dataReferencia, int pagina, int totalRegistros)
         {
             AnoLetivo = anoLetivo;

@@ -34,10 +34,10 @@ namespace SME.GoogleClassroom.Aplicacao
                 var alunoCursoGsa = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
                 
                 // Usuario Curso 
-                var alunoCurso = await mediator.Send(new RemoverCursoUsuarioCommand(filtro.CursoId));
+                var alunoCurso = await mediator.Send(new RemoverCursoUsuarioCommand(filtro.CursoUsuarioId));
 
                 // Google API
-                var alunoCursoGoogle = new AlunoCursoGoogle(long.Parse(filtro.UsuarioGsaId), long.Parse(filtro.CursoGsaId));
+                var alunoCursoGoogle = new UsuarioCursoGoogleDto(filtro.CursoGsaId, filtro.UsuarioGsaId);
                 var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
 
                 if (alunoCursoGoogleRemovido == false)
@@ -52,6 +52,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         private async Task InserirMensagemErroIntegracaoAsync(CursoUsuarioRemoverDto filtro, string mensagem)
-          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new CursoUsuarioRemovidoGsaErro(filtro.UsuarioGsaId, filtro.CursoGsaId, mensagem)));
+          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new CursoUsuarioRemovidoGsaErro(filtro.UsuarioId, filtro.CursoId, mensagem)));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,16 +18,23 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<AlunosCursoUsuarioRemovidoTurmaDto>();
-            foreach(var alunoCodigo in dto.AlunosCodigos)
+            try
             {
-                var cursosUsuarios = await mediator.Send(new ObterCursoUsuarioPorUsuarioIdETurmaIdQuery(alunoCodigo, dto.TurmaId));
-                if(cursosUsuarios != null && cursosUsuarios.Any())
+                foreach (var alunoCodigo in dto.AlunosCodigos)
                 {
-                    foreach(var cursoUsuario in cursosUsuarios)
+                    var cursosUsuarios = await mediator.Send(new ObterCursoUsuarioPorUsuarioIdETurmaIdQuery(alunoCodigo, dto.TurmaId));
+                    if (cursosUsuarios != null && cursosUsuarios.Any())
                     {
-                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, cursoUsuario));
+                        foreach (var cursoUsuario in cursosUsuarios)
+                        {
+                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, cursoUsuario));
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
             return true;
         }

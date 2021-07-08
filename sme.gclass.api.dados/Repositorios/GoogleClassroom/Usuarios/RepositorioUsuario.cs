@@ -609,13 +609,13 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = new StringBuilder(@"select distinct (c.turma_id) from cursos c ");
 
-            var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
+            var queryCount = "SELECT count(distinct (c.turma_id)) from cursos c ";
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
             query.AppendLine(";");
-            query.AppendLine(queryCount.ToString());
+            query.AppendLine(queryCount);
 
             var retorno = new PaginacaoResultadoDto<long>();
 
@@ -623,12 +623,11 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-                tipo = UsuarioTipo.Aluno,
-                paginacao.QuantidadeRegistrosIgnorados,
-                paginacao.QuantidadeRegistros
+                quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                quantidadeRegistros = paginacao.QuantidadeRegistros
             };
 
-            using var alunos = await conn.QueryMultipleAsync(query.ToString(), new { parametros });
+            using var alunos = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
             retorno.Items = alunos.Read<long>();
             retorno.TotalRegistros = alunos.ReadFirst<int>();

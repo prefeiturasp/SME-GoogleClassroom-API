@@ -4,15 +4,15 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class CursoUsuarioRemovidoGsaErro : BaseErro
     {
-        public string UsuarioId { get; set; }
-        public string CursoId { get; set; }
+        public long UsuarioId { get; set; }
+        public long CursoId { get; set; }
 
-        public CursoUsuarioRemovidoGsaErro(string usuarioId, string cursoId, string mensagem)
+        public CursoUsuarioRemovidoGsaErro(long usuarioId, long cursoId, string mensagem)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;
             Mensagem = mensagem;
-            ExecucaoTipo = ExecucaoTipo.AlunoCursoRemover;
+            ExecucaoTipo = ExecucaoTipo.UsuarioCursoRemover;
             Tipo = ErroTipo.Negocio;
             DataInclusao = DateTime.Now;
         }

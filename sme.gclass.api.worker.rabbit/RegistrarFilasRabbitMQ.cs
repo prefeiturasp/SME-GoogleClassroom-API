@@ -201,25 +201,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioCarregar);
             }
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoSync);
 
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioRemovidoGsa)
-            {
-                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, true, false, false);
-                canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoSync);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar);
 
-                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, true, false, false);
-                canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync);
 
-                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, true, false, false);
-                canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar);
 
-                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, true, false, false);
-                canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar);
-
-                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, true, false, false);
-                canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync);
-
-            }
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync);
         }
 
         private static void RegistrarFilasDeProcessamentoGsa(IModel canalRabbit, ConsumoDeFilasOptions consumoDeFilasOptions)

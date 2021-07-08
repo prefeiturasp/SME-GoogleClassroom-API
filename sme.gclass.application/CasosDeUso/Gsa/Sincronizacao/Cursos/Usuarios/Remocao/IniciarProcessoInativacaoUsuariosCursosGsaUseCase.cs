@@ -20,7 +20,8 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 await LimparTabelasAsync();
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, null));
+                var dto = new CarregarTurmaRemoverCursoUsuarioDto();
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, dto));
             }
             catch (Exception ex)
             {

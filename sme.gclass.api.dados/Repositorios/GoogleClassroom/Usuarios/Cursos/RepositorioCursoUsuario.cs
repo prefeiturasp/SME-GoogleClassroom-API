@@ -429,6 +429,7 @@ namespace SME.GoogleClassroom.Dados
         {
             const string query = @"
                 SELECT
+                    cu.id as CursoUsuarioId,
                     curso_id as CursoId,
                     usuario_id as UsuarioId,
                     curso_id as CursoGsaId,

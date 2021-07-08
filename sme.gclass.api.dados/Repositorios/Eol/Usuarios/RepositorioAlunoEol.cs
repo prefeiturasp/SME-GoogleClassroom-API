@@ -256,6 +256,7 @@ namespace SME.GoogleClassroom.Dados
 
 		public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataReferencia)
 		{
+			var totalDiasConsiderar = 10;
 			using var conn = ObterConexao();
 
 			const string query = @"
@@ -286,9 +287,14 @@ namespace SME.GoogleClassroom.Dados
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo
 					AND te.cd_turma_escola = @turmaId
-					AND mte.dt_situacao_aluno >= (@dataReferencia + 10)";
+					AND matr.dt_status_matricula >= (@dataReferencia + @totalDiasConsiderar)
+					and matr.dt_status_matricula = (select max(matr2.dt_status_matricula) from v_matricula_cotic matr2(NOLOCK)
+													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
+													 where matr2.cd_aluno = a.cd_aluno
+													   and matr2.an_letivo = te.an_letivo
+													   and mte2.cd_turma_escola = te.cd_turma_escola)";
 
-			return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataReferencia });
+			return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataReferencia, totalDiasConsiderar });
 		}
 
         private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, DateTime? dataReferecia, long? codigoEol)
