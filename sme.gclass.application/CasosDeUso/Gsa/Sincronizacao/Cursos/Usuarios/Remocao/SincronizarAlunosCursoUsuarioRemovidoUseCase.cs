@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception e)
             {
-                SentrySdk.CaptureException(e);
+                SentrySdk.CaptureMessage($"Não foi possível incluir o curso_usuario_removido. {e.Message}");
                 await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new CursoUsuarioRemovidoGsaErro(dto.UsuarioId, dto.CursoId, $"Não foi possível incluir o curso_usuario_removido. {e.Message}")));
             }
 
