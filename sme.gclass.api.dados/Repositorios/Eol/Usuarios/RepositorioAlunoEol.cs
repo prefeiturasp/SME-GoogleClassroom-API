@@ -254,6 +254,49 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
         }
 
+		public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataReferencia)
+		{
+			var totalDiasConsiderar = 10;
+			using var conn = ObterConexao();
+
+			const string query = @"
+
+				SELECT
+					DISTINCT
+					a.cd_aluno AS CodigoAluno
+				FROM
+					v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN 
+					aluno a
+					ON aluno.cd_aluno = a.cd_aluno
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON aluno.cd_aluno = matr.cd_aluno
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON matr.cd_matricula = mte.cd_matricula
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE
+					matr.st_matricula IN (2,3,4,7,8,11,12,14,15)
+					AND mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
+					AND matr.an_letivo = @anoLetivo
+					AND te.an_letivo = @anoLetivo
+					AND te.cd_turma_escola = @turmaId
+					AND matr.dt_status_matricula >= (@dataReferencia + @totalDiasConsiderar)
+					and matr.dt_status_matricula = (select max(matr2.dt_status_matricula) from v_matricula_cotic matr2(NOLOCK)
+													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
+													 where matr2.cd_aluno = a.cd_aluno
+													   and matr2.an_letivo = te.an_letivo
+													   and mte2.cd_turma_escola = te.cd_turma_escola)";
+
+			return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataReferencia, totalDiasConsiderar });
+		}
+
         private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, DateTime? dataReferecia, long? codigoEol)
         {
             return $@"DECLARE @situacaoAtivo AS CHAR = 1;

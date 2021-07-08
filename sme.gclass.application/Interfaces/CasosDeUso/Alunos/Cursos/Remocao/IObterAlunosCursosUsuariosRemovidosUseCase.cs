@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IObterAlunosCursosRemovidosUseCase
+    public interface IObterAlunosCursosUsuariosRemovidosUseCase
     {
-        Task<PaginacaoResultadoDto<UsuarioCursoRemovidoGsa>> Executar(FiltroObterAlunosCursosRemovidosDto filtro);
+        Task<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>> Executar(FiltroObterAlunosCursosUsuariosRemovidosDto filtro);
     }
 }

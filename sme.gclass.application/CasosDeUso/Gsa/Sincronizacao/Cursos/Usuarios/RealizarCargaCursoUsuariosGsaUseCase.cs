@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public RealizarCargaCursoUsuariosGsaUseCase(IMediator mediator)
         {
-            this.mediator = mediator;
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)

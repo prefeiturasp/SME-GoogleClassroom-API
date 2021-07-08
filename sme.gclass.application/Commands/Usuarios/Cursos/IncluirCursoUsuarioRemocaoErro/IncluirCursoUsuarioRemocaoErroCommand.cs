@@ -6,9 +6,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirCursoUsuarioRemocaoErroCommand : IRequest<long>
     {
-        public UsuarioCursoRemovidoGsaErro UsuarioCursoRemovidoGsaErro { get; set; }
+        public CursoUsuarioRemovidoGsaErro UsuarioCursoRemovidoGsaErro { get; set; }
 
-        public IncluirCursoUsuarioRemocaoErroCommand(UsuarioCursoRemovidoGsaErro usuarioCursoRemovidoGsaErro)
+        public IncluirCursoUsuarioRemocaoErroCommand(CursoUsuarioRemovidoGsaErro usuarioCursoRemovidoGsaErro)
         {
             UsuarioCursoRemovidoGsaErro = usuarioCursoRemovidoGsaErro;
         }

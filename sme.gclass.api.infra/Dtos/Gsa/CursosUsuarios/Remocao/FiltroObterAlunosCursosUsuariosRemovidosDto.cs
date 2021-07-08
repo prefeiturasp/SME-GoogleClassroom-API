@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroObterAlunosCursosRemovidosDto : FiltroPaginacaoBaseDto
+    public class FiltroObterAlunosCursosUsuariosRemovidosDto : FiltroPaginacaoBaseDto
     {
         public string CursoId { get; set; }
     }

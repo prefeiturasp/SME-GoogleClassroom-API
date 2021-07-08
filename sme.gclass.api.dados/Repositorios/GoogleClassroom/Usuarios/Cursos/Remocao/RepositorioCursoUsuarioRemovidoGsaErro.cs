@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioUsuarioCursoRemovidoGsaErro : RepositorioGoogle, IRepositorioUsuarioCursoRemovidoGsaErro
+    public class RepositorioCursoUsuarioRemovidoGsaErro : RepositorioGoogle, IRepositorioCursoUsuarioRemovidoGsaErro
     {
-        public RepositorioUsuarioCursoRemovidoGsaErro(ConnectionStrings connectionStrings)
+        public RepositorioCursoUsuarioRemovidoGsaErro(ConnectionStrings connectionStrings)
             : base(connectionStrings)
         {
         }
 
-        public async Task<long> SalvarAsync(UsuarioCursoRemovidoGsaErro usuarioCursoGsa)
+        public async Task<long> SalvarAsync(CursoUsuarioRemovidoGsaErro usuarioCursoGsa)
         {
-            var query = @"INSERT INTO public.usuario_curso_removido_gsa_erro 
+            var query = @"INSERT INTO public.curso_usuario_removido_gsa_erro 
                            (curso_id, usuario_id, mensagem, execucao_tipo, data_inclusao)
                          VALUES
                            (@cursoId, @usuarioId, @mensagem, @execucaoTipo, @dataInclusao)

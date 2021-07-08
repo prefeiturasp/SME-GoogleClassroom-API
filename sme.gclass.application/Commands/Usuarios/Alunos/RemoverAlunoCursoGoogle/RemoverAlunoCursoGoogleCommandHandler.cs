@@ -31,9 +31,9 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task RemoverAlunoCursoNoGoogle(AlunoCursoGoogle alunoCursoGoogle, ClassroomService servicoClassroom)
+        private async Task RemoverAlunoCursoNoGoogle(UsuarioCursoGoogleDto alunoCursoGoogle, ClassroomService servicoClassroom)
         {
-            var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId.ToString());
+            var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId, alunoCursoGoogle.UsuarioId);
             await requestCreate.ExecuteAsync();
         }
     }

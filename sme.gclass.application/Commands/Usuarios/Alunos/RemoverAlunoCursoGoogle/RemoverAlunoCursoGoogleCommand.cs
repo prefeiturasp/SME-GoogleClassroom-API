@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class RemoverAlunoCursoGoogleCommand : IRequest<bool>
     {
-        public RemoverAlunoCursoGoogleCommand(AlunoCursoGoogle alunoCursoGoogle)
+        public RemoverAlunoCursoGoogleCommand(UsuarioCursoGoogleDto alunoCursoGoogle)
         {
             AlunoCursoGoogle = alunoCursoGoogle;
         }
 
-        public AlunoCursoGoogle AlunoCursoGoogle { get; set; }
+        public UsuarioCursoGoogleDto AlunoCursoGoogle { get; set; }
     }
 
     public class RemoverAlunoCursoGoogleCommandValidator : AbstractValidator<RemoverAlunoCursoGoogleCommand>
