@@ -20,23 +20,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(GravarAvisoGsaCommand request, CancellationToken cancellationToken)
         {
-            var usuarioId = await ObterUsuarioId(request.AvisoDto.UsuarioClassroomId);
-
-            var avisoGsa = MapearEntidade(request.AvisoDto.Id, request.AvisoDto.Mensagem, usuarioId, request.AvisoDto.CursoId, request.AvisoDto.CriadoEm, request.AvisoDto.AlteradoEm);
+            var avisoGsa = MapearEntidade(request.AvisoDto.Id, request.AvisoDto.Mensagem, request.UsuarioIndice, request.AvisoDto.CursoId, request.AvisoDto.CriadoEm, request.AvisoDto.AlteradoEm);
 
             if (await RegistroExistente(request.AvisoDto.Id))
                 await repositorioAviso.AlterarAviso(avisoGsa);
             else
                 await repositorioAviso.InserirAviso(avisoGsa);
-        }
-
-        private async Task<long> ObterUsuarioId(string usuarioClassroomId)
-        {
-            var usuarioId = await mediator.Send(new ObterUsuarioIdPorClassroomIdQuery(usuarioClassroomId));
-            if (usuarioId == 0)
-                throw new NegocioException("ID do usuário não localizado na base GCA para gravação do aviso do mural");
-
-            return usuarioId;
         }
 
         private AvisoGsa MapearEntidade(long id, string mensagem, long usuarioId, long cursoId, DateTime criadoEm, DateTime alteradoEm)

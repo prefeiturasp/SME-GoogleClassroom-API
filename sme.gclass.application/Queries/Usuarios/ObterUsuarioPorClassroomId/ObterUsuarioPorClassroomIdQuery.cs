@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuarioIdPorClassroomIdQuery : IRequest<long>
+    public class ObterUsuarioPorClassroomIdQuery : IRequest<UsuarioGoogle>
     {
-        public ObterUsuarioIdPorClassroomIdQuery(string googleClassroomId)
+        public ObterUsuarioPorClassroomIdQuery(string googleClassroomId)
         {
             GoogleClassroomId = googleClassroomId;
         }
@@ -13,7 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public string GoogleClassroomId { get; }
     }
 
-    public class ObterUsuarioIdPorClassroomIdQueryValidator : AbstractValidator<ObterUsuarioIdPorClassroomIdQuery>
+    public class ObterUsuarioIdPorClassroomIdQueryValidator : AbstractValidator<ObterUsuarioPorClassroomIdQuery>
     {
         public ObterUsuarioIdPorClassroomIdQueryValidator()
         {

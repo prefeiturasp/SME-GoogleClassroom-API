@@ -23,11 +23,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível realizar a importação do aviso do mural. Mensagem não recebida");
 
             var avisoGsa = mensagem.ObterObjetoMensagem<AvisoMuralGsaDto>();
-
+            var usuario = await ObterUsuario(avisoGsa.UsuarioClassroomId);
             try
             {
-                await GravarAvisoGsa(avisoGsa);
-                if (!await EnviarParaSgp(avisoGsa))
+                await GravarAvisoGsa(avisoGsa, usuario.Indice);
+                if (!await EnviarParaSgp(avisoGsa, usuario.Id))
                     throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
 
                 return true;
@@ -37,16 +37,41 @@ namespace SME.GoogleClassroom.Aplicacao
                 SentrySdk.CaptureMessage($"Não foi possível importar o aviso do mural GSA do curso {avisoGsa.CursoId} e e usuario {avisoGsa.UsuarioClassroomId}: {ex.Message}");
                 // TODO Incluir na entidade de erros
 
+
                 throw;
             }        
         }
 
-        private async Task<bool> EnviarParaSgp(AvisoMuralGsaDto avisoGsa)
-            => await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbitSgp.RotaMuralAvisosSync, avisoGsa, ExchangeRabbit.Sgp));
-
-        private async Task GravarAvisoGsa(AvisoMuralGsaDto avisoGsa)
+        private async Task<UsuarioGoogle> ObterUsuario(string usuarioClassroomId)
         {
-            await mediator.Send(new GravarAvisoGsaCommand(avisoGsa));
+            var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(usuarioClassroomId));
+
+            if (usuario == null)
+                throw new NegocioException("Usuário não localizado na base GCA para gravação do aviso do mural");
+
+            return usuario;
+        }
+
+        private async Task<bool> EnviarParaSgp(AvisoMuralGsaDto avisoGsa, long usuarioId)
+        {
+            var curso = await mediator.Send(new ObterCursoGooglePorIdQuery(avisoGsa.CursoId));
+
+            var avisoDto = new AvisoMuralIntegracaoSgpDto()
+            {
+                TurmaId = curso.TurmaId.ToString(),
+                ComponenteCurricularId = curso.ComponenteCurricularId.ToString(),
+                UsuarioRf = usuarioId.ToString(),
+                Mensagem = avisoGsa.Mensagem,
+                DataCriacao = avisoGsa.CriadoEm,
+                DataAlteracao = avisoGsa.AlteradoEm
+            };
+
+            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbitSgp.RotaMuralAvisosSync, avisoDto, ExchangeRabbit.Sgp));
+        }
+
+        private async Task GravarAvisoGsa(AvisoMuralGsaDto avisoGsa, long usuarioIndice)
+        {
+            await mediator.Send(new GravarAvisoGsaCommand(avisoGsa, usuarioIndice));
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE public.avisos
 (
-    id            INT8 NOT NULL GENERATED ALWAYS AS identity,
+    id            INT8 		   NOT NULL,
     texto         VARCHAR(255) NOT NULL,
     usuario_id    INT8         NOT NULL,
     curso_id      INT8         NOT NULL,

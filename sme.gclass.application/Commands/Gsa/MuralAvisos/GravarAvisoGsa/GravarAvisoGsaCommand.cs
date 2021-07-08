@@ -6,18 +6,24 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class GravarAvisoGsaCommand : IRequest
     {
-        public GravarAvisoGsaCommand(AvisoMuralGsaDto avisoDto)
+        public GravarAvisoGsaCommand(AvisoMuralGsaDto avisoDto, long usuarioIndice)
         {
             AvisoDto = avisoDto;
+            UsuarioIndice = usuarioIndice;
         }
 
         public AvisoMuralGsaDto AvisoDto { get; }
+        public long UsuarioIndice { get; }
     }
 
     public class GravarAvisoGsaCommandValidator : AbstractValidator<GravarAvisoGsaCommand>
     {
         public GravarAvisoGsaCommandValidator()
         {
+            RuleFor(a => a.UsuarioIndice)
+                .NotEmpty()
+                .WithMessage("O indice do usuário deve ser informado para geração do aviso do mural");
+
             RuleFor(a => a.AvisoDto)
                 .NotNull()
                 .WithMessage("O dto de aviso do mural deve ser informado");
