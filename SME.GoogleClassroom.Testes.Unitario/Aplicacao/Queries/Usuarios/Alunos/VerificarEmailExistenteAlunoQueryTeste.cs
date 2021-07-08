@@ -35,16 +35,16 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.Queries.Usuarios.Alunos
             var emailTentativa2 = "jose_silva.10091990@edu.sme.prefeitura.sp.gov.br";
             var emailTentativa3 = "jose-silva.10091990@edu.sme.prefeitura.sp.gov.br";
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(email, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(email, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa1, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa1, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa2, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa2, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa3, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa3, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(false);
 
             var query = new VerificarEmailExistenteAlunoQuery(aluno);
@@ -68,16 +68,16 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.Queries.Usuarios.Alunos
             var emailTentativa2 = "jose_silva.10091990@edu.sme.prefeitura.sp.gov.br";
             var emailTentativa3 = "jose-silva.10091990@edu.sme.prefeitura.sp.gov.br";
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(email, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(email, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa1, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa1, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa2, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa2, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
-            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa3, UsuarioTipo.Aluno))
+            repositorioUsuario.Setup(x => x.ExisteEmailUsuarioPorTipo(emailTentativa3, UsuarioTipo.Aluno, aluno.Codigo))
                 .ReturnsAsync(true);
 
             var query = new VerificarEmailExistenteAlunoQuery(aluno);

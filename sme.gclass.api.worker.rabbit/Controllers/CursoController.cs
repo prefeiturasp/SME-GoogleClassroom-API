@@ -202,5 +202,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(email, turmaId, componenteCurricularId);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Atualiza os alunos dos cursos cadastrados no GSA.
+        /// </summary>
+        /// <response code="200">Atualização realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante o comando.</response>
+        /// <response code="601">Houve uma falha de validação durante o comando.</response>
+        [HttpPost("alunos/atualizar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> AtualizarAlunosCursos(long? turmaId, long? componenteCurricularId, [FromServices] IAtualizarAlunosCursosUseCase useCase)
+        {
+            var retorno = await useCase.Executar(turmaId, componenteCurricularId);
+            return Ok(retorno);
+        }
     }
 }
