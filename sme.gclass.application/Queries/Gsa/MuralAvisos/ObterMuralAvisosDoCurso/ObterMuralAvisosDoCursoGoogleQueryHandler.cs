@@ -56,11 +56,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 RegistraRequisicaoGoogleClassroom();
                 return await requestList.ExecuteAsync();
-
             }
             catch (Exception ex)
             {
-
                 throw;
             }        
         }

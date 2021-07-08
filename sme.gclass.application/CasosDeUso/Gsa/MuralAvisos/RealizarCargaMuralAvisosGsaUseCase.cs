@@ -19,9 +19,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            if (mensagem?.Mensagem is null)
-                throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de mural de avisos GSA.");
-
             var anoAtual = DateTime.Now.Year;
             var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual));
 

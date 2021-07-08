@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(a => a.Avisos)
                 .NotEmpty()
-                .WithMessage("Os avisos devem ser informado para tratamento da importação dos avisos do mural");
+                .WithMessage("Os avisos devem ser informados para tratamento da importação dos avisos do mural");
 
             RuleFor(a => a.CursoId)
                 .NotEmpty()
