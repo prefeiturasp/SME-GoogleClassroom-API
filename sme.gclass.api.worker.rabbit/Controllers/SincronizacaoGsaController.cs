@@ -134,7 +134,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpPost("cursos/usuarios-inativos")]
+        [HttpPost("cursos/usuarios/remover")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
