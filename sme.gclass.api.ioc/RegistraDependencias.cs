@@ -153,6 +153,11 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();
             services.TryAddScoped<IProcessarCursoUsuarioGsaUseCase, ProcessarCursoUsuarioGsaUseCase>();
             services.TryAddScoped<IObterCursosDoUsuarioGsaUseCase, ObterCursosDoUsuarioGsaUseCase>();
+
+            // Mural de Avisos
+            services.TryAddScoped<IRealizarCargaMuralAvisosGsaUseCase, RealizarCargaMuralAvisosGsaUseCase>();
+            services.TryAddScoped<ITratarImportacaoMuralAvisosCursoGsaUseCase, TratarImportacaoMuralAvisosCursoGsaUseCase>();
+            services.TryAddScoped<IImportarMuralAvisosCursoGsaUseCase, ImportarMuralAvisosCursoGsaUseCase>();
         }
     }
 }

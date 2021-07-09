@@ -1,10 +1,11 @@
 ﻿CREATE TABLE public.avisos
 (
-    id            VARCHAR(100),
+    id            INT8 		   NOT NULL,
     texto         VARCHAR(255) NOT NULL,
-    data_inclusao TIMESTAMP    NOT NULL,
     usuario_id    INT8         NOT NULL,
-    curso_id      BIGINT       NOT NULL
+    curso_id      INT8         NOT NULL,
+    data_inclusao TIMESTAMP    NOT NULL,
+    data_alteracao TIMESTAMP   NULL
 );
 
 ALTER TABLE public.avisos

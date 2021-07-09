@@ -604,5 +604,28 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
+
+        public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)
+        {
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new { googleClassroomId });
+        }
+
+        public async Task<UsuarioGoogle> ObteUsuarioPorClassroomId(string classroomId)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where u.google_classroom_id = @classroomId";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, new { classroomId });
+        }
     }
 }
