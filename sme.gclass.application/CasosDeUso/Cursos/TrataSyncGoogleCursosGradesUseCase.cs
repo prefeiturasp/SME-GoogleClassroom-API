@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -40,7 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     await IncluirGradeDeCursoComErroAsync(gradeDeCurso, ObterMensagemDeErro(gradeDeCurso, ex));
                 }
-            }
+            }            
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoGradesAdicionar, DateTime.Today));
             return true;
@@ -64,6 +65,6 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = $"Não foi possível inserir a grade do curso [TurmaId:{gradeCursoEol.TurmaId}, ComponenteCurricularId:{gradeCursoEol.ComponenteCurricularId}] na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}. {ex.StackTrace}";
-        }
+        }        
     }
 }
