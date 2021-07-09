@@ -242,7 +242,7 @@ namespace SME.GoogleClassroom.Dados
 	                                        atribuicao_aula atr
                                         WHERE 
                                             an_atribuicao = @anoLetivo
-											{(dataReferencia.HasValue ? "AND dt_atribuicao_aula >= @dataReferencia " : "")}
+											{(dataReferencia.HasValue && string.IsNullOrWhiteSpace(rf) ? "AND dt_atribuicao_aula >= @dataReferencia " : "")}
 	                                        AND dt_cancelamento is null AND (dt_disponibilizacao_aulas is null OR dt_disponibilizacao_aulas > GETDATE());
 
                                         IF OBJECT_ID('tempdb..#tempProfessoresAtivos') IS NOT NULL

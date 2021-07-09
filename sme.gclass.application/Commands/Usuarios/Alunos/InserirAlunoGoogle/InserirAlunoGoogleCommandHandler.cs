@@ -1,4 +1,5 @@
-﻿using Google.Apis.Admin.Directory.directory_v1;
+﻿using Google;
+using Google.Apis.Admin.Directory.directory_v1;
 using Google.Apis.Admin.Directory.directory_v1.Data;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +32,24 @@ namespace SME.GoogleClassroom.Aplicacao
         protected override async Task<bool> ExecutarAsync(InserirAlunoGoogleCommand request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-            await policy.ExecuteAsync(() => IncluirAlunoNoGoogle(request.AlunoGoogle, diretorioClassroom));
+
+            try
+            {
+                await policy.ExecuteAsync(() => IncluirAlunoNoGoogle(request.AlunoGoogle, diretorioClassroom));
+            }
+            catch (GoogleApiException gex)
+            {
+                if (gex.EhErroDeDuplicidade())
+                {
+                    var user = await diretorioClassroom
+                        .Users.Get(request.AlunoGoogle.Email).ExecuteAsync();
+
+                    request.AlunoGoogle.GoogleClassroomId = user?.Id;
+                }
+                else
+                    throw;
+            }
+
             return true;
         }
 
