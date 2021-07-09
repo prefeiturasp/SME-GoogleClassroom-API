@@ -16,16 +16,22 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, string cursoId)
+        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, string cursoId)
         {
             var query = new StringBuilder(@"SELECT
                                                    ucr.usuario_id UsuarioId,
                                                    ucr.curso_id CursoId,
-                                                   ucr.removido_em RemovidoEm 
+                                                   ucr.removido_em RemovidoEm,
+                                                   u.google_classroom_id UsuarioGsaId,
+                                                   u.email EmailUsuario,
+                                                   u.nome NomeUsuario,
+                                                   c.nome NomeCurso
                                               FROM curso_usuario_removido_gsa ucr
+                                              inner join cursos c on c.id = ucr.curso_id 
+                                              inner join usuarios u on u.indice = ucr.usuario_id 
                                              WHERE ucr.usuario_tipo = @tipo ");
 
-            var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
+            var queryCount = new StringBuilder("SELECT count(*) from curso_usuario_removido_gsa u WHERE u.usuario_tipo = @tipo ");
 
             if (!string.IsNullOrEmpty(cursoId))
             {
@@ -39,12 +45,12 @@ namespace SME.GoogleClassroom.Dados
             query.AppendLine(";");
             query.AppendLine(queryCount.ToString());
 
-            var retorno = new PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>();
+            var retorno = new PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>();
 
             var parametros = new
             {
-                paginacao.QuantidadeRegistrosIgnorados,
-                paginacao.QuantidadeRegistros,
+                quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                quantidadeRegistros = paginacao.QuantidadeRegistros,
                 tipo = UsuarioTipo.Aluno,
                 cursoId
             };
@@ -53,7 +59,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var registros = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
-            retorno.Items = registros.Read<CursoUsuarioRemovidoGsa>();
+            retorno.Items = registros.Read<CursoUsuarioRemovidoConsultaDto>();
             retorno.TotalRegistros = registros.ReadFirst<int>();
             retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 

@@ -153,7 +153,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet("alunos-inativos")]
+        [HttpGet("alunos-cursos-removidos")]
         [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]

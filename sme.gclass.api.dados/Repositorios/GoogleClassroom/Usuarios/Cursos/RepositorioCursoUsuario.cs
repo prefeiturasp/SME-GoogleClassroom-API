@@ -433,7 +433,7 @@ namespace SME.GoogleClassroom.Dados
                     curso_id as CursoId,
                     usuario_id as UsuarioId,
                     curso_id as CursoGsaId,
-                    u.email as EmailUsuario
+                    u.google_classroom_id as UsuarioGsaId
                 FROM cursos_usuarios cu
                inner join usuarios u on u.indice = cu.usuario_id 
                inner join cursos c on c.id = cu.curso_id 

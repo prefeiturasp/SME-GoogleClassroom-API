@@ -22,10 +22,6 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 await mediator.Send(new IncluirCursoUsuarioRemovidoCommand(dto.UsuarioId, dto.CursoId, UsuarioTipo.Aluno));
-                var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
-                var usuarioGsa = await diretorioClassroom.Users.Get(dto.EmailUsuario).ExecuteAsync();
-                dto.UsuarioGsaId = usuarioGsa.Id;
-
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, dto));
             }
             catch (Exception e)
