@@ -10,6 +10,8 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> SalvarAsync(UsuarioCursoGsa usuarioCursoGsa);
 
+        Task<bool> RemoverAsync(UsuarioCursoGsa usuarioCursoGsa);
+
         Task<ConsultaCursosDoUsuarioGsa> ObterCursosDoUsuarioGsaAsync(string usuarioId);
 
         Task LimparAsync();

@@ -10,12 +10,14 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IRepositorioUsuarioGsa repositorioUsuarioGsa;
         private readonly IRepositorioCursoGsa repositorioCursoGsa;
         private readonly IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa;
+        private readonly IRepositorioCursoUsuarioRemovidoGsa repositorioCursoUsuarioRemovidoGsa;
 
-        public LimparTabelasGsaCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioGsa, IRepositorioCursoGsa repositorioCursoGsa, IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa)
+        public LimparTabelasGsaCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioGsa, IRepositorioCursoGsa repositorioCursoGsa, IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa, IRepositorioCursoUsuarioRemovidoGsa repositorioCursoUsuarioRemovidoGsa)
         {
             this.repositorioUsuarioGsa = repositorioUsuarioGsa;
             this.repositorioCursoGsa = repositorioCursoGsa;
             this.repositorioUsuarioCursoGsa = repositorioUsuarioCursoGsa;
+            this.repositorioCursoUsuarioRemovidoGsa = repositorioCursoUsuarioRemovidoGsa ?? throw new System.ArgumentNullException(nameof(repositorioCursoUsuarioRemovidoGsa));
         }
 
         protected override async Task Handle(LimparTabelasGsaCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,11 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 await repositorioCursoGsa.LimparAsync();
                 await repositorioUsuarioCursoGsa.LimparAsync();
+            }
+
+            if (request.UsuariosCursosRemovidosGsa)
+            {
+                await repositorioCursoUsuarioRemovidoGsa.LimparAsync();
             }
         }
     }
