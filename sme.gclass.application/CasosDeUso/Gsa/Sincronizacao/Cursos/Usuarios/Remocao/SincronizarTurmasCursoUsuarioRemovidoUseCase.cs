@@ -19,10 +19,11 @@ namespace SME.GoogleClassroom.Aplicacao
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
             foreach (var turmaId in dto.TurmasIds)
             {
-                var alunosCodigos = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(dto.AnoLetivo, turmaId, dto.DataReferencia));
-                if(alunosCodigos != null && alunosCodigos.Any())
+                var alunosCodigos = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(dto.AnoLetivo, turmaId, dto.DataReferencia, 10));
+                var alunosCodigosComCurso = await mediator.Send(new ObterAlunosCodigosComRegistroEmCursosQuery(alunosCodigos));
+                if(alunosCodigosComCurso != null && alunosCodigosComCurso.Any())
                 {
-                    var alunos = new AlunosCursoUsuarioRemovidoTurmaDto(alunosCodigos, turmaId);
+                    var alunos = new AlunosCursoUsuarioRemovidoTurmaDto(alunosCodigosComCurso, turmaId);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, alunos));
                 }
             }
