@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosCursosUsuariosRemovidosPorCursoIdQueryHandler : IRequestHandler<ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery, PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>>
+    public class ObterAlunosCursosUsuariosRemovidosPorCursoIdQueryHandler : IRequestHandler<ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery, PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>>
     {
         private readonly IRepositorioCursoUsuarioRemovidoGsa repositorioCursoUsuarioRemovidoGsa;
 
@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoUsuarioRemovidoGsa = repositorio ?? throw new System.ArgumentNullException(nameof(repositorio));
         }
 
-        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>> Handle(ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> Handle(ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery request, CancellationToken cancellationToken)
         {
             return await repositorioCursoUsuarioRemovidoGsa.ObterAlunosCursosRemovidosPorCursoId(request.Paginacao, request.CursoId);
         }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery : IRequest<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>>
+    public class ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery : IRequest<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>>
     {
         public ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery(Paginacao paginacao, string cursoId)
         {

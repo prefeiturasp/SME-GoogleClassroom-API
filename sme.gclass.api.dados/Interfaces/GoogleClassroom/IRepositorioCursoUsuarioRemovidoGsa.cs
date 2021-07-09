@@ -7,7 +7,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioCursoUsuarioRemovidoGsa
     {
-        Task<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, string cursoId);
+        Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, string cursoId);
         Task<long> SalvarAsync(CursoUsuarioRemovidoGsa entidade);
         Task LimparAsync();
     }

@@ -9,6 +9,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterAlunosCursosUsuariosRemovidosUseCase
     {
-        Task<PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>> Executar(FiltroObterAlunosCursosUsuariosRemovidosDto filtro);
+        Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> Executar(FiltroObterAlunosCursosUsuariosRemovidosDto filtro);
     }
 }
