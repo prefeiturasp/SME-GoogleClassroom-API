@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SME.GoogleClassroom.Dominio.Entidades.Google.Usuarios.InativacaoAlunos
+namespace SME.GoogleClassroom.Dominio
 {
     public class AlunoInativoErro
     {

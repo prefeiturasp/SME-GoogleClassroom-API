@@ -604,5 +604,24 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
+
+        public async Task<bool> InativarAsync(long id)
+        {
+            const string updateQuery = @"update public.usuarios
+                                         set
+                                            organization_path = 'Alunos>Inativos'
+                                         where
+                                            indice = @id";
+
+            var parametros = new
+            {
+                id
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(updateQuery, parametros);
+            return true;
+
+        }
     }
 }
