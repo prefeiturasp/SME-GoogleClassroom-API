@@ -15,9 +15,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public int AnoLetivo { get; }
     }
 
-    public class ObterCursosPorAnoQueryValidator : AbstractValidator<ObterCursosComResponsaveisPorAnoQuery>
+    public class ObterCursosComResponsaveisPorAnoQueryValidator : AbstractValidator<ObterCursosComResponsaveisPorAnoQuery>
     {
-        public ObterCursosPorAnoQueryValidator()
+        public ObterCursosComResponsaveisPorAnoQueryValidator()
         {
             RuleFor(a => a.AnoLetivo)
                 .NotEmpty()
