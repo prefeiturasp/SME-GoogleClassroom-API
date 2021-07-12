@@ -67,6 +67,7 @@
         public static string FilaGsaMuralAvisosCarregar => "googleclass.gsa.mural.avisos.carregar";
         public static string FilaGsaMuralAvisosTratar => "googleclass.gsa.mural.avisos.tratar";
         public static string FilaGsaMuralAvisosIncluir => "googleclass.gsa.mural.avisos.incluir";
+        public static string FilaGsaMuralAvisosIncluirErro => "googleclass.gsa.mural.avisos.incluir.erro";
         #endregion
     }
 }

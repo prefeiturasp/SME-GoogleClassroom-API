@@ -15,12 +15,15 @@ namespace SME.GoogleClassroom.IoC
             IPolicyRegistry<string> registry = services.AddPolicyRegistry();
 
             Random jitterer = new Random();
-            var policy = Policy.Handle<Exception>(ex => !(ex is GoogleApiException || ex is NegocioException))
+            var policyGSync = Policy.Handle<Exception>(ex => !(ex is GoogleApiException || ex is NegocioException))
               .WaitAndRetryAsync(3,    // exponential back-off plus some jitter
                 retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
                       + TimeSpan.FromMilliseconds(jitterer.Next(0, 30)));
+            registry.Add(PoliticaPolly.PolicyGoogleSync, policyGSync);
 
-            registry.Add(PoliticaPolly.PolicyGoogleSync, policy);
+            var policyFilas = Policy.Handle<Exception>()
+              .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(5));
+            registry.Add(PoliticaPolly.PolicyPublicaFila, policyFilas);
 
             RegistrarPolicyGsa(registry);
         }

@@ -1,7 +1,9 @@
-﻿CREATE TABLE public.avisos
+﻿DROP TABLE IF EXISTS public.avisos;
+
+CREATE TABLE public.avisos
 (
     id            INT8 		   NOT NULL,
-    texto         VARCHAR(255) NOT NULL,
+    texto         VARCHAR 	   NOT NULL,
     usuario_id    INT8         NOT NULL,
     curso_id      INT8         NOT NULL,
     data_inclusao TIMESTAMP    NOT NULL,

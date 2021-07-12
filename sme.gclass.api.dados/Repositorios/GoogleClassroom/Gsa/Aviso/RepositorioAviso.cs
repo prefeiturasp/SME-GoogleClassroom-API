@@ -39,18 +39,18 @@ namespace SME.GoogleClassroom.Dados
         public async Task<int> InserirAviso(AvisoGsa avisoGsa)
         {
             const string insertQuery = @"insert into public.avisos
-                                        (id, data_inclusao,curso_id,texto, usuario_id)
+                                        (id, texto, usuario_id, curso_id, data_inclusao, data_alteracao)
                                         values
-                                        (@id, @data_inclusao, @curso_id, @texto, @usuario_id)";
+                                        (@id, @texto, @usuarioId, @cursoId, @dataInclusao, @dataAlteracao)";
 
             var parametros = new
             {
                 id = avisoGsa.Id,
-                dataInclusao = avisoGsa.DataInclusao,
-                cursoId = avisoGsa.CursoId,
                 texto = avisoGsa.Texto,
-                usuarioId = avisoGsa.UsuarioId
-                
+                usuarioId = avisoGsa.UsuarioId,
+                cursoId = avisoGsa.CursoId,
+                dataInclusao = avisoGsa.DataInclusao,
+                dataAlteracao = avisoGsa.DataAlteracao,
             };
 
             using var conn = ObterConexao();
