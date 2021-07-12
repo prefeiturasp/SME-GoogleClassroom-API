@@ -43,5 +43,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await obterAvisoUseCase.Executar(filtro);
             return Ok(retorno);
         }
+
+        [HttpPost("erros/tratamentos")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ProcessarErros([FromServices] IIncluirAvisosGsaErroProcessarUseCase useCase)
+        {
+            await useCase.Executar();
+
+            return Ok();
+        }
     }
 }

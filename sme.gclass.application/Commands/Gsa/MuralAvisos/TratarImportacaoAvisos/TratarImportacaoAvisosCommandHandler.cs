@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (avisosImportar.Any())
             {
-                foreach (var avisoGsa in ObterAvisosInclusosOuAlterados(request.Avisos, ultimaExecucao))
+                foreach (var avisoGsa in avisosImportar)
                 {
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosIncluir, avisoGsa));
                 }

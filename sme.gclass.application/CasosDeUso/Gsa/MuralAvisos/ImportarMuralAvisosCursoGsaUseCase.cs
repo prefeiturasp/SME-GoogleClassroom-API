@@ -35,11 +35,14 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 SentrySdk.CaptureMessage($"Não foi possível importar o aviso do mural GSA do curso {avisoGsa.CursoId} e e usuario {avisoGsa.UsuarioClassroomId}: {ex.Message}");
-                // TODO Incluir na entidade de erros
-
-
+                await EnviarErro(avisoGsa);
                 throw;
             }        
+        }
+
+        private async Task EnviarErro(AvisoMuralGsaDto avisoGsa)
+        {
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosIncluirErro, avisoGsa));
         }
 
         private async Task<UsuarioGoogle> ObterUsuario(string usuarioClassroomId)

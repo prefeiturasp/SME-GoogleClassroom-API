@@ -194,6 +194,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaMuralAvisosIncluir, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaMuralAvisosIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaMuralAvisosIncluir);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaMuralAvisosIncluirErro, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaMuralAvisosIncluirErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaMuralAvisosIncluirErro);
             }
 
             if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
