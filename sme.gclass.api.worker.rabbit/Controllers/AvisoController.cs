@@ -44,6 +44,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok(retorno);
         }
 
+        /// <summary>
+        /// Executa o tratamento dos erros de importação dos avisos dos murais GSA.
+        /// Insere o registro na base GCA e envia para o SGP a vincular com a aula.
+        /// </summary>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("erros/tratamentos")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
