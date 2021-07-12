@@ -19,8 +19,10 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
+            var totalDiasConsiderar = 10;
             var totalPorPagina = 50;
             var paginacao = new Paginacao(1, totalPorPagina);
+            var ehDataReferenciaPrincipal = false;
 
             if (dto != null && dto.AnoLetivo > 0)
             {
@@ -30,20 +32,21 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 dto.AnoLetivo = DateTime.Now.Year;
                 var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
-                if (dataUltimaExecucao <= DateTime.Today.AddDays(-10))
+                if (dataUltimaExecucao < DateTime.Today.AddDays(-totalDiasConsiderar))
                 {
-                    dto.DataReferencia = dataUltimaExecucao;
+                    dto.DataReferencia = DateTime.Today.AddDays(-totalDiasConsiderar);
                     await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
                 }
                 else
                 {
-                    dto.DataReferencia = DateTime.Today;
+                    dto.DataReferencia = dataUltimaExecucao.AddDays(-totalDiasConsiderar);
+                    ehDataReferenciaPrincipal = true;
                 }
             }
             var turmasPaginadas = await mediator.Send(new ObterTurmasIsCadastradasQuery(paginacao));
             if (turmasPaginadas != null && turmasPaginadas.Items != null && turmasPaginadas.Items.Any())
             {
-                var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items);
+                var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items, ehDataReferenciaPrincipal);
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, filtroTurma));
                 var proximaPagina = ((paginacao.QuantidadeRegistrosIgnorados + totalPorPagina) / totalPorPagina) + 1;
                 if (proximaPagina <= turmasPaginadas.TotalPaginas)

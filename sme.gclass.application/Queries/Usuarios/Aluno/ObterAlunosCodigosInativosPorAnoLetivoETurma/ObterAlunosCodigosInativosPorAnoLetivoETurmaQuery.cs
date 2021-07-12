@@ -8,18 +8,18 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery : IRequest<IEnumerable<long>>
     {
-        public ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(int anoLetivo, long turmaId, DateTime dataReferencia, int totalDiasInativo)
+        public ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
             DataReferencia = dataReferencia;
-            TotalDiasInativo = totalDiasInativo;
+            EhDataReferenciaPrincipal = ehDataReferenciaPrincipal;
         }
 
         public int AnoLetivo { get; set; }
         public long TurmaId { get; set; }
         public DateTime DataReferencia { get; set; }
-        public int TotalDiasInativo { get; set; }
+        public bool EhDataReferenciaPrincipal { get; set; }
     }
 
     public class ObterAlunosCodigosInativosPorAnoLetivoETurmaQueryValidator : AbstractValidator<ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery>
@@ -38,10 +38,6 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.DataReferencia)
                 .NotNull()
                 .WithMessage("A data de referência deve ser informada.");
-
-            RuleFor(x => x.TotalDiasInativo)
-                .GreaterThan(0)
-                .WithMessage("O total de dias inativos deve ser informado");
         }
     }
 }
