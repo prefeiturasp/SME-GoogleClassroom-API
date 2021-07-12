@@ -35,6 +35,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
+
             return true;
         }
     }

@@ -25,9 +25,6 @@ namespace SME.GoogleClassroom.Aplicacao
             var filtroUsuarioGsa = new FiltroCargaGsaDto();
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, filtroUsuarioGsa));
 
-            var filtroAvisosGsa = new FiltroCargaGsaDto();
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
-
             return true;
         }
 
