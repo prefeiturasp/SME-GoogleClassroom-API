@@ -110,5 +110,17 @@ namespace SME.GoogleClassroom.Dados
 
             return true;
         }
+
+        public async Task<IEnumerable<long>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos)
+        {
+            var query = @"select u.id as aluno_codigo 
+                            from cursos_usuarios cu
+                           inner join usuarios u on u.indice = cu.usuario_id 
+                           where u.id = ANY(@alunosCodigos)
+                             and u.usuario_tipo = 1";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query, new { alunosCodigos });
+        }
     }
 }

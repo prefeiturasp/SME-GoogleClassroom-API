@@ -157,8 +157,25 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterTodosAlunosInativos([FromServices] IObterAlunosCursosUsuariosRemovidosUseCase useCase,
+        public async Task<IActionResult> ObterTodosAlunosRemovidos([FromServices] IObterAlunosCursosUsuariosRemovidosUseCase useCase,
             [FromQuery] FiltroObterAlunosCursosUsuariosRemovidosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os alunos inativos no Google Classroom.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("alunos-remocao")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterTodosAlunosQueSeraoRemovidos([FromServices] IObterAlunosQueSeraoRemovidosUseCase useCase,
+            [FromQuery] FiltroObterAlunosQueSeraoRemovidosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);

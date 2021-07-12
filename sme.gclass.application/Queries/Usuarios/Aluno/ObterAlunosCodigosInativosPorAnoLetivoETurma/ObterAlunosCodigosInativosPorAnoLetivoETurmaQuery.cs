@@ -8,16 +8,18 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery : IRequest<IEnumerable<long>>
     {
-        public ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(int anoLetivo, long turmaId, DateTime dataReferencia)
+        public ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
             DataReferencia = dataReferencia;
+            EhDataReferenciaPrincipal = ehDataReferenciaPrincipal;
         }
 
         public int AnoLetivo { get; set; }
         public long TurmaId { get; set; }
         public DateTime DataReferencia { get; set; }
+        public bool EhDataReferenciaPrincipal { get; set; }
     }
 
     public class ObterAlunosCodigosInativosPorAnoLetivoETurmaQueryValidator : AbstractValidator<ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery>
