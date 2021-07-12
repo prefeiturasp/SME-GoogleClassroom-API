@@ -12,6 +12,6 @@
         CursoGradesAdicionar = 8,
         FuncionarioCursoAdicionar = 9,
         FuncionarioIndiretoAdicionar = 10,
-        MuralAvisosCarregar = 12,
+        MuralAvisosCarregar = 13,
     }
 }
