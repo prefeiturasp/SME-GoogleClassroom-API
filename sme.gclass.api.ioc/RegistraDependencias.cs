@@ -160,6 +160,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITratarImportacaoMuralAvisosCursoGsaUseCase, TratarImportacaoMuralAvisosCursoGsaUseCase>();
             services.TryAddScoped<IImportarMuralAvisosCursoGsaUseCase, ImportarMuralAvisosCursoGsaUseCase>();
             services.TryAddScoped<IIncluirAvisosGsaErroProcessarUseCase, IncluirAvisosGsaErroProcessarUseCase>();
+            
+            // Atividades Avaliativas
+            services.TryAddScoped<IObterAtividadesUseCase, ObterAtividadesUseCase>();
         }
     }
 }
