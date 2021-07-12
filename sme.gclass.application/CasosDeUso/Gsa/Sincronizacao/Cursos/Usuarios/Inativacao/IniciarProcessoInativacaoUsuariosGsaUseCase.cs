@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarProcessoInativacaoUsuariosCursosGsaUseCase : IIniciarProcessoInativacaoUsuariosCursosGsaUseCase
+    public class IniciarProcessoInativacaoUsuariosGsaUseCase : IIniciarProcessoInativacaoUsuariosGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public IniciarProcessoInativacaoUsuariosCursosGsaUseCase(IMediator mediator)
+        public IniciarProcessoInativacaoUsuariosGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var dto = new FiltroInativacaoUsuariosCursosGoogleDto();
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativacaoUsuarioCurso, RotasRabbit.FilaGsaInativacaoUsuarioCurso, dto));
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativacaoUsuario, RotasRabbit.FilaGsaInativacaoUsuario, dto));
             }
             catch (Exception ex)
             {

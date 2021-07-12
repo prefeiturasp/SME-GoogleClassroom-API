@@ -228,6 +228,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioIncluir, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioIncluir);
             }
+
+            if (consumoDeFilasOptions.Gsa.ProcessarInativacaoUsuarioGsa)
+            {
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativacaoUsuario, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaInativacaoUsuario, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaInativacaoUsuario);
+            }
+
         }
 
         #endregion Filas GSA

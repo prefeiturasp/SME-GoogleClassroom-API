@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IIniciarProcessoInativacaoUsuariosCursosGsaUseCase
+    public interface IIniciarProcessoInativacaoUsuariosGsaUseCase
     {
         Task<bool> Executar();
     }
