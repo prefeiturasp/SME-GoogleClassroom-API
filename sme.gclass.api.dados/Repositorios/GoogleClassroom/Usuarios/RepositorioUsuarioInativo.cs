@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Dados.Repositorios.GoogleClassroom.Usuarios
+namespace SME.GoogleClassroom.Dados
 {
     public class RepositorioUsuarioInativo : RepositorioGoogle, IRepositorioUsuarioInativo
     {

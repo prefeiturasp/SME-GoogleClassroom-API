@@ -46,6 +46,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         private async Task InserirMensagemErroIntegracaoAsync(FiltroInativacaoUsuarioGsaDTO filtro, string mensagem)
-          => await mediator.Send(new IncluirInativacaoUsuarioErroCommand(new AlunoInativoErro(filtro.UsuarioId, mensagem)));
+          => await mediator.Send(new IncluirInativacaoUsuarioErroCommand(new UsuarioInativoErro(filtro.UsuarioId, mensagem)));
     }
 }

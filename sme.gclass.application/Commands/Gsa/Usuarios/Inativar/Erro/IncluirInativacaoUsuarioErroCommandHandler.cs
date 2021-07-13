@@ -8,9 +8,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirInativacaoUsuarioErroCommandHandler : IRequestHandler<IncluirInativacaoUsuarioErroCommand, long>
         {
-            private readonly IRepositorioAlunoInativoErro repositorio;
+            private readonly IRepositorioUsuarioInativoErro repositorio;
 
-            public IncluirInativacaoUsuarioErroCommandHandler(IRepositorioAlunoInativoErro repositorio)
+            public IncluirInativacaoUsuarioErroCommandHandler(IRepositorioUsuarioInativoErro repositorio)
             {
                 this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
         }

@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Dominio
 {
-    public class AlunoInativoErro
+    public class UsuarioInativoErro
     {
         public long? UsuarioId { get; private set; }
         public string Mensagem { get; private set; }
@@ -10,7 +10,7 @@ namespace SME.GoogleClassroom.Dominio
         public ExecucaoTipo ExecucaoTipo { get; private set; }
         public DateTime DataInclusao { get; private set; }
 
-        public AlunoInativoErro(long? usuarioId, string mensagem)
+        public UsuarioInativoErro(long? usuarioId, string mensagem)
         {
             UsuarioId = usuarioId;
             Mensagem = mensagem;

@@ -47,7 +47,8 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IRepositorioCursoUsuarioRemovidoGsaErro, RepositorioCursoUsuarioRemovidoGsaErro>();
             services.TryAddScoped<IRepositorioCursoUsuarioRemovidoGsa, RepositorioCursoUsuarioRemovidoGsa>();
-            services.TryAddScoped<IRepositorioAlunoInativoErro, RepositorioAlunoInativoErro>();
+            services.TryAddScoped<IRepositorioUsuarioInativoErro, RepositorioUsuarioInativoErro>();
+            services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -133,6 +134,14 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IAtualizarAlunosCursosUseCase, AtualizarAlunosCursosUseCase>();
             services.TryAddScoped<IObterAlunosQueSeraoRemovidosUseCase, ObterAlunosQueSeraoRemovidosUseCase>();
 
+            // Usuario Inativação (Aluno)
+            services.TryAddScoped<IIniciarProcessoInativacaoUsuariosGsaUseCase, IniciarProcessoInativacaoUsuariosGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaTurmasInativacaoUsuarioUseCase, RealizarCargaTurmasInativacaoUsuarioUseCase>();
+            services.TryAddScoped<ISincronizarTurmasInativacaoUsuarioUseCase, SincronizarTurmasInativacaoUsuarioUseCase>();
+            services.TryAddScoped<ISincronizarInativacaoUsuarioGsaUseCase, SincronizarInativacaoUsuarioGsaUseCase>();
+            services.TryAddScoped<ITratarInativacaoUsuarioGsaUseCase, TratarInativacaoUsuarioGsaUseCase>();
+            services.TryAddScoped<IIncluirInativacaoUsuarioGsaUseCase, IncluirInativacaoUsuarioGsaUseCase>();
+
             RegistrarCasosDeUsoGsa(services);
         }
 
@@ -168,10 +177,7 @@ namespace SME.GoogleClassroom.IoC
             // RemocaoUsuarioCursoGsa
             services.TryAddScoped<ISincronizarRemocaoUsuarioCursoGsaUseCase, SincronizarRemocaoUsuarioCursoGsaUseCase>();
 
-            services.TryAddScoped<IIniciarProcessoInativacaoUsuariosGsaUseCase, IniciarProcessoInativacaoUsuariosGsaUseCase>();
-            services.TryAddScoped<ISincronizarInativacaoUsuarioGsaUseCase, SincronizarInativacaoUsuarioGsaUseCase>();
-            services.TryAddScoped<ITratarInativacaoUsuarioGsaUseCase, TratarInativacaoUsuarioGsaUseCase>();
-            services.TryAddScoped<IIncluirInativacaoUsuarioGsaUseCase, IncluirInativacaoUsuarioGsaUseCase>();
+
         }
     }
 }

@@ -18,7 +18,6 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaUsuarioInativoDto>();
-           
 
             foreach (var turmaId in dto.TurmasIds)
             {

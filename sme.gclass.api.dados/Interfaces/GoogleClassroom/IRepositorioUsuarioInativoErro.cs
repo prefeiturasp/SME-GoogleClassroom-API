@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados.Interfaces
 {
-    public interface IRepositorioAlunoInativoErro
+    public interface IRepositorioUsuarioInativoErro
     {
-        Task<long> SalvarAsync(AlunoInativoErro alunoInativoErro);
+        Task<long> SalvarAsync(UsuarioInativoErro alunoInativoErro);
     }
 }

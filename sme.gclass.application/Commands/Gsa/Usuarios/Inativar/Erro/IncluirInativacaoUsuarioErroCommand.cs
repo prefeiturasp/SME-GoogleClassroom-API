@@ -6,9 +6,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirInativacaoUsuarioErroCommand : IRequest<long>
     {
-        public AlunoInativoErro AlunoInativoErro { get; set; }
+        public UsuarioInativoErro AlunoInativoErro { get; set; }
 
-        public IncluirInativacaoUsuarioErroCommand(AlunoInativoErro alunoInativoErro)
+        public IncluirInativacaoUsuarioErroCommand(UsuarioInativoErro alunoInativoErro)
         {
             AlunoInativoErro = alunoInativoErro;
         }

@@ -29,10 +29,9 @@ namespace SME.GoogleClassroom.Aplicacao
             else
             {
                 dto.AnoLetivo = DateTime.Now.Year;
-                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoInativar));
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
+                await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoInativar));
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
             }
-
 
             var turmasPaginadas = await mediator.Send(new ObterTurmasIsCadastradasQuery(paginacao));
 
@@ -40,12 +39,13 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var filtroTurma = new FiltroTurmaInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items);
                 
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, filtroTurma));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTurmasSync, RotasRabbit.FilaGsaInativarUsuarioTurmasSync, filtroTurma));
+
                 var proximaPagina = ((paginacao.QuantidadeRegistrosIgnorados + totalPorPagina) / totalPorPagina) + 1;
                 if (proximaPagina <= turmasPaginadas.TotalPaginas)
                 {
-                    var novoDto = new CarregarTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, novoDto));
+                    var turmaInativacaoUsuarioDto = new CarregarTurmaInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, turmaInativacaoUsuarioDto));
                 }
             }
             return true;

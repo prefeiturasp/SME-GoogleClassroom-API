@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioAlunoInativoErro : RepositorioGoogle, IRepositorioAlunoInativoErro
+    public class RepositorioUsuarioInativoErro : RepositorioGoogle, IRepositorioUsuarioInativoErro
     {
-        public RepositorioAlunoInativoErro(ConnectionStrings connectionStrings)
+        public RepositorioUsuarioInativoErro(ConnectionStrings connectionStrings)
             : base(connectionStrings)
         {
         }
 
-        public async Task<long> SalvarAsync(AlunoInativoErro alunoInativoErro)
+        public async Task<long> SalvarAsync(UsuarioInativoErro usuarioInativoErro)
         {
             var query = @"INSERT INTO public.aluno_inativo_erro  
                            (usuario_id, mensagem, execucao_tipo, data_inclusao)
@@ -25,10 +25,10 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-                alunoInativoErro.UsuarioId,
-                alunoInativoErro.Mensagem,
-                alunoInativoErro.ExecucaoTipo,
-                alunoInativoErro.DataInclusao
+                usuarioInativoErro.UsuarioId,
+                usuarioInativoErro.Mensagem,
+                usuarioInativoErro.ExecucaoTipo,
+                usuarioInativoErro.DataInclusao
             };
 
             using var conn = ObterConexao();
