@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface ITratarInativacaoUsuarioGsaUseCase
+    public interface IRealizarCargaTurmasInativacaoUsuarioUseCase
     {
         Task<bool> Executar(MensagemRabbit mensagemRabbit);
     }

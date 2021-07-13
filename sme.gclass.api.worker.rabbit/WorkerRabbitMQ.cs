@@ -103,7 +103,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, new ComandoRabbit("Sincronizar codigos dos alunos para remoção de cursos", typeof(ISincronizarAlunosCursoUsuarioRemovidoUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, new ComandoRabbit("Sincroniza curso do usuário GSA e exclui registro", typeof(ISincronizarRemocaoUsuarioCursoGsaUseCase)));
 
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Carregar os alunos a serem inativados na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIniciar, new ComandoRabbit("Inicia o processo de inativar alunos", typeof(IIniciarProcessoInativacaoUsuariosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTurmasCarregar, new ComandoRabbit("Carregar turmas dos usuários para inativação", typeof(IRealizarCargaTurmasInativacaoUsuarioUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Sincroniza os alunos a serem inativados na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTratar, new ComandoRabbit("Sincroniza os alunos GSA a serem carregados na base", typeof(ITratarInativacaoUsuarioGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IIncluirInativacaoUsuarioGsaUseCase)));
         }

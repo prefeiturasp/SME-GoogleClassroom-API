@@ -18,13 +18,15 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaUsuarioInativoDto>();
+           
+
             foreach (var turmaId in dto.TurmasIds)
             {
                 var alunosCodigos = await mediator.Send(new ObterCodigosAlunosInativosPorAnoLetivoETurmaQuery(dto.AnoLetivo, turmaId, dto.DataReferencia));
                 if (alunosCodigos != null && alunosCodigos.Any())
                 {
                     //var alunos = new AlunosCursoUsuarioRemovidoTurmaDto(alunosCodigos, turmaId);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTratar, RotasRabbit.FilaGsaInativarUsuarioTratar, alunos));
+                    //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTratar, RotasRabbit.FilaGsaInativarUsuarioTratar, alunos));
                 }
             }
             return true;
