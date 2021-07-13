@@ -3,9 +3,9 @@ using MediatR;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InativarUsuarioCommand : IRequest<bool>
+    public class AtualizarUnidadeOrganizacionalUsuarioCommand : IRequest<bool>
     {
-        public InativarUsuarioCommand(long usuarioId)
+        public AtualizarUnidadeOrganizacionalUsuarioCommand(long usuarioId)
         {
             UsuarioId = usuarioId;
         }
@@ -13,9 +13,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public long UsuarioId { get; set; }
     }
 
-    public class InativarUsuarioCommandValidator : AbstractValidator<InativarUsuarioCommand>
+    public class AtualizarUnidadeOrganizacionalUsuarioCommandValidator : AbstractValidator<AtualizarUnidadeOrganizacionalUsuarioCommand>
     {
-        public InativarUsuarioCommandValidator()
+        public AtualizarUnidadeOrganizacionalUsuarioCommandValidator()
         {
             RuleFor(a => a.UsuarioId)
                 .NotEmpty()

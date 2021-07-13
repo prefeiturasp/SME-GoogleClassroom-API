@@ -95,6 +95,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaUsuarioValidar, new ComandoRabbit("Realiza validação de usuários GSA", typeof(IValidarUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioCarregar, new ComandoRabbit("Sincroniza os cursos do usuário GSA a serem adicionados na base", typeof(IRealizarCargaCursoUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioIncluir, new ComandoRabbit("Processar curso do usuário GSA e adiciona na base", typeof(IProcessarCursoUsuarioGsaUseCase)));
+
+            //comandos.Add(RotasRabbit.FilaGsaInativacaoUsuario, new ComandoRabbit("Sincroniza inativação do usuário GSA e adiciona na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
+
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Carregar os alunos a serem inativados na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTratar, new ComandoRabbit("Sincroniza os alunos do mural GSA a serem carregados na base", typeof(ITratarInativacaoUsuarioGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IIncluirInativacaoUsuarioGsaUseCase)));
+
+
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -281,8 +289,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioIncluir, false, consumer);
 
             if (consumoDeFilasOptions.Gsa.ProcessarInativacaoUsuarioGsa)
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativacaoUsuario, false, consumer);
-
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
+            }
         }
     }
 }

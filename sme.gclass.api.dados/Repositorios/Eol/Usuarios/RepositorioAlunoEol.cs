@@ -42,20 +42,20 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		public async Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo)
-		{
-			var query = MontaQueryAlunosParaInclusao(null, null, codigoEol);
+        public async Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo)
+        {
+            var query = MontaQueryAlunosParaInclusao(null, null, codigoEol);
 
-			using var conn = ObterConexao();
-			return await conn.QuerySingleOrDefaultAsync<AlunoEol>(query,
-				new
-				{
-					anoLetivo = anoLetivo,
-					codigoEol
-				}, commandTimeout: 6000);
-		}
+            using var conn = ObterConexao();
+            return await conn.QuerySingleOrDefaultAsync<AlunoEol>(query,
+                new
+                {
+                    anoLetivo = anoLetivo,
+                    codigoEol
+                }, commandTimeout: 6000);
+        }
 
-		public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
+        public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
         {
             using var conn = ObterConexao();
 
@@ -523,6 +523,47 @@ namespace SME.GoogleClassroom.Dados
 						COUNT(*)
 					FROM
 						#tempAlunosMatriculasAtivasFinal temp;";
+        }
+
+        public async Task<IEnumerable<long>> ObterCodigosAlunosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataReferencia)
+        {
+            using var conn = ObterConexao();
+
+            const string query = @"
+				SELECT
+					DISTINCT
+					a.cd_aluno AS CodigoAluno
+				FROM
+					v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN 
+					aluno a
+					ON aluno.cd_aluno = a.cd_aluno
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON aluno.cd_aluno = matr.cd_aluno
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON matr.cd_matricula = mte.cd_matricula
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE
+					matr.st_matricula IN (2,3,4,7,8,11,12,14,15)
+					AND mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
+					AND matr.an_letivo = @anoLetivo
+					AND te.an_letivo = @anoLetivo
+					AND te.cd_turma_escola = @turmaId
+					AND matr.dt_status_matricula >= @dataReferencia
+					and matr.dt_status_matricula = (select max(matr2.dt_status_matricula) from v_matricula_cotic matr2(NOLOCK)
+													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
+													 where matr2.cd_aluno = a.cd_aluno
+													   and matr2.an_letivo = te.an_letivo
+													   and mte2.cd_turma_escola = te.cd_turma_escola)";
+
+            return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataReferencia });
         }
     }
 }

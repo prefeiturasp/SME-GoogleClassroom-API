@@ -52,6 +52,6 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId);
 
-        Task<bool> InativarAsync(long id);
+        Task<bool> AtualizarUnidadeOrganizacionalAsync(long id);
     }
 }

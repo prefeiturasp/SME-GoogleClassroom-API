@@ -6,5 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public bool CursosGsa { get; set; }
         public bool UsuariosGsa { get; set; }
+        public bool UsuariosInativosGsa { get; set; }
     }
 }

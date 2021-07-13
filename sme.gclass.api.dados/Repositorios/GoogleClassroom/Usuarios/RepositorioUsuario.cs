@@ -605,7 +605,7 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
 
-        public async Task<bool> InativarAsync(long id)
+        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id)
         {
             const string updateQuery = @"update public.usuarios
                                          set

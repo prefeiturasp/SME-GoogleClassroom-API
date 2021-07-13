@@ -19,14 +19,25 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
+                await LimparTabelasAsync();
                 var dto = new FiltroInativacaoUsuariosCursosGoogleDto();
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativacaoUsuario, RotasRabbit.FilaGsaInativacaoUsuario, dto));
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, dto));
             }
             catch (Exception ex)
             {
                 SentrySdk.CaptureException(ex);
                 return false;
             }
+        }
+
+        private async Task LimparTabelasAsync()
+        {
+            var command = new LimparTabelasGsaCommand
+            {
+                UsuariosInativosGsa = true
+            };
+
+            await mediator.Send(command);
         }
     }
 }

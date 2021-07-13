@@ -201,6 +201,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioCarregar);
             }
+
+            if (consumoDeFilasOptions.Gsa.ProcessarInativacaoUsuarioGsa)
+            {
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarUsuarioCarregar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaInativarUsuarioCarregar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarUsuarioTratar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarUsuarioTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaInativarUsuarioTratar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarUsuarioIncluir, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarUsuarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaInativarUsuarioIncluir);
+            }
         }
 
         private static void RegistrarFilasDeProcessamentoGsa(IModel canalRabbit, ConsumoDeFilasOptions consumoDeFilasOptions)
@@ -228,13 +240,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioIncluir, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioIncluir, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioIncluir);
             }
-
-            if (consumoDeFilasOptions.Gsa.ProcessarInativacaoUsuarioGsa)
-            {
-                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativacaoUsuario, true, false, false);
-                canalRabbit.QueueBind(RotasRabbit.FilaGsaInativacaoUsuario, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaInativacaoUsuario);
-            }
-
         }
 
         #endregion Filas GSA

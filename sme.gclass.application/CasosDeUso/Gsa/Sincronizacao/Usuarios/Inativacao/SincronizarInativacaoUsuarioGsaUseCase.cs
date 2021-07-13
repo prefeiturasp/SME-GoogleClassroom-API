@@ -1,12 +1,10 @@
 ﻿using MediatR;
-using Sentry;
-using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Aplicacao.Queries;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos;
-using System;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao
+namespace SME.GoogleClassroom.Aplicacao.CasosDeUso
 {
     public class SincronizarInativacaoUsuarioGsaUseCase : ISincronizarInativacaoUsuarioGsaUseCase
     {
@@ -14,34 +12,22 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public SincronizarInativacaoUsuarioGsaUseCase(IMediator mediator)
         {
-            this.mediator = mediator;
+            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            if (mensagemRabbit?.Mensagem is null)
-                throw new NegocioException("Não foi possível gerar a carga de dados para a inativação usuário GSA.");
-
-            var filtro = mensagemRabbit?.ObterObjetoMensagem<FiltroInativacaoUsuarioGsaDTO>();
-            if (filtro is null)
-                throw new NegocioException("A mensagem enviada é inválida.");
-
-            try
+            var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaUsuarioInativoDto>();
+            foreach (var turmaId in dto.TurmasIds)
             {
-                var alunoInativado = await mediator.Send(new InativarUsuarioCommand(filtro.UsuarioId));
-
-                if (alunoInativado == false)
-                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o Usuário");
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                await InserirMensagemErroIntegracaoAsync(filtro, ex.Message);
+                var alunosCodigos = await mediator.Send(new ObterCodigosAlunosInativosPorAnoLetivoETurmaQuery(dto.AnoLetivo, turmaId, dto.DataReferencia));
+                if (alunosCodigos != null && alunosCodigos.Any())
+                {
+                    //var alunos = new AlunosCursoUsuarioRemovidoTurmaDto(alunosCodigos, turmaId);
+                    //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTratar, RotasRabbit.FilaGsaInativarUsuarioTratar, alunos));
+                }
             }
             return true;
         }
-
-        private async Task InserirMensagemErroIntegracaoAsync(FiltroInativacaoUsuarioGsaDTO filtro, string mensagem)
-          => await mediator.Send(new IncluirInativacaoUsuarioErroCommand(new AlunoInativoErro(filtro.UsuarioId, mensagem)));
     }
 }
