@@ -5,6 +5,7 @@
         public ushort LimiteDeMensagensPorExecucao { get; set; }
         public bool ConsumirFilasSync { get; set; }
         public bool ConsumirFilasDeInclusao { get; set; }
+        public bool ProcessarCursoUsuarioRemovidoGsa { get; set; }
         public ConsumoDeFilasGsa Gsa { get; set; }
     }
 
@@ -16,6 +17,5 @@
         public bool ProcessarCursoGsa { get; set; }
         public bool CargaCursoUsuarioGsa { get; set; }
         public bool ProcessarCursoUsuarioGsa { get; set; }
-        public bool ProcessarCursoUsuarioRemovidoGsa { get; set; }
     }
 }
