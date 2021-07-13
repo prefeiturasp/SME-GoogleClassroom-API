@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> ExisteAlunoPorRf(long rf);
 
-        Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo);
+        Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo, long id);
 
         Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email);
 
@@ -51,6 +51,7 @@ namespace SME.GoogleClassroom.Dados
         Task FinalizarAtualizacaoUsuarioGoogleClassroomIdAsync();
 
         Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId);
+        Task<PaginacaoResultadoDto<long>> ObterTurmasComCursoAlunoCadastrado(Paginacao paginacao);
 
         Task<bool> AtualizarUnidadeOrganizacionalAsync(long id);
     }

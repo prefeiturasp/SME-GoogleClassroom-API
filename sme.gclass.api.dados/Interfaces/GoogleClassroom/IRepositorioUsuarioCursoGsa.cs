@@ -1,5 +1,6 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -10,8 +11,12 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> SalvarAsync(UsuarioCursoGsa usuarioCursoGsa);
 
+        Task<bool> RemoverAsync(UsuarioCursoGsa usuarioCursoGsa);
+
         Task<ConsultaCursosDoUsuarioGsa> ObterCursosDoUsuarioGsaAsync(string usuarioId);
 
         Task LimparAsync();
+
+        Task<IEnumerable<long>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos);
     }
 }

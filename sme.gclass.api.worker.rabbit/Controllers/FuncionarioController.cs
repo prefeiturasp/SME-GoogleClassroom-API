@@ -81,6 +81,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
+        /// Inicia a sincronização de um funcionário do EOL para o Google Classroom com base no RF.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos funcionários acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("sincronizacao/individual")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleFuncionarioUseCase iniciarSyncGoogleFuncionarioUseCase,
+            [FromQuery][Required] long rf)
+        {
+            var retorno = await iniciarSyncGoogleFuncionarioUseCase.Executar(rf);
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Inicia o tratamento de erros de funcionários do EOL para o Google Classroom.
         /// </summary>
         /// <remarks>

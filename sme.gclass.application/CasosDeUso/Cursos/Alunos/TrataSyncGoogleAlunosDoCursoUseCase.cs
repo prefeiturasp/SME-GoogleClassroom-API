@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            var alunosDoCursoParaIncluir = await mediator.Send(new ObterAlunosDoCursoParaIncluirGoogleQuery(DateTime.Now.Year, cursoParaIncluirAlunos.TurmaId, cursoParaIncluirAlunos.ComponenteCurricularId));
+            var alunosDoCursoParaIncluir = await mediator.Send(new ObterAlunosDoCursoParaIncluirGoogleQuery(DateTime.Now.Year, cursoParaIncluirAlunos.TurmaId, cursoParaIncluirAlunos.ComponenteCurricularId));            
             if (!alunosDoCursoParaIncluir?.Any() ?? true) return true;
 
             foreach (var alunoDoCursoParaIncluir in alunosDoCursoParaIncluir)

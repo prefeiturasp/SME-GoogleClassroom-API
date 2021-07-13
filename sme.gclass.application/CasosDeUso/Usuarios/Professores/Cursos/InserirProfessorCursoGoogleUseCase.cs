@@ -1,6 +1,7 @@
 ﻿using Google;
 using MediatR;
 using Newtonsoft.Json;
+using SME.GoogleClassroom.Aplicacao.Commands.Usuarios.Professores.ObterProfessorCursoGoogle;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -38,10 +39,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(professorCursoEolParaIncluir.TurmaId, professorCursoEolParaIncluir.ComponenteCurricularId));
                 if (curso is null) return false;
 
-                var existeProfessorCurso = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professor.First().Indice, curso.Id));
-                if (existeProfessorCurso) return true;
+                var existeProfessorCursoLocal = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professor.First().Indice, curso.Id));
+                var existeProfessorCursoGoogle = await mediator.Send(new ExisteProfessorCursoGoogleCommand(curso.Id, professor.First().Email));
+                if (existeProfessorCursoLocal && existeProfessorCursoGoogle) return true;
 
-                await InserirProfessorCursoGoogleAsync(professor.First(), curso);
+                await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal, existeProfessorCursoGoogle);
 
                 return true;
             }
@@ -54,14 +56,14 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle)
+        private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal, bool existeProfessorCursoGoogle)
         {
             var professorCursoGoogle = new ProfessorCursoGoogle(professorGoogle.Indice, cursoGoogle.Id);
 
             try
             {
-                var professorCursoSincronizado = await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professorGoogle.Email));
-                if(professorCursoSincronizado)
+                var professorCursoSincronizado = !existeProfessorCursoGoogle && await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professorGoogle.Email));
+                if(professorCursoSincronizado && !existeProfessorCursoLocal)
                 {
                     await InserirProfessorCursoAsync(professorCursoGoogle);
                 }

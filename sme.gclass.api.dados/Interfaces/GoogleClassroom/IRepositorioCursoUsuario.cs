@@ -1,5 +1,6 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -23,5 +24,7 @@ namespace SME.GoogleClassroom.Dados
         Task<int> RemoverAsync(long id);
 
         Task<CursoUsuario> ObterPorUsuarioIdCursoIdAsync(long usuarioId, long cursoId);
+
+        Task<IEnumerable<CursoUsuarioRemoverDto>> ObterPorUsuarioIdETurmaId(long usuarioId, long turmaId);
     }
 }

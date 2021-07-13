@@ -1,159 +1,114 @@
 pipeline {
+    environment {
+      branchname =  env.BRANCH_NAME.toLowerCase()
+      kubeconfig = getKubeconf(env.branchname)
+      registryCredential = 'jenkins_registry'
+    }
+  
     agent {
-      node { 
-        label 'dotnet5-sdk'
-	    }
+      node { label 'dotnet5-gca-rc' }
     }
-    
-    options {
-      buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
-      disableConcurrentBuilds()
-      skipDefaultCheckout()  
-    }
-           
-    stages {
-       stage('CheckOut') {
-        steps {
-          checkout scm	
-        }
-       }
 
-       stage('Build projeto') {
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20'))
+      disableConcurrentBuilds()
+      skipDefaultCheckout()
+    }
+  
+    stages {
+
+        stage('CheckOut') {            
+            steps { checkout scm }            
+        }
+
+        stage('Build projeto') {
         steps {
           sh "echo executando build de projeto"
           sh 'dotnet build sme.gclass.api.worker.rabbit/'
         }
       }
 
-       stage('Analise Codigo') {
-          when {
-                branch 'release'
-            }
-         steps {
-             sh 'echo Analise SonarQube API'
-             sh 'dotnet-sonarscanner begin /k:"SME-GoogleClassroom-API" /d:sonar.host.url="http://sonar.sme.prefeitura.sp.gov.br" /d:sonar.login="5372148e28da7a141a6a553951a6cfd26ed8e9ee"'
-             sh 'dotnet build sme.gclass.api.worker.rabbit/'
-             sh 'dotnet-sonarscanner end /d:sonar.login="5372148e28da7a141a6a553951a6cfd26ed8e9ee"'
-           
-         }
-       }
-
-      stage('Docker Build') {
-         		
-		    when { anyOf { branch 'master'; branch "story/*"; branch 'development'; branch 'release';  } }	
-        steps {
-	     
-	      
-        script {
-            def BRANCH_REPO = env.BRANCH_NAME.toLowerCase()
-            def BRANCH_NAME = env.BRANCH_NAME	
-            def GIT_URL = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
-          
-	    	
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "541b688a-fad2-499a-9c4d-56c8ffc4cff2",
-              nodeFilters: "",
-              options: """
-                    buildNumber=$BUILD_NUMBER
-                    branchName=$BRANCH_NAME
-                    gitUrl=$GIT_URL
-                    branchRepo=$BRANCH_REPO
-               
-                   """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-           }
-        }
-      }
-       
-        stage('Deploy DEV') {
-          when {
-            branch 'development'
-          }
-        steps {
-           //Start JOB de deploy Kubernetes 
-          sh 'echo Deploy ambiente desenvolvimento'
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "2692b141-52ba-4ab8-bc4f-47fc2d63f7bb",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
-        } 
-       }
-       
         
 
-      stage('Deploy HOM') {
-         when {
-           branch 'release'
-         }
-        steps {
-          //Start JOB deploy Kubernetes 
-            timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias, robson_silva'
+        stage('AnaliseCodigo') {
+	      when { branch 'homolog' }
+          steps {
+              withSonarQubeEnv('sonarqube-local'){
+                sh 'echo "[ INFO ] Iniciando analise Sonar..." && dotnet-sonarscanner begin /k:"SME-GoogleClassroom-API"'
+                sh 'dotnet build sme.gclass.api.worker.rabbit/'
+                sh 'dotnet-sonarscanner end'
+
             }
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "cda51939-84b0-4f7e-a11c-574c987b4896",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
           }
         }
-       }
 
+        
 
-       stage('Deploy PROD') {
-         when {
-           branch 'master'
-         }
-        steps {
-            timeout(time: 24, unit: "HOURS") {
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, marcos_costa, rafael_losi, carlos_dias, robson_silva'
-          }    
-          //Start JOB deploy kubernetes 
-         
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "907ea1f6-a4de-4669-ad12-cac567a34a42",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-              //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
+        stage('Build') {
+          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } } 
+          steps {
+            script {
+              imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/gca-api"
+              dockerImage1 = docker.build(imagename1, "-f sme.gclass.api.worker.rabbit/Dockerfile .")
+              docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
+              dockerImage1.push()
+              }
+              sh "docker rmi $imagename1"
+              //sh "docker rmi $imagename2"
+            }
           }
         }
-       }
-    } 
+	    
+        stage('Deploy'){
+            when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'homolog';  } }        
+            steps {
+                script{
+                    if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
+                        sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
+                        timeout(time: 24, unit: "HOURS") {
+                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato'
+                        }
+                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('cp $config '+"$home"+'/.kube/config')
+                            sh 'kubectl rollout restart deployment/gca-api -n sme-googleclass'
+                            sh('rm -f '+"$home"+'/.kube/config')
+                        }
+                    }
+                    else{
+                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('cp $config '+"$home"+'/.kube/config')
+                            sh 'kubectl rollout restart deployment/gca-api -n sme-googleclass'
+                            sh('rm -f '+"$home"+'/.kube/config')
+                        }
+                    }
+                }
+            }           
+        }    
+    }
+
+  post {
+    success { sendTelegram("🚀 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Success \nLog: \n${env.BUILD_URL}console") }
+    unstable { sendTelegram("💣 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Unstable \nLog: \n${env.BUILD_URL}console") }
+    failure { sendTelegram("💥 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Failure \nLog: \n${env.BUILD_URL}console") }
+    aborted { sendTelegram ("😥 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Aborted \nLog: \n${env.BUILD_URL}console") }
+  }
+}
+def sendTelegram(message) {
+    def encodedMessage = URLEncoder.encode(message, "UTF-8")
+    withCredentials([string(credentialsId: 'telegramToken', variable: 'TOKEN'),
+    string(credentialsId: 'telegramChatId', variable: 'CHAT_ID')]) {
+        response = httpRequest (consoleLogResponseBody: true,
+                contentType: 'APPLICATION_JSON',
+                httpMode: 'GET',
+                url: 'https://api.telegram.org/bot'+"$TOKEN"+'/sendMessage?text='+encodedMessage+'&chat_id='+"$CHAT_ID"+'&disable_web_page_preview=true',
+                validResponseCodes: '200')
+        return response
+    }
+}
+def getKubeconf(branchName) {
+    if("main".equals(branchName)) { return "config_prd"; }
+    else if ("master".equals(branchName)) { return "config_prd"; }
+    else if ("homolog".equals(branchName)) { return "config_hom"; }
+    else if ("release".equals(branchName)) { return "config_hom"; }
+    else if ("development".equals(branchName)) { return "config_dev"; }
 }
