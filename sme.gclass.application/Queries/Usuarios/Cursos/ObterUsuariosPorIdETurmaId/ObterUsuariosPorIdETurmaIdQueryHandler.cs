@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<CursoUsuarioInativarDto>> Handle(ObterUsuariosPorIdETurmaIdQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursoUsuario.ObterUsuariosPorIdETurmaIdAsync(request.UsuarioId, request.TurmaId);
+            return await repositorioCursoUsuario.ObterUsuariosPorIdETurmaId(request.UsuarioId, request.TurmaId);
         }
     }
 }
