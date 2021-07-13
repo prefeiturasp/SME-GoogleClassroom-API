@@ -451,7 +451,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, parametros);
         }
 
-        public async Task<IEnumerable<CursoUsuarioInativarDto>> ObterUsuariosPorIdETurmaIdAsync(long usuarioId, long turmaId)
+        public async Task<IEnumerable<CursoUsuarioInativarDto>> ObterUsuariosPorIdETurmaId(long usuarioId, long turmaId)
         {
             const string query = @"
                 SELECT

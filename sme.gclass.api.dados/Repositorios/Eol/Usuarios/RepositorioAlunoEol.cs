@@ -678,7 +678,7 @@ namespace SME.GoogleClassroom.Dados
 					escola esc (NOLOCK)
 					ON te.cd_escola = esc.cd_escola
 				WHERE
-					matr.st_matricula IN (2,3,4,7,8,11,12,14,15)
+					matr.st_matricula IN (2,3,4,5,7,8,11,12,14,15)
 					AND mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo
@@ -692,5 +692,6 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataReferencia });
         }
-    }
+
+	}
 }
