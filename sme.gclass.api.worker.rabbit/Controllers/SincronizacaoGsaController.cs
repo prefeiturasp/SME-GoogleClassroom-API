@@ -129,7 +129,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Inicia a sincronização de Inativação alunos inativos turma GSA.
+        /// Inicia a sincronização de remoção alunos inativos turma GSA.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>

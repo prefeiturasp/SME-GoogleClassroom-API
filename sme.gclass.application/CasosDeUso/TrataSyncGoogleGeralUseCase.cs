@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarAtribuicoesProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync, resposta));
             var publicarGradesAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoGradeSync, RotasRabbit.FilaCursoGradeSync, resposta));
             var publicarFuncionarioIndireto = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoSync, RotasRabbit.FilaFuncionarioIndiretoSync, resposta));
-            //var publicarCursoUsuarioRemovido = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, resposta));
+            var publicarCursoUsuarioRemovido = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, resposta));
             var publicarTratamentoDeErrosAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroSync, RotasRabbit.FilaAlunoErroSync, resposta));
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
@@ -49,8 +49,8 @@ namespace SME.GoogleClassroom.Aplicacao
             if(!publicarGradesAlunos)
                 throw new NegocioException("Erro ao enviar a sync de grades.");
 
-            //if (!publicarCursoUsuarioRemovido)
-            //    throw new NegocioException("Erro ao enviar a sync de cursos usuários removidos.");
+            if (!publicarCursoUsuarioRemovido)
+                throw new NegocioException("Erro ao enviar a sync de cursos usuários removidos.");
 
             if (!publicarFuncionarioIndireto)
                 throw new NegocioException("Erro ao enviar a sync de funcionários indiretos.");
