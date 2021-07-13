@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ITratarInativacaoUsuarioGsaUseCase
+    public interface ITratarInativacaoUsuarioGsaUseCase
     {
     }
 }

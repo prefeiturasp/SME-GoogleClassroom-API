@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Infra;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.CasosDeUso
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class SincronizarInativacaoUsuarioGsaUseCase : ISincronizarInativacaoUsuarioGsaUseCase
     {

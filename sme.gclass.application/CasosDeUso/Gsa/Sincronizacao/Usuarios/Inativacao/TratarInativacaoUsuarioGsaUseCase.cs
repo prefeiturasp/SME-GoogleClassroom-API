@@ -2,7 +2,7 @@
 using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.CasosDeUso
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class TratarInativacaoUsuarioGsaUseCase : ITratarInativacaoUsuarioGsaUseCase
     {

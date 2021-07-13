@@ -1,6 +1,9 @@
-﻿namespace SME.GoogleClassroom.Aplicacao
+﻿using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Infra;
+
+namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ISincronizarInativacaoUsuarioGsaUseCase
+    public interface ISincronizarInativacaoUsuarioGsaUseCase : IUseCase<MensagemRabbit, bool>
     {
     }
 }
