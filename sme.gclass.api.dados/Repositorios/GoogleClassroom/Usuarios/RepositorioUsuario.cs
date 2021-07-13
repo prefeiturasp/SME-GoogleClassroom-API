@@ -79,9 +79,9 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { rf, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
         }
 
-        public async Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo)
+        public async Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo, long id)
         {
-            var query = @"SELECT exists(SELECT 1 from usuarios where email = @email and usuario_tipo = @usuarioTipo limit 1)";
+            var query = @"SELECT exists(SELECT 1 from usuarios where email = @email and usuario_tipo = @usuarioTipo and id <> @id limit 1)";
             using var conn = ObterConexao();
             return (await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo }));
         }
@@ -603,6 +603,37 @@ namespace SME.GoogleClassroom.Dados
             var query = @"SELECT exists(SELECT 1 from usuarios where google_classroom_id = @googleClassroomId limit 1)";
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
+        }
+
+        public async Task<PaginacaoResultadoDto<long>> ObterTurmasComCursoAlunoCadastrado(Paginacao paginacao)
+        {
+            var query = new StringBuilder(@"select distinct (c.turma_id) from cursos c ");
+
+            var queryCount = "SELECT count(distinct (c.turma_id)) from cursos c ";
+
+            if (paginacao.QuantidadeRegistros > 0)
+                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
+
+            query.AppendLine(";");
+            query.AppendLine(queryCount);
+
+            var retorno = new PaginacaoResultadoDto<long>();
+
+            using var conn = ObterConexao();
+
+            var parametros = new
+            {
+                quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                quantidadeRegistros = paginacao.QuantidadeRegistros
+            };
+
+            using var alunos = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+            retorno.Items = alunos.Read<long>();
+            retorno.TotalRegistros = alunos.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
         }
     }
 }

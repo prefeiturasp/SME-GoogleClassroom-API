@@ -1,0 +1,1 @@
+update execucao_controle set ultima_execucao = '2021-01-01' where execucao_tipo = 11

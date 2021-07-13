@@ -22,13 +22,13 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
             var paginacao = new Paginacao(0, 0);
-            var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
+            var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, mensagem?.Mensagem?.ToString()));
 
             foreach (var professorParaIncluirGoogle in professoresParaIncluirGoogle.Items)
             {
                 try
                 {
-                    var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorIncluir, RotasRabbit.FilaProfessorIncluir, professorParaIncluirGoogle));
+                    var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorIncluir, RotasRabbit.FilaProfessorIncluir, professorParaIncluirGoogle));                    
                     if (!publicarProfessor)
                     {
                         await IncluirProfessorComErroAsync(professorParaIncluirGoogle, ObterMensagemDeErro(professorParaIncluirGoogle.Rf));
@@ -40,7 +40,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+            if (professoresParaIncluirGoogle.TotalRegistros > 1)
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+
             return true;
         }
 

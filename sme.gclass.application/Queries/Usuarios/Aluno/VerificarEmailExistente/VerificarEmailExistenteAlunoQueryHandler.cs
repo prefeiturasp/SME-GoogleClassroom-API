@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<AlunoEol> ObterEmailValido(AlunoEol aluno, int tentativa = 0)
         {
             aluno.DefinirEmail(tentativa);
-            var emailExistente = await repositorioUsuario.ExisteEmailUsuarioPorTipo(aluno.Email, UsuarioTipo.Aluno);
+            var emailExistente = await repositorioUsuario.ExisteEmailUsuarioPorTipo(aluno.Email, UsuarioTipo.Aluno, aluno.Codigo);
 
             if (!emailExistente)
                 return aluno;
