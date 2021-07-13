@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (alunosCodigos != null && alunosCodigos.Any())
                 {
                     //var alunos = new AlunosCursoUsuarioRemovidoTurmaDto(alunosCodigos, turmaId);
-                    //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTratar, RotasRabbit.FilaGsaInativarUsuarioTratar, alunos));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTratar, RotasRabbit.FilaGsaInativarUsuarioTratar, alunos));
                 }
             }
             return true;

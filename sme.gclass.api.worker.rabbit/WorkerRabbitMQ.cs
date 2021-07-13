@@ -96,13 +96,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioCarregar, new ComandoRabbit("Sincroniza os cursos do usuário GSA a serem adicionados na base", typeof(IRealizarCargaCursoUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioIncluir, new ComandoRabbit("Processar curso do usuário GSA e adiciona na base", typeof(IProcessarCursoUsuarioGsaUseCase)));
 
-            //comandos.Add(RotasRabbit.FilaGsaInativacaoUsuario, new ComandoRabbit("Sincroniza inativação do usuário GSA e adiciona na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
-
             comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Carregar os alunos a serem inativados na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTratar, new ComandoRabbit("Sincroniza os alunos do mural GSA a serem carregados na base", typeof(ITratarInativacaoUsuarioGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTratar, new ComandoRabbit("Sincroniza os alunos GSA a serem carregados na base", typeof(ITratarInativacaoUsuarioGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IIncluirInativacaoUsuarioGsaUseCase)));
-
-
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
