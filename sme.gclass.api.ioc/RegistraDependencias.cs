@@ -20,7 +20,6 @@ namespace SME.GoogleClassroom.IoC
 
             RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
-
         }
 
         private static void RegistrarRepositorios(IServiceCollection services)
@@ -48,6 +47,8 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IRepositorioCursoUsuarioRemovidoGsaErro, RepositorioCursoUsuarioRemovidoGsaErro>();
             services.TryAddScoped<IRepositorioCursoUsuarioRemovidoGsa, RepositorioCursoUsuarioRemovidoGsa>();
+            
+            services.TryAddScoped<IRepositorioAviso, RepositorioAviso>();            
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -161,12 +162,19 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterUsuariosGsaUseCase, ObterUsuariosGsaUseCase>();
             services.TryAddScoped<IIniciarValidacaoUsuariosGsaUseCase, IniciarValidacaoUsuariosGsaUseCase > ();
 
+            services.TryAddScoped<IObterAvisoUseCase, ObterAvisoUseCase>();
             services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();
             services.TryAddScoped<IProcessarCursoUsuarioGsaUseCase, ProcessarCursoUsuarioGsaUseCase>();
             services.TryAddScoped<IObterCursosDoUsuarioGsaUseCase, ObterCursosDoUsuarioGsaUseCase>();
             
             // RemocaoUsuarioCursoGsa
             services.TryAddScoped<ISincronizarRemocaoUsuarioCursoGsaUseCase, SincronizarRemocaoUsuarioCursoGsaUseCase>();
+
+            // Mural de Avisos
+            services.TryAddScoped<IRealizarCargaMuralAvisosGsaUseCase, RealizarCargaMuralAvisosGsaUseCase>();
+            services.TryAddScoped<ITratarImportacaoMuralAvisosCursoGsaUseCase, TratarImportacaoMuralAvisosCursoGsaUseCase>();
+            services.TryAddScoped<IImportarMuralAvisosCursoGsaUseCase, ImportarMuralAvisosCursoGsaUseCase>();
+            services.TryAddScoped<IIncluirAvisosGsaErroProcessarUseCase, IncluirAvisosGsaErroProcessarUseCase>();
         }
     }
 }

@@ -8,10 +8,12 @@ namespace SME.GoogleClassroom.Aplicacao
     public class TrataSyncGoogleGeralUseCase : ITrataSyncGoogleGeralUseCase
     {
         private readonly IMediator mediator;
+        private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
 
-        public TrataSyncGoogleGeralUseCase(IMediator mediator)
+        public TrataSyncGoogleGeralUseCase(IMediator mediator, ConsumoDeFilasOptions consumoDeFilasOptions)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
+            this.consumoDeFilasOptions = consumoDeFilasOptions ?? throw new System.ArgumentNullException(nameof(consumoDeFilasOptions));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
@@ -30,6 +32,14 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
             var publicarCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroSync, RotasRabbit.FilaCursoErroSync, resposta));
+
+            // Cargas GSA
+            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            {
+                // Mural de Avisos
+                var filtroAvisosGsa = new FiltroCargaGsaDto();
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
+            }
 
             if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");

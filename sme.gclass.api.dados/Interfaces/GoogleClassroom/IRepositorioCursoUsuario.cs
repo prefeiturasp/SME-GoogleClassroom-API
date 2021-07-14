@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> ExisteFuncionarioCurso(long usuarioId, long cursoId);
 
         Task<PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>> ObterFuncionariosCursosAsync(Paginacao paginacao, long? rf, long? TurmaId, long? ComponenteCurricularId);
-
+        Task<IEnumerable<CursoResponsavelDto>> ObterCursosComResponsaveisPorAno(int anoLetivo);
         Task<int> RemoverAsync(long id);
 
         Task<CursoUsuario> ObterPorUsuarioIdCursoIdAsync(long usuarioId, long cursoId);

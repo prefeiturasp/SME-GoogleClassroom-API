@@ -1,13 +1,13 @@
 ﻿namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroCargaUsuariosGoogleDto
+    public class FiltroCargaGsaDto
     {
-        public FiltroCargaUsuariosGoogleDto(string tokenProximaPagina)
+        public FiltroCargaGsaDto(string tokenProximaPagina)
         {
             TokenProximaPagina = tokenProximaPagina;
         }
 
-        public FiltroCargaUsuariosGoogleDto()
+        public FiltroCargaGsaDto()
         {
             TokenProximaPagina = null;
         }
