@@ -22,13 +22,11 @@ pipeline {
         }
 
         stage('Build projeto') {
-        steps {
-          sh "echo executando build de projeto"
-          sh 'dotnet build sme.gclass.api.worker.rabbit/'
+          steps {
+            sh "echo executando build de projeto"
+            sh 'dotnet build sme.gclass.api.worker.rabbit/'
+          }
         }
-      }
-
-        
 
         stage('AnaliseCodigo') {
 	      when { branch 'homolog' }
@@ -41,8 +39,6 @@ pipeline {
             }
           }
         }
-
-        
 
         stage('Build') {
           when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } } 
@@ -83,7 +79,18 @@ pipeline {
                     }
                 }
             }           
-        }    
+        }
+
+        stage('Flyway') {
+          agent { label 'master' }
+          when { anyOf {  branch 'master'; branch 'main'; branch 'development';  } }
+          steps{
+            withCredentials([string(credentialsId: "flyway_gclass_${branchname}", variable: 'url')]) {
+              checkout scm
+              sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts boxfuse/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+          }
+        }		
+      }
     }
 
   post {
