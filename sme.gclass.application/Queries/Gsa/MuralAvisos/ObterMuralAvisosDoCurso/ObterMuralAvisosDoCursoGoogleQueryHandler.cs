@@ -37,7 +37,10 @@ namespace SME.GoogleClassroom.Aplicacao
             var curso = request.Curso;
 
             var avisosGsa = await ObterAvisosDaPagina(servicoClassroom, curso.CursoId, request.TokenProximaPagina);
-            foreach(var announcement in avisosGsa.Announcements)
+            if (avisosGsa == null || avisosGsa.Announcements == null)
+                return retorno;
+
+            foreach (var announcement in avisosGsa.Announcements)
             {
                 if (curso.Responsaveis.Any(a => a.Id == announcement.CreatorUserId))
                     retorno.Avisos.Add(new AvisoMuralGsaDto(announcement.Id, announcement.CourseId, announcement.CreatorUserId, announcement.Text, announcement.CreationTime, announcement.UpdateTime));
