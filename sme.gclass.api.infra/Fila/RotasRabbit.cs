@@ -69,6 +69,15 @@
         public static string FilaGsaMuralAvisosIncluir => "googleclass.gsa.mural.avisos.incluir";
         public static string FilaGsaMuralAvisosIncluirErro => "googleclass.gsa.mural.avisos.incluir.erro";
         #endregion
+
+        #region Usuários Remover
+        public static string FilaGsaCursoUsuarioRemovidoIniciar => "googleclass.gsa.curso.usuario.removido.iniciar";
+        public static string FilaGsaCursoUsuarioRemovidoTurmasCarregar => "googleclass.gsa.curso.usuario.removido.turmas.carregar";
+        public static string FilaGsaCursoUsuarioRemovidoTurmasSync => "googleclass.gsa.curso.usuario.removido.turmas.sync";
+        public static string FilaGsaCursoUsuarioRemovidoAlunosTratar => "googleclass.gsa.curso.usuario.removido.alunos.tratar";
+        public static string FilaGsaCursoUsuarioRemovidoAlunosSync => "googleclass.gsa.curso.usuario.removido.alunos.sync";
+        public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
+        #endregion
     }
 }
 

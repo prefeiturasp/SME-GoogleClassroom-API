@@ -10,6 +10,7 @@ namespace SME.GoogleClassroom.Dominio
 
         public int Codigo { get; set; }
         public DateTime DataNascimento { get; set; }
+        public long TurmaId { get; set; }
 
         public AlunoEol(int codigo, string nomePessoa, string nomeSocial, string organizationPath, DateTime dataNascimento)
             : base(nomePessoa, nomeSocial, organizationPath)

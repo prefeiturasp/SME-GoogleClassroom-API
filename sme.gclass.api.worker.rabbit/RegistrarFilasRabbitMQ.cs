@@ -28,6 +28,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarFilasProfessorSync(canalRabbit);
             RegistrarFilasFuncionarioSync(canalRabbit);
             RegistrarFilasUsuarioSync(canalRabbit);
+            RegistrarFilasRemoverAlunosSync(canalRabbit);
         }
 
         private static void RegistrarFilasCursoSync(IModel canalRabbit)
@@ -109,6 +110,27 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaUsuarioGoogleIdSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaUsuarioGoogleIdSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaUsuarioGoogleIdSync);
+        }
+        
+        private static void RegistrarFilasRemoverAlunosSync(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, RotasRabbit.ExchangeGoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync);
         }
 
         #endregion Filas Sync
