@@ -24,6 +24,7 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataNascimento { get; set; }
         public long TurmaId { get; set; }
         public int SituacaoMatricula { get; set; }
+        public DateTime DataSituacao { get; set; }
 
         public void DefinirEmail(int? tentativa = 0)
         {

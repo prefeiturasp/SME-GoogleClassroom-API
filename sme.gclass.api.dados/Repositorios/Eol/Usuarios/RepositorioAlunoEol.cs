@@ -282,18 +282,17 @@ namespace SME.GoogleClassroom.Dados
 					escola esc (NOLOCK)
 					ON te.cd_escola = esc.cd_escola
 				WHERE
-					matr.st_matricula IN (2,3,4,7,8,11,12,14,15)
-					AND mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
+					mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo
 					AND te.cd_turma_escola = @turmaId ");
 
 			if (ehDataReferenciaPrincipal)
-				query.AppendLine("AND matr.dt_status_matricula = @dataReferencia");
+				query.AppendLine("AND mte.dt_situacao_aluno = @dataReferencia");
 			else
-				query.AppendLine("AND matr.dt_status_matricula <= @dataReferencia");
+				query.AppendLine("AND mte.dt_situacao_aluno <= @dataReferencia");
 
-			 query.AppendLine(@"and matr.dt_status_matricula = (select max(matr2.dt_status_matricula) from v_matricula_cotic matr2(NOLOCK)
+			 query.AppendLine(@"and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
 													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
 													 where matr2.cd_aluno = a.cd_aluno
 													   and matr2.an_letivo = te.an_letivo
@@ -313,7 +312,8 @@ namespace SME.GoogleClassroom.Dados
 					a.nm_social_aluno AS NomeSocial,
 					a.dt_nascimento_aluno AS DataNascimento,
 				    te.cd_turma_escola AS TurmaId,
-					matr.st_matricula as SituacaoMatricula";
+					mte.cd_situacao_aluno as SituacaoMatricula,
+					mte.dt_situacao_aluno as DataSituacao ";
 
 			var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
 
@@ -336,8 +336,7 @@ namespace SME.GoogleClassroom.Dados
 					escola esc (NOLOCK)
 					ON te.cd_escola = esc.cd_escola
 				WHERE
-					matr.st_matricula IN (2,3,4,7,8,11,12,14,15)
-					AND mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
+					mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo ");
 
@@ -345,16 +344,16 @@ namespace SME.GoogleClassroom.Dados
 				queryFrom.AppendLine("AND te.cd_turma_escola = @turmaId ");
 
 			if (ehDataReferenciaPrincipal)
-				queryFrom.AppendLine("AND matr.dt_status_matricula = @dataReferencia ");
+				queryFrom.AppendLine("AND mte.dt_situacao_aluno = @dataReferencia ");
 			else
-				queryFrom.AppendLine("AND matr.dt_status_matricula <= @dataReferencia ");
+				queryFrom.AppendLine("AND mte.dt_situacao_aluno <= @dataReferencia ");
 
-			queryFrom.AppendLine(@"and matr.dt_status_matricula = (select max(matr2.dt_status_matricula) from v_matricula_cotic matr2(NOLOCK)
+			queryFrom.AppendLine(@"and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
 													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
 													 where matr2.cd_aluno = a.cd_aluno
 													   and matr2.an_letivo = te.an_letivo
 													   and mte2.cd_turma_escola = te.cd_turma_escola) ");
-			var queryPaginacao = @"order by a.cd_aluno
+			var queryPaginacao = @"order by mte.dt_situacao_aluno desc
 								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
 
 			var query = new StringBuilder(querySelectDados);
