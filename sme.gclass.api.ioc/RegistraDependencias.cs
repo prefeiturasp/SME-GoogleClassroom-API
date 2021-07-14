@@ -171,6 +171,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ISincronizarRemocaoUsuarioCursoGsaUseCase, SincronizarRemocaoUsuarioCursoGsaUseCase>();
 
             // Mural de Avisos
+            services.TryAddScoped<IIniciarSyncGoogleMuralAvisosUseCase, IniciarSyncGoogleMuralAvisosUseCase>();
             services.TryAddScoped<IRealizarCargaMuralAvisosGsaUseCase, RealizarCargaMuralAvisosGsaUseCase>();
             services.TryAddScoped<ITratarImportacaoMuralAvisosCursoGsaUseCase, TratarImportacaoMuralAvisosCursoGsaUseCase>();
             services.TryAddScoped<IImportarMuralAvisosCursoGsaUseCase, ImportarMuralAvisosCursoGsaUseCase>();

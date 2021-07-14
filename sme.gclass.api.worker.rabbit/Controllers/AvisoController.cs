@@ -58,5 +58,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Inicia a sincronização de Mural de Avisos do Google Classroom para o SGP.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos alunos acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("sincronizacao")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleMuralAvisosUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
+
     }
 }
