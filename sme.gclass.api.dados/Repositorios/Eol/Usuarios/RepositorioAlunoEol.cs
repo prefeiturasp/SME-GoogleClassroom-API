@@ -311,7 +311,8 @@ namespace SME.GoogleClassroom.Dados
 					DISTINCT a.cd_aluno AS Codigo,
 					a.nm_aluno AS NomePessoa,
 					a.nm_social_aluno AS NomeSocial,
-					a.dt_nascimento_aluno AS DataNascimento ";
+					a.dt_nascimento_aluno AS DataNascimento,
+				    te.cd_turma_escola AS TurmaId ";
 
 			var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
 
