@@ -136,10 +136,8 @@ namespace SME.GoogleClassroom.IoC
 
             // Usuario Inativação (Aluno)
             services.TryAddScoped<IIniciarProcessoInativacaoUsuariosGsaUseCase, IniciarProcessoInativacaoUsuariosGsaUseCase>();
-            services.TryAddScoped<IRealizarCargaTurmasInativacaoUsuarioUseCase, RealizarCargaTurmasInativacaoUsuarioUseCase>();
-            services.TryAddScoped<ISincronizarTurmasInativacaoUsuarioUseCase, SincronizarTurmasInativacaoUsuarioUseCase>();
-            services.TryAddScoped<ISincronizarInativacaoUsuarioGsaUseCase, SincronizarInativacaoUsuarioGsaUseCase>();
-            services.TryAddScoped<ITratarInativacaoUsuarioGsaUseCase, TratarInativacaoUsuarioGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaAlunoInativacaoUsuarioUseCase, RealizarCargaAlunoInativacaoUsuarioUseCase>();
+            services.TryAddScoped<ITratarAlunosInativacaoUsuarioUseCase, TratarAlunosInativacaoUsuarioGsaUseCase>();
             services.TryAddScoped<IIncluirInativacaoUsuarioGsaUseCase, IncluirInativacaoUsuarioGsaUseCase>();
 
             RegistrarCasosDeUsoGsa(services);

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Aplicacao.Queries;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class RealizarCargaTurmasInativacaoUsuarioUseCase : IRealizarCargaTurmasInativacaoUsuarioUseCase
+    public class RealizarCargaAlunoInativacaoUsuarioUseCase : IRealizarCargaAlunoInativacaoUsuarioUseCase
     {
         private readonly IMediator mediator;
 
-        public RealizarCargaTurmasInativacaoUsuarioUseCase(IMediator mediator)
+        public RealizarCargaAlunoInativacaoUsuarioUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -32,17 +33,17 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoInativar));
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
             }
+            
+            var alunosPaginados = await mediator.Send(new ObterAlunosInativosPorAnoLetivoQuery(paginacao, dto.AnoLetivo));
 
-            var turmasPaginadas = await mediator.Send(new ObterTurmasIsCadastradasQuery(paginacao));
-
-            if (turmasPaginadas != null && turmasPaginadas.Items != null && turmasPaginadas.Items.Any())
+            if (alunosPaginados != null && alunosPaginados.Items != null && alunosPaginados.Items.Any())
             {
-                var filtroTurma = new FiltroTurmaInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items);
+                var paginaAlunosFiltro = new FiltroAlunoInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, alunosPaginados.Items);
                 
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTurmasSync, RotasRabbit.FilaGsaInativarUsuarioTurmasSync, filtroTurma));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, RotasRabbit.FilaGsaInativarUsuarioSync, paginaAlunosFiltro));
 
                 var proximaPagina = ((paginacao.QuantidadeRegistrosIgnorados + totalPorPagina) / totalPorPagina) + 1;
-                if (proximaPagina <= turmasPaginadas.TotalPaginas)
+                if (proximaPagina <= alunosPaginados.TotalPaginas)
                 {
                     var turmaInativacaoUsuarioDto = new CarregarTurmaInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, turmaInativacaoUsuarioDto));

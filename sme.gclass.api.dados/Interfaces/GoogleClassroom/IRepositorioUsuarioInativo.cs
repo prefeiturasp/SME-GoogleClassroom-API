@@ -7,5 +7,6 @@ namespace SME.GoogleClassroom.Dados
     public interface IRepositorioUsuarioInativo
     {
         Task<bool> InativarUsuarioAsync(long usuarioId, UsuarioTipo tipo, DateTime inativadoEm);
+        Task LimparAsync();
     }
 }

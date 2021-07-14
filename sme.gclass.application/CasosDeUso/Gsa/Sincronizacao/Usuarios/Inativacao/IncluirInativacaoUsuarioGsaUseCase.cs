@@ -22,17 +22,20 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a inativação usuário GSA.");
 
-            var filtro = mensagemRabbit?.ObterObjetoMensagem<FiltroInativacaoUsuarioGsaDTO>();
+            var filtro = mensagemRabbit?.ObterObjetoMensagem<AlunoUsuarioInativarDto>();
             if (filtro is null)
                 throw new NegocioException("A mensagem enviada é inválida.");
 
             try
             {
+                // registra aluno inativo
                 var usuarioInativado = await mediator.Send(new IncluirUsuarioInativoCommand(new UsuarioInativo(filtro.UsuarioId)));
-
+                
+                // Atualiza Unidade Organizacional
                 var alunoInativado = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId));
 
-                // TODO: Inativar usuario no google api
+                // Google API
+                //var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoGoogleCommand(filtro.Email));
 
                 if (usuarioInativado == false || alunoInativado == false)
                     await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o Usuário");
@@ -45,7 +48,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task InserirMensagemErroIntegracaoAsync(FiltroInativacaoUsuarioGsaDTO filtro, string mensagem)
+        private async Task InserirMensagemErroIntegracaoAsync(AlunoUsuarioInativarDto filtro, string mensagem)
           => await mediator.Send(new IncluirInativacaoUsuarioErroCommand(new UsuarioInativoErro(filtro.UsuarioId, mensagem)));
     }
 }

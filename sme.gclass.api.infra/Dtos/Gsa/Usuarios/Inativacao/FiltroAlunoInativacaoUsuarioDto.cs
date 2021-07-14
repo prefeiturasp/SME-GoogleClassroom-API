@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroTurmaInativacaoUsuarioDto
+    public class FiltroAlunoInativacaoUsuarioDto
     {
-        public FiltroTurmaInativacaoUsuarioDto(int anoLetivo, DateTime dataReferencia, IEnumerable<long> turmasIds)
+        public FiltroAlunoInativacaoUsuarioDto(int anoLetivo, DateTime dataReferencia, IEnumerable<long> alunosIds)
         {
             AnoLetivo = anoLetivo;
             DataReferencia = dataReferencia;
-            TurmasIds = turmasIds;
+            AlunosIds = alunosIds;
         }
 
         public int AnoLetivo { get; set; }
         public DateTime DataReferencia { get; set; }
-        public IEnumerable<long> TurmasIds { get; set; }
+        public IEnumerable<long> AlunosIds { get; set; }
     }
 }

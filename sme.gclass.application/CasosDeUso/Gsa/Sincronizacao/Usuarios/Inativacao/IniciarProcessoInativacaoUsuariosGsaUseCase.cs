@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 await LimparTabelasAsync();
                 var dto = new FiltroInativacaoUsuariosCursosGoogleDto();
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioTurmasCarregar, RotasRabbit.FilaGsaInativarUsuarioTurmasCarregar, dto));
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, dto));
             }
             catch (Exception ex)
             {

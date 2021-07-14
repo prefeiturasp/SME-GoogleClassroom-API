@@ -104,11 +104,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, new ComandoRabbit("Sincroniza curso do usuário GSA e exclui registro", typeof(ISincronizarRemocaoUsuarioCursoGsaUseCase)));
 
             comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIniciar, new ComandoRabbit("Inicia o processo de inativar alunos", typeof(IIniciarProcessoInativacaoUsuariosGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTurmasCarregar, new ComandoRabbit("Carregar turmas dos usuários para inativação", typeof(IRealizarCargaTurmasInativacaoUsuarioUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTurmasSync, new ComandoRabbit("Sincronizar turmas dos usuários para inativação", typeof(ISincronizarTurmasInativacaoUsuarioUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Sincroniza os alunos a serem inativados na base", typeof(ISincronizarInativacaoUsuarioGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioTratar, new ComandoRabbit("Sincroniza os alunos GSA a serem carregados na base", typeof(ITratarInativacaoUsuarioGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IIncluirInativacaoUsuarioGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Carregar alunos para inativação", typeof(IRealizarCargaAlunoInativacaoUsuarioUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioSync, new ComandoRabbit("Tratar os alunos GSA a serem inativados", typeof(ITratarAlunosInativacaoUsuarioUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Incluir na fila de inativação de alunos GSA ", typeof(IIncluirInativacaoUsuarioGsaUseCase)));
+           
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -255,6 +254,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIniciar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -299,13 +304,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioGsa)
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioIncluir, false, consumer);
-
-            if (consumoDeFilasOptions.Gsa.ProcessarInativacaoUsuarioGsa)
-            {
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
-            }
         }
     }
 }
