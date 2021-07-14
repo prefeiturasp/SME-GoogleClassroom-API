@@ -35,6 +35,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
+            System.Threading.Thread.Sleep(15 * 60 * 1000);
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
 
             return true;
