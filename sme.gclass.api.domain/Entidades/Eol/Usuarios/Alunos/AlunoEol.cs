@@ -6,12 +6,6 @@ namespace SME.GoogleClassroom.Dominio
 {
     public class AlunoEol : UsuarioEol
     {
-        private const int MaximoTentativasGerarEmail = 3;
-
-        public int Codigo { get; set; }
-        public DateTime DataNascimento { get; set; }
-        public long TurmaId { get; set; }
-
         public AlunoEol(int codigo, string nomePessoa, string nomeSocial, string organizationPath, DateTime dataNascimento)
             : base(nomePessoa, nomeSocial, organizationPath)
         {
@@ -23,6 +17,13 @@ namespace SME.GoogleClassroom.Dominio
         protected AlunoEol()
         {
         }
+
+        private const int MaximoTentativasGerarEmail = 3;
+
+        public int Codigo { get; set; }
+        public DateTime DataNascimento { get; set; }
+        public long TurmaId { get; set; }
+        public int SituacaoMatricula { get; set; }
 
         public void DefinirEmail(int? tentativa = 0)
         {
