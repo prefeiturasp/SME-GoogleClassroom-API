@@ -301,6 +301,49 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<long>(query.ToString(), new { turmaId, anoLetivo, dataReferencia });
 		}
 
+		public async Task<IEnumerable<long>> ObterTurmasTeste(int status)
+		{
+			using var conn = ObterConexao();
+
+			var query = new StringBuilder(@"
+
+				SELECT
+					DISTINCT
+					te.cd_turma_escola AS CodigoTurma
+				FROM
+					v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN 
+					aluno a
+					ON aluno.cd_aluno = a.cd_aluno
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON aluno.cd_aluno = matr.cd_aluno
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON matr.cd_matricula = mte.cd_matricula
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE
+					mte.cd_situacao_aluno = @status
+					AND matr.an_letivo = 2021
+					AND te.an_letivo = 2021 
+					AND mte.dt_situacao_aluno <= '2021-07-14'
+					and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
+													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
+													 where matr2.cd_aluno = a.cd_aluno
+													   and matr2.an_letivo = te.an_letivo
+													   and mte2.cd_turma_escola = te.cd_turma_escola)
+					order by te.cd_turma_escola desc
+
+                   offset 0 rows fetch next 500 rows only");
+
+			return await conn.QueryAsync<long>(query.ToString(), new { status });
+		}
+
 		public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
 		{
 			using var conn = ObterConexao();

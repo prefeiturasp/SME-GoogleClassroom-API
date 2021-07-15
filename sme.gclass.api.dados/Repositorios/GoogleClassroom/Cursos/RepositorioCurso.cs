@@ -3,6 +3,7 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -171,6 +172,29 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
+        }
+
+        public async Task<IEnumerable<CursoGoogle>> ObterCursosPorTurmas(IEnumerable<long> turmasId)
+        {
+            var query = @"select c.id, 
+                                 c.nome,
+                                 c.secao,
+                                 c.turma_id AS TurmaId,
+                                 c.componente_curricular_id AS ComponenteCurricularId,
+                                 c.data_inclusao AS DataInclusao,
+                                 c.data_atualizacao AS DataAtualizacao,
+                                 c.Email       
+                            from public.cursos c 
+                           where turma_id = ANY(@turmasId) ";
+
+            var parametros = new
+            {
+                turmasId
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<CursoGoogle>(query, parametros);
         }
 
         public async Task<CursoGoogle> ObterCursoPorId(long id)
