@@ -135,6 +135,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
                         RegistrarSentry(ea, mensagemRabbit, nex);
+                        Console.Write($"Erros de Negocio: {nex.Message}");
                     }
                     catch (ValidacaoException vex)
                     {
@@ -142,6 +143,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
                         RegistrarSentry(ea, mensagemRabbit, vex);
+                        Console.Write($"Erros de Validação: {vex.Message}");
                     }
                     catch (Exception ex)
                     {
@@ -149,6 +151,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
                         RegistrarSentry(ea, mensagemRabbit, ex);
+                        Console.Write($"Erros: {ex.Message}");
                     }
                     finally
                     {
