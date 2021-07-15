@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<CursoUsuarioDto>> Handle(ObterCursosComResponsaveisPorAnoQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoUsuario.ObterCursosComResponsaveisPorAno(request.AnoLetivo);
+            => await repositorioCursoUsuario.ObterCursosComResponsaveisPorAno(request.AnoLetivo, request.CursoId);
     }
 }

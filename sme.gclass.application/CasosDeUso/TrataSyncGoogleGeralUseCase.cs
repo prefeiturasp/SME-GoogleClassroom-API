@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
             {
                 // Mural de Avisos
-                var filtroAvisosGsa = new FiltroCargaGsaDto();
+                var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto();
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
             }
 

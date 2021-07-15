@@ -5,12 +5,13 @@ namespace SME.GoogleClassroom.Infra
 {
     public class CursoResponsavelDto
     {
-        public CursoResponsavelDto()
+        public CursoResponsavelDto(long cursoId, IEnumerable<string> responsaveis)
         {
-            Responsaveis = new List<UsuarioGoogleClassroomDto>();
+            CursoId = cursoId;
+            Responsaveis = responsaveis;
         }
 
         public long CursoId { get; set; }
-        public List<UsuarioGoogleClassroomDto> Responsaveis { get; set; }
+        public IEnumerable<string> Responsaveis { get; set; }
     }
 }
