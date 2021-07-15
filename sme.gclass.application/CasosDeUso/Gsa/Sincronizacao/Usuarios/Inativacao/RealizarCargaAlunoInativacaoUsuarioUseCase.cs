@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaInativacaoUsuarioDto>();
-            var totalPorPagina = 50;
+            var totalPorPagina = 100;
             var paginacao = new Paginacao(1, totalPorPagina);
 
             if (dto != null && dto.AnoLetivo > 0)

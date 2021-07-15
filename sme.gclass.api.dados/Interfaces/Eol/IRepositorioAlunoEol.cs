@@ -14,5 +14,6 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<long>> ObterCodigosAlunosInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo);
         Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal);
         Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal);
+                Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo);
     }
 }
