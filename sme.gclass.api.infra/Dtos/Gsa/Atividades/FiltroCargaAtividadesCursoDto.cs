@@ -2,13 +2,11 @@
 {
     public class FiltroCargaAtividadesCursoDto
     {
-        public FiltroCargaAtividadesCursoDto(CursoDto curso, string tokenProximaPagina = "")
+        public FiltroCargaAtividadesCursoDto(long? cursoId = null)
         {
-            Curso = curso;
-            TokenProximaPagina = tokenProximaPagina;
+            CursoId = cursoId;
         }
 
-        public CursoDto Curso { get; set; }
-        public string TokenProximaPagina { get; set; }
+        public long? CursoId { get; set; }
     }
 }

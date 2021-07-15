@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> ExisteCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId);
         Task<int> ExcluirCursoAsync(long cursoId);
         Task<CursoGoogle> ObterCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId);
-        Task<IEnumerable<CursoDto>> ObterCursosPorAno(int anoLetivo);
+        Task<IEnumerable<CursoDto>> ObterCursosPorAno(int anoLetivo, long? cursoId = null);
         Task<CursoGoogle> ObterCursoPorId(long id);
         Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao);
     }

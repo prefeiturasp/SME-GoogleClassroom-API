@@ -13,5 +13,6 @@
         FuncionarioCursoAdicionar = 9,
         FuncionarioIndiretoAdicionar = 10,
         MuralAvisosCarregar = 13,
+        AtividadesCarregar = 14,
     }
 }

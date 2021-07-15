@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
@@ -18,16 +19,18 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar(MensagemRabbit param)
+        public async Task<bool> Executar(MensagemRabbit mensage)
         {
+            var filtro = mensage.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
+
             var anoAtual = DateTime.Now.Year;
-            var cursos = await mediator.Send(new ObterCursosPorAnoQuery(anoAtual));
+            var cursos = await mediator.Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId));
 
             foreach (var curso in cursos)
             {
                 try
                 {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroCargaAtividadesCursoDto(curso)));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(curso)));
                 }
                 catch (Exception ex)
                 {
@@ -36,8 +39,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            // TODO obter tipo da tarefa 42906 com o Bernard
-            //await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
+            System.Threading.Thread.Sleep(60 * 60 * 1000);
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
 
             return true;
         }

@@ -126,7 +126,8 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> RegistroExiste(long id)
         {
-            throw new System.NotImplementedException();
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from atividades where id = @id", new { id });
         }
     }
 }

@@ -61,5 +61,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok();
         }
         
+
+
+        /// <summary>
+        /// Executa manualmente a integração de atividades do GSA.
+        /// Insere o registro na base GCA e envia para o SGP a vincular com a aula.
+        /// </summary>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("sincronizacao")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, long? cursoId = null)
+        {
+            await useCase.Executar(cursoId);
+
+            return Ok();
+        }
     }
 }

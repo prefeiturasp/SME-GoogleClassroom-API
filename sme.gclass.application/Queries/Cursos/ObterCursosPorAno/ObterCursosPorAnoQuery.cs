@@ -7,12 +7,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosPorAnoQuery : IRequest<IEnumerable<CursoDto>>
     {
-        public ObterCursosPorAnoQuery(int anoLetivo)
+        public ObterCursosPorAnoQuery(int anoLetivo, long? cursoId)
         {
             AnoLetivo = anoLetivo;
+            CursoId = cursoId;
         }
 
         public int AnoLetivo { get; }
+        public long? CursoId { get; }
     }
 
     public class ObterCursosPorAnoQueryValidator : AbstractValidator<ObterCursosPorAnoQuery>
