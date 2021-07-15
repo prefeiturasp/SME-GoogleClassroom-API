@@ -16,4 +16,5 @@ namespace SME.GoogleClassroom.Infra
         public DateTime DataReferencia { get; set; }
         public IEnumerable<long> AlunosIds { get; set; }
     }
+    
 }
