@@ -11,6 +11,6 @@ namespace SME.GoogleClassroom.Infra
         }
 
         public long CursoId { get; set; }
-        public ICollection<UsuarioGoogleClassroomDto> Responsaveis { get; set; }
+        public List<UsuarioGoogleClassroomDto> Responsaveis { get; set; }
     }
 }

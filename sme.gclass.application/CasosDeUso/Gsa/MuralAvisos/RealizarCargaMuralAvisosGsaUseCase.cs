@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -22,11 +23,14 @@ namespace SME.GoogleClassroom.Aplicacao
             var anoAtual = DateTime.Now.Year;
             var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual));
 
-            foreach (var curso in cursos)
+            foreach (var curso in cursos.GroupBy(a => a.CursoId))
             {
                 try
                 {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroCargaMuralAvisosCursoDto(curso)));
+                    var cursoResponsavel = new CursoResponsavelDto() { CursoId = curso.Key };
+                    cursoResponsavel.Responsaveis.AddRange(curso.Select(a => new UsuarioGoogleClassroomDto() { Id = a.UsuarioId }));
+
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroCargaMuralAvisosCursoDto(cursoResponsavel)));
                 }
                 catch (Exception ex)
                 {
