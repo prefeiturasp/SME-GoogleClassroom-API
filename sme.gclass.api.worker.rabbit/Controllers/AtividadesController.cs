@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
@@ -42,6 +44,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         {
             var retorno = await obterAtividadesUseCase.Executar(filtro);
             return Ok(retorno);
+        }
+        
+        /// <summary>
+        /// Executa o tratamento dos erros de importação de atividades GSA.
+        /// Insere o registro na base GCA e envia para o SGP a vincular com o curso.
+        /// </summary>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("erros/tratamentos")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ProcessarErros([FromServices] IIncluirAtividadesGsaProcessarErroUseCase useCase)
+        {
+            await useCase.Executar();
+
+            return Ok();
         }
         
     }
