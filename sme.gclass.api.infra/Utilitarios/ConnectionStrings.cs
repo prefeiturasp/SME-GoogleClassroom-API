@@ -11,6 +11,6 @@ namespace SME.GoogleClassroom.Infra
         }
 
         public string ConnectionStringEol => configuration.GetConnectionString("EolConnection");
-        public string ConnectionStringGoogleClassroom => configuration.GetConnectionString("GoogleClassroomConnectionDev");
+        public string ConnectionStringGoogleClassroom => configuration.GetConnectionString("GoogleClassroomConnection");
     }
 }
