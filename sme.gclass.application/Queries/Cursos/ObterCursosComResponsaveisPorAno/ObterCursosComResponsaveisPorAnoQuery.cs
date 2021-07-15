@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComResponsaveisPorAnoQuery : IRequest<IEnumerable<CursoResponsavelDto>>
+    public class ObterCursosComResponsaveisPorAnoQuery : IRequest<IEnumerable<CursoUsuarioDto>>
     {
         public ObterCursosComResponsaveisPorAnoQuery(int anoLetivo)
         {
