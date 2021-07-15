@@ -21,16 +21,17 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var anoAtual = DateTime.Now.Year;
-            var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual));
+            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
+
+            var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual, filtro.CursoId));
 
             foreach (var curso in cursos.GroupBy(a => a.CursoId))
             {
                 try
                 {
-                    var cursoResponsavel = new CursoResponsavelDto() { CursoId = curso.Key };
-                    cursoResponsavel.Responsaveis.AddRange(curso.Select(a => new UsuarioGoogleClassroomDto() { Id = a.UsuarioId }));
+                    var cursoResponsavel = new CursoResponsavelDto(curso.Key, curso.Select(a => a.UsuarioId));
 
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroCargaMuralAvisosCursoDto(cursoResponsavel)));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursoResponsavel)));
                 }
                 catch (Exception ex)
                 {

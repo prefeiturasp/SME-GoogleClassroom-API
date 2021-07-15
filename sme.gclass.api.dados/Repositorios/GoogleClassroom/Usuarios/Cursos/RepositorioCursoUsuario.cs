@@ -452,17 +452,20 @@ namespace SME.GoogleClassroom.Dados
         }
 
 
-        public async Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo)
+        public async Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId)
         {
             var query = @"select c.id as CursoId
 	                    , u.google_classroom_id as UsuarioId
                       from cursos c
                      inner join cursos_usuarios cu on cu.curso_id = c.id
                      inner join usuarios u on u.indice = cu.usuario_id and u.usuario_tipo <> 1
-                     where extract(year from c.data_inclusao) = @anoLetivo";
+                     where extract(year from c.data_inclusao) = @anoLetivo ";
+
+            if (cursoId.HasValue)
+                query += "and c.id = @cursoId ";
 
             using var conn = ObterConexao();
-                return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo });
+                return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
         }
     }
 }
