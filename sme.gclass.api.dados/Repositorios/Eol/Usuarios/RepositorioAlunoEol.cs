@@ -255,12 +255,9 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
         }
 
-		public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
+		public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim)
 		{
-			using var conn = ObterConexao();
-
-			var query = new StringBuilder(@"
-
+			var query = @"
 				SELECT
 					DISTINCT
 					a.cd_aluno AS CodigoAluno
@@ -285,20 +282,16 @@ namespace SME.GoogleClassroom.Dados
 					mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo
-					AND te.cd_turma_escola = @turmaId ");
-
-			if (ehDataReferenciaPrincipal)
-				query.AppendLine("AND mte.dt_situacao_aluno = @dataReferencia");
-			else
-				query.AppendLine("AND mte.dt_situacao_aluno <= @dataReferencia");
-
-			 query.AppendLine(@"and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
+					AND te.cd_turma_escola = @turmaId 
+					AND mte.dt_situacao_aluno between @dataInicio and @dataFim 
+					AND mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
 													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
 													 where matr2.cd_aluno = a.cd_aluno
 													   and matr2.an_letivo = te.an_letivo
-													   and mte2.cd_turma_escola = te.cd_turma_escola)");
+													   and mte2.cd_turma_escola = te.cd_turma_escola)";
 
-			return await conn.QueryAsync<long>(query.ToString(), new { turmaId, anoLetivo, dataReferencia });
+			using var conn = ObterConexao();
+				return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataInicio, dataFim });
 		}
 
 		public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)

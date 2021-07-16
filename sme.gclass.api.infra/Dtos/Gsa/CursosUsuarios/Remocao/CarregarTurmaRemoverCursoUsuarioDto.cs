@@ -10,16 +10,16 @@ namespace SME.GoogleClassroom.Infra
         {
         }
 
-        public CarregarTurmaRemoverCursoUsuarioDto(int anoLetivo, DateTime dataReferencia, int pagina, int totalRegistros)
+        public CarregarTurmaRemoverCursoUsuarioDto(DateTime dataInicio, DateTime dataFim, int pagina, int totalRegistros)
         {
-            AnoLetivo = anoLetivo;
-            DataReferencia = dataReferencia;
+            DataInicio = dataInicio;
+            DataFim = dataFim;
             Pagina = pagina;
             TotalRegistros = totalRegistros;
         }
 
-        public int AnoLetivo { get; set; }
-        public DateTime DataReferencia { get; set; }
+        public DateTime DataInicio { get; }
+        public DateTime DataFim { get; }
         public int Pagina { get; set; }
         public int TotalRegistros { get; set; }
     }

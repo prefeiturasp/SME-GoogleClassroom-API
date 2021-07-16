@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Dados
 
         Task LimparAsync();
 
-        Task<IEnumerable<long>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos);
+        Task<IEnumerable<CursoUsuarioRemoverDto>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos, long turmaId);
     }
 }

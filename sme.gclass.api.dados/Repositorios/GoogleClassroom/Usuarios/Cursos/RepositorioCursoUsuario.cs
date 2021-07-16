@@ -425,33 +425,6 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QuerySingleOrDefaultAsync<CursoUsuario>(query, parametros);
         }
 
-        public async Task<IEnumerable<CursoUsuarioRemoverDto>> ObterPorUsuarioIdETurmaId(long usuarioId, long turmaId)
-        {
-            const string query = @"
-                SELECT
-                    cu.id as CursoUsuarioId,
-                    curso_id as CursoId,
-                    usuario_id as UsuarioId,
-                    curso_id as CursoGsaId,
-                    u.google_classroom_id as UsuarioGsaId
-                FROM cursos_usuarios cu
-               inner join usuarios u on u.indice = cu.usuario_id 
-               inner join cursos c on c.id = cu.curso_id 
-               where c.turma_id = @turmaId
-                 and u.id = @usuarioId
-                 and not excluido";
-
-            var parametros = new
-            {
-                usuarioId,
-                turmaId
-            };
-
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, parametros);
-        }
-
-
         public async Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId)
         {
             var query = @"select c.id as CursoId
@@ -467,5 +440,6 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
                 return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
         }
+
     }
 }
