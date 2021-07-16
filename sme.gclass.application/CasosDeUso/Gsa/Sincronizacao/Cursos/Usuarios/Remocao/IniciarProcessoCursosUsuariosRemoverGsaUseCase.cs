@@ -19,7 +19,6 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                await LimparTabelasAsync();
                 var dto = new CarregarTurmaRemoverCursoUsuarioDto();
                 return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, dto));
             }
@@ -28,16 +27,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 SentrySdk.CaptureException(ex);
                 return false;
             }
-        }
-
-        private async Task LimparTabelasAsync()
-        {
-            var command = new LimparTabelasGsaCommand
-            {
-                UsuariosCursosRemovidosGsa = true
-            };
-
-            await mediator.Send(command);
         }
     }
 }
