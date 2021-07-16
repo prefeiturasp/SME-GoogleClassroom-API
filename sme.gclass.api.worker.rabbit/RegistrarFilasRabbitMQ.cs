@@ -114,23 +114,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         
         private static void RegistrarFilasRemoverAlunosSync(IModel canalRabbit)
         {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar);
-
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar);
-
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosSync);
         }
 
         #endregion Filas Sync

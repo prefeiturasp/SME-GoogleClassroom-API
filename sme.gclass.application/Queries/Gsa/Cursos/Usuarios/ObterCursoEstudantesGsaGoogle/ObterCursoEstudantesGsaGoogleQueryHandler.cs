@@ -52,8 +52,8 @@ namespace SME.GoogleClassroom.Aplicacao
             paginaConsulta.CursosDoUsuario.AddRange(resultadoPagina.Students
                 .Select(estudante => new UsuarioCursoGsaDto
                 {
-                    CursoId = estudante.UserId,
-                    UsuarioId = estudante.CourseId,
+                    CursoId = long.Parse(estudante.CourseId),
+                    UsuarioId = estudante.UserId,
                     UsuarioCursoTipo = (short)UsuarioCursoGsaTipo.Estudante
                 })
                 .ToList());

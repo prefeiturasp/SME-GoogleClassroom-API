@@ -12,5 +12,7 @@ namespace SME.GoogleClassroom.Infra
         public string CursoGsaId { get; set; }
         public string UsuarioGsaId { get; set; }
         public string EmailUsuario { get; set; }
+        public int TipoUsuario { get; set; }
+        public int TipoGsa { get; set; }
     }
 }

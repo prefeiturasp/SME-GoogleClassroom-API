@@ -29,15 +29,20 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
+                // Incluir UsuarioRemovido
+                var tipoUsuario = (UsuarioTipo)filtro.TipoUsuario;
+                await mediator.Send(new IncluirCursoUsuarioRemovidoCommand(filtro.UsuarioId, filtro.CursoId, tipoUsuario));
+
                 // Usuario Curso GSA
-                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.CursoGsaId, filtro.UsuarioGsaId, UsuarioCursoGsaTipo.Estudante);
+                var tipoGsa = (UsuarioCursoGsaTipo)filtro.TipoGsa;
+                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId, tipoGsa);
                 var alunoCursoGsa = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
                 
                 // Usuario Curso 
                 var alunoCurso = await mediator.Send(new RemoverCursoUsuarioCommand(filtro.CursoUsuarioId));
 
                 // Google API
-                var alunoCursoGoogle = new UsuarioCursoGoogleDto(filtro.CursoGsaId, filtro.UsuarioGsaId);
+                var alunoCursoGoogle = new UsuarioCursoGoogleDto(filtro.CursoId, filtro.UsuarioGsaId, filtro.TipoGsa);
                 var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
 
                 if (alunoCursoGoogleRemovido == false)

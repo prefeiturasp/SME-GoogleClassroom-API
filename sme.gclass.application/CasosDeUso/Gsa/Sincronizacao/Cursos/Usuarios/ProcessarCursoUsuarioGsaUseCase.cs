@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioCursoGsaDto is null)
                 throw new NegocioException("Não foi possível processar o curso do usuário GSA. A mensagem enviada é inválida.");
 
-            var usuarioCursoExiste = await mediator.Send(new ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId));
+            var usuarioCursoExiste = await mediator.Send(new ExisteCursoDoUsuarioGsaPorUsuarioIdCursoIdQuery(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId.ToString()));
             if (usuarioCursoExiste) return true;
 
             var usuarioCursoTipo = Enum.Parse<UsuarioCursoGsaTipo>(usuarioCursoGsaDto.UsuarioCursoTipo.ToString());

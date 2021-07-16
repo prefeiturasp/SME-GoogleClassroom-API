@@ -2,13 +2,15 @@
 {
     public class UsuarioCursoGoogleDto
     {
-        public UsuarioCursoGoogleDto(string cursoId, string usuarioId)
+        public UsuarioCursoGoogleDto(long cursoId, string usuarioId, int tipoGsa)
         {
             CursoId = cursoId;
             UsuarioId = usuarioId;
+            TipoGsa = tipoGsa;
         }
 
-        public string CursoId { get; set; }
+        public long CursoId { get; set; }
         public string UsuarioId { get; set; }
+        public int TipoGsa { get; }
     }
 }

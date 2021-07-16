@@ -31,5 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Commands\Gsa\Cursos\Usuarios\" />
+    <Folder Include="Interfaces\CasosDeUso\Gsa\Sincronizacao\Cursos\Usuarios\Remocao\" />
   </ItemGroup>
 </Project>
