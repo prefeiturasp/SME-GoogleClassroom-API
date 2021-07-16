@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
     public class FiltroTurmaRemoverCursoUsuarioDto
     {
-        public FiltroTurmaRemoverCursoUsuarioDto(int anoLetivo, DateTime dataReferencia, IEnumerable<long> turmasIds, bool ehDataReferenciaPrincipal)
+        public FiltroTurmaRemoverCursoUsuarioDto(DateTime dataInicio, DateTime dataFim, long turmaId)
         {
-            AnoLetivo = anoLetivo;
-            DataReferencia = dataReferencia;
-            TurmasIds = turmasIds;
-            EhDataReferenciaPrincipal = ehDataReferenciaPrincipal;
+            DataInicio = dataInicio;
+            DataFim = dataFim;
+            TurmaId = turmaId;
         }
 
-        public int AnoLetivo { get; set; }
-        public DateTime DataReferencia { get; set; }
-        public IEnumerable<long> TurmasIds { get; set; }
-        public bool EhDataReferenciaPrincipal { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFim { get; set; }
+        public long TurmaId { get; set; }
     }
 }

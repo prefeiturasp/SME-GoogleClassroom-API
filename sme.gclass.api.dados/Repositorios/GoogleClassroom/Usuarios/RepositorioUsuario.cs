@@ -605,35 +605,12 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
 
-        public async Task<PaginacaoResultadoDto<long>> ObterTurmasComCursoAlunoCadastrado(Paginacao paginacao)
+        public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo)
         {
-            var query = new StringBuilder(@"select distinct (c.turma_id) from cursos c ");
-
-            var queryCount = "SELECT count(distinct (c.turma_id)) from cursos c ";
-
-            if (paginacao.QuantidadeRegistros > 0)
-                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
-
-            query.AppendLine(";");
-            query.AppendLine(queryCount);
-
-            var retorno = new PaginacaoResultadoDto<long>();
+            var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo");
 
             using var conn = ObterConexao();
-
-            var parametros = new
-            {
-                quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
-                quantidadeRegistros = paginacao.QuantidadeRegistros
-            };
-
-            using var alunos = await conn.QueryMultipleAsync(query.ToString(), parametros);
-
-            retorno.Items = alunos.Read<long>();
-            retorno.TotalRegistros = alunos.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
-
-            return retorno;
+                return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo } );
         }
 
         public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)
