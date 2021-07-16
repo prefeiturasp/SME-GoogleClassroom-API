@@ -14,6 +14,6 @@
         FuncionarioIndiretoAdicionar = 10,
         UsuarioCursoRemover = 11,
         MuralAvisosCarregar = 13,
-        ProfessorCursoRemover = 14,
+        ProfessorCursoRemover = 15,
     }
 }
