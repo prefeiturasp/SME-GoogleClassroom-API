@@ -20,36 +20,24 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaInativacaoUsuarioDto>();
-            var totalPorPagina = 100;
-            var paginacao = new Paginacao(1, totalPorPagina);
 
-            if (dto != null && dto.AnoLetivo > 0)
-            {
-                paginacao = new Paginacao(dto.Pagina, dto.TotalRegistros);
-            }
-            else
-            {
-                dto.AnoLetivo = DateTime.Now.Year;
-                await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoInativar));
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
-            }
-            
-            var alunosPaginados = await mediator.Send(new ObterAlunosInativosPorAnoLetivoQuery(paginacao, dto.AnoLetivo));
+            await AtualizarUltimaExecucao(dto);
 
-            if (alunosPaginados != null && alunosPaginados.Items != null && alunosPaginados.Items.Any())
-            {
-                var paginaAlunosFiltro = new FiltroAlunoInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, alunosPaginados.Items);
-                
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, RotasRabbit.FilaGsaInativarUsuarioSync, paginaAlunosFiltro));
+            var alunosParaInativar = await mediator.Send(new ObterAlunosInativosPorAnoLetivoQuery(DateTime.Now.Year, dto.DataReferencia, dto.AlunoId));
 
-                var proximaPagina = ((paginacao.QuantidadeRegistrosIgnorados + totalPorPagina) / totalPorPagina) + 1;
-                if (proximaPagina <= alunosPaginados.TotalPaginas)
-                {
-                    var turmaInativacaoUsuarioDto = new CarregarTurmaInativacaoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, turmaInativacaoUsuarioDto));
-                }
+            if (alunosParaInativar != null && alunosParaInativar.Any())
+            {
+                var alunosInativacao = new FiltroAlunoInativacaoUsuarioDto(dto.DataReferencia, alunosParaInativar);
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, RotasRabbit.FilaGsaInativarUsuarioSync, alunosInativacao));
             }
             return true;
+        }
+
+        private async Task AtualizarUltimaExecucao(CarregarTurmaInativacaoUsuarioDto dto)
+        {
+            var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoInativar));
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
+            dto.DataReferencia = dataUltimaExecucao;
         }
     }
 }

@@ -155,9 +155,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoInativacaoUsuariosGsaUseCase useCase)
+        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoInativacaoUsuariosGsaUseCase useCase, long? alunoId = null)
         {
-            var retorno = await useCase.Executar();
+            var retorno = await useCase.Executar(alunoId);
             return Ok(retorno);
         }
     }

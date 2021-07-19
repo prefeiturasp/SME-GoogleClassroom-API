@@ -2,17 +2,12 @@
 {
     public class FiltroInativacaoUsuariosCursosGoogleDto
     {
-        public FiltroInativacaoUsuariosCursosGoogleDto(string tokenProximaPagina)
+        public FiltroInativacaoUsuariosCursosGoogleDto(long? alunoId = null)
         {
-            TokenProximaPagina = tokenProximaPagina;
+            AlunoId = alunoId;
         }
 
-        public FiltroInativacaoUsuariosCursosGoogleDto()
-        {
-            TokenProximaPagina = null;
-        }
-
-        public string TokenProximaPagina { get; set; }
+        public long? AlunoId { get; set; }
     }
 }
 

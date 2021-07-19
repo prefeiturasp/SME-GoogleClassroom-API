@@ -640,7 +640,7 @@ namespace SME.GoogleClassroom.Dados
         {
             const string updateQuery = @"update public.usuarios
                                          set
-                                            organization_path = 'Alunos>Inativos',
+                                            organization_path = 'Alunos/Inativos',
                                             data_atualizacao = current_timestamp
                                          where
                                             indice = @id";

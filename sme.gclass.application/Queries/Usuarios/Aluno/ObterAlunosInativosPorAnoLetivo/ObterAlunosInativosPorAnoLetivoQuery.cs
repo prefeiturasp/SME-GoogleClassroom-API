@@ -1,21 +1,24 @@
 ﻿using FluentValidation;
 using MediatR;
-using SME.GoogleClassroom.Dominio;
-using SME.GoogleClassroom.Infra;
+using System;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
-    public class ObterAlunosInativosPorAnoLetivoQuery : IRequest<PaginacaoResultadoDto<long>>
+    public class ObterAlunosInativosPorAnoLetivoQuery : IRequest<IEnumerable<long>>
     {
-        public ObterAlunosInativosPorAnoLetivoQuery(Paginacao paginacao, int anoLetivo)
+        public ObterAlunosInativosPorAnoLetivoQuery(int anoLetivo, DateTime dataReferencia, long? alunoId = null)
         {
             AnoLetivo = anoLetivo;
-            Paginacao = paginacao;
+            AlunoId = alunoId;
+            DataReferencia = dataReferencia;
         }
 
         public int AnoLetivo { get; set; }
 
-        public Paginacao Paginacao { get; set; }
+        public DateTime DataReferencia { get; set; }
+
+        public long? AlunoId { get; set; }
     }
 
     public class ObterAlunosInativosPorAnoLetivoETurmaQueryValidator : AbstractValidator<ObterAlunosInativosPorAnoLetivoQuery>
@@ -26,6 +29,10 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                 .GreaterThan(0)
                 .NotNull()
                 .WithMessage("O ano letivo deve ser informado.");
+
+            RuleFor(x => x.DataReferencia)
+                .NotNull()
+                .WithMessage("A Data de referência deve ser informada.");
         }
     }
 }

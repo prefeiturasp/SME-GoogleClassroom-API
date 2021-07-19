@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
-using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
-    public class ObterAlunosInativosPorAnoLetivoQueryHandler : IRequestHandler<ObterAlunosInativosPorAnoLetivoQuery, PaginacaoResultadoDto<long>>
+    public class ObterAlunosInativosPorAnoLetivoQueryHandler : IRequestHandler<ObterAlunosInativosPorAnoLetivoQuery, IEnumerable<long>>
     {
         private readonly IRepositorioAlunoEol repositorioAlunoEol;
 
@@ -16,9 +16,9 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
             this.repositorioAlunoEol = repositorioAlunoEol ?? throw new ArgumentNullException(nameof(repositorioAlunoEol));
         }
 
-        public async Task<PaginacaoResultadoDto<long>> Handle(ObterAlunosInativosPorAnoLetivoQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<long>> Handle(ObterAlunosInativosPorAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioAlunoEol.ObterCodigosAlunosInativosPorAnoLetivo(request.Paginacao, request.AnoLetivo);
+            return await repositorioAlunoEol.ObterCodigosAlunosInativosPorAnoLetivo(request.AnoLetivo, request.DataReferencia, request.AlunoId);
         }
     }
 }

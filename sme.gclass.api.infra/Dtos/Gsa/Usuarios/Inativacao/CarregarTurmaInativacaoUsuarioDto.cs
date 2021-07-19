@@ -4,21 +4,14 @@ namespace SME.GoogleClassroom.Infra
 {
     public class CarregarTurmaInativacaoUsuarioDto
     {
-        public CarregarTurmaInativacaoUsuarioDto()
+        public CarregarTurmaInativacaoUsuarioDto(DateTime dataReferencia, long? alunoId = null)
         {
-        }
-
-        public CarregarTurmaInativacaoUsuarioDto(int anoLetivo, DateTime dataReferencia, int pagina, int totalRegistros)
-        {
-            AnoLetivo = anoLetivo;
             DataReferencia = dataReferencia;
-            Pagina = pagina;
-            TotalRegistros = totalRegistros;
+            AlunoId = alunoId;
         }
 
-        public int AnoLetivo { get; set; }
         public DateTime DataReferencia { get; set; }
-        public int Pagina { get; set; }
-        public int TotalRegistros { get; set; }
+
+        public long? AlunoId { get; set; }
     }
 }
