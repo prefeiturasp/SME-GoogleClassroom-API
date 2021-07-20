@@ -4,7 +4,7 @@ using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Aplicacao.erros
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class IniciarSyncGoogleUsuariosErrosUseCase : IIniciarSyncGoogleUsuariosErrosUseCase
     {

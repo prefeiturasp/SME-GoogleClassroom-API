@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Usuarios.Erros
+namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface ITrataSyncGoogleUsuarioErroUseCase
+    public interface ITrataSyncGoogleAlunoInativoErroUseCase
     {
         Task<bool> Executar(MensagemRabbit mensagemRabbit);
     }

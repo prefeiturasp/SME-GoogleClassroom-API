@@ -3,6 +3,7 @@ using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,5 +35,25 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(query, parametros);
         }
-   }
+
+        public async Task<IEnumerable<UsuarioInativoErro>> BuscarTodo()
+        {
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<UsuarioInativoErro>(
+                @"select 
+                         usuario_id as UsuarioId,
+                         mensagem as Mensagem,
+                         execucao_tipo as UsuarioTipo,
+                         data_inclusao as DataInclusao
+                     from public.aluno_inativo_erro;");
+        }
+
+        public async Task<int> Excluir(long usuarioId)
+        {
+            const string query = @"delete from public.aluno_inativo_erro where usuario_id  = @usuarioId;";
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, new {usuarioId});
+        }
+    }
 }

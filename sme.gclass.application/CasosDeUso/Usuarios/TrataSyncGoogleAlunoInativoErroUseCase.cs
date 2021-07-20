@@ -3,19 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Sentry;
-using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Usuarios.Erros;
-using SME.GoogleClassroom.Aplicacao.Queries.Cursos.ObterAlunoCursoRemovidoErro;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Aplicacao.Queries;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TrataSyncGoogleUsuarioErroUseCase : ITrataSyncGoogleUsuarioErroUseCase
+    public class TrataSyncGoogleAlunoInativoErroUseCase : ITrataSyncGoogleAlunoInativoErroUseCase
     {
         private readonly IMediator mediator;
         private readonly bool _deveExecutarIntegracao;
 
-        public TrataSyncGoogleUsuarioErroUseCase(IMediator mediator,
+        public TrataSyncGoogleAlunoInativoErroUseCase(IMediator mediator,
             VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var errosParaTratar = await mediator.Send(new ObterAlunoCursoRemovidoErroQuery());
+                var errosParaTratar = await mediator.Send(new ObterAlunoInativoErroQuery());
                 if (errosParaTratar != null && errosParaTratar.Any())
                 {
                     foreach (var erroParaTratar in errosParaTratar)
@@ -34,8 +34,8 @@ namespace SME.GoogleClassroom.Aplicacao
                         try
                         {
                             await mediator.Send(new PublicaFilaRabbitCommand(
-                                RotasRabbit.FilaGsaCursoUsuarioRemovidoSync,
-                                RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, erroParaTratar));
+                                RotasRabbit.FilaGsaInativarUsuarioIniciar,
+                                RotasRabbit.FilaGsaInativarUsuarioIniciar, erroParaTratar));
 
                             await ExcluirCursoErroAsync(erroParaTratar);
                         }
@@ -56,14 +56,15 @@ namespace SME.GoogleClassroom.Aplicacao
             return false;
         }
 
-        private async Task ExcluirCursoErroAsync(CursoUsuarioRemovidoGsaErro cursoUsuarioRemovidoGsaErro)
+        private async Task ExcluirCursoErroAsync(UsuarioInativoErro usuarioInativoErro)
         {
             if (!_deveExecutarIntegracao) return;
-            if (!await mediator.Send(new ExcluirRemoverCursoAlunoErroCommand(cursoUsuarioRemovidoGsaErro.UsuarioId,
-                cursoUsuarioRemovidoGsaErro.UsuarioId)))
+            var usuarioId = usuarioInativoErro.UsuarioId ??
+                            throw new ArgumentNullException(nameof(usuarioInativoErro.UsuarioId));
+            if (!await mediator.Send(new ExluirAlunoInativoErroQuery(usuarioId)))
             {
                 SentrySdk.CaptureMessage(
-                    $"Não foi possível excluir o erro do usuario Id {cursoUsuarioRemovidoGsaErro.UsuarioId} do curso id {cursoUsuarioRemovidoGsaErro.CursoId}");
+                    $"Não foi possível excluir o erro do usuario Id {usuarioInativoErro.UsuarioId}");
             }
         }
     }
