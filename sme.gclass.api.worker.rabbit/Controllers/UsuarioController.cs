@@ -76,9 +76,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("erros/tratamentos")]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> ProcessarErros([FromServices] IIniciarSyncGoogleUsuariosErrosUseCase iniciarSyncGoogleAlunosRemovidosErrosUseCase)
+        public async Task<IActionResult> ProcessarErros([FromServices] IIniciarSyncGoogleUsuariosErrosUseCase useCase)
         {
-            var retorno = await iniciarSyncGoogleAlunosRemovidosErrosUseCase.Executar();
+            var retorno = await useCase.Executar();
             return Ok(retorno);
         }
     }
