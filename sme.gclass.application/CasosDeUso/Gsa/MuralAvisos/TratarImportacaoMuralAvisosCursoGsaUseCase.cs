@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de mural de avisos GSA.");
 
-            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
+            var filtro = mensagem.ObterObjetoMensagem<FiltroTratarMuralAvisosCursoDto>();
 
             var paginaMural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(filtro.Curso));
 
@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicaProximaPaginaAsync(FiltroCargaMuralAvisosCursoDto filtro)
+        private async Task PublicaProximaPaginaAsync(FiltroTratarMuralAvisosCursoDto filtro)
         {
             try
             {

@@ -73,6 +73,13 @@
         public static string FilaGsaAtividadesIncluir => "googleclass.gsa.atividades.incluir";
         public static string FilaGsaAtividadesIncluirErro => "googleclass.gsa.atividades.incluir.erro";
         #endregion
+
+        #region Usuários Remover
+        public static string FilaGsaCursoUsuarioRemovidoTurmasCarregar => "googleclass.gsa.curso.usuario.removido.turmas.carregar";
+        public static string FilaGsaCursoUsuarioRemovidoTurmaTratar => "googleclass.gsa.curso.usuario.removido.turma.tratar";
+        public static string FilaGsaCursoUsuarioRemovidoAlunosTratar => "googleclass.gsa.curso.usuario.removido.alunos.tratar";
+        public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
+        #endregion
     }
 }
 

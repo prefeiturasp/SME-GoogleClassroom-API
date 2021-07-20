@@ -1,14 +1,11 @@
 ﻿namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroCargaMuralAvisosCursoDto
+    public class FiltroCargaMuralAvisosCursoDto : FiltroCargaGsaDto
     {
-        public FiltroCargaMuralAvisosCursoDto(CursoResponsavelDto curso, string tokenProximaPagina = "")
+        public FiltroCargaMuralAvisosCursoDto(long? cursoId = null)
         {
-            Curso = curso;
-            TokenProximaPagina = tokenProximaPagina;
+            CursoId = cursoId;
         }
-
-        public string TokenProximaPagina { get; set; }
-        public CursoResponsavelDto Curso { get; set; }
+        public long? CursoId { get; set; }
     }
 }

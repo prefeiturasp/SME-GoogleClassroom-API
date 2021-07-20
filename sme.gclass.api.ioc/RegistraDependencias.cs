@@ -44,6 +44,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
             services.TryAddScoped<IRepositorioUsuarioGsa, RepositorioUsuarioGsa>();
             services.TryAddScoped<IRepositorioUsuarioCursoGsa, RepositorioUsuarioCursoGsa>();
+
+            services.TryAddScoped<IRepositorioCursoUsuarioRemovidoGsaErro, RepositorioCursoUsuarioRemovidoGsaErro>();
+            services.TryAddScoped<IRepositorioCursoUsuarioRemovidoGsa, RepositorioCursoUsuarioRemovidoGsa>();
             
             services.TryAddScoped<IRepositorioAviso, RepositorioAviso>();            
             services.TryAddScoped<IRepositorioAtividade, RepositorioAtividade>();            
@@ -123,6 +126,15 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
             services.TryAddScoped<IIncluirAtividadesGsaProcessarErroUseCase, IncluirAtividadesGsaProcessarErroUseCase>();
 
+            services.TryAddScoped<IObterAlunosCursosUsuariosRemovidosUseCase, ObterAlunosCursosUsuariosRemovidosUseCase>();
+
+            services.TryAddScoped<IIniciarProcessoCursosUsuariosRemoverGsaUseCase, IniciarProcessoCursosUsuariosRemoverGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaTurmasCursoUsuarioRemovidoUseCase, RealizarCargaTurmasCursoUsuarioRemovidoUseCase>();
+            services.TryAddScoped<ITratarTurmaCursoUsuarioRemovidoUseCase, TratarTurmaCursoUsuarioRemovidoUseCase>();
+            services.TryAddScoped<ITratarAlunosCursoUsuarioRemovidoUseCase, TratarAlunosCursoUsuarioRemovidoUseCase>();
+            services.TryAddScoped<IAtualizarAlunosCursosUseCase, AtualizarAlunosCursosUseCase>();
+            services.TryAddScoped<IObterAlunosQueSeraoRemovidosUseCase, ObterAlunosQueSeraoRemovidosUseCase>();
+
             RegistrarCasosDeUsoGsa(services);
         }
 
@@ -155,8 +167,12 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();
             services.TryAddScoped<IProcessarCursoUsuarioGsaUseCase, ProcessarCursoUsuarioGsaUseCase>();
             services.TryAddScoped<IObterCursosDoUsuarioGsaUseCase, ObterCursosDoUsuarioGsaUseCase>();
+            
+            // RemocaoUsuarioCursoGsa
+            services.TryAddScoped<ISincronizarRemocaoUsuarioCursoGsaUseCase, SincronizarRemocaoUsuarioCursoGsaUseCase>();
 
             // Mural de Avisos
+            services.TryAddScoped<IIniciarSyncGoogleMuralAvisosUseCase, IniciarSyncGoogleMuralAvisosUseCase>();
             services.TryAddScoped<IRealizarCargaMuralAvisosGsaUseCase, RealizarCargaMuralAvisosGsaUseCase>();
             services.TryAddScoped<ITratarImportacaoMuralAvisosCursoGsaUseCase, TratarImportacaoMuralAvisosCursoGsaUseCase>();
             services.TryAddScoped<IImportarMuralAvisosCursoGsaUseCase, ImportarMuralAvisosCursoGsaUseCase>();

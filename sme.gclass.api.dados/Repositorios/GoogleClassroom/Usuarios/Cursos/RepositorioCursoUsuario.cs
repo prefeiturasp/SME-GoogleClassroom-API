@@ -425,36 +425,21 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QuerySingleOrDefaultAsync<CursoUsuario>(query, parametros);
         }
 
-        public async Task<IEnumerable<CursoResponsavelDto>> ObterCursosComResponsaveisPorAno(int anoLetivo)
+        public async Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId)
         {
             var query = @"select c.id as CursoId
-	                    , u.google_classroom_id as id
-	                    , u.nome 
-	                    , u.email
-	                    , u.organization_path as OrganizationPath
-	                    , u.data_inclusao as DataCriacao
+	                    , u.google_classroom_id as UsuarioId
                       from cursos c
                      inner join cursos_usuarios cu on cu.curso_id = c.id
                      inner join usuarios u on u.indice = cu.usuario_id and u.usuario_tipo <> 1
-                     where extract(year from c.data_inclusao) = @anoLetivo";
+                     where extract(year from c.data_inclusao) = @anoLetivo ";
 
-            var dic = new Dictionary<long, CursoResponsavelDto>();
+            if (cursoId.HasValue)
+                query += "and c.id = @cursoId ";
 
             using var conn = ObterConexao();
-                await conn.QueryAsync<CursoResponsavelDto, UsuarioGoogleClassroomDto, CursoResponsavelDto>(query, (curso, responsavel) =>
-                {
-                    if (dic.TryGetValue(curso.CursoId, out var cursoExistente))
-                        cursoExistente.Responsaveis.Add(responsavel);
-                    else
-                    {
-                        curso.Responsaveis.Add(responsavel);
-                        dic.Add(curso.CursoId, curso);
-                    }
-
-                    return curso;
-                }, new { anoLetivo });
-
-            return dic.Values;
+                return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
         }
+
     }
 }

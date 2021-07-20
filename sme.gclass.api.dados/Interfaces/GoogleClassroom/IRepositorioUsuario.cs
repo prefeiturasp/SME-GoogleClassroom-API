@@ -52,5 +52,6 @@ namespace SME.GoogleClassroom.Dados
         Task FinalizarAtualizacaoUsuarioGoogleClassroomIdAsync();
 
         Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId);
+        Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo);
     }
 }

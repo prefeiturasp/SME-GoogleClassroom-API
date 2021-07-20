@@ -27,6 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarAtribuicoesProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync, resposta));
             var publicarGradesAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoGradeSync, RotasRabbit.FilaCursoGradeSync, resposta));
             var publicarFuncionarioIndireto = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoSync, RotasRabbit.FilaFuncionarioIndiretoSync, resposta));
+            var publicarCursoUsuarioRemovido = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, new CarregarTurmaRemoverCursoUsuarioDto()));
             var publicarTratamentoDeErrosAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroSync, RotasRabbit.FilaAlunoErroSync, resposta));
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
@@ -36,7 +37,8 @@ namespace SME.GoogleClassroom.Aplicacao
             // Mural de Avisos
             if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
             {
-                var filtroAvisosGsa = new FiltroCargaGsaDto();
+                // Mural de Avisos
+                var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto();
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
             }
             // Atividades
@@ -64,6 +66,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if(!publicarGradesAlunos)
                 throw new NegocioException("Erro ao enviar a sync de grades.");
+
+            if (!publicarCursoUsuarioRemovido)
+                throw new NegocioException("Erro ao enviar a sync de cursos usuários removidos.");
 
             if (!publicarFuncionarioIndireto)
                 throw new NegocioException("Erro ao enviar a sync de funcionários indiretos.");

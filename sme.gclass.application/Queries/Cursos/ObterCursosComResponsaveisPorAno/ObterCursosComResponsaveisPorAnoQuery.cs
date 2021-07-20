@@ -5,14 +5,16 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComResponsaveisPorAnoQuery : IRequest<IEnumerable<CursoResponsavelDto>>
+    public class ObterCursosComResponsaveisPorAnoQuery : IRequest<IEnumerable<CursoUsuarioDto>>
     {
-        public ObterCursosComResponsaveisPorAnoQuery(int anoLetivo)
+        public ObterCursosComResponsaveisPorAnoQuery(int anoLetivo, long? cursoId = null)
         {
             AnoLetivo = anoLetivo;
+            CursoId = cursoId;
         }
 
         public int AnoLetivo { get; }
+        public long? CursoId { get; }
     }
 
     public class ObterCursosComResponsaveisPorAnoQueryValidator : AbstractValidator<ObterCursosComResponsaveisPorAnoQuery>
