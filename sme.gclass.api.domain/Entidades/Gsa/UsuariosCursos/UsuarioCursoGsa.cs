@@ -3,10 +3,10 @@
     public class UsuarioCursoGsa
     {
         public string UsuarioId { get; set; }
-        public long CursoId { get; set; }
+        public string CursoId { get; set; }
         public UsuarioCursoGsaTipo UsuarioCursoTipo { get; set; }
 
-        public UsuarioCursoGsa(string usuarioId, long cursoId, UsuarioCursoGsaTipo usuarioCursoTipo)
+        public UsuarioCursoGsa(string usuarioId, string cursoId, UsuarioCursoGsaTipo usuarioCursoTipo)
         {
             UsuarioId = usuarioId;
             CursoId = cursoId;

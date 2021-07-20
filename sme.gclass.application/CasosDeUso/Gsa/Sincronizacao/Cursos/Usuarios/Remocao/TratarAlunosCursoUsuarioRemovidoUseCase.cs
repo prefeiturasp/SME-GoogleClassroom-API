@@ -31,6 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     {
                         var cursoUsuarioRemover = new CursoUsuarioRemoverDto()
                         {
+                            CursoUsuarioId = cursoUsuario.CursoUsuarioId,
                             CursoId = cursoUsuario.CursoId,
                             UsuarioId = cursoUsuario.UsuarioId,
                             UsuarioGsaId = cursoUsuario.UsuarioGsaId,

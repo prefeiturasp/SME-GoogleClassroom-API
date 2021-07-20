@@ -35,7 +35,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 // Usuario Curso GSA
                 var tipoGsa = (UsuarioCursoGsaTipo)filtro.TipoGsa;
-                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId, tipoGsa);
+                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId.ToString(), tipoGsa);
                 var alunoCursoGsa = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
                 
                 // Usuario Curso 
