@@ -215,6 +215,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaMuralAvisosIncluirErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaMuralAvisosIncluirErro);
             }
 
+            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            {
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAtividadesCarregar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaAtividadesCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaAtividadesCarregar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAtividadesTratar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaAtividadesTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaAtividadesTratar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAtividadesIncluir, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaAtividadesIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaAtividadesIncluir);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAtividadesIncluirErro, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaAtividadesIncluirErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaAtividadesIncluirErro);
+            }
+
             if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
             {
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoCarregar, true, false, false);

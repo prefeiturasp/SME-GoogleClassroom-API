@@ -123,7 +123,7 @@ namespace SME.GoogleClassroom.Dados
             var queryCompleta = new StringBuilder("SELECT ");
 
             if (ehParaPaginacao)
-                queryCompleta.AppendLine("count(*)");
+                queryCompleta.AppendLine("count(*) ");
             else
             {
                 queryCompleta.AppendLine(@" A.ID AS Id, 
