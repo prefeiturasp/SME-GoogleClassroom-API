@@ -53,6 +53,7 @@
         #region Usuários
         public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
         public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
+        public static string FilaUsuarioGoogleTratarErro => "googleclass.usuario.erro.tratar";
         #endregion
 
         #region GSA
