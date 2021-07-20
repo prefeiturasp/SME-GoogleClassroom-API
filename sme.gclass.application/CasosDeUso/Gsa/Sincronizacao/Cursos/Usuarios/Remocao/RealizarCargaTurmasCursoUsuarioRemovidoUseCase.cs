@@ -18,9 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
-
-            var datasReferencias = await ObterDatasReferencias(dto);
+            var datasReferencias = await ObterDatasReferencias();
 
             var turmas = await mediator.Send(new ObterTurmasIdsCadastradasQuery(DateTime.Now.Year));
             if (turmas != null && turmas.Any())
@@ -28,29 +26,19 @@ namespace SME.GoogleClassroom.Aplicacao
                 foreach(var turma in turmas)
                 {
                     var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio, datasReferencias.dataFim, turma);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
                 }
             }
+
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
             return true;
         }
 
-        private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias(CarregarTurmaRemoverCursoUsuarioDto dto)
+        private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias()
         {
-            if (dto != null)
-            {
-                // Data da última execução - 10
-                dto.DataInicio = new DateTime(DateTime.Now.Year, 01, 01);
-                // Data atual - 10
-                dto.DataFim = new DateTime(DateTime.Now.Year, 12, 31);
-                return (dto.DataInicio, dto.DataFim);
-            }
-            else
-            {
                 var totalDiasConsiderar = 10;
                 var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
-
                 return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
-            }
         }
     }
 }

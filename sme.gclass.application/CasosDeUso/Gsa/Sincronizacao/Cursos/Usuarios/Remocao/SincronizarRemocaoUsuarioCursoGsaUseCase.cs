@@ -35,7 +35,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 // Usuario Curso GSA
                 var tipoGsa = (UsuarioCursoGsaTipo)filtro.TipoGsa;
-                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId, tipoGsa);
+                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId.ToString(), tipoGsa);
                 var alunoCursoGsa = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
                 
                 // Usuario Curso 
@@ -43,10 +43,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 // Google API
                 var alunoCursoGoogle = new UsuarioCursoGoogleDto(filtro.CursoId, filtro.UsuarioGsaId, filtro.TipoGsa);
-                //var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
+                var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
 
-                //if (alunoCursoGoogleRemovido == false)
-                    //throw new NegocioException("Não foi possível remover a associação de Curso x Usuário no Google API");
+                if (alunoCursoGoogleRemovido == false)
+                    throw new NegocioException("Não foi possível remover a associação de Curso x Usuário no Google API");
             }
             catch (Exception ex)
             {

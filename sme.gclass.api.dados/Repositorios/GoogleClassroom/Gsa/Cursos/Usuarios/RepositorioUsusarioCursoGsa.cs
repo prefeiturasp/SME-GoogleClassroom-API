@@ -127,7 +127,7 @@ namespace SME.GoogleClassroom.Dados
                  and u.usuario_tipo = 1";
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, new { alunosCodigos });
+            return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, new { alunosCodigos, turmaId });
         }
     }
 }

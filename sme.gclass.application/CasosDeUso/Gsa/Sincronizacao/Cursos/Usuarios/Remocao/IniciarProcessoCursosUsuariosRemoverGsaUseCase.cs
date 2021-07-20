@@ -19,8 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var dto = new CarregarTurmaRemoverCursoUsuarioDto();
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, dto));
+                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, null));
             }
             catch (Exception ex)
             {
