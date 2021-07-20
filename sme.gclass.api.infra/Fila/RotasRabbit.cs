@@ -68,6 +68,10 @@
         public static string FilaGsaMuralAvisosTratar => "googleclass.gsa.mural.avisos.tratar";
         public static string FilaGsaMuralAvisosIncluir => "googleclass.gsa.mural.avisos.incluir";
         public static string FilaGsaMuralAvisosIncluirErro => "googleclass.gsa.mural.avisos.incluir.erro";
+        public static string FilaGsaAtividadesCarregar => "googleclass.gsa.atividades.carregar";
+        public static string FilaGsaAtividadesTratar => "googleclass.gsa.atividades.tratar";
+        public static string FilaGsaAtividadesIncluir => "googleclass.gsa.atividades.incluir";
+        public static string FilaGsaAtividadesIncluirErro => "googleclass.gsa.atividades.incluir.erro";
         #endregion
 
         #region Usuários Remover

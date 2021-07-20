@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarImportacaoMuralAvisosCursoGsaUseCase : ITratarImportacaoMuralAvisosCursoGsaUseCase
+    public class TratarImportacaoAtividadesCursoGsaUseCase : ITratarImportacaoAtividadesCursoGsaUseCase
     {
         private readonly IMediator mediator;
 
-        public TratarImportacaoMuralAvisosCursoGsaUseCase(IMediator mediator)
+        public TratarImportacaoAtividadesCursoGsaUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -23,33 +23,32 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de mural de avisos GSA.");
 
-            var filtro = mensagem.ObterObjetoMensagem<FiltroTratarMuralAvisosCursoDto>();
+            var filtro = mensagem.ObterObjetoMensagem<FiltroTratarAtividadesCursoDto>();
 
-            var paginaMural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(filtro.Curso));
+            var paginaAtividades = await mediator.Send(new ObterAtividadesDoCursoGoogleQuery(filtro.Curso));
 
-            if (paginaMural.Avisos.Any())
-                await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, filtro.Curso.CursoId));
+            if (paginaAtividades.Atividades.Any())
+                await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, filtro.Curso.CursoId));
 
-            filtro.TokenProximaPagina = paginaMural.TokenProximaPagina;
+            filtro.TokenProximaPagina = paginaAtividades.TokenProximaPagina;
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
                 await PublicaProximaPaginaAsync(filtro);
 
             return true;
         }
 
-        private async Task PublicaProximaPaginaAsync(FiltroTratarMuralAvisosCursoDto filtro)
+        private async Task PublicaProximaPaginaAsync(FiltroTratarAtividadesCursoDto filtro)
         {
             try
             {
-                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtro));
-                if (!syncCursoComparativo)
-                    SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos do usuário GSA.");
+                var syncAtividades = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtro));
+                if (!syncAtividades)
+                    SentrySdk.CaptureMessage("Não foi possível sincronizar os atividades avaliativas GSA.");
             }
             catch (Exception ex)
             {
                 SentrySdk.CaptureException(ex);
             }
         }
-
     }
 }
