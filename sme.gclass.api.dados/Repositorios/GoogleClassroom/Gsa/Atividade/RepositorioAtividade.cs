@@ -61,13 +61,13 @@ namespace SME.GoogleClassroom.Dados
 
             queryCompleta.AppendLine("FROM atividades A ");
             queryCompleta.AppendLine("INNER JOIN CURSOS U ON U.Id = A.CURSO_ID ");
-            queryCompleta.AppendLine("WHERE A.DATA_INCLUSAO = @dataReferencia;");
+            queryCompleta.AppendLine("WHERE A.DATA_INCLUSAO = @dataReferencia ");
 
 
             if (cursoId.HasValue)
                 queryCompleta.AppendLine(@"AND A.ID = @cursoId");
 
-            if (paginacao.QuantidadeRegistros > 0)
+            if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
                 queryCompleta.AppendLine(
                     $" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
 
