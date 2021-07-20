@@ -694,7 +694,7 @@ namespace SME.GoogleClassroom.Dados
                 throw ex;
             }
         }
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
         {
             var querySelectDados = @" SELECT 					
 										DISTINCT a.cd_aluno AS Codigo,
@@ -728,6 +728,7 @@ namespace SME.GoogleClassroom.Dados
 											mte.cd_situacao_aluno IN (2,3,4,5,7,8,11,12,14,15)
 											AND matr.an_letivo = @anoLetivo
 											AND te.an_letivo = @anoLetivo
+											AND matr.dt_status_matricula >= @dataReferencia
 											AND NOT EXISTS (select 1 from v_matricula_cotic where an_letivo >= matr.an_letivo and st_matricula IN(1,6,10,13) and cd_aluno = a.cd_aluno)
 										");
 
@@ -747,7 +748,8 @@ namespace SME.GoogleClassroom.Dados
                     quantidadeRegistros = paginacao.QuantidadeRegistros,
                     quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
                     anoLetivo,
-                }, commandTimeout: 6000);
+					dataReferencia
+				}, commandTimeout: 6000);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {

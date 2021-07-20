@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
         public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(ObterAlunosQueSeraoInativadosPorAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioAlunoEol.ObterAlunosQueSeraoInativosPorAnoLetivo(request.Paginacao, request.AnoLetivo);
+            return await repositorioAlunoEol.ObterAlunosQueSeraoInativosPorAnoLetivo(request.Paginacao, request.AnoLetivo, request.DataReferencia);
         }
     }
 }

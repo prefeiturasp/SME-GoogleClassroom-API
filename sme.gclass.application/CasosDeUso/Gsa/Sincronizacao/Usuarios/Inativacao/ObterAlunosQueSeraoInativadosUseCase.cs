@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
-            return await mediator.Send(new ObterAlunosQueSeraoInativadosPorAnoLetivoQuery(paginacao, filtro.AnoLetivo));
+            return await mediator.Send(new ObterAlunosQueSeraoInativadosPorAnoLetivoQuery(paginacao, filtro.AnoLetivo, filtro.DataReferencia));
         }
     }
 
