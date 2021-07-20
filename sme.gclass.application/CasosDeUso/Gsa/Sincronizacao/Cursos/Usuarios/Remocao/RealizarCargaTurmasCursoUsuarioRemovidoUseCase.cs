@@ -19,11 +19,6 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
-            var totalPorPagina = 50;
-
-            var paginacao = dto != null ?
-                new Paginacao(dto.Pagina, dto.TotalRegistros) :
-                new Paginacao(1, totalPorPagina);
 
             var datasReferencias = await ObterDatasReferencias(dto);
 
@@ -42,7 +37,13 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias(CarregarTurmaRemoverCursoUsuarioDto dto)
         {
             if (dto != null)
+            {
+                // Data da última execução - 10
+                dto.DataInicio = new DateTime(DateTime.Now.Year, 01, 01);
+                // Data atual - 10
+                dto.DataFim = new DateTime(DateTime.Now.Year, 12, 31);
                 return (dto.DataInicio, dto.DataFim);
+            }
             else
             {
                 var totalDiasConsiderar = 10;

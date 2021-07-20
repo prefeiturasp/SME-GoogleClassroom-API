@@ -123,7 +123,7 @@ namespace SME.GoogleClassroom.Dados
                inner join cursos c on c.id = cu.curso_id 
                where c.turma_id = @turmaId
                  and u.id = ANY(@alunosCodigos)
-                 and not excluido
+                 and not cu.excluido
                  and u.usuario_tipo = 1";
 
             using var conn = ObterConexao();
