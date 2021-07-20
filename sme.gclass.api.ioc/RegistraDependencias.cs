@@ -40,7 +40,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioCursoUsuario, RepositorioCursoUsuario>();
             services.TryAddScoped<IRepositorioFuncionarioIndiretoEol, RepositorioFuncionarioIndiretoEol>();
             services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
-            
             services.TryAddScoped<IRepositorioCursoGsa, RepositorioCursoGsa>();
             services.TryAddScoped<IRepositorioUsuarioGsa, RepositorioUsuarioGsa>();
             services.TryAddScoped<IRepositorioUsuarioCursoGsa, RepositorioUsuarioCursoGsa>();
@@ -50,6 +49,8 @@ namespace SME.GoogleClassroom.IoC
             
             services.TryAddScoped<IRepositorioAviso, RepositorioAviso>();            
             services.TryAddScoped<IRepositorioAtividade, RepositorioAtividade>();            
+            services.TryAddScoped<IRepositorioUsuarioInativoErro, RepositorioUsuarioInativoErro>();
+            services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -136,6 +137,17 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterAlunosQueSeraoRemovidosUseCase, ObterAlunosQueSeraoRemovidosUseCase>();
             services.TryAddScoped<IIniciarSyncGoogleAlunosRemovidosErrosUseCase, IniciarSyncGoogleAlunosRemovidosErrosUseCase>();
 
+            // Usuario Inativação (Aluno)
+            services.TryAddScoped<IIniciarProcessoInativacaoUsuariosGsaUseCase, IniciarProcessoInativacaoUsuariosGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaAlunoInativacaoUsuarioUseCase, RealizarCargaAlunoInativacaoUsuarioUseCase>();
+            services.TryAddScoped<ITratarAlunosInativacaoUsuarioUseCase, TratarAlunosInativacaoUsuarioGsaUseCase>();
+            services.TryAddScoped<IIncluirInativacaoUsuarioGsaUseCase, IncluirInativacaoUsuarioGsaUseCase>();
+            services.TryAddScoped<IObterAlunosInativosUseCase, ObterAlunosInativosUseCase>();            
+            services.TryAddScoped<IObterAlunosQueSeraoInativadosUseCase, ObterAlunosQueSeraoInativadosUseCase>();
+            services.TryAddScoped<ITrataSyncGoogleAlunoInativoErroUseCase, TrataSyncGoogleAlunoInativoErroUseCase>();
+            
+           
+
             RegistrarCasosDeUsoGsa(services);
         }
 
@@ -163,6 +175,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IValidarUsuariosGsaUseCase, ValidarUsuariosGsaUseCase>();
             services.TryAddScoped<IObterUsuariosGsaUseCase, ObterUsuariosGsaUseCase>();
             services.TryAddScoped<IIniciarValidacaoUsuariosGsaUseCase, IniciarValidacaoUsuariosGsaUseCase > ();
+            services.TryAddScoped<IIniciarSyncGoogleUsuariosErrosUseCase, IniciarSyncGoogleUsuariosErrosUseCase > ();
 
             services.TryAddScoped<IObterAvisoUseCase, ObterAvisoUseCase>();
             services.TryAddScoped<IRealizarCargaCursoUsuariosGsaUseCase, RealizarCargaCursoUsuariosGsaUseCase>();

@@ -49,6 +49,8 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             #endregion
 
+            var publicarInativarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, resposta));
+
             if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");
 
@@ -84,6 +86,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (!publicarCursoErro)
                 throw new NegocioException("Erro ao enviar a sync de cursos erro.");
+
+            if (!publicarInativarUsuario)
+                throw new NegocioException("Erro ao enviar a sync de inativar usuários (alunos).");
 
             return await Task.FromResult(true);
         }
