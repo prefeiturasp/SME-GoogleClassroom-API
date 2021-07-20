@@ -21,8 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(TratarImportacaoAtividadesCommand request, CancellationToken cancellationToken)
         {
-            // TODO obter tipo da tarefa 42906 com o Bernard
-            var ultimaExecucao = DateTime.MinValue;// await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
+            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
             var atividadesImportar = ObterAtividadesInclusasOuAlteradas(request.Atividades, ultimaExecucao);
 
             if (atividadesImportar.Any())
