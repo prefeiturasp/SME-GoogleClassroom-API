@@ -8,10 +8,12 @@ namespace SME.GoogleClassroom.Aplicacao
     public class TrataSyncGoogleGeralUseCase : ITrataSyncGoogleGeralUseCase
     {
         private readonly IMediator mediator;
+        private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
 
-        public TrataSyncGoogleGeralUseCase(IMediator mediator)
+        public TrataSyncGoogleGeralUseCase(IMediator mediator, ConsumoDeFilasOptions consumoDeFilasOptions)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
+            this.consumoDeFilasOptions = consumoDeFilasOptions ?? throw new System.ArgumentNullException(nameof(consumoDeFilasOptions));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
@@ -25,11 +27,27 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarAtribuicoesProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync, resposta));
             var publicarGradesAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoGradeSync, RotasRabbit.FilaCursoGradeSync, resposta));
             var publicarFuncionarioIndireto = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIndiretoSync, RotasRabbit.FilaFuncionarioIndiretoSync, resposta));
-            var publicarCursoUsuarioRemovido = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, RotasRabbit.FilaGsaCursoUsuarioRemovidoIniciar, resposta));
+            var publicarCursoUsuarioRemovido = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, new CarregarTurmaRemoverCursoUsuarioDto()));
             var publicarTratamentoDeErrosAlunos = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroSync, RotasRabbit.FilaAlunoErroSync, resposta));
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
             var publicarCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroSync, RotasRabbit.FilaCursoErroSync, resposta));
+
+            #region Cargas GSA
+            // Mural de Avisos
+            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            {
+                // Mural de Avisos
+                var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto();
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
+            }
+            // Atividades
+            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            {
+                var filtroAvisosGsa = new FiltroCargaGsaDto();
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroAvisosGsa));
+            }
+            #endregion
 
             var publicarInativarUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, resposta));
 

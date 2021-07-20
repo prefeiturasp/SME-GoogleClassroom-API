@@ -12,4 +12,8 @@
     <ProjectReference Include="..\sme.gclass.api.infra\SME.GoogleClassroom.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entidades\Google\MuralAvisos\" />
+  </ItemGroup>
+
 </Project>

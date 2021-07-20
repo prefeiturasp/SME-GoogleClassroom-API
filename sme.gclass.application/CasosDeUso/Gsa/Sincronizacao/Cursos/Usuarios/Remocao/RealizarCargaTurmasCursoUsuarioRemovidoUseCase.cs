@@ -19,43 +19,38 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
-            var totalDiasConsiderar = 10;
-            var totalPorPagina = 50;
-            var paginacao = new Paginacao(1, totalPorPagina);
-            var ehDataReferenciaPrincipal = false;
 
-            if (dto != null && dto.AnoLetivo > 0)
+            var datasReferencias = await ObterDatasReferencias(dto);
+
+            var turmas = await mediator.Send(new ObterTurmasIdsCadastradasQuery(DateTime.Now.Year));
+            if (turmas != null && turmas.Any())
             {
-                paginacao = new Paginacao(dto.Pagina, dto.TotalRegistros);
-            }
-            else
-            {
-                dto.AnoLetivo = DateTime.Now.Year;
-                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
-                if (dataUltimaExecucao < DateTime.Today.AddDays(-totalDiasConsiderar))
+                foreach(var turma in turmas)
                 {
-                    dto.DataReferencia = DateTime.Today.AddDays(-totalDiasConsiderar);
-                    await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
-                }
-                else
-                {
-                    dto.DataReferencia = dataUltimaExecucao.AddDays(-totalDiasConsiderar);
-                    ehDataReferenciaPrincipal = true;
-                }
-            }
-            var turmasPaginadas = await mediator.Send(new ObterTurmasIsCadastradasQuery(paginacao));
-            if (turmasPaginadas != null && turmasPaginadas.Items != null && turmasPaginadas.Items.Any())
-            {
-                var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, turmasPaginadas.Items, ehDataReferenciaPrincipal);
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasSync, filtroTurma));
-                var proximaPagina = ((paginacao.QuantidadeRegistrosIgnorados + totalPorPagina) / totalPorPagina) + 1;
-                if (proximaPagina <= turmasPaginadas.TotalPaginas)
-                {
-                    var novoDto = new CarregarTurmaRemoverCursoUsuarioDto(dto.AnoLetivo, dto.DataReferencia, proximaPagina, totalPorPagina);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, novoDto));
+                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio, datasReferencias.dataFim, turma);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
                 }
             }
             return true;
+        }
+
+        private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias(CarregarTurmaRemoverCursoUsuarioDto dto)
+        {
+            if (dto != null)
+            {
+                // Data da última execução - 10
+                dto.DataInicio = new DateTime(DateTime.Now.Year, 01, 01);
+                // Data atual - 10
+                dto.DataFim = new DateTime(DateTime.Now.Year, 12, 31);
+                return (dto.DataInicio, dto.DataFim);
+            }
+            else
+            {
+                var totalDiasConsiderar = 10;
+                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
+
+                return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
+            }
         }
     }
 }

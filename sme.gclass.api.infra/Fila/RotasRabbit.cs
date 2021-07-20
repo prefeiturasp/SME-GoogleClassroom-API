@@ -2,7 +2,6 @@
 {
     public static class RotasRabbit
     {
-        public static string ExchangeGoogleSync => "googleclass.exchange";
         public static string FilaGoogleSync => "googleclass.sync.geral";
 
         #region Cursos
@@ -66,6 +65,14 @@
         public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
         public static string FilaGsaCursoUsuarioCarregar => "googleclass.gsa.curso.usuario.carregar";
         public static string FilaGsaCursoUsuarioIncluir => "googleclass.gsa.curso.usuario.incluir";
+        public static string FilaGsaMuralAvisosCarregar => "googleclass.gsa.mural.avisos.carregar";
+        public static string FilaGsaMuralAvisosTratar => "googleclass.gsa.mural.avisos.tratar";
+        public static string FilaGsaMuralAvisosIncluir => "googleclass.gsa.mural.avisos.incluir";
+        public static string FilaGsaMuralAvisosIncluirErro => "googleclass.gsa.mural.avisos.incluir.erro";
+        public static string FilaGsaAtividadesCarregar => "googleclass.gsa.atividades.carregar";
+        public static string FilaGsaAtividadesTratar => "googleclass.gsa.atividades.tratar";
+        public static string FilaGsaAtividadesIncluir => "googleclass.gsa.atividades.incluir";
+        public static string FilaGsaAtividadesIncluirErro => "googleclass.gsa.atividades.incluir.erro";
         #endregion
 
         #region Inativação de Usuários
@@ -78,12 +85,11 @@
         #endregion 
 
         #region Usuários Remover
-        public static string FilaGsaCursoUsuarioRemovidoIniciar => "googleclass.gsa.curso.usuario.removido.iniciar";
         public static string FilaGsaCursoUsuarioRemovidoTurmasCarregar => "googleclass.gsa.curso.usuario.removido.turmas.carregar";
-        public static string FilaGsaCursoUsuarioRemovidoTurmasSync => "googleclass.gsa.curso.usuario.removido.turmas.sync";
+        public static string FilaGsaCursoUsuarioRemovidoTurmaTratar => "googleclass.gsa.curso.usuario.removido.turma.tratar";
         public static string FilaGsaCursoUsuarioRemovidoAlunosTratar => "googleclass.gsa.curso.usuario.removido.alunos.tratar";
-        public static string FilaGsaCursoUsuarioRemovidoAlunosSync => "googleclass.gsa.curso.usuario.removido.alunos.sync";
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
+        public static string FilaGsaCursoUsuarioRemovidoErroTratar => "googleclass.gsa.curso.usuario.removido.erro.tratar";
         #endregion
     }
 }

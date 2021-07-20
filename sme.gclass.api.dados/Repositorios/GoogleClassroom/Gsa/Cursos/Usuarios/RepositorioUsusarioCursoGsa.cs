@@ -111,16 +111,23 @@ namespace SME.GoogleClassroom.Dados
             return true;
         }
 
-        public async Task<IEnumerable<long>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos)
+        public async Task<IEnumerable<CursoUsuarioRemoverDto>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos, long turmaId)
         {
-            var query = @"select u.id as aluno_codigo 
-                            from cursos_usuarios cu
-                           inner join usuarios u on u.indice = cu.usuario_id 
-                           where u.id = ANY(@alunosCodigos)
-                             and u.usuario_tipo = 1";
+            var query = @"SELECT
+                    cu.id as CursoUsuarioId,
+                    c.id as CursoId,
+                    u.indice as UsuarioId,
+                    u.google_classroom_id as UsuarioGsaId
+                FROM cursos_usuarios cu
+               inner join usuarios u on u.indice = cu.usuario_id 
+               inner join cursos c on c.id = cu.curso_id 
+               where c.turma_id = @turmaId
+                 and u.id = ANY(@alunosCodigos)
+                 and not cu.excluido
+                 and u.usuario_tipo = 1";
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<long>(query, new { alunosCodigos });
+            return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, new { alunosCodigos });
         }
     }
 }

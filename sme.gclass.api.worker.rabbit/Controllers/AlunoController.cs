@@ -148,7 +148,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna os alunos inativos no Google Classroom.
+        /// Retorna os alunos removidos dos cursos no Google Classroom.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
@@ -165,7 +165,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna os alunos à excluir no EOL.
+        /// Retorna os alunos inativos no EOL que serão removidos.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>

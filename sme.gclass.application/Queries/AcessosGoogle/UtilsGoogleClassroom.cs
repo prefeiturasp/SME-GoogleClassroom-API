@@ -12,6 +12,12 @@ namespace SME.GoogleClassroom.Aplicacao
             ClassroomService.Scope.ClassroomRosters,
             ClassroomService.Scope.ClassroomProfilePhotos,
             ClassroomService.Scope.ClassroomProfileEmails,
+            ClassroomService.Scope.ClassroomAnnouncements,
+            ClassroomService.Scope.ClassroomAnnouncementsReadonly,
+            ClassroomService.Scope.ClassroomCourseworkStudents,
+            ClassroomService.Scope.ClassroomCourseworkStudentsReadonly,
+            ClassroomService.Scope.ClassroomCourseworkMe,
+            ClassroomService.Scope.ClassroomCourseworkMeReadonly,
         };
     }
 }

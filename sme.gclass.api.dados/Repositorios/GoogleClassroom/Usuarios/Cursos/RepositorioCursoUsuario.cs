@@ -425,30 +425,20 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QuerySingleOrDefaultAsync<CursoUsuario>(query, parametros);
         }
 
-        public async Task<IEnumerable<CursoUsuarioRemoverDto>> ObterPorUsuarioIdETurmaId(long usuarioId, long turmaId)
+        public async Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId)
         {
-            const string query = @"
-                SELECT
-                    cu.id as CursoUsuarioId,
-                    curso_id as CursoId,
-                    usuario_id as UsuarioId,
-                    curso_id as CursoGsaId,
-                    u.google_classroom_id as UsuarioGsaId
-                FROM cursos_usuarios cu
-               inner join usuarios u on u.indice = cu.usuario_id 
-               inner join cursos c on c.id = cu.curso_id 
-               where c.turma_id = @turmaId
-                 and u.id = @usuarioId
-                 and not excluido";
+            var query = @"select c.id as CursoId
+	                    , u.google_classroom_id as UsuarioId
+                      from cursos c
+                     inner join cursos_usuarios cu on cu.curso_id = c.id
+                     inner join usuarios u on u.indice = cu.usuario_id and u.usuario_tipo <> 1
+                     where extract(year from c.data_inclusao) = @anoLetivo ";
 
-            var parametros = new
-            {
-                usuarioId,
-                turmaId
-            };
+            if (cursoId.HasValue)
+                query += "and c.id = @cursoId ";
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, parametros);
+                return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
         }
 
         public async Task<IEnumerable<CursoUsuarioInativarDto>> ObterUsuariosPorIdETurmaId(long usuarioId, long turmaId)

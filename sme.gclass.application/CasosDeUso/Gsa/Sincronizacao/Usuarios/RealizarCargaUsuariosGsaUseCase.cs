@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de usuários GSA.");
 
-            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCargaUsuariosGoogleDto>();
+            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCargaGsaDto>();
             var paginaUsiariosGoogle = await mediator.Send(new ObterUsuariosGsaGoogleQuery(filtro.TokenProximaPagina));
             foreach (var usuario in paginaUsiariosGoogle.Usuarios)
             {
@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicaProximaPaginaAsync(FiltroCargaUsuariosGoogleDto filtro)
+        private async Task PublicaProximaPaginaAsync(FiltroCargaGsaDto filtro)
         {
             try
             {

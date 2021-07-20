@@ -27,13 +27,23 @@ namespace SME.GoogleClassroom.Aplicacao
         protected override async Task<bool> ExecutarAsync(RemoverAlunoCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            await policy.ExecuteAsync(() => RemoverAlunoCursoNoGoogle(request.AlunoCursoGoogle, servicoClassroom));
+            switch ((UsuarioCursoGsaTipo)request.AlunoCursoGoogle.TipoGsa)
+            {
+                case UsuarioCursoGsaTipo.Estudante:
+                    await policy.ExecuteAsync(() => RemoverAlunoCursoNoGoogle(request.AlunoCursoGoogle, servicoClassroom));
+                    break;
+                case UsuarioCursoGsaTipo.Professor:
+                    break;
+                default:
+                    break;
+            }
+            
             return true;
         }
 
         private async Task RemoverAlunoCursoNoGoogle(UsuarioCursoGoogleDto alunoCursoGoogle, ClassroomService servicoClassroom)
         {
-            var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId, alunoCursoGoogle.UsuarioId);
+            var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId);
             await requestCreate.ExecuteAsync();
         }
     }

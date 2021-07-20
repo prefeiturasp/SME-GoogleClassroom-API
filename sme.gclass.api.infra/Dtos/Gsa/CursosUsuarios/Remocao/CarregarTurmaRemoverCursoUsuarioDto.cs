@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
@@ -8,19 +6,16 @@ namespace SME.GoogleClassroom.Infra
     {
         public CarregarTurmaRemoverCursoUsuarioDto()
         {
+
         }
 
-        public CarregarTurmaRemoverCursoUsuarioDto(int anoLetivo, DateTime dataReferencia, int pagina, int totalRegistros)
+        public CarregarTurmaRemoverCursoUsuarioDto(DateTime dataInicio, DateTime dataFim)
         {
-            AnoLetivo = anoLetivo;
-            DataReferencia = dataReferencia;
-            Pagina = pagina;
-            TotalRegistros = totalRegistros;
+            DataInicio = dataInicio;
+            DataFim = dataFim;
         }
 
-        public int AnoLetivo { get; set; }
-        public DateTime DataReferencia { get; set; }
-        public int Pagina { get; set; }
-        public int TotalRegistros { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFim { get; set; }
     }
 }

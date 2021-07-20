@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Handle(VerificarSeExistemMensagemNaFilaQuery request, CancellationToken cancellationToken)
         {
-            rabbitChannel.QueueBind(request.RotaFila, RotasRabbit.ExchangeGoogleSync, request.RotaFila);
+            rabbitChannel.QueueBind(request.RotaFila, ExchangeRabbit.GoogleSync, request.RotaFila);
             var existemMensagens = rabbitChannel.MessageCount(request.RotaFila) > uint.MinValue;
             return await Task.FromResult(existemMensagens);
         }
