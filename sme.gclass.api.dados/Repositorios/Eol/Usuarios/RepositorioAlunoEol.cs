@@ -311,7 +311,7 @@ namespace SME.GoogleClassroom.Dados
 					DISTINCT a.cd_aluno AS Codigo,
 					a.nm_aluno AS NomePessoa,
 					a.nm_social_aluno AS NomeSocial,
-					a.dt_nascimento_aluno AS DataNascimento ";
+					a.dt_nascimento_aluno AS DataNascimento";
 
             var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
 
@@ -696,13 +696,14 @@ namespace SME.GoogleClassroom.Dados
         }
         public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo)
         {
-            using var conn = ObterConexao();
-
             var querySelectDados = @" SELECT 					
 										DISTINCT a.cd_aluno AS Codigo,
 										a.nm_aluno AS NomePessoa,
 										a.nm_social_aluno AS NomeSocial,
-										a.dt_nascimento_aluno AS DataNascimento ";
+										a.dt_nascimento_aluno AS DataNascimento,
+										te.cd_turma_escola AS TurmaId,
+										mte.cd_situacao_aluno as SituacaoMatricula,
+										mte.dt_situacao_aluno as DataSituacao"; 
 
             var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
 
@@ -738,8 +739,9 @@ namespace SME.GoogleClassroom.Dados
             query.Append(queryPaginacao);
             query.Append(querySelectCount);
             query.Append(queryFrom);
-
-            using var multi = await conn.QueryMultipleAsync(query.ToString(),
+			
+			using var conn = ObterConexao();
+			using var multi = await conn.QueryMultipleAsync(query.ToString(),
                 new
                 {
                     quantidadeRegistros = paginacao.QuantidadeRegistros,

@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 // Google API
                 var alunoRemovidoGoogle = await mediator.Send(new RemoverAlunoGoogleCommand(filtro.EmailUsuario));
 
-                if (usuarioInativado == false || alunoInativado == false)
+                if (usuarioInativado == false || alunoInativado == false || alunoRemovidoGoogle == false)
                     await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o Usuário");
             }
             catch (Exception ex)
