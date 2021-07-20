@@ -33,13 +33,21 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
             var publicarCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroSync, RotasRabbit.FilaCursoErroSync, resposta));
 
-            // Cargas GSA
+            #region Cargas GSA
+            // Mural de Avisos
             if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
             {
                 // Mural de Avisos
                 var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto();
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
             }
+            // Atividades
+            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            {
+                var filtroAvisosGsa = new FiltroCargaGsaDto();
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroAvisosGsa));
+            }
+            #endregion
 
             if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");
