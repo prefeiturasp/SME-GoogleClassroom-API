@@ -26,14 +26,6 @@ namespace SME.GoogleClassroom.Dominio
         {
         }
 
-        private const int MaximoTentativasGerarEmail = 3;
-
-        public int Codigo { get; set; }
-        public DateTime DataNascimento { get; set; }
-        public long TurmaId { get; set; }
-        public int SituacaoMatricula { get; set; }
-        public DateTime DataSituacao { get; set; }
-
         public void DefinirEmail(int? tentativa = 0)
         {
             if (tentativa.HasValue && tentativa > MaximoTentativasGerarEmail)
