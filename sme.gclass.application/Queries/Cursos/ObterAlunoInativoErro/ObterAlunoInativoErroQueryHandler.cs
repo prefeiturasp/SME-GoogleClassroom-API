@@ -19,6 +19,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<UsuarioInativoErro>> Handle(ObterAlunoInativoErroQuery request,
             CancellationToken cancellationToken)
-            => await repositorioUsuarioInativoErro.BuscarTodo();
+            => await repositorioUsuarioInativoErro.BuscarTodos();
     }
 }

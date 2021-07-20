@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(query, parametros);
         }
 
-        public async Task<IEnumerable<UsuarioInativoErro>> BuscarTodo()
+        public async Task<IEnumerable<UsuarioInativoErro>> BuscarTodos()
         {
             using var conn = ObterConexao();
             return await conn.QueryAsync<UsuarioInativoErro>(

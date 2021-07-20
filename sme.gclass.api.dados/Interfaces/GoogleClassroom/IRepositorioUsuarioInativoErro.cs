@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
     {
         Task<long> SalvarAsync(UsuarioInativoErro alunoInativoErro);
 
-        Task<IEnumerable<UsuarioInativoErro>> BuscarTodo();
+        Task<IEnumerable<UsuarioInativoErro>> BuscarTodos();
         Task<int> Excluir(long requestUsuarioId);
     }
 }
