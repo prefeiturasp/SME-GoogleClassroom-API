@@ -132,6 +132,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITratarAlunosCursoUsuarioRemovidoUseCase, TratarAlunosCursoUsuarioRemovidoUseCase>();
             services.TryAddScoped<IAtualizarAlunosCursosUseCase, AtualizarAlunosCursosUseCase>();
             services.TryAddScoped<IObterAlunosQueSeraoRemovidosUseCase, ObterAlunosQueSeraoRemovidosUseCase>();
+            services.TryAddScoped<ITratarProfessoresCursoUsuarioRemovidoUseCase, TratarProfessoresCursoUsuarioRemovidoUseCase>();
 
             // Remover atribuicao professor x curso
             services.TryAddScoped<IObterProfessoresQueSeraoRemovidosUseCase, ObterProfessoresQueSeraoRemovidosUseCase>();
