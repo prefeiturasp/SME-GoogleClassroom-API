@@ -2,21 +2,18 @@
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery : IRequest<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>>
     {
-        public ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery(Paginacao paginacao, string cursoId)
+        public ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery(Paginacao paginacao, long cursoId)
         {
             CursoId = cursoId;
             Paginacao = paginacao;
         }
 
-        public string CursoId { get; set; }
+        public long CursoId { get; set; }
         public Paginacao Paginacao { get; set; }
 
         public class ObterUsuariosCursosRemovidosPorCursoIdValidator : AbstractValidator<ObterAlunosCursosUsuariosRemovidosPorCursoIdQuery>
