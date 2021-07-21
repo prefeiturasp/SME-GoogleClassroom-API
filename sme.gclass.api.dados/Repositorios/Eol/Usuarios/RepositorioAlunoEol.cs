@@ -719,11 +719,17 @@ namespace SME.GoogleClassroom.Dados
 											escola esc (NOLOCK)
 											ON te.cd_escola = esc.cd_escola
 										WHERE
-											mte.cd_situacao_aluno IN (2,3,4,5,7,8,11,12,14,15)
+												mte.cd_situacao_aluno IN (2,3,4,5,7,8,11,12,14,15)
 											AND matr.an_letivo = @anoLetivo
 											AND te.an_letivo = @anoLetivo
 											AND matr.dt_status_matricula >= @dataReferencia
-											AND NOT EXISTS (select 1 from v_matricula_cotic where an_letivo >= matr.an_letivo and st_matricula IN(1,6,10,13) and cd_aluno = a.cd_aluno)
+											AND NOT EXISTS (select 1 
+												from v_matricula_cotic v2
+											   inner join matricula_turma_escola m2 on ON 
+													v2.cd_matricula = m2.cd_matricula
+											   where v2.an_letivo >= matr.an_letivo 
+											     and v2.cd_aluno = a.cd_aluno
+											     and m2.cd_situacao_aluno IN(1,6,10,13) )
 										");
 
             var queryPaginacao = @"order by a.cd_aluno
