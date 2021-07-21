@@ -30,13 +30,15 @@ namespace SME.GoogleClassroom.Aplicacao
                 var alunosInativacao = new FiltroAlunoInativacaoUsuarioDto(dto.DataReferencia, alunosParaInativar);
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, RotasRabbit.FilaGsaInativarUsuarioSync, alunosInativacao));
             }
+
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
             return true;
         }
 
         private async Task AtualizarUltimaExecucao(CarregarTurmaInativacaoUsuarioDto dto)
         {
             var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoInativar));
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
+            
             dto.DataReferencia = dataUltimaExecucao;
         }
     }
