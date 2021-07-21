@@ -50,7 +50,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var alunoExiste = await requestAlunoExiste.ExecuteAsync();
             if (alunoExiste != null)
             {
-                var requestDelete = diretorioClassroom.Users.Delete(email);
+                alunoExiste.Suspended = true;
+                var requestDelete = diretorioClassroom.Users.Update(alunoExiste, alunoExiste.Id);
                 var usuarioDeletado = await requestDelete.ExecuteAsync();
 
                 if (usuarioDeletado is null)
