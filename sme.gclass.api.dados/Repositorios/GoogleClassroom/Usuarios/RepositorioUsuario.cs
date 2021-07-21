@@ -645,7 +645,7 @@ namespace SME.GoogleClassroom.Dados
                                             organization_path = 'Alunos/Inativos',
                                             data_atualizacao = current_timestamp
                                          where
-                                            indice = @id";
+                                            id = @id";
 
             var parametros = new
             {

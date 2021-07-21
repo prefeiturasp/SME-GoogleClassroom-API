@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 foreach (var alunoGoogle in alunosGoogle)
                 {
-                    var alunoInativar = new AlunoUsuarioInativarDto(alunoGoogle.Indice, alunoGoogle.GoogleClassroomId, alunoGoogle.Email);
+                    var alunoInativar = new AlunoUsuarioInativarDto(alunoGoogle.Codigo, alunoGoogle.Indice, alunoGoogle.Email);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioIncluir, RotasRabbit.FilaGsaInativarUsuarioIncluir, alunoInativar));
                 }
             }
