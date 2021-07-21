@@ -50,6 +50,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var alunoExiste = await requestAlunoExiste.ExecuteAsync();
             if (alunoExiste != null)
             {
+                alunoExiste.OrgUnitPath = "/Alunos/Inativos";
                 alunoExiste.Suspended = true;
                 var requestDelete = diretorioClassroom.Users.Update(alunoExiste, alunoExiste.Id);
                 var usuarioDeletado = await requestDelete.ExecuteAsync();
