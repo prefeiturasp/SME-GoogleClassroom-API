@@ -388,7 +388,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<int> RemoverAsync(long id)
         {
-            const string query = "DELETE FROM public.cursos_usuarios WHERE id = @id";
+            const string query = "UPDATE public.cursos_usuarios SET excluido = true WHERE id = @id";
             var parametros = new
             {
                 id
