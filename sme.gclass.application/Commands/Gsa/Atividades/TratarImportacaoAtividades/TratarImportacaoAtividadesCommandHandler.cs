@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,8 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(TratarImportacaoAtividadesCommand request, CancellationToken cancellationToken)
         {
-            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
-            var atividadesImportar = ObterAtividadesInclusasOuAlteradas(request.Atividades, ultimaExecucao);
+            var atividadesImportar = ObterAtividadesInclusasOuAlteradas(request.Atividades, request.UltimaExecucao);
 
             if (atividadesImportar.Any())
             {

@@ -20,8 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(TratarImportacaoAvisosCommand request, CancellationToken cancellationToken)
         {
-            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
-            var avisosImportar = ObterAvisosInclusosOuAlterados(request.Avisos, ultimaExecucao);
+            var avisosImportar = ObterAvisosInclusosOuAlterados(request.Avisos, request.UltimaExecucao);
 
             if (avisosImportar.Any())
             {
