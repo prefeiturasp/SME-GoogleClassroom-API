@@ -26,6 +26,11 @@ namespace SME.GoogleClassroom.Aplicacao
             var usuario = await ObterUsuario(atividadeGsa.UsuarioClassroomId);
             try
             {
+                // Atividades sem descrição devem ser importadadas com o Título
+                atividadeGsa.Descricao = string.IsNullOrEmpty(atividadeGsa.Descricao) ?
+                    atividadeGsa.Titulo :
+                    atividadeGsa.Descricao;
+
                 await GravarAtividadeGsa(atividadeGsa, usuario.Indice);
                 if (!await EnviarParaSgp(atividadeGsa, usuario))
                     throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
@@ -34,15 +39,15 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureMessage($"Não foi possível importar o aviso do mural GSA do curso {atividadeGsa.CursoId} e e usuario {atividadeGsa.UsuarioClassroomId}: {ex.Message}");
                 await EnviarErro(atividadeGsa);
-                throw;
+                SentrySdk.CaptureMessage($"Não foi possível importar o aviso do mural GSA do curso {atividadeGsa.CursoId} e e usuario {atividadeGsa.UsuarioClassroomId}: {ex.Message}");
+                throw ex;
             }
         }
 
         private async Task EnviarErro(AtividadeGsaDto atividadeGsa)
         {
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosIncluirErro, atividadeGsa));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesIncluirErro, atividadeGsa));
         }
 
         private async Task<UsuarioGoogle> ObterUsuario(string usuarioClassroomId)
