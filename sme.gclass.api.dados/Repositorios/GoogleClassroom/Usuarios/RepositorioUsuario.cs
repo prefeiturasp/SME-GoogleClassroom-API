@@ -605,12 +605,14 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo)
+        public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId)
         {
-            var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo");
+            var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo ");
+            if(turmaId > 0)
+                query.AppendLine(" AND c.turma_id = @turmaId");
 
             using var conn = ObterConexao();
-                return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo } );
+                return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo, turmaId } );
         }
 
         public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)

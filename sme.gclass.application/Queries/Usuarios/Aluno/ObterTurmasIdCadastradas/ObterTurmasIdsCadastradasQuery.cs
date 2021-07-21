@@ -6,12 +6,15 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterTurmasIdsCadastradasQuery : IRequest<IEnumerable<long>>
     {
-        public ObterTurmasIdsCadastradasQuery(int anoLetivo)
+        public ObterTurmasIdsCadastradasQuery(int anoLetivo, long? turmaId = null)
         {
             AnoLetivo = anoLetivo;
+            TurmaId = turmaId;
         }
 
         public int AnoLetivo { get; }
+
+        public long? TurmaId { get; set; }
     }
 
     public class ObterTurmasIsCadastradasQueryValidator : AbstractValidator<ObterTurmasIdsCadastradasQuery>
