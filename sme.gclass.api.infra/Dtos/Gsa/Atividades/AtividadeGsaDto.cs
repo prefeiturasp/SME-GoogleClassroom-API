@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Infra
         public long Id { get; }
         public long CursoId { get; }
         public string Titulo { get; }
-        public string Descricao { get; }
+        public string Descricao { get; set; }
         public string UsuarioClassroomId { get; }
         public DateTime CriadoEm { get; }
         public DateTime AlteradoEm { get; }
