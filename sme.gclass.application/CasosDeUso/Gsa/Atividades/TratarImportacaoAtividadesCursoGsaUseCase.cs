@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var paginaAtividades = await mediator.Send(new ObterAtividadesDoCursoGoogleQuery(filtro.Curso));
 
             if (paginaAtividades.Atividades.Any())
-                await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, filtro.Curso.CursoId));
+                await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, filtro.Curso.CursoId, filtro.UltimaExecucao));
 
             filtro.TokenProximaPagina = paginaAtividades.TokenProximaPagina;
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))

@@ -24,6 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var filtro = mensagem.ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
 
             var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual, filtro.CursoId));
+            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
 
             foreach (var curso in cursos.GroupBy(a => a.CursoId))
             {
@@ -31,7 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     var cursoResponsavel = new CursoResponsavelDto(curso.Key, curso.Select(a => a.UsuarioId));
 
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursoResponsavel)));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursoResponsavel, ultimaExecucao)));
                 }
                 catch (Exception ex)
                 {
@@ -40,9 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            System.Threading.Thread.Sleep(15 * 60 * 1000);
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
-
             return true;
         }
     }

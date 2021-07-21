@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var paginaMural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(filtro.Curso));
 
             if (paginaMural.Avisos.Any())
-                await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, filtro.Curso.CursoId));
+                await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, filtro.Curso.CursoId, filtro.UltimaExecucao));
 
             filtro.TokenProximaPagina = paginaMural.TokenProximaPagina;
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))

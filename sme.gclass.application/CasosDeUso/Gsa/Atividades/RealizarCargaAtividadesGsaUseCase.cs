@@ -25,12 +25,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var anoAtual = DateTime.Now.Year;
             var cursos = await mediator.Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId));
+            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
 
             foreach (var curso in cursos)
             {
                 try
                 {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(curso)));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(curso, ultimaExecucao)));
                 }
                 catch (Exception ex)
                 {
@@ -39,9 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            System.Threading.Thread.Sleep(60 * 60 * 1000);
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
-
             return true;
         }
     }
