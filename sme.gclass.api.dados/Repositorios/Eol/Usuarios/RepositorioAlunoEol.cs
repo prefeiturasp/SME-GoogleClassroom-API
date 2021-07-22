@@ -690,18 +690,20 @@ namespace SME.GoogleClassroom.Dados
         }
         public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
         {
-            var querySelectDados = @" SELECT 					
+            try
+            {
+				var querySelectDados = @" SELECT 					
 										DISTINCT a.cd_aluno AS Codigo,
 										a.nm_aluno AS NomePessoa,
 										a.nm_social_aluno AS NomeSocial,
 										a.dt_nascimento_aluno AS DataNascimento,
 										te.cd_turma_escola AS TurmaId,
 										mte.cd_situacao_aluno as SituacaoMatricula,
-										mte.dt_situacao_aluno as DataSituacao"; 
+										mte.dt_situacao_aluno as DataSituacao";
 
-            var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
+				var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
 
-            var queryFrom = new StringBuilder(@" FROM
+				var queryFrom = new StringBuilder(@" FROM
 											v_aluno_cotic aluno (NOLOCK)
 										INNER JOIN
 											aluno a
@@ -725,40 +727,46 @@ namespace SME.GoogleClassroom.Dados
 											AND matr.dt_status_matricula >= @dataReferencia
 											AND NOT EXISTS (select 1 
 												from v_matricula_cotic v2
-											   inner join matricula_turma_escola m2 on ON 
+											   inner join matricula_turma_escola m2 ON 
 													v2.cd_matricula = m2.cd_matricula
 											   where v2.an_letivo >= matr.an_letivo 
 											     and v2.cd_aluno = a.cd_aluno
 											     and m2.cd_situacao_aluno IN(1,6,10,13) )
 										");
 
-            var queryPaginacao = @"order by a.cd_aluno
+				var queryPaginacao = @"order by a.cd_aluno
 								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
 
-            var query = new StringBuilder(querySelectDados);
-            query.Append(queryFrom);
-            query.Append(queryPaginacao);
-            query.Append(querySelectCount);
-            query.Append(queryFrom);
-			
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query.ToString(),
-                new
-                {
-                    quantidadeRegistros = paginacao.QuantidadeRegistros,
-                    quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
-                    anoLetivo,
-					dataReferencia
-				}, commandTimeout: 6000);
+				var query = new StringBuilder(querySelectDados);
+				query.Append(queryFrom);
+				query.Append(queryPaginacao);
+				query.Append(querySelectCount);
+				query.Append(queryFrom);
 
-            var retorno = new PaginacaoResultadoDto<AlunoEol>
+				using var conn = ObterConexao();
+				using var multi = await conn.QueryMultipleAsync(query.ToString(),
+					new
+					{
+						quantidadeRegistros = paginacao.QuantidadeRegistros,
+						quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+						anoLetivo,
+						dataReferencia
+					}, commandTimeout: 6000);
+
+				var retorno = new PaginacaoResultadoDto<AlunoEol>
+				{
+					Items = multi.Read<AlunoEol>(),
+					TotalRegistros = multi.ReadFirst<int>()
+				};
+
+				retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+				return retorno;
+
+			}
+			catch (Exception ex)
             {
-                Items = multi.Read<AlunoEol>(),
-                TotalRegistros = multi.ReadFirst<int>()
-            };
-
-            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
-            return retorno;
+                throw ex;
+            }
         }
     }
 }
