@@ -255,9 +255,9 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
         }
 
-		public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim)
-		{
-			var query = @"
+        public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim)
+        {
+            var query = @"
 				SELECT
 					DISTINCT
 					a.cd_aluno AS CodigoAluno
@@ -290,9 +290,9 @@ namespace SME.GoogleClassroom.Dados
 													   and matr2.an_letivo = te.an_letivo
 													   and mte2.cd_turma_escola = te.cd_turma_escola)";
 
-			using var conn = ObterConexao();
-				return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataInicio, dataFim });
-		}
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query, new { turmaId, anoLetivo, dataInicio, dataFim });
+        }
 
         public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {
@@ -336,17 +336,17 @@ namespace SME.GoogleClassroom.Dados
             if (turmaId > 0)
                 queryFrom.AppendLine("AND te.cd_turma_escola = @turmaId ");
 
-			if (ehDataReferenciaPrincipal)
-				queryFrom.AppendLine("AND mte.dt_situacao_aluno = @dataReferencia ");
-			else
-				queryFrom.AppendLine("AND mte.dt_situacao_aluno <= @dataReferencia ");
+            if (ehDataReferenciaPrincipal)
+                queryFrom.AppendLine("AND mte.dt_situacao_aluno = @dataReferencia ");
+            else
+                queryFrom.AppendLine("AND mte.dt_situacao_aluno <= @dataReferencia ");
 
-			queryFrom.AppendLine(@"and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
+            queryFrom.AppendLine(@"and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
 													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
 													 where matr2.cd_aluno = a.cd_aluno
 													   and matr2.an_letivo = te.an_letivo
 													   and mte2.cd_turma_escola = te.cd_turma_escola) ");
-			var queryPaginacao = @"order by mte.dt_situacao_aluno desc
+            var queryPaginacao = @"order by mte.dt_situacao_aluno desc
 								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
 
             var query = new StringBuilder(querySelectDados);
@@ -650,7 +650,7 @@ namespace SME.GoogleClassroom.Dados
         {
             try
             {
-				var query = new StringBuilder(@"
+                var query = new StringBuilder(@"
 							   SELECT DISTINCT a.cd_aluno AS CodigoAluno 
 							   FROM
 									v_aluno_cotic aluno (NOLOCK)
@@ -677,12 +677,12 @@ namespace SME.GoogleClassroom.Dados
 									AND NOT EXISTS (select 1 from v_matricula_cotic where an_letivo >= matr.an_letivo and st_matricula IN(1,6,10,13) and cd_aluno = a.cd_aluno) ");
 
                 if (alunoId != null && alunoId > 0)
-					query.AppendLine("AND a.cd_aluno = @alunoId ");
+                    query.AppendLine("AND a.cd_aluno = @alunoId ");
 
                 using var conn = ObterConexao();
-                return await conn.QueryAsync<long>(query.ToString(), new{anoLetivo, dataReferencia, alunoId});
-			
-			}
+                return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo, dataReferencia, alunoId });
+
+            }
             catch (Exception ex)
             {
                 throw ex;
@@ -690,9 +690,7 @@ namespace SME.GoogleClassroom.Dados
         }
         public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
         {
-            try
-            {
-				var querySelectDados = @" SELECT 					
+            var querySelectDados = @" SELECT 					
 										DISTINCT a.cd_aluno AS Codigo,
 										a.nm_aluno AS NomePessoa,
 										a.nm_social_aluno AS NomeSocial,
@@ -701,9 +699,9 @@ namespace SME.GoogleClassroom.Dados
 										mte.cd_situacao_aluno as SituacaoMatricula,
 										mte.dt_situacao_aluno as DataSituacao";
 
-				var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
+            var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
 
-				var queryFrom = new StringBuilder(@" FROM
+            var queryFrom = new StringBuilder(@" FROM
 											v_aluno_cotic aluno (NOLOCK)
 										INNER JOIN
 											aluno a
@@ -734,39 +732,33 @@ namespace SME.GoogleClassroom.Dados
 											     and m2.cd_situacao_aluno IN(1,6,10,13) )
 										");
 
-				var queryPaginacao = @"order by a.cd_aluno
+            var queryPaginacao = @"order by a.cd_aluno
 								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
 
-				var query = new StringBuilder(querySelectDados);
-				query.Append(queryFrom);
-				query.Append(queryPaginacao);
-				query.Append(querySelectCount);
-				query.Append(queryFrom);
+            var query = new StringBuilder(querySelectDados);
+            query.Append(queryFrom);
+            query.Append(queryPaginacao);
+            query.Append(querySelectCount);
+            query.Append(queryFrom);
 
-				using var conn = ObterConexao();
-				using var multi = await conn.QueryMultipleAsync(query.ToString(),
-					new
-					{
-						quantidadeRegistros = paginacao.QuantidadeRegistros,
-						quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
-						anoLetivo,
-						dataReferencia
-					}, commandTimeout: 6000);
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query.ToString(),
+                new
+                {
+                    quantidadeRegistros = paginacao.QuantidadeRegistros,
+                    quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                    anoLetivo,
+                    dataReferencia
+                }, commandTimeout: 6000);
 
-				var retorno = new PaginacaoResultadoDto<AlunoEol>
-				{
-					Items = multi.Read<AlunoEol>(),
-					TotalRegistros = multi.ReadFirst<int>()
-				};
-
-				retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
-				return retorno;
-
-			}
-			catch (Exception ex)
+            var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
-                throw ex;
-            }
+                Items = multi.Read<AlunoEol>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
+
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            return retorno;
         }
     }
 }
