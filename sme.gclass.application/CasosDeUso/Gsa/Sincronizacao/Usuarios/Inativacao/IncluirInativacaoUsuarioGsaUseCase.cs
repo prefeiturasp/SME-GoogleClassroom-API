@@ -2,7 +2,6 @@
 using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos;
 using System;
 using System.Threading.Tasks;
 
@@ -30,7 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 // registra aluno inativo
                 var usuarioInativado = await mediator.Send(new IncluirUsuarioInativoCommand(new UsuarioInativo(filtro.UsuarioId)));
-                
+
                 // Atualiza Unidade Organizacional
                 var alunoInativado = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId));
 
