@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Infra;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,8 +28,13 @@ namespace SME.GoogleClassroom.Aplicacao
                     var alunoInativar = new AlunoUsuarioInativarDto(alunoGoogle.Codigo, alunoGoogle.Indice, alunoGoogle.Email);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioIncluir, RotasRabbit.FilaGsaInativarUsuarioIncluir, alunoInativar));
                 }
+                return true;
             }
-            return true;
+            else
+            {
+                SentrySdk.CaptureMessage($"Não foi possível localizar os usuários (alunos) pelos códigos {string.Join(", ", alunosCodigos)} no GSA");
+                return false;
+            }
         }
     }
 }
