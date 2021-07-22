@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 // Atividades sem descrição devem ser importadadas com o Título
-                atividadeGsa.Descricao = string.IsNullOrEmpty(atividadeGsa.Descricao) ?
+                atividadeGsa.Descricao = string.IsNullOrEmpty(atividadeGsa.Descricao.Trim()) ?
                     atividadeGsa.Titulo :
                     atividadeGsa.Descricao;
 
