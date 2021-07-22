@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
     public class FiltroObterProfessoresQueSeraoRemovidosDto : FiltroPaginacaoBaseDto
     {
-        public int AnoLetivo { get; set; }
-        public long TurmaId { get; set; }
-        public DateTime DataReferencia { get; set; }
+        public FiltroObterProfessoresQueSeraoRemovidosDto()
+        {
+        }
+
+        public FiltroObterProfessoresQueSeraoRemovidosDto(string turmaId)
+        {
+            TurmaId = turmaId;
+        }
+
+        public string TurmaId { get; set; }
     }
 }
