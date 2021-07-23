@@ -177,5 +177,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
 
+        /// <summary>
+        /// Inicia o tratamento de erros de professores que perderam atribuição em turmas Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("cursos/atribuicoes/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErros([FromServices] IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase useCase)
+        {
+            return Ok(await useCase.Executar());
+        }
     }
 }
