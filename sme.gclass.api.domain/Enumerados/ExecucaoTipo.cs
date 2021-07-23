@@ -16,6 +16,6 @@
         AlunoInativar = 12,
         MuralAvisosCarregar = 13,
         AtividadesCarregar = 14,
-        ArquivarCursosTurmasExtintas = 15
+        ArquivarCursosTurmasExtintas = 16
     }
 }
