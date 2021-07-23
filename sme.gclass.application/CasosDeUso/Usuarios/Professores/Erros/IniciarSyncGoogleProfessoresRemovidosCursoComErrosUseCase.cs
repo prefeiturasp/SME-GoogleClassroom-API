@@ -57,10 +57,9 @@ namespace SME.GoogleClassroom.Aplicacao
                         var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
                         var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                         
-                        // TODO: Capturar objeto correto para enviar para fila
-                        //var professoresRemovidosCursos = mensagemRabbit.ObterObjetoMensagem<AtividadeGsaDto>();
+                        var professoresRemovidosCursos = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-                        //await _mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, professoresRemovidosCursos));
+                        await _mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, professoresRemovidosCursos));
                     }
                 }
             }
