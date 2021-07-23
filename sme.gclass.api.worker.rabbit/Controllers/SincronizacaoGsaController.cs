@@ -144,5 +144,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok(retorno);
         }
 
+
+        /// <summary>
+        /// Inicia a sincronização para remoção professores sem atribuição - GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("cursos/professores/remover")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoRemoverProfessoresCursosGsa([FromServices] IIniciarProcessoRemoverProfessorCursoGsaUseCase useCase, long? turmaId = null)
+        {
+            var retorno = await useCase.Executar(turmaId);
+            return Ok(retorno);
+        }
+
     }
 }
