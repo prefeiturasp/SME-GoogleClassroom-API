@@ -76,8 +76,7 @@
         public static string FilaGsaCursoUsuarioRemovidoAlunosTratar => "googleclass.gsa.curso.usuario.removido.alunos.tratar";
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
 
-        public static string FilaGsaProfessoresRemovidosCursoErroSync => "googleclass.gsa.curso.professor.removido.sync.erro";
+        public static string FilaGsaCursoUsuarioRemovidoProfessoresTratarErro => "googleclass.gsa.curso.usuario.removido.professores.tratar.erro";
         #endregion
     }
 }
-
