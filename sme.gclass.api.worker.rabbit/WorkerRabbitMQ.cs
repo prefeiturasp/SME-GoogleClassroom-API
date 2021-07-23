@@ -7,7 +7,6 @@ using RabbitMQ.Client.Events;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
-using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Professores.Cursos;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
