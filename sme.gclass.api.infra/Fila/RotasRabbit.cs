@@ -71,6 +71,8 @@
         #endregion
 
         #region Usuários Remover
+
+        public static string FilaGsaCursoProfessorRemovidoTurmasCarregar => "googleclass.gsa.curso.professor.removido.turmas.carregar";
         public static string FilaGsaCursoUsuarioRemovidoTurmasCarregar => "googleclass.gsa.curso.usuario.removido.turmas.carregar";
         public static string FilaGsaCursoUsuarioRemovidoTurmaTratar => "googleclass.gsa.curso.usuario.removido.turma.tratar";
         public static string FilaGsaCursoUsuarioRemovidoAlunosTratar => "googleclass.gsa.curso.usuario.removido.alunos.tratar";
