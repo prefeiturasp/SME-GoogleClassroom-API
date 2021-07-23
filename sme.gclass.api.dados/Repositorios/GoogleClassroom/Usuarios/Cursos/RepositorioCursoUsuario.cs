@@ -78,6 +78,7 @@ namespace SME.GoogleClassroom.Dados
                                             DROP TABLE IF EXISTS professorTempPaginado;
                                             select distinct
                                                    u.indice,
+                                                   u.google_classroom_id AS googleclassroomid
                                                    u.id AS rf,
                                                    u.nome AS nome,
                                                    u.email AS email
@@ -104,11 +105,14 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
 
             query.AppendLine(@"select t1.rf,
+                                      t1.indice,
    		                              t1.nome,
    		                              t1.email,
+                                      t1.googleclassroomid,
                                       c.id,
    	                                  c.id as CursoId,
    		                              c.nome,
+                                      c.email,
    		                              c.secao,
    		                              c.turma_id as TurmaId,
    		                              c.componente_curricular_id as ComponenteCurricularId
@@ -439,6 +443,27 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
                 return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
+        }
+
+        public async Task<IEnumerable<UsuarioGoogle>> ObterFuncionariosPorCursoId(long cursoId)
+        {
+            var query = @"
+                    select 
+                        u.id,
+                        u.indice,
+	                    u.nome,
+                        u.email,
+                        u.organization_path as organizationPath,
+                        u.google_classroom_id as GoogleClassroomId,
+                        u.existe_google as GoogleClassroomId
+                    from cursos_usuarios cu
+                    inner join usuarios u on u.indice = cu.usuario_id
+                    where cu.curso_id = @cursoId
+                    and u.usuario_tipo <> 1
+                    and not cu.excluido";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<UsuarioGoogle>(query, new { cursoId });
         }
 
     }
