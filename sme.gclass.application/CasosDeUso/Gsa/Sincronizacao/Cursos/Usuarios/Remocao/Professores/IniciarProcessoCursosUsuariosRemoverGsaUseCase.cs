@@ -15,11 +15,11 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(MensagemRabbit mensagem)
+        public async Task<bool> Executar(long? turmaId = null)
         {
             try
             {
-                var dto = new CarregarProfessoresCursoRemoverDto();
+                var dto = new CarregarProfessoresCursoRemoverDto(turmaId);
                 return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoProfessorRemovidoTurmasCarregar, dto));
             }
             catch (Exception ex)
