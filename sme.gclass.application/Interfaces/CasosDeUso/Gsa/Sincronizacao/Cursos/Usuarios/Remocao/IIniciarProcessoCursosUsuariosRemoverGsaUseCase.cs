@@ -5,6 +5,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarProcessoCursosUsuariosRemoverGsaUseCase
     {
-        Task<bool> Executar(MensagemRabbit mensagem);
+        Task<bool> Executar(long? turmaId);
     }
 }

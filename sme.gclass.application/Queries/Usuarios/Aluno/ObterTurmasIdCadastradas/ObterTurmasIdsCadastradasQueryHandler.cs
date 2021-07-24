@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<long>> Handle(ObterTurmasIdsCadastradasQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioUsuario.ObterTurmasComCursoAlunoCadastrado(request.AnoLetivo);
+            return await repositorioUsuario.ObterTurmasComCursoAlunoCadastrado(request.AnoLetivo, request.TurmaId);
         }
     }
 }

@@ -74,11 +74,13 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<ProfessorCursosCadastradosDto>> ObterProfessoresCursosAsync(Paginacao paginacao, long? rf, long? turmaId, long? componenteCurricularId)
         {
-            var query = new StringBuilder(@"DROP TABLE IF EXISTS professorTemp;
+            try
+            {
+                var query = new StringBuilder(@"DROP TABLE IF EXISTS professorTemp;
                                             DROP TABLE IF EXISTS professorTempPaginado;
                                             select distinct
                                                    u.indice,
-                                                   u.google_classroom_id AS googleclassroomid
+                                                   u.google_classroom_id AS googleclassroomid,
                                                    u.id AS rf,
                                                    u.nome AS nome,
                                                    u.email AS email
@@ -88,23 +90,23 @@ namespace SME.GoogleClassroom.Dados
                                              inner join cursos c on c.id = cu.curso_id
                                              where u.usuario_tipo = @tipo
                                                and not cu.excluido");
-            if (rf.HasValue && rf > 0)
-                query.AppendLine(" and u.id = @rf");
+                if (rf.HasValue && rf > 0)
+                    query.AppendLine(" and u.id = @rf");
 
-            if (turmaId.HasValue && turmaId > 0)
-                query.AppendLine(" and c.turma_id = @turmaId");
+                if (turmaId.HasValue && turmaId > 0)
+                    query.AppendLine(" and c.turma_id = @turmaId");
 
-            if (componenteCurricularId.HasValue && componenteCurricularId > 0)
-                query.AppendLine(" and c.componente_curricular_id = @componenteCurricularId");
+                if (componenteCurricularId.HasValue && componenteCurricularId > 0)
+                    query.AppendLine(" and c.componente_curricular_id = @componenteCurricularId");
 
-            query.AppendLine(";");
+                query.AppendLine(";");
 
-            query.AppendLine(" select * into temporary professorTempPaginado from professorTemp");
+                query.AppendLine(" select * into temporary professorTempPaginado from professorTemp");
 
-            if (paginacao.QuantidadeRegistros > 0)
-                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+                if (paginacao.QuantidadeRegistros > 0)
+                    query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
 
-            query.AppendLine(@"select t1.rf,
+                query.AppendLine(@"select t1.rf,
                                       t1.indice,
    		                              t1.nome,
    		                              t1.email,
@@ -120,58 +122,64 @@ namespace SME.GoogleClassroom.Dados
                                 inner join cursos_usuarios cu on cu.curso_id = c.id
                                 inner join professorTempPaginado t1 on t1.indice = cu.usuario_id ");
 
-            if (rf.HasValue && rf > 0)
-                query.AppendLine(" and t1.rf = @rf");
+                if (rf.HasValue && rf > 0)
+                    query.AppendLine(" and t1.rf = @rf");
 
-            if (turmaId.HasValue && turmaId > 0)
-                query.AppendLine(" and c.turma_id = @turmaId");
+                if (turmaId.HasValue && turmaId > 0)
+                    query.AppendLine(" and c.turma_id = @turmaId");
 
-            if (componenteCurricularId.HasValue && componenteCurricularId > 0)
-                query.AppendLine(" and c.componente_curricular_id = @componenteCurricularId");
+                if (componenteCurricularId.HasValue && componenteCurricularId > 0)
+                    query.AppendLine(" and c.componente_curricular_id = @componenteCurricularId");
 
-            query.AppendLine(";");
+                query.AppendLine(";");
 
-            query.AppendLine("select count(*) from professorTemp");
+                query.AppendLine("select count(*) from professorTemp");
 
-            var retorno = new PaginacaoResultadoDto<ProfessorCursosCadastradosDto>();
+                var retorno = new PaginacaoResultadoDto<ProfessorCursosCadastradosDto>();
 
-            var parametros = new
-            {
-                paginacao.QuantidadeRegistrosIgnorados,
-                paginacao.QuantidadeRegistros,
-                tipo = UsuarioTipo.Professor,
-                rf,
-                turmaId,
-                componenteCurricularId
-            };
-
-            using var conn = ObterConexao();
-
-            var multiResult = await conn.QueryMultipleAsync(query.ToString(), parametros);
-
-            var dic = new Dictionary<long, ProfessorCursosCadastradosDto>();
-
-            var Result = multiResult.Read<ProfessorCursosCadastradosDto, CursoDto, ProfessorCursosCadastradosDto>(
-                (professor, curso) =>
+                var parametros = new
                 {
-                    if (!dic.TryGetValue(professor.Rf, out var professorResultado))
+                    paginacao.QuantidadeRegistrosIgnorados,
+                    paginacao.QuantidadeRegistros,
+                    tipo = UsuarioTipo.Professor,
+                    rf,
+                    turmaId,
+                    componenteCurricularId
+                };
+
+                using var conn = ObterConexao();
+
+                var multiResult = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+                var dic = new Dictionary<long, ProfessorCursosCadastradosDto>();
+
+                var Result = multiResult.Read<ProfessorCursosCadastradosDto, CursoDto, ProfessorCursosCadastradosDto>(
+                    (professor, curso) =>
                     {
-                        professor.Cursos.Add(curso);
-                        dic.Add(professor.Rf, professor);
-                        return professor;
+                        if (!dic.TryGetValue(professor.Rf, out var professorResultado))
+                        {
+                            professor.Cursos.Add(curso);
+                            dic.Add(professor.Rf, professor);
+                            return professor;
+                        }
+
+                        professorResultado.Cursos.Add(curso);
+
+                        return professorResultado;
                     }
+                    );
 
-                    professorResultado.Cursos.Add(curso);
+                retorno.Items = dic.Values;
+                retorno.TotalRegistros = multiResult.ReadFirst<int>();
+                retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
-                    return professorResultado;
-                }
-                );
+                return retorno;
 
-            retorno.Items = dic.Values;
-            retorno.TotalRegistros = multiResult.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
-
-            return retorno;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<PaginacaoResultadoDto<AlunoCursosCadastradosDto>> ObterAlunosCursosAsync(Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
@@ -447,23 +455,30 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<UsuarioGoogle>> ObterFuncionariosPorCursoId(long cursoId)
         {
-            var query = @"
-                    select 
-                        u.id,
-                        u.indice,
-	                    u.nome,
-                        u.email,
-                        u.organization_path as organizationPath,
-                        u.google_classroom_id as GoogleClassroomId,
-                        u.existe_google as GoogleClassroomId
-                    from cursos_usuarios cu
-                    inner join usuarios u on u.indice = cu.usuario_id
-                    where cu.curso_id = @cursoId
-                    and u.usuario_tipo <> 1
-                    and not cu.excluido";
+            try
+            {
+                var query = @"
+		                    select 
+		                        u.id,
+		                        u.indice,
+			                    u.nome,
+		                        u.email,
+		                        u.organization_path as organizationPath,
+		                        u.google_classroom_id as GoogleClassroomId,
+		                        u.existe_google as GoogleClassroomId
+		                    from cursos_usuarios cu
+		                    inner join usuarios u on u.indice = cu.usuario_id
+		                    where cu.curso_id = @cursoId
+		                     and u.usuario_tipo <> 1
+		                     and not cu.excluido";
 
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<UsuarioGoogle>(query, new { cursoId });
+                using var conn = ObterConexao();
+                return await conn.QueryAsync<UsuarioGoogle>(query, new { cursoId });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

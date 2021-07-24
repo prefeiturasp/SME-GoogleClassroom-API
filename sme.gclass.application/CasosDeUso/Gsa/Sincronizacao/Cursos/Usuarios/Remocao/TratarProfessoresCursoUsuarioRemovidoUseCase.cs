@@ -12,24 +12,22 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         private readonly IMediator mediator;
 
-        public TratarProfessoresCursoUsuarioRemovidoUseCase()
+        public TratarProfessoresCursoUsuarioRemovidoUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            CursoUsuarioRemoverDto cursoUsuarioRemover;
-
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
             var professoresASeremRemovidos = await mediator.Send(new ObterProfessoresParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DataInicio, dto.DataFim)); 
 
             foreach (var professorASerRemovido in professoresASeremRemovidos)
             {
-                var professorCurso = await ObterInformacoesDoProfessorECurso(professorASerRemovido);
+               var professorCurso = await ObterInformacoesDoProfessorECurso(professorASerRemovido);
 
-                cursoUsuarioRemover = new CursoUsuarioRemoverDto
+               var cursoUsuarioRemover = new CursoUsuarioRemoverDto
                 {
                     CursoId = professorCurso.curso.CursoId,
                     TipoUsuario = (int)UsuarioTipo.Professor,
@@ -40,6 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (ProfessorASerRemovidoEhResponsavelPeloCurso(professorCurso.professor, professorCurso.curso))
                 {
+                    // TODO: Testar à partir desse ponto
                     var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(professorCurso.curso.CursoId));
 
                     var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, professorCurso.professor);
@@ -73,7 +72,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task<(ProfessorCursosCadastradosDto professor, CursoDto curso)> ObterInformacoesDoProfessorECurso(RemoverAtribuicaoProfessorCursoEolDto professorASerRemovido)
         {
-            var paginacao = new Paginacao(1, 1);
+            var paginacao = new Paginacao(1, 50);
             var professorCurso = await mediator.Send(new ObterProfessoresCursosGoogleQuery(paginacao, null, professorASerRemovido.TurmaCodigo, professorASerRemovido.ComponenteCurricularCodigo));
             
             var professor = professorCurso.Items.FirstOrDefault();

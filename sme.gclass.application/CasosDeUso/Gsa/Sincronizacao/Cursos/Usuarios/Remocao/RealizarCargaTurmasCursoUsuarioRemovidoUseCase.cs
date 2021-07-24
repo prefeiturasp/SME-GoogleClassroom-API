@@ -19,15 +19,10 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
-            var totalPorPagina = 50;
-
-            var paginacao = dto != null ?
-                new Paginacao(dto.Pagina, dto.TotalRegistros) :
-                new Paginacao(1, totalPorPagina);
 
             var datasReferencias = await ObterDatasReferencias(dto);
 
-            var turmas = await mediator.Send(new ObterTurmasIdsCadastradasQuery(DateTime.Now.Year));
+            var turmas = await mediator.Send(new ObterTurmasIdsCadastradasQuery(DateTime.Now.Year, dto.TurmaId));
             if (turmas != null && turmas.Any())
             {
                 foreach(var turma in turmas)
@@ -41,15 +36,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias(CarregarTurmaRemoverCursoUsuarioDto dto)
         {
-            if (dto != null)
-                return (dto.DataInicio, dto.DataFim);
-            else
-            {
-                var totalDiasConsiderar = 10;
-                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
-
-                return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
-            }
+            var totalDiasConsiderar = 10;
+            var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
+            return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
         }
     }
 }
