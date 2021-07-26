@@ -492,6 +492,7 @@ namespace SME.GoogleClassroom.Dados
 				query.AppendLine(@"select te.cd_turma_escola as TurmaCodigo
 							, aa.cd_componente_curricular as ComponenteCurricularCodigo
 							, s.cd_registro_funcional as UsuarioRf
+							, s.nm_pessoa as UsuarioNome
 							, aa.dt_disponibilizacao_aulas as DataDisponibilizacao
 							, aa.cd_motivo_disponibilizacao as MotivoDisponibilizacao ");
 
