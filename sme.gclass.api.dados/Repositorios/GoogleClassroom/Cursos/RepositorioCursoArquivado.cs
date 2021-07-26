@@ -19,6 +19,7 @@ namespace SME.GoogleClassroom.Dados
                             values
                             (@CursoId, @DataArquivamento, @Extinto)";
 
+
             var parametros = new
             {
                 cursoId,
