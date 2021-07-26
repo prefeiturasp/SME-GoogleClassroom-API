@@ -42,7 +42,6 @@
         public static string FilaProfessorCursoRemover => "googleclass.professor.curso.remover";
         public static string FilaProfessorErroSync => "googleclass.professor.erro.sync";
         public static string FilaProfessorErroTratar => "googleclass.professor.erro.tratar";
-        public static string FilaGsaCursoUsuarioRemovidoProfessoresTratar => "googleclass.gsa.curso.usuario.removido.professor.tratar";
         #endregion
 
         #region Funcionário indireto
@@ -73,10 +72,10 @@
 
         #region Usuários Remover
 
-        public static string FilaGsaCursoProfessorRemovidoTurmasCarregar => "googleclass.gsa.curso.professor.removido.turmas.carregar";
         public static string FilaGsaCursoUsuarioRemovidoTurmasCarregar => "googleclass.gsa.curso.usuario.removido.turmas.carregar";
         public static string FilaGsaCursoUsuarioRemovidoTurmaTratar => "googleclass.gsa.curso.usuario.removido.turma.tratar";
         public static string FilaGsaCursoUsuarioRemovidoAlunosTratar => "googleclass.gsa.curso.usuario.removido.alunos.tratar";
+        public static string FilaGsaCursoUsuarioRemovidoProfessoresTratar => "googleclass.gsa.curso.usuario.removido.professor.tratar";
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
 
         public static string FilaGsaCursoUsuarioRemovidoProfessoresTratarErro => "googleclass.gsa.curso.usuario.removido.professores.tratar.erro";
