@@ -20,11 +20,11 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível realizar arquivamento do curso. Mensagem não recebida");
 
-            //var atividadeGsa = mensagem.ObterObjetoMensagem<AtividadeGsaDto>();
+            var cursoArquivado = mensagem.ObterObjetoMensagem<CursoArquivadoDto>();
 
-            var usuario = await mediator.Send(new ArquivarCursoExtintoQuery());
+            var result = await mediator.Send(new ArquivarCursoExtintoQuery(cursoArquivado.CursoId, cursoArquivado.DataArquivamento, cursoArquivado.Extinto));
 
-            return true;
+            return result > 0;
         }
     }
 }

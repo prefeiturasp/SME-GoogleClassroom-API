@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ArquivarCursoExtintoQueryHandler: IRequestHandler<ArquivarCursoExtintoQuery, bool>
+    public class ArquivarCursoExtintoQueryHandler: IRequestHandler<ArquivarCursoExtintoQuery, long>
     {
         private readonly IRepositorioCursoArquivado repositorioCursoArquivado;
 
@@ -15,8 +15,8 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoArquivado = repositorioCursoArquivado ?? throw new ArgumentNullException(nameof(repositorioCursoArquivado));
         }
 
-        public async Task<bool> Handle(ArquivarCursoExtintoQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoArquivado.ArquivarCurso();
+        public async Task<long> Handle(ArquivarCursoExtintoQuery request, CancellationToken cancellationToken)
+            => await repositorioCursoArquivado.Arquivar(request.CursoId, request.DataArquivamento, request.Extinto);
 
     }
 }
