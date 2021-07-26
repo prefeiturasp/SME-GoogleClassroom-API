@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<bool> Handle(ArquivarCursoExtintoQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoArquivado.ArquivarCurso();
+            => await repositorioCursoArquivado.Arquivar(request.CursoId, request.DataArquivamento, request.Extinto);
 
     }
 }
