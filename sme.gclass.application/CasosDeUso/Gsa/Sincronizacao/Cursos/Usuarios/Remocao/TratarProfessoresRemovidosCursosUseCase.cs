@@ -29,6 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                var cursoUsuarioRemover = new CursoUsuarioRemoverDto
                 {
+                    CursoUsuarioId = professorCurso.cursoUsuarioId,
                     CursoId = professorCurso.curso.CursoId,
                     TipoUsuario = (int)UsuarioTipo.Professor,
                     TipoGsa = (int)UsuarioCursoGsaTipo.Professor,
@@ -69,11 +70,14 @@ namespace SME.GoogleClassroom.Aplicacao
             throw new NegocioException("Não foi possível localizar novo responsável pelo curso. O professor não poderá ser removido.");
         }
 
-        private async Task<(ProfessorCursosCadastradosDto professor, CursoDto curso)> ObterInformacoesDoProfessorECurso(RemoverAtribuicaoProfessorCursoEolDto professorASerRemovido)
+        private async Task<(ProfessorCursosCadastradosDto professor, CursoDto curso, long cursoUsuarioId)> ObterInformacoesDoProfessorECurso(RemoverAtribuicaoProfessorCursoEolDto professorASerRemovido)
         {
             var paginacao = new Paginacao(1, 50);
             var professorCurso = await mediator.Send(new ObterProfessoresCursosGoogleQuery(paginacao, null, professorASerRemovido.TurmaCodigo, professorASerRemovido.ComponenteCurricularCodigo));
-            
+
+            if (professorCurso.Items == null || !professorCurso.Items.Any())
+                throw new NegocioException("Não foi possível localizar o professor do curso.");
+
             var professor = professorCurso.Items.FirstOrDefault();
             var curso = professor.Cursos.FirstOrDefault();
 
@@ -83,7 +87,8 @@ namespace SME.GoogleClassroom.Aplicacao
             if (professor is null)
                 throw new NegocioException("Não foi possível localizar professor para ser removido.");
 
-            return (professor, curso);
+            return (professor, curso, professorCurso.Items.FirstOrDefault().CursoUsuarioId);
+
         }
 
         private bool ProfessorASerRemovidoEhResponsavelPeloCurso(ProfessorCursosCadastradosDto professor, CursoDto curso)

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -35,17 +34,17 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 // Usuario Curso GSA
                 var tipoGsa = (UsuarioCursoGsaTipo)filtro.TipoGsa;
-                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId, tipoGsa);
-                var alunoCursoGsa = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
-                
+                var usuarioCursoGsa = new UsuarioCursoGsa(filtro.UsuarioGsaId, filtro.CursoId.ToString(), tipoGsa);
+                var usuarioCursoGsaRemovido = await mediator.Send(new RemoverUsuarioCursoGsaCommand(usuarioCursoGsa));
+
                 // Usuario Curso 
-                var alunoCurso = await mediator.Send(new RemoverCursoUsuarioCommand(filtro.CursoUsuarioId));
+                var usuarioCurso = await mediator.Send(new RemoverCursoUsuarioCommand(filtro.CursoUsuarioId));
 
                 // Google API
-                var alunoCursoGoogle = new UsuarioCursoGoogleDto(filtro.CursoId, filtro.UsuarioGsaId, filtro.TipoGsa);
-                var alunoCursoGoogleRemovido = await mediator.Send(new RemoverAlunoCursoGoogleCommand(alunoCursoGoogle));
+                var usuarioCursoGoogle = new UsuarioCursoGoogleDto(filtro.CursoId, filtro.UsuarioGsaId, filtro.TipoGsa);
+                var usuarioCursoGoogleRemovido = await mediator.Send(new RemoverUsuarioCursoGoogleCommand(usuarioCursoGoogle));
 
-                if (alunoCursoGoogleRemovido == false)
+                if (usuarioCursoGoogleRemovido == false)
                     throw new NegocioException("Não foi possível remover a associação de Curso x Usuário no Google API");
             }
             catch (Exception ex)

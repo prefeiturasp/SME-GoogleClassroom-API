@@ -39,9 +39,8 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var course = servicoClassroom.Courses.Get(cursoId.ToString()).Execute();
                 if (course.OwnerId == ownerId)
-                {
-                    throw new NegocioException("Esse usuário já é o dono do curso");
-                }
+                    return;
+
                 var professores = await servicoClassroom.Courses.Teachers.List(cursoId.ToString()).ExecuteAsync();
                 var professor = professores.Teachers.FirstOrDefault(p => p.UserId == ownerId);
                 if (professor == null)

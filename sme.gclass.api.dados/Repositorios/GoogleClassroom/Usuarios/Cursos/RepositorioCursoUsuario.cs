@@ -107,6 +107,7 @@ namespace SME.GoogleClassroom.Dados
                     query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
 
                 query.AppendLine(@"select t1.rf,
+                                      cu.Id as CursoUsuarioId,
                                       t1.indice,
    		                              t1.nome,
    		                              t1.email,
@@ -400,14 +401,22 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<int> RemoverAsync(long id)
         {
-            const string query = "DELETE FROM public.cursos_usuarios WHERE id = @id";
-            var parametros = new
+            try
             {
-                id
-            };
+                const string query = "UPDATE public.cursos_usuarios SET excluido = true WHERE id = @id";
+                var parametros = new
+                {
+                    id
+                };
 
-            using var conn = ObterConexao();
-            return await conn.ExecuteAsync(query, parametros);
+                using var conn = ObterConexao();
+                return await conn.ExecuteAsync(query, parametros);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<CursoUsuario> ObterPorUsuarioIdCursoIdAsync(long usuarioId, long cursoId)

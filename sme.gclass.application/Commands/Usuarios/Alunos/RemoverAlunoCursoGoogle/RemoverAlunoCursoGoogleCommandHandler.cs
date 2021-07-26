@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class RemoverAlunoCursoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<RemoverAlunoCursoGoogleCommand>
+    public class RemoverAlunoCursoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<RemoverUsuarioCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
@@ -24,26 +24,33 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
-        protected override async Task<bool> ExecutarAsync(RemoverAlunoCursoGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(RemoverUsuarioCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            switch ((UsuarioCursoGsaTipo)request.AlunoCursoGoogle.TipoGsa)
+            switch ((UsuarioCursoGsaTipo)request.UsuarioCursoGoogle.TipoGsa)
             {
                 case UsuarioCursoGsaTipo.Estudante:
-                    await policy.ExecuteAsync(() => RemoverAlunoCursoNoGoogle(request.AlunoCursoGoogle, servicoClassroom));
+                    await policy.ExecuteAsync(() => RemoverAlunoCursoNoGoogle(request.UsuarioCursoGoogle, servicoClassroom));
                     break;
                 case UsuarioCursoGsaTipo.Professor:
+                    await policy.ExecuteAsync(() => RemoverProfessorCursoNoGoogle(request.UsuarioCursoGoogle, servicoClassroom));
                     break;
                 default:
                     break;
             }
-            
+
             return true;
         }
 
         private async Task RemoverAlunoCursoNoGoogle(UsuarioCursoGoogleDto alunoCursoGoogle, ClassroomService servicoClassroom)
         {
             var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId);
+            await requestCreate.ExecuteAsync();
+        }
+
+        private async Task RemoverProfessorCursoNoGoogle(UsuarioCursoGoogleDto professorCursoGoogle, ClassroomService servicoClassroom)
+        {
+            var requestCreate = servicoClassroom.Courses.Teachers.Delete(professorCursoGoogle.CursoId.ToString(), professorCursoGoogle.UsuarioId);
             await requestCreate.ExecuteAsync();
         }
     }

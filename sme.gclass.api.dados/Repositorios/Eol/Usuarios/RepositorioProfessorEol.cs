@@ -528,28 +528,36 @@ namespace SME.GoogleClassroom.Dados
 
 		public async Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao)
         {
-			var query = new StringBuilder();
-			query.AppendLine(MontaQueryProfessorParaRemoverCurso(turmaId, false, true));
-			query.AppendLine(MontaQueryProfessorParaRemoverCurso(turmaId, true));
+            try
+            {
+				var query = new StringBuilder();
+				query.AppendLine(MontaQueryProfessorParaRemoverCurso(turmaId, false, true));
+				query.AppendLine(MontaQueryProfessorParaRemoverCurso(turmaId, true));
 
-			var parametros = new
-			{
-				turmaId,
-				dataInicio,
-				dataFim,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados
-			};
+				var parametros = new
+				{
+					turmaId,
+					dataInicio,
+					dataFim,
+					paginacao.QuantidadeRegistros,
+					paginacao.QuantidadeRegistrosIgnorados
+				};
 
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query.ToString(), parametros);
-			var retorno = new PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>();
+				using var conn = ObterConexao();
+				using var multi = await conn.QueryMultipleAsync(query.ToString(), parametros);
+				var retorno = new PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>();
 
-			retorno.Items = multi.Read<RemoverAtribuicaoProfessorCursoEolDto>();
-			retorno.TotalRegistros = multi.ReadFirst<int>();
-			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+				retorno.Items = multi.Read<RemoverAtribuicaoProfessorCursoEolDto>();
+				retorno.TotalRegistros = multi.ReadFirst<int>();
+				retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
-			return retorno;
+				return retorno;
+			}
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
 		}
 	}
 }
