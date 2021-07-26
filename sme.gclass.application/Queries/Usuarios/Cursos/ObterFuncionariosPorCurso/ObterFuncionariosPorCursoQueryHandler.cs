@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionariosPorCursoQueryHandler: IRequestHandler<ObterFuncionariosPorCursoQuery, IEnumerable<UsuarioGoogle>>
+    public class ObterFuncionariosPorCursoQueryHandler: IRequestHandler<ObterFuncionariosPorCursoQuery, IEnumerable<UsuarioGoogleDto>>
     {
         private readonly IRepositorioCursoUsuario repositorioCursoUsuario;
 
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoUsuario = repositorioCursoUsuario;
         }
 
-        public async Task<IEnumerable<UsuarioGoogle>> Handle(ObterFuncionariosPorCursoQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UsuarioGoogleDto>> Handle(ObterFuncionariosPorCursoQuery request, CancellationToken cancellationToken)
             => await repositorioCursoUsuario.ObterFuncionariosPorCursoId(request.CursoId); 
     }
 }

@@ -453,7 +453,7 @@ namespace SME.GoogleClassroom.Dados
                 return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
         }
 
-        public async Task<IEnumerable<UsuarioGoogle>> ObterFuncionariosPorCursoId(long cursoId)
+        public async Task<IEnumerable<UsuarioGoogleDto>> ObterFuncionariosPorCursoId(long cursoId)
         {
             try
             {
@@ -465,7 +465,7 @@ namespace SME.GoogleClassroom.Dados
 		                        u.email,
 		                        u.organization_path as organizationPath,
 		                        u.google_classroom_id as GoogleClassroomId,
-		                        u.existe_google as GoogleClassroomId
+		                        u.existe_google as ExisteGoogle
 		                    from cursos_usuarios cu
 		                    inner join usuarios u on u.indice = cu.usuario_id
 		                    where cu.curso_id = @cursoId
@@ -473,7 +473,7 @@ namespace SME.GoogleClassroom.Dados
 		                     and not cu.excluido";
 
                 using var conn = ObterConexao();
-                return await conn.QueryAsync<UsuarioGoogle>(query, new { cursoId });
+                return await conn.QueryAsync<UsuarioGoogleDto>(query, new { cursoId });
             }
             catch (Exception ex)
             {

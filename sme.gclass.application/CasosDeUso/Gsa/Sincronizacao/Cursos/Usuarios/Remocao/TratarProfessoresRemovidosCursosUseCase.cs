@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarProfessoresCursoUsuarioRemovidoUseCase : ITratarProfessoresCursoUsuarioRemovidoUseCase
+    public class TratarProfessoresRemovidosCursosUseCase : ITratarProfessoresRemovidosCursosUseCase
     {
         private readonly IMediator mediator;
 
-        public TratarProfessoresCursoUsuarioRemovidoUseCase(IMediator mediator)
+        public TratarProfessoresRemovidosCursosUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
@@ -38,7 +38,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (ProfessorASerRemovidoEhResponsavelPeloCurso(professorCurso.professor, professorCurso.curso))
                 {
-                    // TODO: Testar à partir desse ponto
                     var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(professorCurso.curso.CursoId));
 
                     var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, professorCurso.professor);
@@ -52,9 +51,9 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private UsuarioGoogle DefinaNovoResponsavelPeloCurso(IEnumerable<UsuarioGoogle> funcionariosDoCurso, ProfessorCursosCadastradosDto professor)
+        private UsuarioGoogleDto DefinaNovoResponsavelPeloCurso(IEnumerable<UsuarioGoogleDto> funcionariosDoCurso, ProfessorCursosCadastradosDto professor)
         {
-            UsuarioGoogle funcionarioResponsavel;
+            UsuarioGoogleDto funcionarioResponsavel;
 
             var tiposFuncionarios = new[] { "/Professores", "/Admin/CP", "/Admin/AD", "/Admin/DIRETOR" };
             var funcionarios = funcionariosDoCurso.Where(o => !o.Email.Equals(professor.Email)).ToList();

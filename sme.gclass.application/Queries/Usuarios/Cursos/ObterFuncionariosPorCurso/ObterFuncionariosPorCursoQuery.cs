@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterFuncionariosPorCursoQuery: IRequest<IEnumerable<UsuarioGoogle>>
+    public class ObterFuncionariosPorCursoQuery: IRequest<IEnumerable<UsuarioGoogleDto>>
     {
         public long CursoId { get; set; }
 
