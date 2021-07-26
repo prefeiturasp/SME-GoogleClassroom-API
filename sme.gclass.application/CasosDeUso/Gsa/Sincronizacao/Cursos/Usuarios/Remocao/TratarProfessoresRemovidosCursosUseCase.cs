@@ -27,6 +27,9 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                var professorCurso = await ObterInformacoesDoProfessorECurso(professorASerRemovido);
 
+                if (professorCurso.professor == null)
+                    continue;
+
                var cursoUsuarioRemover = new CursoUsuarioRemoverDto
                 {
                     CursoUsuarioId = professorCurso.cursoUsuarioId,
@@ -43,7 +46,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                     var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, professorCurso.professor);
 
-                    var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(professorCurso.curso.TurmaId, professorCurso.curso.ComponenteCurricularId, professorCurso.professor.GoogleClassRoomId, professorCurso.professor.Email));
+                    var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(professorCurso.curso.TurmaId, professorCurso.curso.ComponenteCurricularId, novoResponsavel.GoogleClassroomId, novoResponsavel.Email));
                 }
 
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, cursoUsuarioRemover));
@@ -73,7 +76,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<(ProfessorCursosCadastradosDto professor, CursoDto curso, long cursoUsuarioId)> ObterInformacoesDoProfessorECurso(RemoverAtribuicaoProfessorCursoEolDto professorASerRemovido)
         {
             var paginacao = new Paginacao(1, 50);
-            var professorCurso = await mediator.Send(new ObterProfessoresCursosGoogleQuery(paginacao, null, professorASerRemovido.TurmaCodigo, professorASerRemovido.ComponenteCurricularCodigo));
+            var professorCurso = await mediator.Send(new ObterProfessoresCursosGoogleQuery(paginacao, long.Parse(professorASerRemovido.UsuarioRf), professorASerRemovido.TurmaCodigo, professorASerRemovido.ComponenteCurricularCodigo));
 
             if (professorCurso.Items == null || !professorCurso.Items.Any())
                 throw new NegocioException("Não foi possível localizar o professor do curso.");
@@ -88,7 +91,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível localizar professor para ser removido.");
 
             return (professor, curso, professorCurso.Items.FirstOrDefault().CursoUsuarioId);
-
         }
 
         private bool ProfessorASerRemovidoEhResponsavelPeloCurso(ProfessorCursosCadastradosDto professor, CursoDto curso)
