@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 VirtualHost = _configuration.GetSection("ConfiguracaoRabbit:Virtualhost").Value
             };
 
-            await _policy.ExecuteAsync(() => TratarMensagens(RotasRabbit.FilaGsaProfessoresRemovidosCursoErroSync, factory));
+            await _policy.ExecuteAsync(() => TratarMensagens(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratarErro, factory));
             
             return true;
         }
