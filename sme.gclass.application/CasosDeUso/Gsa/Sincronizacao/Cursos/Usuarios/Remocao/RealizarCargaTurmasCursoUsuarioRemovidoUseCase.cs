@@ -27,8 +27,8 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 foreach(var turma in turmas)
                 {
-                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio, datasReferencias.dataFim, turma);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
+                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio, datasReferencias.dataFim, turma, dto.ProcessarAlunos, dto.ProcessarProfessores);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
                 }
             }
             return true;

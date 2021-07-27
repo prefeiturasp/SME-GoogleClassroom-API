@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
@@ -138,9 +139,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase)
+        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, bool processarAlunos = true, bool processarProfessores = true)
         {
-            var retorno = await useCase.Executar(null);
+            var retorno = await useCase.Executar(null, processarAlunos, processarProfessores);
             return Ok(retorno);
         }
 
@@ -155,9 +156,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoRemoverProfessoresCursosGsa([FromServices] IIniciarProcessoRemoverProfessorCursoGsaUseCase useCase, long? turmaId = null)
+        public async Task<IActionResult> IniciarProcessoRemoverProfessoresCursosGsa([FromServices] IIniciarProcessoRemoverProfessorCursoGsaUseCase useCase, long? turmaId = null, bool processarAlunos = true, bool processarProfessores = true)
         {
-            var retorno = await useCase.Executar(turmaId);
+            var retorno = await useCase.Executar(turmaId, processarAlunos, processarProfessores);
             return Ok(retorno);
         }
 

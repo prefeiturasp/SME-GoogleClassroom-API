@@ -25,8 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatas()
         {
             var dias = 10;
-
-            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorCursoRemover));
+            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
             return (ultimaExecucao.AddDays(-dias), DateTime.Today.AddDays(-dias));
         }
     }

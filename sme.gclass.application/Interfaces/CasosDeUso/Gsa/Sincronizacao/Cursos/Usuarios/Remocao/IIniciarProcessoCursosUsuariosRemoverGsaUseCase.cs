@@ -1,10 +1,9 @@
-﻿using SME.GoogleClassroom.Infra;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarProcessoCursosUsuariosRemoverGsaUseCase
     {
-        Task<bool> Executar(long? turmaId);
+        Task<bool> Executar(long? turmaId = null, bool processarAlunos = true, bool processarProfessores = true);
     }
 }
