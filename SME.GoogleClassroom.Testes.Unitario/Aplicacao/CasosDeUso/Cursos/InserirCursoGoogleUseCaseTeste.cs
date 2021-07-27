@@ -62,7 +62,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
 
             var excecao = new NullReferenceException("Erro ao se comunicar Google Classroom.");
 
-            mediator.Setup(a => a.Send(It.IsAny<ExcluirCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<InserirCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(excecao);
 
             var cursoJson = JsonConvert.SerializeObject(curso);
@@ -81,7 +81,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
             mediator.Setup(a => a.Send(It.IsAny<ExisteCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExcluirCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<InserirCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             mediator.Setup(a => a.Send(It.IsAny<InserirCursoCommand>(), It.IsAny<CancellationToken>()))
