@@ -116,6 +116,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaAtividadesCarregar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(IRealizarCargaAtividadesGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaAtividadesTratar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(ITratarImportacaoAtividadesCursoGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaAtividadesIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IImportarAtividadesCursoGsaUseCase)));
+            
+            //Curso arquivado
+            comandos.Add(RotasRabbit.FilaCursoExtintoArquivarErroTratar, new ComandoRabbit("Tratamento de erros cursos extintos", typeof(ITratamentoCursoExtintoErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
