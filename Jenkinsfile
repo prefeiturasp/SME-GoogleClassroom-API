@@ -26,9 +26,7 @@ pipeline {
           sh "echo executando build de projeto"
           sh 'dotnet build sme.gclass.api.worker.rabbit/'
         }
-      }
-
-        
+      }        
 
         stage('AnaliseCodigo') {
 	      when { branch 'homolog' }
@@ -40,9 +38,7 @@ pipeline {
 
             }
           }
-        }
-
-        
+        }        
 
         stage('Build') {
           when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } } 
@@ -71,10 +67,10 @@ pipeline {
                         withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                             sh('cp $config '+"$home"+'/.kube/config')
                             sh 'kubectl rollout restart deployment/gca-api -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-curso-gsa -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-sync -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-usuario-curso-gsa -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-usuario-gsa -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-curso-gsa -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-sync -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-usuario-curso-gsa -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-usuario-gsa -n sme-googleclass'
                             sh('rm -f '+"$home"+'/.kube/config')
                         }
                     }
@@ -82,16 +78,27 @@ pipeline {
                         withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                             sh('cp $config '+"$home"+'/.kube/config')
                             sh 'kubectl rollout restart deployment/gca-api -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-curso-gsa -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-sync -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-usuario-curso-gsa -n sme-googleclass'
-							sh 'kubectl rollout restart deployment/gca-usuario-gsa -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-curso-gsa -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-sync -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-usuario-curso-gsa -n sme-googleclass'
+			    sh 'kubectl rollout restart deployment/gca-usuario-gsa -n sme-googleclass'
                             sh('rm -f '+"$home"+'/.kube/config')
                         }
                     }
                 }
             }           
-        }    
+        }
+
+      stage('Flyway') {
+        agent { label 'master' }
+        when { anyOf {  branch 'master'; branch 'main'; branch 'development';  } }
+        steps{
+          withCredentials([string(credentialsId: "flyway_gclass_${branchname}", variable: 'url')]) {
+            checkout scm
+            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts boxfuse/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+          }
+        }		
+      }
     }
 
   post {

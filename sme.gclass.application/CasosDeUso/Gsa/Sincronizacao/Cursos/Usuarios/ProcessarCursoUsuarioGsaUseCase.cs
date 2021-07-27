@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (usuarioCursoExiste) return true;
 
             var usuarioCursoTipo = Enum.Parse<UsuarioCursoGsaTipo>(usuarioCursoGsaDto.UsuarioCursoTipo.ToString());
-            var usuarioGsa = new UsuarioCursoGsa(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId, usuarioCursoTipo);
+            var usuarioGsa = new UsuarioCursoGsa(usuarioCursoGsaDto.UsuarioId, usuarioCursoGsaDto.CursoId.ToString(), usuarioCursoTipo);
 
             var retorno = await mediator.Send(new IncluirUsuarioCursoGsaCommand(usuarioGsa));
             return retorno;

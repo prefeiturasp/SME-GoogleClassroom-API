@@ -1,4 +1,4 @@
-﻿namespace SME.GoogleClassroom.Infra
+namespace SME.GoogleClassroom.Infra
 {
     public class CarregarTurmaRemoverCursoUsuarioDto
     {
@@ -13,4 +13,4 @@
         public bool ProcessarAlunos { get; set; }
         public bool ProcessarProfessores { get; set; }
     }
-}
+ }

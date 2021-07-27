@@ -3,6 +3,7 @@ using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -208,6 +209,23 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(query, parametros);
+        }
+
+        public async Task<IEnumerable<CursoDto>> ObterCursosPorAno(int anoLetivo, long? cursoId = null)
+        {
+            var query = @"select id as CursoId
+                            , nome
+                            , secao
+                            , turma_id as TurmaId
+                            , componente_curricular_id as ComponenteCurricularId
+                        from cursos c 
+                        where extract(year from c.data_inclusao) = @anoLetivo ";
+
+            if (cursoId.HasValue)
+                query += " and c.id = @cursoId";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<CursoDto>(query, new { anoLetivo, cursoId });
         }
     }
 }

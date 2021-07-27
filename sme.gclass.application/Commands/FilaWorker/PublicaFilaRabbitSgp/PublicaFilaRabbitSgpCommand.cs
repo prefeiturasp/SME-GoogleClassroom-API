@@ -7,13 +7,17 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class PublicaFilaRabbitSgpCommand : IRequest<bool>
     {
-        public PublicaFilaRabbitSgpCommand(string nomeFila, object mensagem)
+        public PublicaFilaRabbitSgpCommand(string nomeFila, object mensagem, string usuarioLogadoRF = "", string usuarioLogadoNome = "")
         {
             NomeFila = nomeFila;
             Mensagem = mensagem;
+            UsuarioLogadoRF = usuarioLogadoRF;
+            UsuarioLogadoNome = usuarioLogadoNome;
         }
 
         public string NomeFila { get; }
         public object Mensagem { get; }
+        public string UsuarioLogadoRF { get; }
+        public string UsuarioLogadoNome { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -20,17 +21,18 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-            var alunosCodigos = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(DateTime.Today.Year, dto.TurmaId, dto.DataInicio, dto.DataFim));
-            if (alunosCodigos != null && alunosCodigos.Any())
+            var alunosCodigosInativosEOL = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(DateTime.Today.Year, dto.TurmaId, dto.DataInicio, dto.DataFim));
+            if (alunosCodigosInativosEOL != null && alunosCodigosInativosEOL.Any())
             {
-                var cursosUsuarios = await mediator.Send(new ObterAlunosCodigosComRegistroEmCursosQuery(alunosCodigos, dto.TurmaId)); 
-                
+                var cursosUsuarios = await mediator.Send(new ObterAlunosCodigosComRegistroEmCursosQuery(alunosCodigosInativosEOL, dto.TurmaId));
+
                 if (cursosUsuarios != null && cursosUsuarios.Any())
                 {
                     foreach (var cursoUsuario in cursosUsuarios)
                     {
                         var cursoUsuarioRemover = new CursoUsuarioRemoverDto()
                         {
+                            CursoUsuarioId = cursoUsuario.CursoUsuarioId,
                             CursoId = cursoUsuario.CursoId,
                             UsuarioId = cursoUsuario.UsuarioId,
                             UsuarioGsaId = cursoUsuario.UsuarioGsaId,
@@ -40,6 +42,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, cursoUsuarioRemover));
                     }
+                }
+                else
+                {
+                    SentrySdk.CaptureMessage($"Não foi possível localizar a relação de cursos x estudantes na base do GSA! TurmaId: {dto.TurmaId} e {String.Join(", ", alunosCodigosInativosEOL)}");
                 }
             }
 

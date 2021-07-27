@@ -52,6 +52,7 @@
         #region Usuários
         public static string FilaUsuarioGoogleIdSync => "googleclass.usuario.googleid.sync";
         public static string FilaUsuarioGoogleIdAtualizar => "googleclass.usuario.googleid.atualizar";
+        public static string FilaUsuarioGoogleTratarErro => "googleclass.usuario.erro.tratar";
         #endregion
 
         #region GSA
@@ -68,7 +69,20 @@
         public static string FilaGsaMuralAvisosTratar => "googleclass.gsa.mural.avisos.tratar";
         public static string FilaGsaMuralAvisosIncluir => "googleclass.gsa.mural.avisos.incluir";
         public static string FilaGsaMuralAvisosIncluirErro => "googleclass.gsa.mural.avisos.incluir.erro";
+        public static string FilaGsaAtividadesCarregar => "googleclass.gsa.atividades.carregar";
+        public static string FilaGsaAtividadesTratar => "googleclass.gsa.atividades.tratar";
+        public static string FilaGsaAtividadesIncluir => "googleclass.gsa.atividades.incluir";
+        public static string FilaGsaAtividadesIncluirErro => "googleclass.gsa.atividades.incluir.erro";
         #endregion
+
+        #region Inativação de Usuários
+        public static string FilaGsaInativarUsuarioIniciar => "googleclass.gsa.inativar.usuario.iniciar";
+        public static string FilaGsaInativarUsuarioCarregar => "googleclass.gsa.inativar.usuario.carregar";
+        public static string FilaGsaInativarUsuarioSync => "googleclass.gsa.inativar.usuario.sync";
+        public static string FilaGsaInativarUsuarioTratar => "googleclass.gsa.inativar.usuario.tratar";
+        public static string FilaGsaInativarUsuarioIncluir => "googleclass.gsa.inativar.usuario.incluir";
+
+        #endregion 
 
         #region Usuários Remover
 
@@ -79,6 +93,8 @@
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
 
         public static string FilaGsaCursoUsuarioRemovidoProfessoresTratarErro => "googleclass.gsa.curso.usuario.removido.professores.tratar.erro";
+        public static string FilaGsaCursoUsuarioRemovidoErroTratar => "googleclass.gsa.curso.usuario.removido.erro.tratar";
+
         #endregion
     }
 }

@@ -607,7 +607,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId)
         {
-            var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo");
+            var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo ");
+            if(turmaId > 0)
+                query.AppendLine(" AND c.turma_id = @turmaId");
 
             if (turmaId > 0)
                 query.AppendLine(" and c.turma_id = @turmaId");
@@ -637,6 +639,26 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, new { classroomId });
+        }
+
+        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id)
+        {
+            const string updateQuery = @"update public.usuarios
+                                         set
+                                            organization_path = 'Alunos/Inativos',
+                                            data_atualizacao = current_timestamp
+                                         where
+                                            id = @id";
+
+            var parametros = new
+            {
+                id
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(updateQuery, parametros);
+            return true;
+
         }
     }
 }

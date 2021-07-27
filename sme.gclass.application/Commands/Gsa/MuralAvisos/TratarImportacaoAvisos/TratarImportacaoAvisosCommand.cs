@@ -1,20 +1,23 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class TratarImportacaoAvisosCommand : IRequest
     {
-        public TratarImportacaoAvisosCommand(ICollection<AvisoMuralGsaDto> avisos, long cursoId)
+        public TratarImportacaoAvisosCommand(ICollection<AvisoMuralGsaDto> avisos, long cursoId, System.DateTime ultimaExecucao)
         {
             Avisos = avisos;
             CursoId = cursoId;
+            UltimaExecucao = ultimaExecucao;
         }
 
         public ICollection<AvisoMuralGsaDto> Avisos { get; set; }
         public long CursoId { get; set; }
+        public DateTime UltimaExecucao { get; set; }
     }
 
     public class TratarImportacaoAvisosCommandValidator : AbstractValidator<TratarImportacaoAvisosCommand>
