@@ -13,7 +13,10 @@
         public static string FilaCursoAlunoSync => "googleclass.curso.aluno.sync";
         public static string FilaCursoGradeSync => "googleclass.curso.grade.sync";
         public static string FilaCursoFuncionarioSync => "googleclass.curso.funcionario.sync";
-        public static string FilaCursoArquivar => "googleclass.gsa.curso.arquivar";
+
+        public static string FilaCursoExtintoArquivarCarregar => "googleclass.gsa.curso.extinto.arquivar.carregar";
+        public static string FilaCursoExtintoArquivarTratar => "googleclass.gsa.curso.extinto.arquivar.tratar";
+        public static string FilaCursoExtintoArquivarSync => "googleclass.gsa.curso.extinto.arquivar.sync";
         #endregion
 
         #region Alunos
@@ -92,6 +95,8 @@
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
         public static string FilaGsaCursoUsuarioRemovidoErroTratar => "googleclass.gsa.curso.usuario.removido.erro.tratar";
         #endregion
+
+
     }
 }
 
