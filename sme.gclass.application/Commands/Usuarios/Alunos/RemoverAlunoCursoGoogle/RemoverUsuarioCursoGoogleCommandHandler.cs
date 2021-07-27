@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class RemoverAlunoCursoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<RemoverUsuarioCursoGoogleCommand>
+    public class RemoverUsuarioCursoGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<RemoverUsuarioCursoGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public RemoverAlunoCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
+        public RemoverUsuarioCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
             : base(variaveisGlobaisOptions, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
