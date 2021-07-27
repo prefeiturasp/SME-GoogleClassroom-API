@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IArquivarCursoExtintoUseCase: IRabbitUseCase
+    public interface IObterCursosExtintosUseCase: IRabbitUseCase
     {
     }
 }

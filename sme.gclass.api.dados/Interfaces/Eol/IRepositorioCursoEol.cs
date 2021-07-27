@@ -15,5 +15,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId);
         Task<bool> ExisteTurmaAtivaPorId(long turmaId);
         Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo);
+        Task<IEnumerable<CursoExtintoEol>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo);
     }
 }

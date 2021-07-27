@@ -1119,5 +1119,20 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryFirstOrDefaultAsync<bool>(query, new { turmaId });
         }
+
+		public async Task<IEnumerable<CursoExtintoEol>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo)
+		{
+			using var conn = ObterConexao();
+
+			const string query = @"select 
+										cd_turma_escola as TurmaId, 
+										dt_fim as DataExtincao 
+								  from turma_escola te 
+								  where st_turma_escola = 'E' 
+										and an_letivo = @anoLetivo 
+										and dt_fim between @dataInicio and @dataFim";				
+
+			return await conn.QueryAsync<CursoExtintoEol>(query, new { dataInicio, dataFim, anoLetivo });
+		}
     }
 }
