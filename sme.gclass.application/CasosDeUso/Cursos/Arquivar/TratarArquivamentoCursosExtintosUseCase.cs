@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível tratar a exinção de turmas. Mensagem não recebida");
 
-            var dto = mensagem.ObterObjetoMensagem<ArquivarTurmaExitintaDto>();
+            var dto = mensagem.ObterObjetoMensagem<ArquivarTurmaExtintaDto>();
 
             try
             {

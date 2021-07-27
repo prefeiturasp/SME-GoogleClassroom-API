@@ -22,21 +22,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var dataInicio = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ArquivarCursosTurmasExtintas));
             var dataFim = DateTime.Today;
-            var cursosExtintos = await mediator.Send(new ObterCursosExtintosQueryPorPeriodo(dataInicio, dataFim, parametroSistema.Ano, turmaId));
+            var cursosExtintos = await mediator.Send(new ObterCursosExtintosQueryPorPeriodoQuery(dataInicio, dataFim, parametroSistema.Ano, turmaId));
 
             foreach (var item in cursosExtintos)
             {
-                var cursoExtinto = new
-                {
-                    TurmaId = item.TurmaId,
-                    DataExtincao = item.DataExtincao,
-                    Excluir = DefinaExclusaoOuArquivamento(item.DataExtincao, DateTime.Parse(parametroSistema.Valor))
-                };
+                var cursoExtinto = new ArquivarTurmaExtintaDto(item.TurmaId, item.DataExtincao, DefinaExclusaoOuArquivamento(item.DataExtincao, DateTime.Parse(parametroSistema.Valor)))
 
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarTratar,  cursoExtinto));
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ArquivarCursosTurmasExtintas, DateTime.Today));
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ArquivarCursosTurmasExtintas));
 
             return true;
         }
@@ -50,11 +45,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         private bool DefinaExclusaoOuArquivamento(DateTime dataExtincao, DateTime dataInicioAnoLetivo)
-        {
-            if (dataExtincao > dataInicioAnoLetivo)
-                return false;
-
-            return true;
-        }
+            => (dataExtincao < dataInicioAnoLetivo);
     }
 }

@@ -52,7 +52,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                         var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
                         var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
-                        var turmaDto = mensagemRabbit.ObterObjetoMensagem<ArquivarTurmaExitintaDto>();
+                        var turmaDto = mensagemRabbit.ObterObjetoMensagem<ArquivarTurmaExtintaDto>();
 
                         await _mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarTratar, turmaDto));
                     }
