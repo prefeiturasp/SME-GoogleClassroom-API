@@ -52,6 +52,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioUsuarioInativoErro, RepositorioUsuarioInativoErro>();
             services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
             
+            //Curso Arquivado
+            services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
+            
             // Curso Arquivado
             services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
         }
@@ -150,7 +153,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterAlunosQueSeraoInativadosUseCase, ObterAlunosQueSeraoInativadosUseCase>();
             services.TryAddScoped<ITrataSyncGoogleAlunoInativoErroUseCase, TrataSyncGoogleAlunoInativoErroUseCase>();
             
-           
+            //Curso Arquivar
+            services.TryAddScoped<IIniciarTratamentoErroCursoAqruivadosUseCase, IniciarTratamentoErroCursoAqruivadosUseCase>();
+            
 
             RegistrarCasosDeUsoGsa(services);
         }
@@ -206,6 +211,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IImportarAtividadesCursoGsaUseCase, ImportarAtividadesCursoGsaUseCase>();
             
             
+            //Curso Arquivado
+            services.TryAddScoped<ITratamentoCursoExtintoErroUseCase, TratamentoCursoExtintoErroUseCase>();
             
         }
     }
