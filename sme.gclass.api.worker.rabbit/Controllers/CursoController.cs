@@ -220,16 +220,32 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
         
         /// <summary>
-        /// Tratar erro ao arquivar curso
+        /// Reprocessar erros ao tratar arquivamento de cursos extintos
         /// </summary>
         /// <remarks>
         /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
-        [HttpPost("arquivados/tratamentos/erros")]
+        [HttpPost("extintos/arquivar/erros/tratar")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> TratarErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoAqruivadosUseCase useCase)
+        public async Task<IActionResult> TratarErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosTratarUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Reprocessar erros ao sincronizar arquivamento de cursos extintos
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("extintos/arquivar/erros/tratar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
         {
             await useCase.Executar();
             return Ok();
