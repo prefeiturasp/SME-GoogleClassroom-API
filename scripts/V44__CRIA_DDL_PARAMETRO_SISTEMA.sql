@@ -14,8 +14,8 @@ ALTER TABLE public.parametro_sistema
     ADD CONSTRAINT parametros_sistema_pk
         PRIMARY KEY (id);
 
-create index parametro_sistema_tipo_id_idx
+create index public.parametro_sistema_tipo_id_idx
     on public.parametro_sistema (tipo);
 
-create index atividades_usuario_ano_idx
+create index public.parametro_sistema_ano_idx
     on public.parametro_sistema (ano);
