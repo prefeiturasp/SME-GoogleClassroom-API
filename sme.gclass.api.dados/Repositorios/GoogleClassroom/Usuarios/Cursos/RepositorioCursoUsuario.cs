@@ -515,5 +515,10 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<CursoUsuarioInativarDto>(query, parametros);
 
         }
+
+        public Task<IEnumerable<CursoUsuarioRemoverDto>> ObterPorUsuarioIdETurmaId(long usuarioId, long turmaId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

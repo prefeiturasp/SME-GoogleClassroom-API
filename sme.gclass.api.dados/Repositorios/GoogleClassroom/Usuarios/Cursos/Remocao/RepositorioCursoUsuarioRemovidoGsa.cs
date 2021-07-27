@@ -154,6 +154,6 @@ namespace SME.GoogleClassroom.Dados
             const string query = @"DELETE FROM curso_usuario_removido_gsa";
             using var conn = ObterConexao();
             await conn.ExecuteAsync(query);
-        }        
+        }
     }
 }

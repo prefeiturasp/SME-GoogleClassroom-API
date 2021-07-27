@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
 
-            var datasReferencias = await ObterDatasReferencias(dto);
+            var datasReferencias = await ObterDatasReferencias();
 
             var turmas = await mediator.Send(new ObterTurmasIdsCadastradasQuery(DateTime.Now.Year, dto.TurmaId));
             if (turmas != null && turmas.Any())

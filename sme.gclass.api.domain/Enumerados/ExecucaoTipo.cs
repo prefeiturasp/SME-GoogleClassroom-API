@@ -14,6 +14,7 @@
         FuncionarioIndiretoAdicionar = 10,
         UsuarioCursoRemover = 11,
         AlunoInativar = 12,
-        MuralAvisosCarregar = 13
+        MuralAvisosCarregar = 13,
+        AtividadesCarregar = 14
     }
 }
