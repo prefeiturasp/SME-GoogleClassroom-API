@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace SME.GoogleClassroom.Dominio
+namespace SME.GoogleClassroom.Infra
 {
-    public class CursoExtintoEol
+    public class CursoExtintoEolDto
     {
         public long TurmaId { get; set; }
         public DateTime DataExtincao { get; set; }
-        public CursoExtintoEol() { }
+        public CursoExtintoEolDto() { }
     }
 }
