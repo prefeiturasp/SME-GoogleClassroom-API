@@ -120,7 +120,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">Foi realizada a requisição para atribuíção do professor ao curso.</response>
         [HttpPost("cursos")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<IActionResult> EnviarRequisicaoAtribuirProfessorCurso([FromBody]AtribuirProfessorCursoDto atribuirProfessorCursoDto, [FromServices]IEnviarRequisicaoAtribuirProfessorCursoUseCase atribuirProfessorCursoUseCase)
+        public async Task<IActionResult> EnviarRequisicaoAtribuirProfessorCurso([FromBody] AtribuirProfessorCursoDto atribuirProfessorCursoDto, [FromServices] IEnviarRequisicaoAtribuirProfessorCursoUseCase atribuirProfessorCursoUseCase)
         {
             var retorno = await atribuirProfessorCursoUseCase.Executar(atribuirProfessorCursoDto);
             return Ok(retorno);
@@ -157,6 +157,39 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         {
             var retorno = await iniciarSyncGoogleAtribuicoesDosProfessoresUseCase.Executar();
             return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os professores quer perderam a atribuição em turmas para remover o vinculo no GSA
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos/atribuicoes/remover")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterTodosAlunosQueSeraoRemovidos([FromServices] IObterProfessoresQueSeraoRemovidosUseCase useCase,
+            [FromQuery] FiltroObterProfessoresQueSeraoRemovidosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+
+        /// <summary>
+        /// Inicia o tratamento de erros de professores que perderam atribuição em turmas Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("cursos/atribuicoes/remover/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErros([FromServices] IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase useCase)
+        {
+            return Ok(await useCase.Executar());
         }
     }
 }

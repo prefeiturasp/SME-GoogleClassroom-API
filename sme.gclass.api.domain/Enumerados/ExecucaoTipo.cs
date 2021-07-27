@@ -16,6 +16,5 @@
         AlunoInativar = 12,
         MuralAvisosCarregar = 13,
         AtividadesCarregar = 14
-
     }
 }

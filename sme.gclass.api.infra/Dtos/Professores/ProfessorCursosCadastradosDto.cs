@@ -9,9 +9,13 @@ namespace SME.GoogleClassroom.Infra
             Cursos = new List<CursoDto>();
         }
 
+
+        public long CursoUsuarioId { get; set; }
+        public long Indice { get; set; }
         public long Rf { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
+        public string GoogleClassRoomId { get; set; }
         public ICollection<CursoDto> Cursos { get; set; }
 
     }
