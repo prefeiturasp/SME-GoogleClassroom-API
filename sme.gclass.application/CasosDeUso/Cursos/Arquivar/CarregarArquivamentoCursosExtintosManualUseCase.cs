@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
