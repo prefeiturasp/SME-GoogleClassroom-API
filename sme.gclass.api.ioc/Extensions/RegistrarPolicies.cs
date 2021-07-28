@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Registry;
+using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
@@ -25,8 +26,17 @@ namespace SME.GoogleClassroom.IoC
               .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(5));
             registry.Add(PoliticaPolly.PolicyPublicaFila, policyFilas);
 
-            var policyGSyncRemocaoProfessor = Policy.Handle<Exception>()
-            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
+            var policyGSyncRemocaoProfessor = Policy.Handle<Exception>(ex => !(ex is GoogleApiException || ex is NegocioException))
+                .WaitAndRetryAsync(new[]
+                {
+                    TimeSpan.FromSeconds(15),
+                    TimeSpan.FromSeconds(30),
+                    TimeSpan.FromSeconds(60)
+                }, (exception, timeSpan, retryCount, context) =>
+                {
+                    Console.WriteLine("RETRY policyGSyncRemocaoProfessor - " + DateTime.Now.Second + " - " + exception.Message);
+                });
+            //.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(30));
             registry.Add(PoliticaPolly.PolicyRemocaoProfessor, policyFilas);
 
             RegistrarPolicyGsa(registry);
