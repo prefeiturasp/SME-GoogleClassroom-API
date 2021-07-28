@@ -40,14 +40,17 @@ namespace SME.GoogleClassroom.Dados
             try
             {
                 var query = @"select 
-                usuario_id as UsuarioId,
-	            curso_id as CursoId,
-	            mensagem as Mensagem,
-                usuario_tipo as UsuarioTipo,
-	            execucao_tipo as ExecucaoTipo,
-                usuario_id_gsa as UsuarioGsaId,
-	            data_inclusao as DataInclusao
-            from public.curso_usuario_removido_gsa_erro";
+                                erro.usuario_id as UsuarioId,
+                                erro.curso_id as CursoId,
+                                erro.mensagem as Mensagem,
+                                erro.execucao_tipo as ExecucaoTipo,
+                                erro.data_inclusao as DataInclusao,
+                                u.usuario_tipo as UsuarioTipo,
+                                u.id as UsuarioIdGsa,
+                                cu.id as CursoUsuarioId
+                            from public.curso_usuario_removido_gsa_erro erro
+                            inner join usuarios u on u.indice = erro.usuario_id 
+                            inner join cursos_usuarios cu on cu.curso_id = erro.curso_id ";
 
                 using var conn = ObterConexao();
                 return await conn.QueryAsync<CursoUsuarioRemovidoGsaErro>(query);

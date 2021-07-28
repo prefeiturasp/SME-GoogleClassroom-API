@@ -1,5 +1,6 @@
 ﻿using Google;
 using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -42,7 +43,10 @@ namespace SME.GoogleClassroom.Aplicacao
                 else if (gEx.AcessoNaoAutorizado()) throw new NegocioException("Usuário sem acesso ao Google Classroom");
                 else if (gEx.EmailContaServicoInvalido()) throw new NegocioException("Email informado é inválido");
                 else
-                    throw new NegocioException(gEx.Message);
+                {
+                    SentrySdk.CaptureException(gEx);
+                    return false;
+                }
             }
         }
     }

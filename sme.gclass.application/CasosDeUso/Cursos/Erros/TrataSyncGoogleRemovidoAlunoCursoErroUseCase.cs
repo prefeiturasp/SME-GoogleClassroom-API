@@ -34,10 +34,12 @@ namespace SME.GoogleClassroom.Aplicacao
                         {
                             var dto = new CursoUsuarioRemoverDto
                             {
-                                TipoUsuario = (int)erroParaTratar.UsuarioTipo,
+                                CursoUsuarioId = erroParaTratar.CursoUsuarioId,
+                                TipoUsuario = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioTipo.Aluno : (int)UsuarioTipo.Professor,
+                                TipoGsa = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioCursoGsaTipo.Estudante : (int)UsuarioCursoGsaTipo.Professor,
                                 UsuarioId = erroParaTratar.UsuarioId,
                                 CursoId = erroParaTratar.CursoId,
-                                UsuarioGsaId = erroParaTratar.UsuarioGsaId
+                                UsuarioGsaId = erroParaTratar.UsuarioIdGsa,
                             };
 
                             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, dto));
