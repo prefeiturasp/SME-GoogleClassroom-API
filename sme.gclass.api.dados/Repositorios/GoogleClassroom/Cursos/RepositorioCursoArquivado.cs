@@ -46,9 +46,11 @@ namespace SME.GoogleClassroom.Dados
         {
             string query = paginado ? 
                 "select count(*) " : 
-                @"Select c.nome as Curso,
-                         data_arquivamento as DataArquivamento,
-                         data_arquivamento as DataExtincao 
+                @"Select c.Id as CursoId
+                    ,   c.Nome
+                    ,   c.Secao
+                    ,   data_arquivamento as DataArquivamento
+                    ,   data_arquivamento as DataExtincao 
                  ";
 
             query += @" from cursos_arquivado inner join cursos c on c.id = cursos_arquivado.curso_id where data_extincao = @dataArquivamento";
