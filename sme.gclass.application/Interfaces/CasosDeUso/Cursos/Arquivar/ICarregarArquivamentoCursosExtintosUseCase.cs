@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
-
-namespace SME.GoogleClassroom.Aplicacao
+﻿namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface ICarregarArquivamentoCursosExtintosUseCase
+    public interface ICarregarArquivamentoCursosExtintosUseCase : IRabbitUseCase
     {
-        Task<bool> Executar(long? turmaId);
     }
 }

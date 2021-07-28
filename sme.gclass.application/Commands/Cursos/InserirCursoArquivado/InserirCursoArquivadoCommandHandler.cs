@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(InserirCursoArquivadoCommand request, CancellationToken cancellationToken)
         {
-            await repositorioCursoArquivado.Inserir(request.CursoId, request.DataArquivamento, request.Extinto);
+            await repositorioCursoArquivado.Inserir(request.CursoId, request.DataArquivamento, request.DataExtincao, request.Extinto);
         }
     }
 }

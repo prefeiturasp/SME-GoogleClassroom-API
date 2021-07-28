@@ -220,7 +220,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
 
         /// <summary>
-        /// Obtem lista de cursos arquivados no EOL que serão arquivados no Google Sala de Aula ao executar a rotina de arquivamento
+        /// Obtem lista de turmas extintas no EOL que terão seus cursos arquivados no Google Sala de Aula ao executar a rotina de arquivamento
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
@@ -232,6 +232,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public async Task<IActionResult> ObterCursosArquivar([FromServices] IObterCursosExtintosParaArquivarPaginadoUseCase useCase, [FromQuery] FiltroTurmasExtintasArquivarDto filtro)
         {
             return Ok(await useCase.Executar(filtro));
+        }
+
+        /// <summary>
+        /// Executar manualmente o Arquivamento de Turmas 
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("extintos/arquivar")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ArquivarTurmasExtintas([FromServices] ICarregarArquivamentoCursosExtintosManualUseCase useCase, [FromQuery] long? turmaId)
+        {
+            await useCase.Executar(turmaId);
+            return Ok();
         }
 
         /// <summary>

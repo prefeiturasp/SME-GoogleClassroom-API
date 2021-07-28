@@ -13,15 +13,15 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task Inserir(long cursoId, DateTime dataArquivamento, bool extinto)
+        public async Task Inserir(long cursoId, DateTime dataArquivamento, DateTime dataExtincao, bool extinto)
         {
             var query = @" INSERT INTO public.cursos_arquivado
-                            (curso_id, data_arquivamento, extinto)
+                            (curso_id, data_arquivamento, data_extincao, extinto)
                             values
-                            (@cursoId, @dataArquivamento, @extinto)";
+                            (@cursoId, @dataArquivamento, @dataExtincao, @extinto)";
 
             using var conn = ObterConexao();
-            await conn.ExecuteAsync(query, new {cursoId, dataArquivamento, extinto});
+            await conn.ExecuteAsync(query, new { cursoId, dataArquivamento, dataExtincao, extinto });
         }
 
         public async Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataExtincao(DateTime dataExtincao, Paginacao paginacao)

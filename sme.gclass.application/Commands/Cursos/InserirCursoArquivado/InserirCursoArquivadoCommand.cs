@@ -6,15 +6,17 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class InserirCursoArquivadoCommand : IRequest
     {
-        public InserirCursoArquivadoCommand(long cursoId, DateTime dataArquivamento, bool extinto)
+        public InserirCursoArquivadoCommand(long cursoId, DateTime dataArquivamento, DateTime dataExtincao, bool extinto)
         {
             CursoId = cursoId;
             DataArquivamento = dataArquivamento;
+            DataExtincao = dataExtincao;
             Extinto = extinto;
         }
 
         public long CursoId { get; }
         public DateTime DataArquivamento { get; }
+        public DateTime DataExtincao { get; }
         public bool Extinto { get; }
     }
 
@@ -29,6 +31,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(a => a.DataArquivamento)
                 .NotEmpty()
                 .WithMessage("A data do arquivamento deve ser informada para arquivamento do curso");
+
+            RuleFor(a => a.DataExtincao)
+                .NotEmpty()
+                .WithMessage("A data de extinção deve ser informada para arquivamento do curso");
         }
     }
 }

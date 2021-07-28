@@ -7,7 +7,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioCursoArquivado
     {
-        Task Inserir(long cursoId, DateTime dataArquivamento, bool extinto);
+        Task Inserir(long cursoId, DateTime dataArquivamento, DateTime dataExtincao, bool extinto);
 
         Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataExtincao(DateTime dataExtincao,
             Paginacao paginacao);

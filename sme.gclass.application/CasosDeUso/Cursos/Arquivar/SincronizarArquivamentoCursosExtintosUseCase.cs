@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                await IncluirCursoArquivado(cursoDto.CursoId, cursoDto.DataExtincao, cursoDto.Excluir);
+                await IncluirCursoArquivado(cursoDto.CursoId, DateTime.Now, cursoDto.DataExtincao, cursoDto.Excluir);
 
                 await SincronizarArquivamentoCurso(cursoDto.CursoId, cursoDto.Excluir);
             }
@@ -42,9 +42,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new ArquivarCursoGoogleCommand(cursoId));
         }
 
-        private async Task IncluirCursoArquivado(long cursoId, DateTime dataExtincao, bool excluir)
+        private async Task IncluirCursoArquivado(long cursoId, DateTime dataArquivamento, DateTime dataExtincao, bool excluir)
         {
-            await mediator.Send(new InserirCursoArquivadoCommand(cursoId, dataExtincao, excluir));
+            await mediator.Send(new InserirCursoArquivadoCommand(cursoId, dataArquivamento, dataExtincao, excluir));
         }
     }
 }

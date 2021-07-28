@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Dados
                             and ano = @ano";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstAsync<ParametrosSistema>(query, new { tipo, ano });
+            return await conn.QueryFirstOrDefaultAsync<ParametrosSistema>(query, new { tipo, ano });
         }
     }
 }

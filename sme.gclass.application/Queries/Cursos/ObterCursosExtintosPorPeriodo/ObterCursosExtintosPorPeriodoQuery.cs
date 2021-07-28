@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosExtintosPorPeriodoQuery: IRequest<IEnumerable<CursoExtintoEolDto>>
     {
-        public ObterCursosExtintosPorPeriodoQuery(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
+        public ObterCursosExtintosPorPeriodoQuery(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId = null)
         {
             DataInicio = dataInicio;
             DataFim = dataFim;
