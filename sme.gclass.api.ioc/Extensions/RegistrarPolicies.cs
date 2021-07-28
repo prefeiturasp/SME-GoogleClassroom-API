@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.IoC
             registry.Add(PoliticaPolly.PolicyPublicaFila, policyFilas);
 
             var policyGSyncRemocaoProfessor = Policy.Handle<Exception>()
-            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(5));
+            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(60));
             registry.Add(PoliticaPolly.PolicyRemocaoProfessor, policyFilas);
 
             RegistrarPolicyGsa(registry);
