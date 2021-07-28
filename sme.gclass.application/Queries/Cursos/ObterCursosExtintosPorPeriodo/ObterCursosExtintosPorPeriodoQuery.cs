@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosExtintosQueryPorPeriodoQuery: IRequest<IEnumerable<CursoExtintoEolDto>>
+    public class ObterCursosExtintosPorPeriodoQuery: IRequest<IEnumerable<CursoExtintoEolDto>>
     {
-        public ObterCursosExtintosQueryPorPeriodoQuery(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
+        public ObterCursosExtintosPorPeriodoQuery(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
         {
             DataInicio = dataInicio;
             DataFim = dataFim;
@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public long? TurmaId { get; set; }
     }
 
-    public class ObterCursosExtintosQueryPorPeriodoQueryValidator : AbstractValidator<ObterCursosExtintosQueryPorPeriodoQuery>
+    public class ObterCursosExtintosQueryPorPeriodoQueryValidator : AbstractValidator<ObterCursosExtintosPorPeriodoQuery>
     {
         public ObterCursosExtintosQueryPorPeriodoQueryValidator()
         {

@@ -22,11 +22,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var dataInicio = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ArquivarCursosTurmasExtintas));
             var dataFim = DateTime.Today;
-            var cursosExtintos = await mediator.Send(new ObterCursosExtintosQueryPorPeriodoQuery(dataInicio, dataFim, parametroSistema.Ano, turmaId));
+            var cursosExtintos = await mediator.Send(new ObterCursosExtintosPorPeriodoQuery(dataInicio, dataFim, parametroSistema.Ano, turmaId));
 
             foreach (var item in cursosExtintos)
             {
-                var cursoExtinto = new ArquivarTurmaExtintaDto(item.TurmaId, item.DataExtincao, DefinaExclusaoOuArquivamento(item.DataExtincao, DateTime.Parse(parametroSistema.Valor)))
+                var cursoExtinto = new ArquivarTurmaExtintaDto(item.TurmaId, item.DataExtincao, DefinaExclusaoOuArquivamento(item.DataExtincao, DateTime.Parse(parametroSistema.Valor)));
 
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarTratar,  cursoExtinto));
             }

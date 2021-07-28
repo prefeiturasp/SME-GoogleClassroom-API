@@ -1,4 +1,5 @@
-﻿create table public.parametro_sistema
+﻿DROP TABLE IF EXISTS parametro_sistema;
+create table parametro_sistema
 (
     id           bigint generated always as identity,
     nome         varchar(50)          not null,
@@ -10,12 +11,12 @@
 );
 
 
-ALTER TABLE public.parametro_sistema
+ALTER TABLE parametro_sistema
     ADD CONSTRAINT parametros_sistema_pk
         PRIMARY KEY (id);
 
-create index public.parametro_sistema_tipo_id_idx
+create index parametro_sistema_tipo_id_idx
     on public.parametro_sistema (tipo);
 
-create index public.parametro_sistema_ano_idx
+create index parametro_sistema_ano_idx
     on public.parametro_sistema (ano);

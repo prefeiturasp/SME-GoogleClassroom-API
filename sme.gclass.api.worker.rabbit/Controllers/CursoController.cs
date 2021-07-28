@@ -218,7 +218,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(turmaId, componenteCurricularId);
             return Ok(retorno);
         }
-        
+
+        /// <summary>
+        /// Obtem lista de cursos arquivados no EOL que serão arquivados no Google Sala de Aula ao executar a rotina de arquivamento
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("extintos/arquivar")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoExtintoEolDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosArquivar([FromServices] IObterCursosExtintosParaArquivarPaginadoUseCase useCase, [FromQuery] FiltroTurmasExtintasArquivarDto filtro)
+        {
+            return Ok(await useCase.Executar(filtro));
+        }
+
         /// <summary>
         /// Reprocessar erros ao tratar arquivamento de cursos extintos
         /// </summary>
@@ -243,7 +258,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
-        [HttpPost("extintos/arquivar/erros/tratar")]
+        [HttpPost("extintos/arquivar/erros/sincronizar")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
         {

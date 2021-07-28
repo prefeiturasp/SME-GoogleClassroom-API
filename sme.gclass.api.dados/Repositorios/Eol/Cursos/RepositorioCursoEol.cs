@@ -1120,22 +1120,59 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<bool>(query, new { turmaId });
         }
 
-		public async Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo, long?turmaId)
+		public async Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
 		{
-			using var conn = ObterConexao();
+			var query = MontaQueryCursosExtintos(turmaId, false, false);
 
-			string query = @"select 
-								cd_turma_escola as TurmaId, 
-								dt_fim as DataExtincao 
-							from turma_escola te 
-							where st_turma_escola = 'E' 
-								and an_letivo = @anoLetivo 
-								and dt_fim between @dataInicio and @dataFim ";
+			using var conn = ObterConexao();
+				return await conn.QueryAsync<CursoExtintoEolDto>(query, new { dataInicio, dataFim, anoLetivo, turmaId });
+		}
+
+        private string MontaQueryCursosExtintos(long? turmaId, bool paginacao, bool contador)
+        {
+			string query = contador ? 
+				"select count(*) " : 
+				@"select 
+					cd_turma_escola as TurmaId, 
+					dt_fim as DataExtincao ";
+
+			query += @"from turma_escola te (NOLOCK)
+				 inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
+					  where st_turma_escola = 'E' 
+						AND te.cd_tipo_turma in (1,2,3,5,6,7)
+						AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
+						and an_letivo = @anoLetivo 
+						and dt_fim between @dataInicio and @dataFim ";
 
 			if (turmaId.HasValue)
-				query += " and turma_id = @turmaId";
+				query += " and te.cd_turma_escola = @turmaId ";
 
-			return await conn.QueryAsync<CursoExtintoEolDto>(query, new { dataInicio, dataFim, anoLetivo, turmaId });
+			if (!contador)
+				query += " order by dt_fim ";
+
+			if (paginacao)
+				query += " OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ";
+
+			query += "; ";
+
+			return query;
 		}
-    }
+
+		public async Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
+		{
+			var query = MontaQueryCursosExtintos(turmaId, true, false);
+			query += MontaQueryCursosExtintos(turmaId, false, true);
+
+			using var conn = ObterConexao();
+			using var multi = await conn.QueryMultipleAsync(query, new { dataInicio, dataFim, anoLetivo, turmaId, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+
+			var retorno = new PaginacaoResultadoDto<CursoExtintoEolDto>();
+
+			retorno.Items = multi.Read<CursoExtintoEolDto>();
+			retorno.TotalRegistros = multi.ReadFirst<int>();
+			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+			return retorno;
+		}
+	}
 }
