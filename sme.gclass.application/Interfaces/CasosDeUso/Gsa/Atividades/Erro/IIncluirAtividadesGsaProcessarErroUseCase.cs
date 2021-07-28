@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
-
-namespace SME.GoogleClassroom.Aplicacao.Interfaces
+﻿namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface IIncluirAtividadesGsaProcessarErroUseCase
+    public interface IIncluirAtividadesGsaProcessarErroUseCase : ITratarFilaErrosUseCase
     {
-        Task Executar();
     }
 }

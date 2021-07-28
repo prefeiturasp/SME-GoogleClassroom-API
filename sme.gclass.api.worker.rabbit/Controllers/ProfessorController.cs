@@ -189,7 +189,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> ProcessarErros([FromServices] IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase useCase)
         {
-            return Ok(await useCase.Executar());
+            await useCase.Executar();
+            return Ok();
         }
     }
 }
