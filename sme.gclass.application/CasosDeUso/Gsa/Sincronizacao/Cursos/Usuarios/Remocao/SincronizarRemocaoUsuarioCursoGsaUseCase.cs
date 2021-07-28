@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -56,6 +57,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         private async Task InserirMensagemErroIntegracaoAsync(CursoUsuarioRemoverDto filtro, string mensagem)
-          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new CursoUsuarioRemovidoGsaErro(filtro.UsuarioId, filtro.CursoId, mensagem)));
+          => await mediator.Send(new IncluirCursoUsuarioRemocaoErroCommand(new CursoUsuarioRemovidoGsaErro(filtro.UsuarioId, filtro.CursoId, mensagem, (UsuarioTipo)filtro.TipoUsuario, filtro.UsuarioGsaId)));
     }
 }

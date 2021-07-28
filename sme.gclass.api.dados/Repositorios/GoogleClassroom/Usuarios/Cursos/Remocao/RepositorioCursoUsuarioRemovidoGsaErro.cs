@@ -3,6 +3,7 @@ using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
+using System;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -36,14 +37,25 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<CursoUsuarioRemovidoGsaErro>> ObterTodos()
         {
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<CursoUsuarioRemovidoGsaErro>(@"select 
+            try
+            {
+                var query = @"select 
                 usuario_id as UsuarioId,
 	            curso_id as CursoId,
 	            mensagem as Mensagem,
+                usuario_tipo as UsuarioTipo,
 	            execucao_tipo as ExecucaoTipo,
+                usuario_id_gsa as UsuarioGsaId,
 	            data_inclusao as DataInclusao
-            from public.curso_usuario_removido_gsa_erro");
+            from public.curso_usuario_removido_gsa_erro";
+
+                using var conn = ObterConexao();
+                return await conn.QueryAsync<CursoUsuarioRemovidoGsaErro>(query);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
 

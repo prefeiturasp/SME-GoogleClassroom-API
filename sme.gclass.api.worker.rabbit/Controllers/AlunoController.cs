@@ -197,6 +197,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }            
+
         /// <summary>
         /// Retorna os alunos inativos no EOL
         /// </summary>
@@ -211,6 +212,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             [FromQuery] FiltroObterAlunosQueSeraoInativadosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de alunos removidos do EOL para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("removidos/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErrosDeRemocaoAluno([FromServices] IIniciarSyncGoogleAlunosRemovidosErrosUseCase usecase)
+        {
+            var retorno = await usecase.Executar();
             return Ok(retorno);
         }
     }

@@ -266,6 +266,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, false, consumer);
 
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoErroTratar, false, consumer);
+                
+
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIniciar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioSync, false, consumer);
