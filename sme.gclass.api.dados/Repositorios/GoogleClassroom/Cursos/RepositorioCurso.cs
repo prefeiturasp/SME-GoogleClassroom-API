@@ -227,5 +227,11 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryAsync<CursoDto>(query, new { anoLetivo, cursoId });
         }
+
+        public async Task<IEnumerable<long>> ObterIdsCursosPorTurma(long turmaId)
+        {
+            using var conn = ObterConexao();
+                return await conn.QueryAsync<long>(@"select id from cursos where turma_id = @turmaId ", new { turmaId });
+        }
     }
 }

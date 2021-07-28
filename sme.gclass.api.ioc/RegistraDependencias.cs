@@ -51,6 +51,10 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioAtividade, RepositorioAtividade>();            
             services.TryAddScoped<IRepositorioUsuarioInativoErro, RepositorioUsuarioInativoErro>();
             services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
+            
+            //Curso Arquivado
+            services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
+            services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -154,6 +158,16 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterProfessoresRemovidosCursosUseCase, ObterProfessoresRemovidosCursosUseCase>();
 
 
+            //Curso Arquivar
+            services.TryAddScoped<ICarregarArquivamentoCursosExtintosUseCase, CarregarArquivamentoCursosExtintosUseCase>();
+            services.TryAddScoped<ITratarArquivamentoCursosExtintosUseCase, TratarArquivamentoCursosExtintosUseCase>();
+            services.TryAddScoped<ISincronizarArquivamentoCursosExtintosUseCase, SincronizarArquivamentoCursosExtintosUseCase>();
+            services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosTratarUseCase, IniciarTratamentoErroCursoArquivadosTratarUseCase>();
+            services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosSyncUseCase, IniciarTratamentoErroCursoArquivadosSyncUseCase>();
+            services.TryAddScoped<IObterCursosExtintosParaArquivarPaginadoUseCase, ObterCursosExtintosParaArquivarPaginadoUseCase>();
+            services.TryAddScoped<ICarregarArquivamentoCursosExtintosManualUseCase, CarregarArquivamentoCursosExtintosManualUseCase>();
+            services.TryAddScoped<IObterCursosArquivadosPaginadoUseCase, ObterCursosArquivadosPaginadoUseCase>();
+
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
             
             RegistrarCasosDeUsoGsa(services);
@@ -209,6 +223,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarCargaAtividadesGsaUseCase, RealizarCargaAtividadesGsaUseCase>();
             services.TryAddScoped<ITratarImportacaoAtividadesCursoGsaUseCase, TratarImportacaoAtividadesCursoGsaUseCase>();
             services.TryAddScoped<IImportarAtividadesCursoGsaUseCase, ImportarAtividadesCursoGsaUseCase>();
+            
         }
     }
 }

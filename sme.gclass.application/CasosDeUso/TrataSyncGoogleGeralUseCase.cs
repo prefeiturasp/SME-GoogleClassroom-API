@@ -33,6 +33,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
             var publicarCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroSync, RotasRabbit.FilaCursoErroSync, resposta));
 
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarCarregar, new FiltroArquivamentoTurmasDto()));
+
             #region Cargas GSA
             // Mural de Avisos
             if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)

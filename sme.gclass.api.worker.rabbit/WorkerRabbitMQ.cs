@@ -117,6 +117,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaAtividadesCarregar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(IRealizarCargaAtividadesGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaAtividadesTratar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(ITratarImportacaoAtividadesCursoGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaAtividadesIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IImportarAtividadesCursoGsaUseCase)));
+
+            //Curso arquivado
+            comandos.Add(RotasRabbit.FilaCursoExtintoArquivarCarregar, new ComandoRabbit("Carregar arquivamento de cursos extintos no EOL", typeof(ICarregarArquivamentoCursosExtintosUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoExtintoArquivarTratar, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ITratarArquivamentoCursosExtintosUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoExtintoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ISincronizarArquivamentoCursosExtintosUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -275,6 +280,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarSync, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
