@@ -24,13 +24,13 @@ namespace SME.GoogleClassroom.Dados
             await conn.ExecuteAsync(query, new { cursoId, dataArquivamento, dataExtincao, extinto });
         }
 
-        public async Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataExtincao(DateTime dataExtincao, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataExtincao(DateTime dataArquivamento, Paginacao paginacao)
         {
             var query = MontaQueryCursosExtintosPaginado(true, false);
             query += MontaQueryCursosExtintosPaginado( false, true);
   
             using var conn = ObterConexao();
-            using var multi = await conn.QueryMultipleAsync(query, new { dataArquivamento = dataExtincao, quantidadeRegistrosIgnorados =  paginacao.QuantidadeRegistrosIgnorados, quantidadeRegistros = paginacao.QuantidadeRegistros });
+            using var multi = await conn.QueryMultipleAsync(query, new { dataArquivamento = dataArquivamento, quantidadeRegistrosIgnorados =  paginacao.QuantidadeRegistrosIgnorados, quantidadeRegistros = paginacao.QuantidadeRegistros });
 
             var retorno = new PaginacaoResultadoDto<CursoArquivadoDto>();
 
@@ -45,15 +45,15 @@ namespace SME.GoogleClassroom.Dados
         private string MontaQueryCursosExtintosPaginado(bool paginacao,  bool paginado)
         {
             string query = paginado ? 
-                "select count(*) " : 
+                "select count(*) " :
                 @"Select c.Id as CursoId
                     ,   c.Nome
                     ,   c.Secao
                     ,   data_arquivamento as DataArquivamento
-                    ,   data_arquivamento as DataExtincao 
+                    ,   data_extincao as DataExtincao 
                  ";
 
-            query += @" from cursos_arquivado inner join cursos c on c.id = cursos_arquivado.curso_id where data_extincao = @dataArquivamento";
+            query += @" from cursos_arquivado inner join cursos c on c.id = cursos_arquivado.curso_id where date(data_arquivamento) = @dataArquivamento";
 
            
             if (!paginado)
