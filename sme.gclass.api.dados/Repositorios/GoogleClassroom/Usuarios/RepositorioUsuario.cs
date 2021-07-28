@@ -611,8 +611,11 @@ namespace SME.GoogleClassroom.Dados
             if(turmaId > 0)
                 query.AppendLine(" AND c.turma_id = @turmaId");
 
+            if (turmaId > 0)
+                query.AppendLine(" and c.turma_id = @turmaId");
+
             using var conn = ObterConexao();
-                return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo, turmaId } );
+            return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo, turmaId });
         }
 
         public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)

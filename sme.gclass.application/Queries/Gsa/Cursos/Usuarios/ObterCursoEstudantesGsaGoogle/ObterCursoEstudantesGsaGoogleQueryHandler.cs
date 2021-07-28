@@ -52,7 +52,7 @@ namespace SME.GoogleClassroom.Aplicacao
             paginaConsulta.CursosDoUsuario.AddRange(resultadoPagina.Students
                 .Select(estudante => new UsuarioCursoGsaDto
                 {
-                    CursoId = long.Parse(estudante.CourseId),
+                    CursoId = estudante.CourseId,
                     UsuarioId = estudante.UserId,
                     UsuarioCursoTipo = (short)UsuarioCursoGsaTipo.Estudante
                 })

@@ -473,5 +473,92 @@ namespace SME.GoogleClassroom.Dados
 
             return query;
         }
-    }
+
+        public async Task<IEnumerable<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCurso(string turmaId, DateTime dataInicio, DateTime dataFim)
+        {
+			var query = MontaQueryProfessorParaRemoverCurso(turmaId);
+
+			using var conn = ObterConexao();
+			  return await conn.QueryAsync<RemoverAtribuicaoProfessorCursoEolDto>(query, new { turmaId, dataInicio, dataFim });
+
+		}
+
+        private string MontaQueryProfessorParaRemoverCurso(string turmaId, bool contador = false, bool aplicarPaginacao = false)
+        {
+			var query = new StringBuilder();
+			if (contador)
+				query.AppendLine("select count(s.cd_registro_funcional)");
+			else
+				query.AppendLine(@"select te.cd_turma_escola as TurmaCodigo
+							, aa.cd_componente_curricular as ComponenteCurricularCodigo
+							, s.cd_registro_funcional as UsuarioRf
+							, s.nm_pessoa as UsuarioNome
+							, aa.dt_disponibilizacao_aulas as DataDisponibilizacao
+							, aa.cd_motivo_disponibilizacao as MotivoDisponibilizacao ");
+
+			query.AppendLine(@"from atribuicao_aula aa
+						 inner join turma_escola te on 
+								  aa.an_atribuicao = te.an_letivo 
+							  AND aa.cd_unidade_educacao = te.cd_escola
+						 inner join v_cargo_base_cotic cs on cs.cd_cargo_base_servidor = aa.cd_cargo_base_servidor 
+						 inner join v_servidor_cotic s on s.cd_servidor = cs.cd_servidor
+						  where aa.dt_disponibilizacao_aulas between @dataInicio and @dataFim
+						  and aa.cd_motivo_disponibilizacao <> 34
+						  and not exists(
+  							select 1 
+  							  from atribuicao_aula aa2 
+  							 inner join turma_escola te2 on aa2.an_atribuicao = te2.an_letivo 
+							 inner join v_cargo_base_cotic cs2 on cs2.cd_cargo_base_servidor = aa2.cd_cargo_base_servidor 
+							 inner join v_servidor_cotic s2 on s2.cd_servidor = cs2.cd_servidor
+							  AND aa2.cd_unidade_educacao = te2.cd_escola
+  							 where s2.cd_registro_funcional = s.cd_registro_funcional 
+  							   and te2.cd_turma_escola = te.cd_turma_escola 
+  							   and aa2.cd_componente_curricular = aa.cd_componente_curricular 
+  							   and aa2.dt_disponibilizacao_aulas is null
+  							 )");
+
+			if (!string.IsNullOrEmpty(turmaId))
+				query.AppendLine(" and te.cd_turma_escola = @turmaId ");
+
+			if (aplicarPaginacao)
+				query.Append(" order by 1,2 OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
+
+			query.AppendLine(";");
+			return query.ToString();
+		}
+
+		public async Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao)
+        {
+            try
+            {
+				var query = new StringBuilder();
+				query.AppendLine(MontaQueryProfessorParaRemoverCurso(turmaId, false, true));
+				query.AppendLine(MontaQueryProfessorParaRemoverCurso(turmaId, true));
+
+				var parametros = new
+				{
+					turmaId,
+					dataInicio,
+					dataFim,
+					paginacao.QuantidadeRegistros,
+					paginacao.QuantidadeRegistrosIgnorados
+				};
+
+				using var conn = ObterConexao();
+				using var multi = await conn.QueryMultipleAsync(query.ToString(), parametros);
+				var retorno = new PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>();
+
+				retorno.Items = multi.Read<RemoverAtribuicaoProfessorCursoEolDto>();
+				retorno.TotalRegistros = multi.ReadFirst<int>();
+				retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+				return retorno;
+			}
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+		}
+	}
 }

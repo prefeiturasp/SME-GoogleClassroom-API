@@ -197,6 +197,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }            
+
         /// <summary>
         /// Retorna os alunos inativos no EOL
         /// </summary>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.GoogleClassroom.Infra
+﻿namespace SME.GoogleClassroom.Infra
 {
     public class CursoUsuarioRemoverDto
     {

@@ -4,6 +4,7 @@ using Google.Apis.Classroom.v1.Data;
 using MediatR;
 using Polly;
 using Polly.Registry;
+using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
@@ -39,9 +40,8 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var course = servicoClassroom.Courses.Get(cursoId.ToString()).Execute();
                 if (course.OwnerId == ownerId)
-                {
-                    throw new NegocioException("Esse usuário já é o dono do curso");
-                }
+                    return;
+
                 var professores = await servicoClassroom.Courses.Teachers.List(cursoId.ToString()).ExecuteAsync();
                 var professor = professores.Teachers.FirstOrDefault(p => p.UserId == ownerId);
                 if (professor == null)
@@ -57,7 +57,9 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 if (gEx.RegistroNaoEncontrado()) throw new NegocioException("Curso não existe no Google Classroom");
                 else
-                    throw new NegocioException(gEx.Message);
+                {
+                    SentrySdk.CaptureException(gEx);
+                }
             }
         }
     }

@@ -1,30 +1,26 @@
-﻿using System;
+﻿using MediatR;
+using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dominio;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using SME.GoogleClassroom.Dados;
-using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Cursos.ObterAlunoCursoRemovidoErro
 {
     public class ObterAlunoCursoRemovidoErroQueryHandler : IRequestHandler<ObterAlunoCursoRemovidoErroQuery,
         IEnumerable<CursoUsuarioRemovidoGsaErro>>
     {
-        private readonly IRepositorioCursoUsuarioRemovidoGsaErro _repositorioCursoUsuarioRemovidoGsaErro;
+        private readonly IRepositorioCursoUsuarioRemovidoGsaErro repositorio;
 
-        public ObterAlunoCursoRemovidoErroQueryHandler(
-            IRepositorioCursoUsuarioRemovidoGsaErro repositorioCursoUsuarioRemovidoGsaErro)
+        public ObterAlunoCursoRemovidoErroQueryHandler(IRepositorioCursoUsuarioRemovidoGsaErro repositorio)
         {
-            _repositorioCursoUsuarioRemovidoGsaErro = repositorioCursoUsuarioRemovidoGsaErro ??
-                                                      throw new ArgumentNullException(
-                                                          nameof(repositorioCursoUsuarioRemovidoGsaErro));
+            this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
         }
 
-        public async Task<IEnumerable<CursoUsuarioRemovidoGsaErro>> Handle(ObterAlunoCursoRemovidoErroQuery request,
-            CancellationToken cancellationToken)
+        public async Task<IEnumerable<CursoUsuarioRemovidoGsaErro>> Handle(ObterAlunoCursoRemovidoErroQuery request, CancellationToken cancellationToken)
         {
-            return await _repositorioCursoUsuarioRemovidoGsaErro.ObterTodos();
+            return await repositorio.ObterTodos();
         }
     }
 }

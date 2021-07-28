@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Infra;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -19,7 +17,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, dto));
+            if (dto.ProcessarAlunos)
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, dto));
+
+            if (dto.ProcessarProfessores)
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, dto));
 
             return true;
         }
