@@ -48,9 +48,9 @@ namespace SME.GoogleClassroom.Aplicacao
                     var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, professorCurso.professor);
 
                     var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(professorCurso.curso.TurmaId, professorCurso.curso.ComponenteCurricularId, novoResponsavel.GoogleClassroomId, novoResponsavel.Email));
-                }
 
-                Thread.Sleep(5000);
+                    Thread.Sleep(5000);
+                }
 
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, cursoUsuarioRemover));
             }
