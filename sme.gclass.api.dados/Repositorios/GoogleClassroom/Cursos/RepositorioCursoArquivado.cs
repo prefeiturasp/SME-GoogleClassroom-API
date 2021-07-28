@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Dados
             query += MontaQueryCursosExtintosPaginado( false, true);
   
             using var conn = ObterConexao();
-            using var multi = await conn.QueryMultipleAsync(query, new { dataArquivamento = dataExtincao, quantidadeRegistrosIgnorados =  paginacao.QuantidadeRegistrosIgnorados, quantidadeRegistros = paginacao.QuantidadeRegistros });
+            using var multi = await conn.QueryMultipleAsync(query, new { dataArquivamento = dataExtincao.Date, quantidadeRegistrosIgnorados =  paginacao.QuantidadeRegistrosIgnorados, quantidadeRegistros = paginacao.QuantidadeRegistros });
 
             var retorno = new PaginacaoResultadoDto<CursoArquivadoDto>();
 
