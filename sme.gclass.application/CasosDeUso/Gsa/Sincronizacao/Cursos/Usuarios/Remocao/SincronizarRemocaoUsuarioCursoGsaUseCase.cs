@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;

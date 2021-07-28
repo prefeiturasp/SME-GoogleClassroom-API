@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IIniciarSyncGoogleAlunosRemovidosErrosUseCase
+    public interface IIniciarSyncGoogleUsuariosRemovidosErrosUseCase
     {
         Task<bool> Executar();
     }

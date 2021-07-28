@@ -32,9 +32,17 @@ namespace SME.GoogleClassroom.Aplicacao
                     {
                         try
                         {
-                            await mediator.Send(new PublicaFilaRabbitCommand(
-                                RotasRabbit.FilaGsaCursoUsuarioRemovidoSync,
-                                RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, erroParaTratar));
+                            var dto = new CursoUsuarioRemoverDto
+                            {
+                                CursoUsuarioId = erroParaTratar.CursoUsuarioId,
+                                TipoUsuario = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioTipo.Aluno : (int)UsuarioTipo.Professor,
+                                TipoGsa = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioCursoGsaTipo.Estudante : (int)UsuarioCursoGsaTipo.Professor,
+                                UsuarioId = erroParaTratar.UsuarioId,
+                                CursoId = erroParaTratar.CursoId,
+                                UsuarioGsaId = erroParaTratar.UsuarioIdGsa,
+                            };
+
+                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, dto));
 
                             await ExcluirCursoErroAsync(erroParaTratar);
                         }
@@ -44,7 +52,6 @@ namespace SME.GoogleClassroom.Aplicacao
                         }
                     }
                 }
-
                 return true;
             }
             catch (Exception ex)

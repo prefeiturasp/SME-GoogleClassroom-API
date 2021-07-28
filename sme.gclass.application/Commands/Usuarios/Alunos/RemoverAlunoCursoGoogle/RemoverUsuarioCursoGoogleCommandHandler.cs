@@ -44,14 +44,22 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task RemoverAlunoCursoNoGoogle(UsuarioCursoGoogleDto alunoCursoGoogle, ClassroomService servicoClassroom)
         {
-            var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId);
-            await requestCreate.ExecuteAsync();
+            var existeUsuarioCurso = servicoClassroom.Courses.Teachers.Get(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId).Execute();
+            if (existeUsuarioCurso != null)
+            {
+                var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId);
+                await requestCreate.ExecuteAsync();
+            }
         }
 
         private async Task RemoverProfessorCursoNoGoogle(UsuarioCursoGoogleDto professorCursoGoogle, ClassroomService servicoClassroom)
         {
-            var requestCreate = servicoClassroom.Courses.Teachers.Delete(professorCursoGoogle.CursoId.ToString(), professorCursoGoogle.UsuarioId);
-            await requestCreate.ExecuteAsync();
+            var existeUsuarioCurso = servicoClassroom.Courses.Teachers.Get(professorCursoGoogle.CursoId.ToString(), professorCursoGoogle.UsuarioId).Execute();
+            if (existeUsuarioCurso != null)
+            {
+                var requestCreate = servicoClassroom.Courses.Teachers.Delete(professorCursoGoogle.CursoId.ToString(), professorCursoGoogle.UsuarioId);
+                await requestCreate.ExecuteAsync();
+            }
         }
     }
 }
