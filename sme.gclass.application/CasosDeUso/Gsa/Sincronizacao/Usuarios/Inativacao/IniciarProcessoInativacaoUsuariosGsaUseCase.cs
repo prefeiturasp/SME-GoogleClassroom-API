@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(long? alunoId = null)
         {
             var dto = new FiltroInativacaoUsuariosCursosGoogleDto(alunoId);
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, RotasRabbit.FilaGsaInativarUsuarioCarregar, dto));
+            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioCarregar, dto));
         }
     }
 }
