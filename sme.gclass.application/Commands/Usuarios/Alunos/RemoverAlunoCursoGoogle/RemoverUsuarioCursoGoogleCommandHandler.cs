@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
             : base(variaveisGlobaisOptions, metricReporter)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
+            this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyRemocaoProfessor);
         }
 
         protected override async Task<bool> ExecutarAsync(RemoverUsuarioCursoGoogleCommand request, CancellationToken cancellationToken)

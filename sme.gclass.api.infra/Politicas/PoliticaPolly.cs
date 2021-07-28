@@ -5,5 +5,7 @@
         public static string PolicyGoogleSync => "RetryPolicy";
         public static string PolicyCargaGsa => "RetryGsaPolicy";
         public static string PolicyPublicaFila => "RetryGsaPublicaFila";
+
+        public static string PolicyRemocaoProfessor => "RetryRemocaoProfessor";
     }
 }
