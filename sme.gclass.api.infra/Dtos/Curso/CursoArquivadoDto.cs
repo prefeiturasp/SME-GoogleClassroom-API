@@ -4,7 +4,12 @@ namespace SME.GoogleClassroom.Infra
 {
     public class CursoArquivadoDto
     {
-        public long CursoId { get; }
-        public DateTime DataExtincao { get; }
+        public string Curso { get; set; }
+        public DateTime DataExtincao { get; set; }
+        public DateTime DataArquivamento { get; set; }
+
+        public CursoArquivadoDto()
+        {
+        }
     }
 }

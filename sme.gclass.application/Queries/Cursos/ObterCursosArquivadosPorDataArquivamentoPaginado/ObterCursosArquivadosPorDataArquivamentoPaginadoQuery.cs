@@ -9,11 +9,12 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Cursos.ObterCursosArquivadosPorD
     public class ObterCursosArquivadosPorDataArquivamentoPaginadoQuery: IRequest<PaginacaoResultadoDto<CursoArquivadoDto>>
     {
         public DateTime DataArquivamento { get; }
-        public Paginacao paginacao { get; }
+        public Paginacao Paginacao { get; }
 
         public ObterCursosArquivadosPorDataArquivamentoPaginadoQuery(DateTime dataArquivamento, Paginacao paginacao)
         {
             DataArquivamento = dataArquivamento;
+            Paginacao = paginacao;
         }
     }
 

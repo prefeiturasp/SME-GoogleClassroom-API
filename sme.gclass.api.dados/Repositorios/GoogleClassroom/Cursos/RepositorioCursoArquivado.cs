@@ -24,13 +24,13 @@ namespace SME.GoogleClassroom.Dados
             await conn.ExecuteAsync(query, new {cursoId, dataArquivamento, extinto});
         }
 
-        public async Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataArquivodo(DateTime dataArquivamento, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataExtincao(DateTime dataExtincao, Paginacao paginacao)
         {
             var query = MontaQueryCursosExtintosPaginado(true, false);
             query += MontaQueryCursosExtintosPaginado( false, true);
   
             using var conn = ObterConexao();
-            using var multi = await conn.QueryMultipleAsync(query, new { dataArquivamento,  paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+            using var multi = await conn.QueryMultipleAsync(query, new { dataArquivamento = dataExtincao, quantidadeRegistrosIgnorados =  paginacao.QuantidadeRegistrosIgnorados, quantidadeRegistros = paginacao.QuantidadeRegistros });
 
             var retorno = new PaginacaoResultadoDto<CursoArquivadoDto>();
 
@@ -46,10 +46,12 @@ namespace SME.GoogleClassroom.Dados
         {
             string query = paginado ? 
                 "select count(*) " : 
-                @"Select curso_id as CursoId,
-                         data_arquivamento as DataExtincao ";
+                @"Select c.nome as Curso,
+                         data_arquivamento as DataArquivamento,
+                         data_arquivamento as DataExtincao 
+                 ";
 
-            query += @" from cursos_arquivado where data_arquivamento = @dataArquivamento";
+            query += @" from cursos_arquivado inner join cursos c on c.id = cursos_arquivado.curso_id where data_extincao = @dataArquivamento";
 
            
             if (!paginado)

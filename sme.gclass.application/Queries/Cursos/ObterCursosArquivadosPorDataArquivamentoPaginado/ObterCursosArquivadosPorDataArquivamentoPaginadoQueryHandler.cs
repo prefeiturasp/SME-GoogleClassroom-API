@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Cursos.ObterCursosArquivadosPorDataArquivamentoPaginado
@@ -18,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Cursos.ObterCursosArquivadosPorD
 
         public async Task<PaginacaoResultadoDto<CursoArquivadoDto>> Handle(
             ObterCursosArquivadosPorDataArquivamentoPaginadoQuery request, CancellationToken cancellationToken)
-            => await _repositorioCursoArquivado.BuscarTodosPorDataArquivodo(request.DataArquivamento, request.paginacao);
+            => await _repositorioCursoArquivado.BuscarTodosPorDataExtincao(request.DataArquivamento, request.Paginacao);
 
     }
 }

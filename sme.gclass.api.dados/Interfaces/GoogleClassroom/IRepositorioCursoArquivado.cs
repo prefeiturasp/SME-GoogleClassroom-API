@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Dados
     {
         Task Inserir(long cursoId, DateTime dataArquivamento, bool extinto);
 
-        Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataArquivodo(DateTime dataArquivamento,
+        Task<PaginacaoResultadoDto<CursoArquivadoDto>> BuscarTodosPorDataExtincao(DateTime dataExtincao,
             Paginacao paginacao);
     }
 }
