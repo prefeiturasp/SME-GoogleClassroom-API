@@ -265,5 +265,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             await useCase.Executar();
             return Ok();
         }
+        
+        
+        /// <summary>
+        /// Obtem lista de cursos arquivados no Google Sala de Aula
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("arquivados")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoArquivadoDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosArquivados(
+            [FromServices] IObterCursosArquivadosPaginadoUseCase useCase,
+            [FromQuery] FiltroCursoArquivadoDto filtro)
+        {
+            return Ok(await useCase.Executar(filtro));
+        }
     }
 }
