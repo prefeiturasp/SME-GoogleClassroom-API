@@ -45,10 +45,12 @@ namespace SME.GoogleClassroom.Dados
         private string MontaQueryCursosExtintosPaginado(bool paginacao,  bool paginado)
         {
             string query = paginado ? 
-                "select count(*) " : 
-                @"Select c.nome as Curso,
-                         data_arquivamento as DataArquivamento,
-                         data_extincao as DataExtincao 
+                "select count(*) " :
+                @"Select c.Id as CursoId
+                    ,   c.Nome
+                    ,   c.Secao
+                    ,   data_arquivamento as DataArquivamento
+                    ,   data_extincao as DataExtincao 
                  ";
 
             query += @" from cursos_arquivado inner join cursos c on c.id = cursos_arquivado.curso_id where date(data_arquivamento) = @dataArquivamento";
