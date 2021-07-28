@@ -29,9 +29,11 @@ namespace SME.GoogleClassroom.IoC
             var policyGSyncRemocaoProfessor = Policy.Handle<Exception>()
                 .WaitAndRetryAsync(new[]
                 {
-                    TimeSpan.FromSeconds(30),
                     TimeSpan.FromSeconds(60),
-                    TimeSpan.FromSeconds(90)
+                    TimeSpan.FromSeconds(60),
+                    TimeSpan.FromSeconds(60),
+                    TimeSpan.FromSeconds(60),
+                    TimeSpan.FromSeconds(60),
                 }, (exception, timeSpan, retryCount, context) =>
                 {
                     Console.WriteLine("RETRY policyGSyncRemocaoProfessor - " + DateTime.Now.Second + " - " + exception.Message);
