@@ -18,6 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroAlunoInativacaoUsuarioDto>();
+            
             var alunosCodigos = dto.AlunosIds.ToArray();
             var alunosGoogle = await mediator.Send(new ObterAlunosPorCodigosQuery(alunosCodigos));
 
@@ -26,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 foreach (var alunoGoogle in alunosGoogle)
                 {
                     var alunoInativar = new AlunoUsuarioInativarDto(alunoGoogle.Codigo, alunoGoogle.Indice, alunoGoogle.Email);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioIncluir, RotasRabbit.FilaGsaInativarUsuarioIncluir, alunoInativar));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioIncluir, alunoInativar));
                 }
                 return true;
             }

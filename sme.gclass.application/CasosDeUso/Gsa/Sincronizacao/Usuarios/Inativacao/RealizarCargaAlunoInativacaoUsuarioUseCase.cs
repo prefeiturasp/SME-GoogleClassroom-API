@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (alunosParaInativar != null && alunosParaInativar.Any())
             {
                 var alunosInativacao = new FiltroAlunoInativacaoUsuarioDto(dto.DataReferencia, alunosParaInativar);
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, RotasRabbit.FilaGsaInativarUsuarioSync, alunosInativacao));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, alunosInativacao));
             }
             else 
             {
@@ -37,6 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
+            
             return true;
         }
 
