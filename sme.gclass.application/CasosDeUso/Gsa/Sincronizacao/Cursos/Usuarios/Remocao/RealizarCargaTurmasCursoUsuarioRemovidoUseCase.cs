@@ -28,8 +28,11 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 foreach (var turma in turmas)
                 {
-                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio, datasReferencias.dataFim, turma, dto.ProcessarAlunos, dto.ProcessarProfessores);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
+                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio,
+                        datasReferencias.dataFim, turma, dto.ProcessarAlunos, dto.ProcessarProfessores,
+                        dto.ProcessarFuncionario);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar,
+                        filtroTurma));
                 }
             }
             else
@@ -44,7 +47,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias()
         {
             var totalDiasConsiderar = 10;
-            var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
+            var dataUltimaExecucao =
+                await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
             return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
         }
     }
