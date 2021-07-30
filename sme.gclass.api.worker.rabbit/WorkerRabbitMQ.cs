@@ -127,9 +127,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             // Inativação Alunos
             comandos.Add(RotasRabbit.FilaGsaInativarProfessorIniciar, new ComandoRabbit("Inicia o processo de inativar professores e funcionários", typeof(IIniciarProcessoInativacaoProfessoresGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Carregar professores e funcionários que devem ser inativados", typeof(IRealizarCargaProfessoresInativosUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioSync, new ComandoRabbit("Tratar os professores e funcioários GSA a serem inativados", typeof(ITratarProfessoresInativosGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Sincroniza a inativação de professores e funcionários GSA ", typeof(ISyncProfessoresInativosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarProfessorCarregar, new ComandoRabbit("Carregar professores e funcionários que devem ser inativados", typeof(IRealizarCargaProfessoresInativosUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarProfessorTratar, new ComandoRabbit("Tratar os professores e funcioários GSA a serem inativados", typeof(ITratarProfessoresInativosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarProfessorIncluir, new ComandoRabbit("Sincroniza a inativação de professores e funcionários GSA ", typeof(ISyncProfessoresInativosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarProfessorErroTratar, new ComandoRabbit("Incluir na fila de erro na inativação de alunos GSA ", typeof(ITrataSyncGoogleAlunoInativoErroUseCase)));
 
         }
@@ -290,6 +290,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorIniciar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorSync, false, consumer);
+
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarTratar, false, consumer);
