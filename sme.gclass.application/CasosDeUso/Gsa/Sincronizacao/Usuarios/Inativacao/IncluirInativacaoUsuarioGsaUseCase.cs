@@ -27,11 +27,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var usuarioInativado = await mediator.Send(new IncluirUsuarioInativoCommand(new UsuarioInativo(filtro.UsuarioId)));
+                var usuarioInativado = await mediator.Send(new IncluirUsuarioInativoCommand(new UsuarioInativo(filtro.UsuarioId, UsuarioTipo.Aluno)));
 
-                var unidadeOrganizacionalAtualizada = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId));
+                var unidadeOrganizacionalAtualizada = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId, "Alunos/Inativos"));
 
-                var alunoRemovidoGoogle = await mediator.Send(new RemoverAlunoGoogleCommand(filtro.EmailUsuario));
+                var alunoRemovidoGoogle = await mediator.Send(new InativarAlunoGoogleCommand(filtro.EmailUsuario));
 
                 if (usuarioInativado == false || unidadeOrganizacionalAtualizada == false || alunoRemovidoGoogle == false)
                     await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o Usuário!");

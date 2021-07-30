@@ -560,5 +560,10 @@ namespace SME.GoogleClassroom.Dados
             }
 
 		}
-	}
+
+        public async Task<IEnumerable<long>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, long? professorId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -9,15 +9,10 @@ namespace SME.GoogleClassroom.Dominio
         public UsuarioTipo UsuarioTipo { get; set; }
         public DateTime InativadoEm { get; set; }
 
-        public UsuarioInativo()
-        {
-
-        }
-
-        public UsuarioInativo(long usuarioId)
+        public UsuarioInativo(long usuarioId, UsuarioTipo usuarioTipo)
         {
             UsuarioId = usuarioId;
-            UsuarioTipo = UsuarioTipo.Aluno;
+            UsuarioTipo = usuarioTipo;
             InativadoEm = DateTime.Now;
         }
     }
