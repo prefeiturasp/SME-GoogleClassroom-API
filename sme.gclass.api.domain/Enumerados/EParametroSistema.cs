@@ -2,7 +2,7 @@
 {
     public enum ETipoParametroSistema
     {
-        InicioAnoLetivo = 1
-
+        InicioAnoLetivo = 1,
+        DiasInativacaoFuncionario = 3,
     }
 }
