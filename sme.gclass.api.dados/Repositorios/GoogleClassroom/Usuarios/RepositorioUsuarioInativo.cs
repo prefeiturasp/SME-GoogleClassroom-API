@@ -48,6 +48,16 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<UsuarioInativo>> ObterAlunosInativos(Paginacao paginacao)
         {
+            return await ObterUsuariosInativosPorTipo(paginacao, UsuarioTipo.Aluno);
+        }
+
+        public async Task<PaginacaoResultadoDto<UsuarioInativo>> ObterFuncionariosInativos(Paginacao paginacao)
+        {
+            return await ObterUsuariosInativosPorTipo(paginacao, UsuarioTipo.Funcionario);
+        }
+
+        private async Task<PaginacaoResultadoDto<UsuarioInativo>> ObterUsuariosInativosPorTipo(Paginacao paginacao, UsuarioTipo usuarioTipo)
+        {
             try
             {
                 var query = new StringBuilder(@"SELECT
@@ -55,9 +65,10 @@ namespace SME.GoogleClassroom.Dados
                                                    ui.usuario_id UsuarioId,
                                                    ui.usuario_tipo UsuarioTipo,
                                                    ui.inativado_em InativadoEm 
-                                              FROM usuario_inativo ui ");
+                                              FROM usuario_inativo ui 
+                                              WHERE ui.usuario_tipo = @usuarioTipo");
 
-                var queryCount = new StringBuilder("SELECT count(*) from usuario_inativo ui ");
+                var queryCount = new StringBuilder("SELECT count(*) from usuario_inativo ui  WHERE ui.usuario_tipo = @usuarioTipo");
 
                 if (paginacao.QuantidadeRegistros > 0)
                     query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
@@ -70,7 +81,8 @@ namespace SME.GoogleClassroom.Dados
                 var parametros = new
                 {
                     paginacao.QuantidadeRegistrosIgnorados,
-                    paginacao.QuantidadeRegistros
+                    paginacao.QuantidadeRegistros,
+                    usuarioTipo
                 };
 
                 using var conn = ObterConexao();

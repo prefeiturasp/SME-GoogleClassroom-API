@@ -11,5 +11,6 @@ namespace SME.GoogleClassroom.Dados
         Task LimparAsync();
 
         Task<PaginacaoResultadoDto<UsuarioInativo>> ObterAlunosInativos(Paginacao paginacao);
+        Task<PaginacaoResultadoDto<UsuarioInativo>> ObterFuncionariosInativos(Paginacao paginacao);
     }
 }
