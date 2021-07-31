@@ -5,6 +5,6 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioParametroSistema
     {
-        Task<ParametrosSistema> ObterParametroSistemaPorTipoEAno(ETipoParametroSistema tipo, int ano);
+        Task<ParametrosSistema> ObterParametroSistemaPorTipoEAno(TipoParametroSistema tipo, int ano);
     }
 }

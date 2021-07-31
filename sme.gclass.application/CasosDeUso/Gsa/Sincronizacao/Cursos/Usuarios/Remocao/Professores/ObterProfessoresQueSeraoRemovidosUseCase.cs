@@ -1,20 +1,32 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterProfessoresRemovidosCursosUseCase : AbstractUseCase, IObterProfessoresRemovidosCursosUseCase
+    public class ObterProfessoresQueSeraoRemovidosUseCase : AbstractUseCase, IObterProfessoresQueSeraoRemovidosUseCase
     {
-        public ObterProfessoresRemovidosCursosUseCase(IMediator mediator) : base(mediator)
+        public ObterProfessoresQueSeraoRemovidosUseCase(IMediator mediator) : base(mediator)
         {
         }
 
-        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> Executar(FiltroObterProfessoresRemovidosCursosDto filtro)
+        public async Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> Executar(FiltroObterUsuariosQueSeraoRemovidosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterProfessoresRemovidosCursosPorIdQuery(paginacao, filtro.CursoId));
+
+            var periodo = await ObterDatas();
+
+            return await mediator.Send(new ObterProfessoresParaRemoverCursoPaginadoQuery(filtro.TurmaId, periodo.dataInicio, periodo.dataFim, paginacao));
+        }
+
+        private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatas()
+        {
+            var dias = 10;
+            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
+            return (ultimaExecucao.AddDays(-dias), DateTime.Today.AddDays(-dias));
         }
     }
 }
