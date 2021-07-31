@@ -10,7 +10,7 @@ namespace SME.GoogleClassroom.Aplicacao
     public class IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase : AbstractTratarFilaErrosUseCase<FiltroTurmaRemoverCursoUsuarioDto>, IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase
     {
         public IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase(IConfiguration configuration, IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
-            : base(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratarErro, RotasRabbit.FilaProfessorCursoAtribuicaoSync, configuration, mediator, registry)
+            : base(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratarErro, RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, configuration, mediator, registry)
         {
         }
     }
