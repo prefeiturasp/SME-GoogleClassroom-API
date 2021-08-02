@@ -44,9 +44,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task ObterUltimaDataExecucao(CarregarProfessoresInativosDto dto)
         {
             var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorInativar));
-
-            // TODO: recuperar do parâmetro
-            dto.DataReferencia = dataUltimaExecucao.AddDays(-15);
+            var diasInativacaoFuncionario = await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(ETipoParametroSistema.DiasInativacaoFuncionario, 2021));
+            dto.DataReferencia = dataUltimaExecucao.AddDays(-double.Parse(diasInativacaoFuncionario.Valor));
         }
     }
 }

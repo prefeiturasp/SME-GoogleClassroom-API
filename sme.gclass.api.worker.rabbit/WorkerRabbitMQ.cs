@@ -125,7 +125,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarTratar, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ITratarArquivamentoCursosExtintosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ISincronizarArquivamentoCursosExtintosUseCase)));
 
-            // Inativação Alunos
+            // Inativação Professores e Funcionários
             comandos.Add(RotasRabbit.FilaGsaInativarProfessorIniciar, new ComandoRabbit("Inicia o processo de inativar professores e funcionários", typeof(IIniciarProcessoInativacaoProfessoresGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarProfessorCarregar, new ComandoRabbit("Carregar professores e funcionários que devem ser inativados", typeof(IRealizarCargaProfessoresInativosUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarProfessorTratar, new ComandoRabbit("Tratar os professores e funcioários GSA a serem inativados", typeof(ITratarProfessoresInativosGsaUseCase)));
