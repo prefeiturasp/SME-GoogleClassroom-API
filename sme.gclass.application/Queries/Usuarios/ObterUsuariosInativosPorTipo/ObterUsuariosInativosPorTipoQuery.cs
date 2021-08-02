@@ -3,21 +3,22 @@ using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Aplicacao.Queries
+namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosInativosQuery : IRequest<PaginacaoResultadoDto<UsuarioInativo>>
+    public class ObterUsuariosInativosPorTipoQuery: IRequest<PaginacaoResultadoDto<UsuarioInativo>>
     {
-        public ObterAlunosInativosQuery(Paginacao paginacao)
+        public ObterUsuariosInativosPorTipoQuery(Paginacao paginacao, UsuarioTipo[] tiposDeUsuarios = null)
         {
             Paginacao = paginacao;
+            TiposDeUsuarios = tiposDeUsuarios;
         }
 
         public Paginacao Paginacao { get; set; }
+        public UsuarioTipo[] TiposDeUsuarios { get; set; }
     }
-
-    public class ObterAlunosInativosQueryValidator : AbstractValidator<ObterAlunosInativosQuery>
+    public class ObterUsuariosInativosPorTipoQueryValidator : AbstractValidator<ObterUsuariosInativosPorTipoQuery>
     {
-        public ObterAlunosInativosQueryValidator()
+        public ObterUsuariosInativosPorTipoQueryValidator()
         {
             RuleFor(x => x.Paginacao)
                            .NotEmpty()

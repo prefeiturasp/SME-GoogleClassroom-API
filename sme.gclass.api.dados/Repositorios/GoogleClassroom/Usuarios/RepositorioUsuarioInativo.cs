@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,18 +47,28 @@ namespace SME.GoogleClassroom.Dados
             await conn.ExecuteAsync(query);
         }
 
-        public async Task<PaginacaoResultadoDto<UsuarioInativo>> ObterAlunosInativos(Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<UsuarioInativo>> ObterUsuariosInativosPorTipo(Paginacao paginacao, UsuarioTipo[] tiposDeUsuarios = null)
         {
             try
             {
+                var tiposDeUsuariosPadroes = new UsuarioTipo[] { 
+                    UsuarioTipo.Aluno, 
+                    UsuarioTipo.Funcionario, 
+                    UsuarioTipo.FuncionarioIndireto, 
+                    UsuarioTipo.Professor 
+                };
+
+                var tiposDeUsuarioParametro = tiposDeUsuarios == null ? tiposDeUsuariosPadroes : tiposDeUsuarios;
+
                 var query = new StringBuilder(@"SELECT
-                                                    ui.id as Id, 
+                                                   ui.id as Id, 
                                                    ui.usuario_id UsuarioId,
                                                    ui.usuario_tipo UsuarioTipo,
                                                    ui.inativado_em InativadoEm 
-                                              FROM usuario_inativo ui ");
+                                              FROM usuario_inativo ui 
+                                              WHERE ui.usuario_tipo = ANY(@tiposDeUsuarioParametro)");
 
-                var queryCount = new StringBuilder("SELECT count(*) from usuario_inativo ui ");
+                var queryCount = new StringBuilder("SELECT count(*) from usuario_inativo ui  WHERE ui.usuario_tipo = ANY(@tiposDeUsuarioParametro)");
 
                 if (paginacao.QuantidadeRegistros > 0)
                     query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
@@ -66,11 +77,12 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine(queryCount.ToString());
 
                 var retorno = new PaginacaoResultadoDto<UsuarioInativo>();
-
+                
                 var parametros = new
                 {
                     paginacao.QuantidadeRegistrosIgnorados,
-                    paginacao.QuantidadeRegistros
+                    paginacao.QuantidadeRegistros,
+                    tiposDeUsuarioParametro = Array.ConvertAll(tiposDeUsuarioParametro, value => (short)value)
                 };
 
                 using var conn = ObterConexao();
@@ -82,7 +94,6 @@ namespace SME.GoogleClassroom.Dados
                 retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
                 return retorno;
-
             }
             catch (Exception ex)
             {

@@ -178,6 +178,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
+        /// Retorna os funcionários inativos
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("inativados")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioInativo>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosInativos([FromServices] IObterFuncionariosInativosUseCase useCase, [FromQuery] FiltroObterFuncionariosInativosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+        }
+
+        /// <summary>
         /// Inicia o tratamento de erros de funcionarios que foram inativados.
         /// </summary>
         /// <remarks>
