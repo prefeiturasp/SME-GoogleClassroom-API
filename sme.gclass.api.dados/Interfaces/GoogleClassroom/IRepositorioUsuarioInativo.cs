@@ -9,8 +9,6 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<bool> InativarUsuarioAsync(long usuarioId, UsuarioTipo tipo, DateTime inativadoEm);
         Task LimparAsync();
-
-        Task<PaginacaoResultadoDto<UsuarioInativo>> ObterAlunosInativos(Paginacao paginacao);
-        Task<PaginacaoResultadoDto<UsuarioInativo>> ObterFuncionariosInativos(Paginacao paginacao);
+        Task<PaginacaoResultadoDto<UsuarioInativo>> ObterUsuariosInativosPorTipo(Paginacao paginacao, UsuarioTipo[] tiposDeUsuarios = null);
     }
 }

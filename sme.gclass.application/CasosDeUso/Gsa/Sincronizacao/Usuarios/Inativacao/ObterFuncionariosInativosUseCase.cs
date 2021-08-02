@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Aplicacao.Queries;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -19,9 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<UsuarioInativo>> Executar(FiltroObterFuncionariosInativosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterFuncionariosInativosQuery(paginacao));
+            return await mediator.Send(new ObterUsuariosInativosPorTipoQuery(paginacao, new[] { UsuarioTipo.Funcionario }));
         }
     }
-
-    
 }
