@@ -641,24 +641,52 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, new { classroomId });
         }
 
-        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id)
+        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
             const string updateQuery = @"update public.usuarios
                                          set
-                                            organization_path = 'Alunos/Inativos',
+                                            organization_path = @estruturaOrganizacional,
                                             data_atualizacao = current_timestamp
                                          where
                                             id = @id";
 
             var parametros = new
             {
-                id
+                id,
+                estruturaOrganizacional
             };
 
             using var conn = ObterConexao();
             await conn.ExecuteAsync(updateQuery, parametros);
             return true;
 
+        }
+
+        public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(string[] Codigos)
+        {
+            var query = @"SELECT
+                                 u.indice,
+                                 u.id as Codigo,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           WHERE usuario_tipo = @professor and usuario_tipo = @funcionario
+                                 and id = any(@Codigos)";
+
+            var parametros = new
+            {
+                Codigos,
+                professor = UsuarioTipo.Professor,
+                funcionario = UsuarioTipo.Funcionario,
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
     }
 }

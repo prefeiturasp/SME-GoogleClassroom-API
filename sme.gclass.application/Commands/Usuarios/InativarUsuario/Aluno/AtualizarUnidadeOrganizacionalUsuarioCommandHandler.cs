@@ -15,6 +15,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<bool> Handle(AtualizarUnidadeOrganizacionalUsuarioCommand request, CancellationToken cancellationToken)
-            => await repositorio.AtualizarUnidadeOrganizacionalAsync(request.UsuarioId);
+            => await repositorio.AtualizarUnidadeOrganizacionalAsync(request.UsuarioId, request.UnidadeOrganizacional);
     }
 }
