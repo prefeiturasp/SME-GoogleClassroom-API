@@ -2,11 +2,11 @@
 {
     public class FiltroInativacaoProfessoresGoogleDto
     {
-        public FiltroInativacaoProfessoresGoogleDto(long? professorId = null)
+        public FiltroInativacaoProfessoresGoogleDto(string rf = null)
         {
-            ProfessorId = professorId;
+            Rf = rf;
         }
 
-        public long? ProfessorId { get; set; }
+        public string Rf { get; set; }
     }
 }

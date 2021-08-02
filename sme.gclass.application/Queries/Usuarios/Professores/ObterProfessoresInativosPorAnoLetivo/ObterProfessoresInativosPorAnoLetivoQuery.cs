@@ -7,10 +7,10 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 {
     public class ObterProfessoresInativosPorAnoLetivoQuery : IRequest<IEnumerable<long>>
     {
-        public ObterProfessoresInativosPorAnoLetivoQuery(int anoLetivo, DateTime dataReferencia, long? professorId = null)
+        public ObterProfessoresInativosPorAnoLetivoQuery(int anoLetivo, DateTime dataReferencia, string rf)
         {
             AnoLetivo = anoLetivo;
-            ProfessorId = professorId;
+            Rf = rf;
             DataReferencia = dataReferencia;
         }
 
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
         public DateTime DataReferencia { get; set; }
 
-        public long? ProfessorId { get; set; }
+        public string Rf { get; set; }
     }
 
     public class ObterProfessoresInativosPorAnoLetivoQueryValidator : AbstractValidator<ObterProfessoresInativosPorAnoLetivoQuery>

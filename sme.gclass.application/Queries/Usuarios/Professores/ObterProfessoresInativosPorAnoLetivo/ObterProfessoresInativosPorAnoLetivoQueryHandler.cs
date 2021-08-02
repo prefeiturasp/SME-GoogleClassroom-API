@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
         public async Task<IEnumerable<long>> Handle(ObterProfessoresInativosPorAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioProfessorEol.ObterCodigosProfessoresInativosPorAnoLetivo(request.AnoLetivo, request.DataReferencia, request.ProfessorId);
+            return await repositorioProfessorEol.ObterCodigosProfessoresInativosPorAnoLetivo(request.AnoLetivo, request.DataReferencia, request.Rf);
         }
     }
 }

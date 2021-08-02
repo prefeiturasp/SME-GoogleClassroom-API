@@ -527,6 +527,9 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 		}
 
+
+
+
 		public async Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao)
         {
             try
@@ -561,9 +564,28 @@ namespace SME.GoogleClassroom.Dados
 
 		}
 
-        public async Task<IEnumerable<long>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, long? professorId)
+        public async Task<IEnumerable<string>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, string rf)
         {
-            throw new NotImplementedException();
-        }
+			var query = new StringBuilder();
+				query.AppendLine(@"select
+										distinct serv.cd_registro_funcional
+								   from v_cargo_base_cotic cargo_base
+								   inner join cargo on cargo.cd_cargo = cargo_base.cd_cargo
+								   inner join v_servidor_cotic serv on serv.cd_servidor = cargo_base.cd_servidor
+								   where cargo_base.dt_fim_nomeacao <= CURRENT_TIMESTAMP - 15 ");
+
+			if (!string.IsNullOrEmpty(rf))
+				query.AppendLine(" and te.cd_turma_escola = @turmaId ");
+
+
+			var parametros = new
+			{
+				anoLetivo = anoLetivo,
+				rf
+			};
+
+			using var conn = ObterConexao();
+			return await conn.QueryAsync<string>(query.ToString(), parametros);
+		}
     }
 }

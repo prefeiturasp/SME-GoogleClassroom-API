@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             await ObterUltimaDataExecucao(dto);
 
-            var professoresParaInativar = await mediator.Send(new ObterProfessoresInativosPorAnoLetivoQuery(DateTime.Now.Year, dto.DataReferencia, dto.ProfessorId));
+            var professoresParaInativar = await mediator.Send(new ObterProfessoresInativosPorAnoLetivoQuery(DateTime.Now.Year, dto.DataReferencia, dto.Rf));
 
             if (professoresParaInativar != null && professoresParaInativar.Any())
             {
