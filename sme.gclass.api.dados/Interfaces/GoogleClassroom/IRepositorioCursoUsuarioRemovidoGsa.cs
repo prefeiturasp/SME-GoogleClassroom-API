@@ -10,6 +10,8 @@ namespace SME.GoogleClassroom.Dados
 
         Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, long cursoId);
 
+        Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterFuncionariosRemovidosCursosPorId(Paginacao paginacao, long cursoId);
+
         Task<long> SalvarAsync(CursoUsuarioRemovidoGsa entidade);
       
         Task LimparAsync();
