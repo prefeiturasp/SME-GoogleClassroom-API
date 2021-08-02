@@ -122,6 +122,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarCarregar, new ComandoRabbit("Carregar arquivamento de cursos extintos no EOL", typeof(ICarregarArquivamentoCursosExtintosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarTratar, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ITratarArquivamentoCursosExtintosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ISincronizarArquivamentoCursosExtintosUseCase)));
+            
+            // Funcionario Removido            
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, new ComandoRabbit("Tratar a remoção do funcionario do cursos.", typeof(ITratarFuncionarioRemovidosCursosUseCase)));
+            
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -284,6 +288,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
