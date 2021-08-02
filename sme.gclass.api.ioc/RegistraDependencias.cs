@@ -161,6 +161,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSyncGoogleFuncionariosRemovidosCursoComErrosUseCase, IniciarSyncGoogleFuncionariosRemovidosCursoComErrosUseCase>();
             services.TryAddScoped<IObterFuncionariosQueSeraoRemovidosUseCase, ObterFuncionariosQueSeraoRemovidosUseCase>();
 
+            services.TryAddScoped<IObterFuncionariosRemovidosCursosUseCase, ObterFuncionariosRemovidosCursosUseCase>();
 
             //Curso Arquivar
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosUseCase, CarregarArquivamentoCursosExtintosUseCase>();

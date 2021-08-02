@@ -1,10 +1,9 @@
-﻿using SME.GoogleClassroom.Dominio;
-using SME.GoogleClassroom.Infra;
+﻿using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao
+namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface IObterProfessoresRemovidosCursosUseCase
+    public interface IObterFuncionariosRemovidosCursosUseCase
     {
         Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> Executar(FiltroObterUsuariosRemovidosCursosDto filtro);
     }

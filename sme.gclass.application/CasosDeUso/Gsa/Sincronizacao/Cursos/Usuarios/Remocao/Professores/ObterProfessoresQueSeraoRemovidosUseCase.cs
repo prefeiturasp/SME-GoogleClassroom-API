@@ -13,6 +13,12 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
+        public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> Executar(FiltroObterUsuariosRemovidosCursosDto filtro)
+        {
+            var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
+            return await mediator.Send(new ObterProfessoresRemovidosCursosPorIdQuery(paginacao, filtro.CursoId));
+        }
+
         public async Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> Executar(FiltroObterUsuariosQueSeraoRemovidosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
