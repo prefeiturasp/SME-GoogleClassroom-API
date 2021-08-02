@@ -99,6 +99,7 @@
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
 
         public static string FilaGsaCursoUsuarioRemovidoProfessoresTratarErro => "googleclass.gsa.curso.usuario.removido.professores.tratar.erro";
+        public static string FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro => "googleclass.gsa.curso.usuario.removido.funcionario.tratar";
         public static string FilaGsaCursoUsuarioRemovidoErroTratar => "googleclass.gsa.curso.usuario.removido.erro.tratar";
 
         #endregion
