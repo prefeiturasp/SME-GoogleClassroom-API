@@ -171,12 +171,14 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
 
 
+
             // Usuario inativação (Professores e Funcionarios)
             services.TryAddScoped<IIniciarProcessoInativacaoProfessoresGsaUseCase, IniciarProcessoInativacaoProfessoresGsaUseCase>();
             services.TryAddScoped<IRealizarCargaProfessoresInativosUseCase, RealizarCargaProfessoresInativosUseCase>();
             services.TryAddScoped<ITratarProfessoresInativosGsaUseCase, TratarProfessoresInativosGsaUseCase>();
             services.TryAddScoped<ISyncProfessoresInativosGsaUseCase, SyncProfessoresInativosGsaUseCase>();
-            
+            services.TryAddScoped<IObterFuncionariosInativosUseCase, ObterFuncionariosInativosUseCase>();
+
             RegistrarCasosDeUsoGsa(services);
         }
 
