@@ -158,7 +158,6 @@ namespace SME.GoogleClassroom.IoC
             
             // Remover atribuicao professor x curso
             services.TryAddScoped<IObterProfessoresQueSeraoRemovidosUseCase, ObterProfessoresQueSeraoRemovidosUseCase>();
-            services.TryAddScoped<IIniciarProcessoRemoverProfessorCursoGsaUseCase, IniciarProcessoRemoverProfessorCursoGsaUseCase>();
             services.TryAddScoped<IObterProfessoresRemovidosCursosUseCase, ObterProfessoresRemovidosCursosUseCase>();
 
             // Remover atribuicao funcionario x curso
