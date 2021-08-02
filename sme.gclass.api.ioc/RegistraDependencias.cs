@@ -55,6 +55,10 @@ namespace SME.GoogleClassroom.IoC
             //Curso Arquivado
             services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
             services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
+            
+            //Funcionario Removido
+            services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
+            
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)

@@ -8,6 +8,9 @@ namespace SME.GoogleClassroom.Dominio
         Estudante = 1,
 
         [Display(Description = "Professor")]
-        Professor = 2
+        Professor = 2,
+        
+        [Display(Description = "Funcionario")]
+        Funcionario = 3
     }
 }
