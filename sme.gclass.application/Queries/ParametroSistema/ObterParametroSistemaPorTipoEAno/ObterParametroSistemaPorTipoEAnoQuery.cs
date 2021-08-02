@@ -6,10 +6,10 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterParametroSistemaPorTipoEAnoQuery: IRequest<ParametrosSistema>
     {
-        public ETipoParametroSistema Tipo { get; set; }
+        public TipoParametroSistema Tipo { get; set; }
         public int Ano { get; set; }
 
-        public ObterParametroSistemaPorTipoEAnoQuery(ETipoParametroSistema tipo, int ano)
+        public ObterParametroSistemaPorTipoEAnoQuery(TipoParametroSistema tipo, int ano)
         {
             Tipo = tipo;
             Ano = ano;
