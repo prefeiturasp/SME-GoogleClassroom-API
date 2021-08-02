@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
         public async Task<PaginacaoResultadoDto<FuncionarioEol>> Handle(ObterFuncionariosQueSeraoInativadosQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioFuncionarioEol.ObterFuncionariosQueSeraoInativados(request.Paginacao);
+            return await repositorioFuncionarioEol.ObterFuncionariosQueSeraoInativados(request.Paginacao, request.DataReferencia);
         }
     }
 }

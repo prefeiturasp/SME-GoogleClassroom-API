@@ -178,7 +178,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna os alunos inativos no EOL
+        /// Retorna os funcionários e professores que serão inativados no GSA - EOL
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>

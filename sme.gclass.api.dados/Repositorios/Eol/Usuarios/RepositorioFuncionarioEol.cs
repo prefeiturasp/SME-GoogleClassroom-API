@@ -442,5 +442,68 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 
 		}
+
+        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia)
+        {
+			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
+			var queryBase = @"
+					IF OBJECT_ID('tempdb..#tempFuncionariosSeraoInativados') IS NOT NULL
+						DROP TABLE #tempFuncionariosSeraoInativados;
+
+					SELECT DISTINCT 
+						serv.cd_registro_funcional as rf,
+						serv.nm_pessoa as NomePessoa,
+						serv.nm_social as NomeSocial
+					INTO #tempFuncionariosSeraoInativados   
+					FROM v_servidor_cotic serv
+					INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+					INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+					INNER JOIN lotacao_servidor AS ls
+							   ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+					WHERE cba.dt_fim_nomeacao <= @dataReferencia
+						AND serv.cd_registro_funcional NOT IN(
+							SELECT
+								distinct serv.cd_registro_funcional
+							FROM v_servidor_cotic serv
+								INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+								INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+								INNER JOIN lotacao_servidor AS ls
+							ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+							WHERE cba.dt_fim_nomeacao IS NULL);";
+
+			var query = new StringBuilder(queryBase);
+			query.AppendLine(@"
+                SELECT
+                    *
+                FROM
+                    #tempFuncionariosSeraoInativados;");
+
+			if (aplicarPaginacao)
+				query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
+
+			query.AppendLine(@"
+                SELECT
+                    COUNT(*)
+                FROM
+                    #tempFuncionariosSeraoInativados;");
+
+			var parametros = new
+			{
+				dataReferencia = dataReferencia.Date,
+				paginacao.QuantidadeRegistros,
+				paginacao.QuantidadeRegistrosIgnorados
+			};
+
+			using var conn = ObterConexao();
+			using var multi = await conn.QueryMultipleAsync(query.ToString(), parametros);
+
+			var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
+
+			retorno.Items = multi.Read<FuncionarioEol>();
+			retorno.TotalRegistros = multi.ReadFirst<int>();
+			retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+
+			return retorno;
+		}
     }
 }

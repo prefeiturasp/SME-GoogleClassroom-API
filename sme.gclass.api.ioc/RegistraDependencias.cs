@@ -169,7 +169,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterCursosArquivadosPaginadoUseCase, ObterCursosArquivadosPaginadoUseCase>();
 
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
-            
+
+            services.TryAddScoped<IObterFuncionariosQueSeraoInativadosUseCase, ObterFuncionariosQueSeraoInativadosUseCase>();
+
             RegistrarCasosDeUsoGsa(services);
         }
 
