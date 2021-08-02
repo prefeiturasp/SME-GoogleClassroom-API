@@ -6,21 +6,19 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosInativosUseCase : IObterAlunosInativosUseCase
+    public class ObterFuncionariosInativosUseCase : IObterFuncionariosInativosUseCase
     {
         private readonly IMediator mediator;
 
-        public ObterAlunosInativosUseCase(IMediator mediator)
+        public ObterFuncionariosInativosUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<UsuarioInativo>> Executar(FiltroObterAlunosInativosDto filtro)
+        public async Task<PaginacaoResultadoDto<UsuarioInativo>> Executar(FiltroObterFuncionariosInativosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterUsuariosInativosPorTipoQuery(paginacao, new[] { UsuarioTipo.Aluno }));
+            return await mediator.Send(new ObterUsuariosInativosPorTipoQuery(paginacao, new[] { UsuarioTipo.Funcionario }));
         }
     }
-
-    
 }
