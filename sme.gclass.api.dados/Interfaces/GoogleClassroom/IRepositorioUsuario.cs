@@ -53,8 +53,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId);
         Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId);
-
-      Task<bool> AtualizarUnidadeOrganizacionalAsync(long id);
-
+        Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional);
+        Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(string[] Codigos);
     }
 }
