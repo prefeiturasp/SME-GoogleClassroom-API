@@ -333,5 +333,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
+
+
+        /// <summary>
+        /// Inicia a sincronização para remoção funcionarios sem atribuição - GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("funcionarios/remover")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoRemoverFuncionariosCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, long? turmaId = null)
+        {
+            var retorno = await useCase.Executar(turmaId, false, false);
+            return Ok(retorno);
+        }
+
     }
 }
