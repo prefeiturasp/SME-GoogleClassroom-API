@@ -23,45 +23,64 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
-
-            var funcionariosASeremRemovidos = await mediator.Send(
-                new ObterFuncionariosParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DataInicio, dto.DataFim));
-
-            foreach (var funcionarioASeremRemovido in funcionariosASeremRemovidos)
+            
+            try
             {
-                var funcionarioECurso = await ObterFuncionarioECurso(funcionarioASeremRemovido);
+                var funcionariosASeremRemovidos = await mediator.Send(
+                    new ObterFuncionariosParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DataInicio, dto.DataFim));
 
-                if (funcionarioECurso.funcionarioCurso is null || funcionarioECurso.curso is null)
-                    continue;
-
-                var cursoFuncionarioRemover = new CursoUsuarioRemoverDto
+                foreach (var funcionarioASeremRemovido in funcionariosASeremRemovidos)
                 {
-                    CursoUsuarioId = funcionarioECurso.funcionarioCurso.CursoUsuarioId,
-                    CursoId = funcionarioECurso.curso.Id,
-                    TipoUsuario = (int) UsuarioTipo.Funcionario,
-                    TipoGsa = (int) UsuarioCursoGsaTipo.Funcionario,
-                    UsuarioId = funcionarioECurso.funcionarioCurso.UsuarioId,
-                    UsuarioGsaId = funcionarioECurso.funcionarioCurso.UsuarioGsaId.ToString(),
-                };
+                    var funcionarioECurso = await ObterFuncionarioECurso(funcionarioASeremRemovido);
 
-                if (FuncionarioEResponsavelPeloCurso(funcionarioECurso.funcionarioCurso.Email, funcionarioECurso.curso.Email))
-                {
-                    var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(funcionarioECurso.curso.Id));
-
-                    var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, funcionarioECurso.funcionarioCurso);
-
-                    var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(funcionarioECurso.curso.TurmaId, funcionarioECurso.curso.ComponenteCurricularId, novoResponsavel.GoogleClassroomId, novoResponsavel.Email));
-                    if (!donoDoCursoAlterado)
-                    {
-                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionariosTratarErro,
-                            cursoFuncionarioRemover));
+                    if (funcionarioECurso.funcionarioCurso is null || funcionarioECurso.curso is null)
                         continue;
+
+                    var cursoFuncionarioRemover = new CursoUsuarioRemoverDto
+                    {
+                        CursoUsuarioId = funcionarioECurso.funcionarioCurso.CursoUsuarioId,
+                        CursoId = funcionarioECurso.curso.Id,
+                        TipoUsuario = (int) UsuarioTipo.Funcionario,
+                        TipoGsa = (int) UsuarioCursoGsaTipo.Funcionario,
+                        UsuarioId = funcionarioECurso.funcionarioCurso.UsuarioId,
+                        UsuarioGsaId = funcionarioECurso.funcionarioCurso.UsuarioGsaId.ToString(),
+                    };
+
+                    if (FuncionarioEResponsavelPeloCurso(funcionarioECurso.funcionarioCurso.Email,
+                        funcionarioECurso.curso.Email))
+                    {
+                        var funcionariosDoCurso =
+                            await mediator.Send(new ObterFuncionariosPorCursoQuery(funcionarioECurso.curso.Id));
+
+                        var novoResponsavel =
+                            DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, funcionarioECurso.funcionarioCurso);
+
+                        var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(
+                            funcionarioECurso.curso.TurmaId, funcionarioECurso.curso.ComponenteCurricularId,
+                            novoResponsavel.GoogleClassroomId, novoResponsavel.Email));
+                        if (!donoDoCursoAlterado)
+                        {
+                            await mediator.Send(new PublicaFilaRabbitCommand(
+                                RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro,
+                                dto));
+                            continue;
+                        }
                     }
+
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync,
+                        cursoFuncionarioRemover));
                 }
-                
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync,
-                    cursoFuncionarioRemover));
+
+
             }
+            catch (Exception exception)
+            {
+                SentrySdk.CaptureException(exception);
+                await mediator.Send(new PublicaFilaRabbitCommand(
+                    RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro,
+                    dto));
+            }
+
 
             return true;
         }
@@ -82,17 +101,18 @@ namespace SME.GoogleClassroom.Aplicacao
 
             return (curso, funcionarioCurso);
         }
-        
+
         private bool FuncionarioEResponsavelPeloCurso(string funcionarioEmail, string cursoEmail)
         {
             return funcionarioEmail.Equals(cursoEmail);
         }
 
-        private UsuarioGoogleDto DefinaNovoResponsavelPeloCurso(IEnumerable<UsuarioGoogleDto> funcionariosDoCurso, FuncionarioCurso professor)
+        private UsuarioGoogleDto DefinaNovoResponsavelPeloCurso(IEnumerable<UsuarioGoogleDto> funcionariosDoCurso,
+            FuncionarioCurso professor)
         {
             UsuarioGoogleDto funcionarioResponsavel;
 
-            var tiposFuncionarios = new[] { "/Professores", "/Admin/CP", "/Admin/AD", "/Admin/DIRETOR" };
+            var tiposFuncionarios = new[] {"/Professores", "/Admin/CP", "/Admin/AD", "/Admin/DIRETOR"};
             var funcionarios = funcionariosDoCurso.Where(o => !o.Email.Equals(professor.Email)).ToList();
 
             foreach (var tipoFuncionario in tiposFuncionarios)
@@ -103,7 +123,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     return funcionarioResponsavel;
             }
 
-            throw new NegocioException("Não foi possível localizar novo responsável pelo curso. O professor não poderá ser removido.");
+            throw new NegocioException(
+                "Não foi possível localizar novo responsável pelo curso. O professor não poderá ser removido.");
         }
     }
 }

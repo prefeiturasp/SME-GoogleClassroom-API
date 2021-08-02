@@ -11,6 +11,6 @@ namespace SME.GoogleClassroom.Dominio
         Professor = 2,
         
         [Display(Description = "Funcionario")]
-        Funcionario = 2
+        Funcionario = 3
     }
 }

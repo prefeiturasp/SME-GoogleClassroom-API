@@ -97,9 +97,7 @@
         public static string FilaGsaCursoUsuarioRemovidoProfessoresTratar => "googleclass.gsa.curso.usuario.removido.professor.tratar";
         public static string FilaGsaCursoUsuarioRemovidoFuncionarioTratar => "googleclass.gsa.curso.usuario.removido.funcionario.tratar";
         public static string FilaGsaCursoUsuarioRemovidoSync => "googleclass.gsa.curso.usuario.removido.sync";
-        public static string FilaGsaCursoUsuarioRemovidoFuncionariosTratarErro => "googleclass.gsa.curso.usuario.removido.funcionarios.tratar.erro";
         
-
         public static string FilaGsaCursoUsuarioRemovidoProfessoresTratarErro => "googleclass.gsa.curso.usuario.removido.professores.tratar.erro";
         public static string FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro => "googleclass.gsa.curso.usuario.removido.funcionario.tratar";
         public static string FilaGsaCursoUsuarioRemovidoErroTratar => "googleclass.gsa.curso.usuario.removido.erro.tratar";
