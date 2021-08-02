@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(string rf = null)
+        public async Task<bool> Executar(string rf)
         {
             var dto = new FiltroInativacaoProfessoresGoogleDto(rf);
             return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorCarregar, dto));

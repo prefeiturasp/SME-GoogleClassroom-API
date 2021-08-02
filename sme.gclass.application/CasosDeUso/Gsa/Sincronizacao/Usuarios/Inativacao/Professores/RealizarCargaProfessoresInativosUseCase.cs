@@ -28,12 +28,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (professoresParaInativar != null && professoresParaInativar.Any())
             {
-                var alunosInativacao = new FiltroAlunoInativacaoUsuarioDto(dto.DataReferencia, professoresParaInativar);
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, alunosInativacao));
+                var professoresEFuncionariosInativacao = new FiltroProfessoresInativosDto(dto.DataReferencia, professoresParaInativar);
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorTratar, professoresEFuncionariosInativacao));
             }
             else
             {
-                SentrySdk.CaptureMessage($"Não foi possível localizar a alunos para o ANO: {DateTime.Now.Year}, REFERÊNCIA: {dto.DataReferencia} e ALUNO: {dto.ProfessorId} na base do EOL!");
+                SentrySdk.CaptureMessage($"Não foi possível localizar a alunos para o ANO: {DateTime.Now.Year}, REFERÊNCIA: {dto.DataReferencia} e ALUNO: {dto.Rf} na base do EOL!");
             }
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorInativar));

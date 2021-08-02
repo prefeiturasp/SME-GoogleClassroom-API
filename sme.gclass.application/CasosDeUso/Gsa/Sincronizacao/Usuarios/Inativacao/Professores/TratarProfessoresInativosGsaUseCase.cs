@@ -20,20 +20,22 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroProfessoresInativosDto>();
             
-            var professoresEFuncionariosGoogle = await mediator.Send(new ObterProfessoresEFuncionariosPorCodigosQuery(dto.Ids.ToArray()));
+            var professoresEFuncionariosGoogle = await mediator.Send(new ObterProfessoresEFuncionariosPorCodigosQuery(dto.Rfs.ToArray()));
 
             if (professoresEFuncionariosGoogle != null && professoresEFuncionariosGoogle.Any())
             {
                 foreach (var professor in professoresEFuncionariosGoogle)
                 {
-                    var professorFuncionarioInativar = new ProfessorInativoDto(professor.Rf, professor.Indice, professor.Email, 1);
+                    var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(professor.Id.ToString()));
+
+                    var professorFuncionarioInativar = new ProfessorInativoDto(professor.Rf, professor.Indice, professor.Email, (int)usuario.UsuarioTipo);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorIncluir, professorFuncionarioInativar));
                 }
                 return true;
             }
             else
             {
-                SentrySdk.CaptureMessage($"Não foi possível localizar os usuários (professores / funcionários) pelos códigos {string.Join(", ", dto.Ids.ToArray())} no GSA");
+                SentrySdk.CaptureMessage($"Não foi possível localizar os usuários (professores / funcionários) pelos códigos {string.Join(", ", dto.Rfs.ToArray())} no GSA");
                 return false;
             }
         }

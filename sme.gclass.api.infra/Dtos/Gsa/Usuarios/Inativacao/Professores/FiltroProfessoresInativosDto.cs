@@ -5,13 +5,13 @@ namespace SME.GoogleClassroom.Infra
 {
     public class FiltroProfessoresInativosDto
     {
-        public FiltroProfessoresInativosDto(DateTime dataReferencia, IEnumerable<long> ids)
+        public FiltroProfessoresInativosDto(DateTime dataReferencia, IEnumerable<string> rfs)
         {
             DataReferencia = dataReferencia;
-            Ids = ids;
+            Rfs = rfs;
         }
 
         public DateTime DataReferencia { get; set; }
-        public IEnumerable<long> Ids { get; set; }
+        public IEnumerable<string> Rfs { get; set; }
     }
 }

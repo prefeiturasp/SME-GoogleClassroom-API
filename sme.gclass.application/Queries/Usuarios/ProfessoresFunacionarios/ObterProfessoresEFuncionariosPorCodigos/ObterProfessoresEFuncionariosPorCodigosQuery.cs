@@ -7,16 +7,16 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterProfessoresEFuncionariosPorCodigosQuery : IRequest<IEnumerable<ProfessorGoogle>>
     {
-        public ObterProfessoresEFuncionariosPorCodigosQuery(long codigo)
+        public ObterProfessoresEFuncionariosPorCodigosQuery(string codigo)
         {
-            ProfessoresEFuncionariosCodigo = new long[] { codigo };
+            ProfessoresEFuncionariosCodigo = new string[] { codigo };
         }
-        public ObterProfessoresEFuncionariosPorCodigosQuery(long[] codigos)
+        public ObterProfessoresEFuncionariosPorCodigosQuery(string[] codigos)
         {
             ProfessoresEFuncionariosCodigo = codigos;
         }
 
-        public long[] ProfessoresEFuncionariosCodigo { get; set; }
+        public string[] ProfessoresEFuncionariosCodigo { get; set; }
     }
 
     public class ObterProfessoresEFuncionariosPorCodigosQueryValidator : AbstractValidator<ObterProfessoresEFuncionariosPorCodigosQuery>
