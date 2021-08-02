@@ -47,6 +47,7 @@
         public static string FilaProfessorCursoRemover => "googleclass.professor.curso.remover";
         public static string FilaProfessorErroSync => "googleclass.professor.erro.sync";
         public static string FilaProfessorErroTratar => "googleclass.professor.erro.tratar";
+        public static string FilaGsaInativarProfessorErroTratar => "googleclass.professor.inativar.erro.tratar";
         #endregion
 
         #region Funcionário indireto
