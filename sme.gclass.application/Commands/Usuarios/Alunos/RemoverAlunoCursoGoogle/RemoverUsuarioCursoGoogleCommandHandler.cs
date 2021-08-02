@@ -33,6 +33,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     await policy.ExecuteAsync(() => RemoverAlunoCursoNoGoogle(request.UsuarioCursoGoogle, servicoClassroom));
                     break;
                 case UsuarioCursoGsaTipo.Professor:
+                case UsuarioCursoGsaTipo.Funcionario:
                     await policy.ExecuteAsync(() => RemoverProfessorCursoNoGoogle(request.UsuarioCursoGoogle, servicoClassroom));
                     break;
                 default:
@@ -44,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task RemoverAlunoCursoNoGoogle(UsuarioCursoGoogleDto alunoCursoGoogle, ClassroomService servicoClassroom)
         {
-            var existeUsuarioCurso = servicoClassroom.Courses.Teachers.Get(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId).Execute();
+            var existeUsuarioCurso = servicoClassroom.Courses.Students.Get(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId).Execute();
             if (existeUsuarioCurso != null)
             {
                 var requestCreate = servicoClassroom.Courses.Students.Delete(alunoCursoGoogle.CursoId.ToString(), alunoCursoGoogle.UsuarioId);

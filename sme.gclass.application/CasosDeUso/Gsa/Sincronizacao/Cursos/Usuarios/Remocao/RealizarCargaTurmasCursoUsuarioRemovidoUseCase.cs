@@ -40,7 +40,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 SentrySdk.CaptureMessage($"Não foi possível localizar curso de turma id {dto.TurmaId} na base do GSA!");
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
+            if (!dto.TurmaId.HasValue)
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
+
             return true;
         }
 

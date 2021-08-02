@@ -10,11 +10,11 @@ namespace SME.GoogleClassroom.Aplicacao.Usuarios
         ObterFuncionarioCursoPorUsuarioRfCursoIdQueryHandler : IRequestHandler<
             ObterFuncionarioCursoPorUsuarioRfCursoIdQuery, FuncionarioCurso>
     {
-        private readonly RepositorioUsuario _repositorioUsuario;
+        private readonly IRepositorioUsuario _repositorioUsuario;
 
-        public ObterFuncionarioCursoPorUsuarioRfCursoIdQueryHandler(RepositorioUsuario repositorioUsuario)
+        public ObterFuncionarioCursoPorUsuarioRfCursoIdQueryHandler(IRepositorioUsuario repositorioUsuario)
         {
-            _repositorioUsuario = repositorioUsuario;
+            _repositorioUsuario = repositorioUsuario ?? throw new System.ArgumentNullException(nameof(repositorioUsuario));
         }
 
         public async Task<FuncionarioCurso> Handle(ObterFuncionarioCursoPorUsuarioRfCursoIdQuery request,

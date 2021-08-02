@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Dados
                                               inner join usuarios u on u.indice = ucr.usuario_id 
                                              WHERE ucr.usuario_tipo = any(@usuarioTipos) ");
 
-            var queryCount = new StringBuilder("SELECT count(*) from curso_usuario_removido_gsa ucr WHERE ucr.usuario_tipo = any(@tipo) ");
+            var queryCount = new StringBuilder("SELECT count(*) from curso_usuario_removido_gsa ucr WHERE ucr.usuario_tipo = any(@usuarioTipos) ");
 
             if (cursoId > 0)
             {
@@ -46,7 +46,7 @@ namespace SME.GoogleClassroom.Dados
             return query.ToString();
         }
 
-        private async Task<PaginacaoResultadoDto<T>> ObterUsuariosCursosRemovidosPorCursoId<T>(Paginacao paginacao, long cursoId, UsuarioTipo[] usuarioTipos) 
+        private async Task<PaginacaoResultadoDto<T>> ObterUsuariosCursosRemovidosPorCursoId<T>(Paginacao paginacao, long cursoId, int[] usuarioTipos) 
         {
             try
             {
@@ -79,13 +79,13 @@ namespace SME.GoogleClassroom.Dados
         }
 
         public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterAlunosCursosRemovidosPorCursoId(Paginacao paginacao, long cursoId)
-            => await ObterUsuariosCursosRemovidosPorCursoId<CursoUsuarioRemovidoConsultaDto>(paginacao, cursoId, new[] { UsuarioTipo.Aluno });
+            => await ObterUsuariosCursosRemovidosPorCursoId<CursoUsuarioRemovidoConsultaDto>(paginacao, cursoId, new[] { (int)UsuarioTipo.Aluno });
 
         public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterProfessoresRemovidosCursosPorId(Paginacao paginacao, long cursoId)
-            => await ObterUsuariosCursosRemovidosPorCursoId<CursoUsuarioRemovidoConsultaDto>(paginacao, cursoId, new[] { UsuarioTipo.Professor });
+            => await ObterUsuariosCursosRemovidosPorCursoId<CursoUsuarioRemovidoConsultaDto>(paginacao, cursoId, new[] { (int)UsuarioTipo.Professor });
 
         public async Task<PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>> ObterFuncionariosRemovidosCursosPorId(Paginacao paginacao, long cursoId)
-            => await ObterUsuariosCursosRemovidosPorCursoId<CursoUsuarioRemovidoConsultaDto>(paginacao, cursoId, new [] { UsuarioTipo.Funcionario, UsuarioTipo.FuncionarioIndireto });
+            => await ObterUsuariosCursosRemovidosPorCursoId<CursoUsuarioRemovidoConsultaDto>(paginacao, cursoId, new [] { (int)UsuarioTipo.Funcionario, (int)UsuarioTipo.FuncionarioIndireto });
 
         public async Task<long> SalvarAsync(CursoUsuarioRemovidoGsa entidade)
         {
