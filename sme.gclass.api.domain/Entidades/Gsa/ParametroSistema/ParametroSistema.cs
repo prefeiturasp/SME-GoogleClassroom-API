@@ -4,7 +4,7 @@
     {
         public long Id { get; set; }
         public string Nome { get; set; }
-        public ETipoParametroSistema Tipo { get; set; }
+        public TipoParametroSistema Tipo { get; set; }
         public string Descricao { get; set; }
         public string Valor { get; set; }
         public int Ano { get; set; }
@@ -14,7 +14,7 @@
         {
         }
 
-        public ParametrosSistema(long id, string nome, ETipoParametroSistema tipo, string descricao, string valor, int ano, bool ativo)
+        public ParametrosSistema(long id, string nome, TipoParametroSistema tipo, string descricao, string valor, int ano, bool ativo)
         {
             Id = id;
             Nome = nome;

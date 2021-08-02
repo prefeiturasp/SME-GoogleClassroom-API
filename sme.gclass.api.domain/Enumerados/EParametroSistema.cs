@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Dominio
 {
-    public enum ETipoParametroSistema
+    public enum TipoParametroSistema
     {
         InicioAnoLetivo = 1,
         DiasRemocaoFuncionario = 2

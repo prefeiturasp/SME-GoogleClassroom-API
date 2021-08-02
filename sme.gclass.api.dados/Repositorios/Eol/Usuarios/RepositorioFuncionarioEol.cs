@@ -442,5 +442,259 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 
 		}
-    }
+
+        public async Task<PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>> ObterFuncionariosParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao)
+        {
+			var parametros = new
+			{
+				turmaId,
+				dataInicio,
+				dataFim,
+				paginacao.QuantidadeRegistros,
+				paginacao.QuantidadeRegistrosIgnorados
+			};
+			var queryContador = MontarQueryFuncionariosRemoverCursos(turmaId, true, false);
+
+			var retorno = new PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>();
+
+			using var conn = ObterConexao();
+			var totalRegistros = await conn.QueryFirstOrDefaultAsync<int>(queryContador, parametros);
+
+			var query = MontarQueryFuncionariosRemoverCursos(turmaId, false, true);
+			retorno.Items = await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
+			retorno.TotalRegistros = totalRegistros;
+			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+			return retorno;
+		}
+
+		private string MontarQueryFuncionariosRemoverCursos(string turmaId, bool contador, bool paginar)
+        {
+			var filtroTurma = string.IsNullOrEmpty(turmaId) ? "" : "and te.cd_turma_escola = @turmaId";
+
+			var query = $@"DECLARE @cargoCP AS INT = 3379;
+				DECLARE @cargoAD AS INT = 3085;
+				DECLARE @cargoDiretor AS INT = 3360;
+				DECLARE @tipoFuncaoPAP AS INT = 30;
+				DECLARE @tipoFuncaoPAEE AS INT = 6;
+				DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
+				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
+				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
+
+				-- 1. Busca os funcionários por cargo fixo
+				IF OBJECT_ID('tempdb..#tempServidorCargosBase') IS NOT NULL
+					DROP TABLE #tempServidorCargosBase
+				SELECT
+					serv.cd_registro_funcional AS Rf,
+					esc.cd_escola AS CdUe,
+					te.cd_turma_escola as CdTurma,
+					cbc.cd_cargo AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor,
+					dt_fim_nomeacao as FimNomeacao
+				INTO #tempServidorCargosBase
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					lotacao_servidor ls (NOLOCK)
+					ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc  (NOLOCK)
+					ON ls.cd_unidade_educacao = esc.cd_escola
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE te.st_turma_escola in ('O', 'A', 'C')
+					AND te.cd_tipo_turma in (1,2,3,5,6,7)
+					and dt_fim_nomeacao between @dataInicio and @dataFim
+					and cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
+					{filtroTurma}
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+				
+
+				-- 2. Busca os funcionários por cargo sobreposto fixo
+				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
+					DROP TABLE #tempServidorCargosSobrepostos
+				SELECT
+					serv.cd_registro_funcional AS Rf, 
+					css.cd_unidade_local_servico AS CdUe,
+					te.cd_turma_escola as CdTurma,
+					css.cd_cargo AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor,
+					css.dt_fim_cargo_sobreposto as FimNomeacao
+				INTO #tempServidorCargosSobrepostos
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					cargo_sobreposto_servidor css (NOLOCK)
+					ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON css.cd_unidade_local_servico = esc.cd_escola
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE te.st_turma_escola in ('O', 'A', 'C')
+					AND te.cd_tipo_turma in (1,2,3,5,6,7)
+					and css.dt_fim_cargo_sobreposto between @dataInicio and @dataFim
+					and css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
+					{filtroTurma}
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+
+				-- 3. Busca os funcionários por função
+				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
+					DROP TABLE #tempServidorFuncao
+				SELECT
+					serv.cd_registro_funcional AS Rf, 
+					esc.cd_escola AS CdUe,
+					te.cd_turma_escola as CdTurma,
+					facs.cd_tipo_funcao AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor,
+					dt_fim_nomeacao as FimNomeacao
+				INTO #tempServidorFuncao
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					funcao_atividade_cargo_servidor facs (NOLOCK)
+					ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON facs.cd_unidade_local_servico = esc.cd_escola
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE te.st_turma_escola in ('O', 'A', 'C')
+					AND te.cd_tipo_turma in (1,2,3,5,6,7)
+					and dt_fim_nomeacao between @dataInicio and @dataFim
+					and facs.cd_tipo_funcao IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
+					{filtroTurma}
+					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+
+
+				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
+					DROP TABLE #tempServidorCargos
+				SELECT distinct
+					base.Rf, 
+					CASE
+						WHEN NOT sobreposto.CdCagoFuncao IS NULL THEN sobreposto.CdCagoFuncao
+						WHEN NOT funcao.CdCagoFuncao IS NULL THEN funcao.CdCagoFuncao
+						ELSE base.CdCagoFuncao
+					END AS CdCagoFuncao,
+					CASE
+						WHEN NOT sobreposto.CdUe IS NULL THEN sobreposto.CdUe
+						WHEN NOT funcao.CdUe IS NULL THEN funcao.CdUe
+						ELSE base.CdUe
+					END AS CdUe,
+					CASE
+						WHEN NOT sobreposto.CdTurma IS NULL THEN sobreposto.CdTurma
+						WHEN NOT funcao.CdTurma IS NULL THEN funcao.CdTurma
+						ELSE base.CdTurma
+					END AS CdTurma,
+					CASE
+						WHEN NOT sobreposto.FimNomeacao IS NULL THEN sobreposto.FimNomeacao
+						WHEN NOT funcao.FimNomeacao IS NULL THEN funcao.FimNomeacao
+						ELSE base.FimNomeacao
+					END AS FimNomeacao
+				INTO #tempServidorCargos
+				FROM
+					#tempServidorCargosBase base
+				LEFT JOIN
+					#tempServidorCargosSobrepostos sobreposto
+					ON base.cd_cargo_base_servidor = sobreposto.cd_cargo_base_servidor
+				LEFT JOIN
+					#tempServidorFuncao funcao
+					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor;
+
+
+				IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
+					DROP TABLE #tempTurmasComponentesRegulares
+				SELECT
+					DISTINCT
+					CASE
+						WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
+					ELSE
+						cc.cd_componente_curricular
+					END ComponenteCurricularId,
+					temp.CdTurma TurmaId,
+					temp.CdUe	
+				INTO #tempTurmasComponentesRegulares
+				FROM
+					#tempServidorCargos temp
+				INNER JOIN
+					serie_turma_escola (NOLOCK) 
+					ON serie_turma_escola.cd_turma_escola = temp.CdTurma
+				INNER JOIN
+					serie_turma_grade (NOLOCK) 
+					ON serie_turma_grade.cd_turma_escola = serie_turma_escola.cd_turma_escola 
+				INNER JOIN
+					escola_grade (NOLOCK) 
+					ON serie_turma_grade.cd_escola_grade = escola_grade.cd_escola_grade
+				INNER JOIN
+					grade (NOLOCK) 
+					ON escola_grade.cd_grade = grade.cd_grade
+				INNER JOIN
+					grade_componente_curricular gcc (NOLOCK) 
+					ON gcc.cd_grade = grade.cd_grade
+				INNER JOIN
+					componente_curricular cc (NOLOCK) 
+					ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+				INNER JOIN
+					serie_ensino (NOLOCK) 
+					ON grade.cd_serie_ensino = serie_ensino.cd_serie_ensino
+				INNER JOIN
+					etapa_ensino (NOLOCK) 
+					ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino; ";
+
+			query += contador ? "select count(*) " :
+				@"SELECT
+					servidor.Rf as UsuarioRf,
+					serv.nm_pessoa as UsuarioNome,
+					cursos.TurmaId as TurmaCodigo,
+					cursos.ComponenteCurricularId as ComponenteCurricularCodigo,
+					cursos.CdUe AS UeCodigo,
+					servidor.FimNomeacao ";
+
+			query +=
+				@"FROM
+					#tempServidorCargos servidor
+				INNER JOIN
+					#tempTurmasComponentesRegulares cursos
+					ON servidor.CdUe = cursos.CdUe
+				inner join
+					v_servidor_cotic serv
+					on serv.cd_registro_funcional = servidor.Rf ";
+
+			if (!contador)
+				query += " order by servidor.FimNomeacao, cursos.CdUe, cursos.TurmaId ";
+
+			if (paginar)
+				query += " OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY ";
+
+			query += ";";
+
+			return query;
+		}
+
+        public async Task<IEnumerable<RemoverAtribuicaoFuncionarioTurmaEolDto>> ObterFuncionariosParaRemoverCurso(string turmaId, DateTime dataInicio, DateTime dataFim)
+        {
+			var query = MontarQueryFuncionariosRemoverCursos(turmaId, false, false);
+			var parametros = new
+			{
+				turmaId,
+				dataInicio,
+				dataFim
+			};
+
+			using var conn = ObterConexao();
+			return await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
+		}
+	}
 }
