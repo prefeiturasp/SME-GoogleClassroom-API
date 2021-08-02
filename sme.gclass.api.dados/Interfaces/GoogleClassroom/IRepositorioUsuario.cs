@@ -56,5 +56,7 @@ namespace SME.GoogleClassroom.Dados
 
       Task<bool> AtualizarUnidadeOrganizacionalAsync(long id);
 
+      Task<FuncionarioCurso> ObterFuncionarioECursoPorUsuarioRFECursoId(long usuarioRF, long cursoId);
+
     }
 }

@@ -22,6 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (dto.ProcessarProfessores)
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, dto));
+            
+            if (dto.ProcessarFuncionario)
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, dto));
 
             return true;
         }

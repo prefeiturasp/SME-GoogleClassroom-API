@@ -55,6 +55,10 @@ namespace SME.GoogleClassroom.IoC
             //Curso Arquivado
             services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
             services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
+            
+            //Funcionario Removido
+            services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
+            
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -154,9 +158,13 @@ namespace SME.GoogleClassroom.IoC
             
             // Remover atribuicao professor x curso
             services.TryAddScoped<IObterProfessoresQueSeraoRemovidosUseCase, ObterProfessoresQueSeraoRemovidosUseCase>();
-            services.TryAddScoped<IIniciarProcessoRemoverProfessorCursoGsaUseCase, IniciarProcessoRemoverProfessorCursoGsaUseCase>();
             services.TryAddScoped<IObterProfessoresRemovidosCursosUseCase, ObterProfessoresRemovidosCursosUseCase>();
 
+            // Remover atribuicao funcionario x curso
+            services.TryAddScoped<IIniciarSyncGoogleFuncionariosRemovidosCursoComErrosUseCase, IniciarSyncGoogleFuncionariosRemovidosCursoComErrosUseCase>();
+            services.TryAddScoped<IObterFuncionariosQueSeraoRemovidosUseCase, ObterFuncionariosQueSeraoRemovidosUseCase>();
+
+            services.TryAddScoped<IObterFuncionariosRemovidosCursosUseCase, ObterFuncionariosRemovidosCursosUseCase>();
 
             //Curso Arquivar
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosUseCase, CarregarArquivamentoCursosExtintosUseCase>();

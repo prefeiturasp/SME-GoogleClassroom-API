@@ -175,6 +175,39 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         {
             var retorno = await atribuirFuncionarioSemRfCursoUseCase.Executar(atribuirFuncionarioSemRfCurso);
             return Ok(retorno);
-        } 
+        }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de funcionarios que perderam atribuição em turmas Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("cursos/atribuicoes/remover/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErros([FromServices] IIniciarSyncGoogleFuncionariosRemovidosCursoComErrosUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
+
+        /// Retorna os funcionarios que perderam a atribuição em turmas para remover o vinculo no GSA
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos/atribuicoes/remover")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterTodosAlunosQueSeraoRemovidos([FromServices] IObterFuncionariosQueSeraoRemovidosUseCase useCase,
+            [FromQuery] FiltroObterUsuariosQueSeraoRemovidosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
     }
 }
