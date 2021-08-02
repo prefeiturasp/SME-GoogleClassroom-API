@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<ParametrosSistema> ObterParametroSistemaPorTipoEAno(ETipoParametroSistema tipo, int ano)
+        public async Task<ParametrosSistema> ObterParametroSistemaPorTipoEAno(TipoParametroSistema tipo, int ano)
         {
             const string query = @"
                         select
