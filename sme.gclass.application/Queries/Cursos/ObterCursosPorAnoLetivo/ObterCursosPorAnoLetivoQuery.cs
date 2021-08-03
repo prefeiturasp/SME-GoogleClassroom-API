@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosPorAnoLetivoSemestreQuery: IRequest<IEnumerable<CursoEolDto>>
+    public class ObterCursosPorAnoLetivoQuery: IRequest<IEnumerable<CursoEolDto>>
     {
-        public ObterCursosPorAnoLetivoSemestreQuery(int anoLetivo)
+        public ObterCursosPorAnoLetivoQuery(int anoLetivo)
         {
             AnoLetivo = anoLetivo;
         }
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public int AnoLetivo { get; set; }
     }
 
-    public class ObterCursosPorAnoSemestreQueryValidator : AbstractValidator<ObterCursosPorAnoLetivoSemestreQuery>
+    public class ObterCursosPorAnoSemestreQueryValidator : AbstractValidator<ObterCursosPorAnoLetivoQuery>
     {
         public ObterCursosPorAnoSemestreQueryValidator()
         {

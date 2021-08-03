@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(ArquivarCursosCommand request, CancellationToken cancellationToken)
         {
-            var cursosEol = await mediator.Send(new ObterCursosPorAnoLetivoSemestreQuery(request.AnoLetivo));
+            var cursosEol = await mediator.Send(new ObterCursosPorAnoLetivoQuery(request.AnoLetivo));
 
             foreach (var curso in cursosEol)
             {
