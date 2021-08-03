@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-            var professoresASeremRemovidos = await mediator.Send(new ObterProfessoresParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DataInicio, dto.DataFim)); 
+            var professoresASeremRemovidos = await mediator.Send(new ObterProfessoresParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DatasAluno.DataInicio, dto.DatasAluno.DataFim)); 
 
             foreach (var professorASerRemovido in professoresASeremRemovidos)
             {

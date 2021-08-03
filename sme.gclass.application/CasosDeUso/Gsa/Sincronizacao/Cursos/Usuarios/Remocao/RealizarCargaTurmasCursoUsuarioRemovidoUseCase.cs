@@ -21,18 +21,23 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<CarregarTurmaRemoverCursoUsuarioDto>();
 
-            var datasReferencias = await ObterDatasReferencias();
+            var datasReferencias = await ObterDatasReferencias(dto.ProcessarAlunos, dto.ProcessarProfessores, dto.ProcessarFuncionario);
 
             var turmas = await mediator.Send(new ObterTurmasIdsCadastradasQuery(DateTime.Now.Year, dto.TurmaId));
             if (turmas != null && turmas.Any())
             {
                 foreach (var turma in turmas)
                 {
-                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio,
-                        datasReferencias.dataFim, turma, dto.ProcessarAlunos, dto.ProcessarProfessores,
+                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(
+                        datasReferencias.datasAluno,
+                        datasReferencias.datasProfessor,
+                        datasReferencias.datasFuncionario,
+                        turma,
+                        dto.ProcessarAlunos,
+                        dto.ProcessarProfessores,
                         dto.ProcessarFuncionario);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar,
-                        filtroTurma));
+
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
                 }
             }
             else
@@ -46,12 +51,31 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias()
+        private async Task<(VigenciaDto datasAluno, VigenciaDto datasProfessor, VigenciaDto datasFuncionario)> ObterDatasReferencias(bool processarAlunos, bool processarProfessores, bool processarFuncionarios)
         {
-            var totalDiasConsiderar = 10;
+            var ano = DateTime.Now.Year;
+            var diasRemocaoAluno = processarAlunos ?
+                await ObterDataInicio(TipoParametroSistema.DiasRemocaoAluno, ano) : 0;
+            var diasRemocaoProfessor = processarProfessores ?
+                await ObterDataInicio(TipoParametroSistema.DiasRemocaoProfessor, ano) : 0;
+            var diasRemocaoFuncionario = processarFuncionarios ?
+                await ObterDataInicio(TipoParametroSistema.DiasRemocaoFuncionario, ano) : 0;
+
             var dataUltimaExecucao =
                 await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
-            return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
+
+            return (new VigenciaDto(dataUltimaExecucao.AddDays(-diasRemocaoAluno), DateTime.Today.AddDays(-diasRemocaoAluno))
+                , new VigenciaDto(dataUltimaExecucao.AddDays(-diasRemocaoProfessor), DateTime.Today.AddDays(-diasRemocaoProfessor))
+                , new VigenciaDto(dataUltimaExecucao.AddDays(-diasRemocaoFuncionario), DateTime.Today.AddDays(-diasRemocaoFuncionario)));
+        }
+
+        private async Task<int> ObterDataInicio(TipoParametroSistema tipoParametro, int ano)
+        {
+            var parametroDiasRemocao = await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(tipoParametro, ano));
+            if (parametroDiasRemocao is null || !parametroDiasRemocao.Ativo)
+                throw new NegocioException($"Não localizado o parâmetro de controle de dias para execução de remoção do curso. Tipo: {tipoParametro}");
+
+            return int.Parse(parametroDiasRemocao.Valor);
         }
     }
 }
