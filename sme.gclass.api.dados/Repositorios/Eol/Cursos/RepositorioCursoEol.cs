@@ -1219,4 +1219,21 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
     }
+			return retorno;
+		}
+
+		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivo(int anoLetivo)
+        {
+			var query = @"	select 
+								cd_turma_escola as TurmaId
+							from turma_escola te (NOLOCK)
+							inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
+							where st_turma_escola = 'C' 
+							and an_letivo = @anoLetivo";
+
+			using var conn = ObterConexao();
+			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo });
+		}
+	}
+
 }

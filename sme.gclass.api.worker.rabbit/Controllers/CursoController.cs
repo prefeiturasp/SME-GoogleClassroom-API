@@ -368,5 +368,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             return Ok(retorno);
         }
 
+        /// <summary>
+        /// Inicia a sincronização para arquivar cursos por ano e semestre - GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("arquivar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoArquivarCursosPorAnoSemestre([FromServices] IIniciarProcessoArquivarCursosPorAnoSemestreUseCase useCase, int ano, int? semestre = 0)
+        {
+            await useCase.Executar(ano, semestre);
+            return Ok();
+        }
     }
 }

@@ -17,6 +17,6 @@
         MuralAvisosCarregar = 13,
         AtividadesCarregar = 14,
         ArquivarCursosTurmasExtintas = 16,
-        ArquivarCursosPorAnoSemestre = 18
+        ArquivarCursosPorAnoLetivo = 18
     }
 }
