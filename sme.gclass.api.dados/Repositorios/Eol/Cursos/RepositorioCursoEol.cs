@@ -1175,7 +1175,7 @@ namespace SME.GoogleClassroom.Dados
 			return retorno;
 		}
 
-		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivoSemestre(int anoLetivo, int? semestre)
+		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivoSemestre(int anoLetivo)
         {
 			var query = @"	select 
 								cd_turma_escola as TurmaId
@@ -1184,15 +1184,8 @@ namespace SME.GoogleClassroom.Dados
 							where st_turma_escola = 'C' 
 							and an_letivo = @anoLetivo";
 
-			if (semestre.HasValue)
-				//filtrar cursos modalidade EJA
-				query += "";
-			else
-				//filtrar todos cursos menos modalidade EJA
-				query += "";
-
 			using var conn = ObterConexao();
-			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo, semestre });
+			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo });
 		}
 	}
 }

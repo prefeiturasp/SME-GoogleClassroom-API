@@ -18,6 +18,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<CursoEolDto>> Handle(ObterCursosPorAnoLetivoSemestreQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoEol.ObterCursosPorAnoLetivoSemestre(request.AnoLetivo, request.Semestre);
+            => await repositorioCursoEol.ObterCursosPorAnoLetivoSemestre(request.AnoLetivo);
     }
 }
