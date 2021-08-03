@@ -20,17 +20,17 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
 
-			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-			var query = MontaQueryCursosParaInclusao(aplicarPaginacao, dataReferencia, rf);
-			var parametros = new
-			{
-				dataReferencia = dataReferencia.Date,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados,
-				rf
-			};
+            var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
+            var query = MontaQueryCursosParaInclusao(aplicarPaginacao, dataReferencia, rf);
+            var parametros = new
+            {
+                dataReferencia = dataReferencia.Date,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados,
+                rf
+            };
 
-			using var multi = await conn.QueryMultipleAsync(query, parametros);
+            using var multi = await conn.QueryMultipleAsync(query, parametros);
 
             var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
 
@@ -41,24 +41,24 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		public async Task<FuncionarioEol> ObterFuncionarioParaTratamentoDeErroAsync(long rf, int anoLetivo)
+        public async Task<FuncionarioEol> ObterFuncionarioParaTratamentoDeErroAsync(long rf, int anoLetivo)
         {
-			var query = MontaQueryCursosParaInclusao(false, null, rf.ToString());
-			var parametros = new
-			{
-				anoLetivo = anoLetivo,
-				rf
-			};
+            var query = MontaQueryCursosParaInclusao(false, null, rf.ToString());
+            var parametros = new
+            {
+                anoLetivo = anoLetivo,
+                rf
+            };
 
-			using var conn = ObterConexao();
-			return await conn.QuerySingleOrDefaultAsync<FuncionarioEol>(query, parametros);
-		}
+            using var conn = ObterConexao();
+            return await conn.QuerySingleOrDefaultAsync<FuncionarioEol>(query, parametros);
+        }
 
-		public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo)
-		{
-			using var conn = ObterConexao();
+        public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo)
+        {
+            using var conn = ObterConexao();
 
-			const string query = @"
+            const string query = @"
 				DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
@@ -251,12 +251,12 @@ namespace SME.GoogleClassroom.Dados
 				INNER JOIN
 					#tempTurmasComponentesRegulares cursos
 					ON servidor.CdUe = cursos.CdUe;";
-			return await conn.QueryAsync<FuncionarioCursoEol>(query, new { rf, anoLetivo });
-		}
+            return await conn.QueryAsync<FuncionarioCursoEol>(query, new { rf, anoLetivo });
+        }
 
-		private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf)
+        private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf)
         {
-			string queryBase = @$"
+            string queryBase = @$"
                 DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
@@ -410,11 +410,11 @@ namespace SME.GoogleClassroom.Dados
 					#tempCargosFuncionariosRemovendoDuplicados
 				ORDER BY cd_servidor";
 
-			var query = new StringBuilder(queryBase);
-			if (aplicarPaginacao)
-				query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
+            var query = new StringBuilder(queryBase);
+            if (aplicarPaginacao)
+                query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
 
-			query.Append(@$"
+            query.Append(@$"
 				SELECT
 					serv.cd_registro_funcional AS Rf,
 					serv.nm_pessoa AS NomePessoa,
@@ -439,71 +439,69 @@ namespace SME.GoogleClassroom.Dados
 
 				");
 
-			return query.ToString();
+            return query.ToString();
 
-		}
+        }
 
         public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia)
         {
-			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-			var queryBase = @"
-					IF OBJECT_ID('tempdb..#tempFuncionariosSeraoInativados') IS NOT NULL
-						DROP TABLE #tempFuncionariosSeraoInativados;
+            try
+            {
+				var querySelectDados = @" SELECT DISTINCT 
+											serv.cd_registro_funcional as rf,
+											serv.nm_pessoa as NomePessoa,
+											serv.nm_social as NomeSocial ";
 
-					SELECT DISTINCT 
-						serv.cd_registro_funcional as rf,
-						serv.nm_pessoa as NomePessoa,
-						serv.nm_social as NomeSocial
-					INTO #tempFuncionariosSeraoInativados   
-					FROM v_servidor_cotic serv
-					INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
-					INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
-					INNER JOIN lotacao_servidor AS ls
-							   ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
-					WHERE cba.dt_fim_nomeacao <= @dataReferencia
-						AND serv.cd_registro_funcional NOT IN(
-							SELECT
-								distinct serv.cd_registro_funcional
-							FROM v_servidor_cotic serv
-								INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
-								INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
-								INNER JOIN lotacao_servidor AS ls
-							ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
-							WHERE cba.dt_fim_nomeacao IS NULL);";
+				var querySelectCount = "SELECT COUNT(DISTINCT serv.cd_registro_funcional) ";
 
-			var query = new StringBuilder(queryBase);
-			query.AppendLine(@"
-                SELECT
-                    *
-                FROM
-                    #tempFuncionariosSeraoInativados;");
+				var queryFrom = new StringBuilder(@" FROM v_servidor_cotic serv
+														INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+														INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+														INNER JOIN lotacao_servidor AS ls
+																	ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+														WHERE cba.dt_fim_nomeacao <= @dataReferencia
+															AND serv.cd_registro_funcional NOT IN(
+																SELECT
+																	distinct serv.cd_registro_funcional
+																FROM v_servidor_cotic serv
+																	INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+																	INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+																	INNER JOIN lotacao_servidor AS ls
+																ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+																WHERE cba.dt_fim_nomeacao IS NULL) ");
 
-			if (aplicarPaginacao)
-				query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY; ");
+                var queryPaginacao = @"ORDER BY serv.cd_registro_funcional offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
 
-			query.AppendLine(@"
-                SELECT
-                    COUNT(*)
-                FROM
-                    #tempFuncionariosSeraoInativados;");
+                var query = new StringBuilder(querySelectDados);
+				query.Append(queryFrom);
+				query.Append(queryPaginacao);
+                query.Append(querySelectCount);
+				query.Append(queryFrom);
 
-			var parametros = new
-			{
-				dataReferencia = dataReferencia.Date,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados
-			};
+				using var conn = ObterConexao();
+                using var multi = await conn.QueryMultipleAsync(query.ToString(),
+                    new
+                    {
+                        quantidadeRegistros = paginacao.QuantidadeRegistros,
+                        quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                        dataReferencia
+                    }, commandTimeout: 6000);
 
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query.ToString(), parametros);
+                var retorno = new PaginacaoResultadoDto<FuncionarioEol>
+                {
+                    Items = multi.Read<FuncionarioEol>(),
+                    TotalRegistros = multi.ReadFirst<int>()
+                };
 
-			var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
+                retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+                return retorno;
 
-			retorno.Items = multi.Read<FuncionarioEol>();
-			retorno.TotalRegistros = multi.ReadFirst<int>();
-			retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-			return retorno;
-		}
+        }
     }
 }
