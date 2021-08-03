@@ -18,6 +18,9 @@
         public static string FilaCursoExtintoArquivarTratarErro => "googleclass.gsa.curso.extinto.arquivar.tratar.erro";
         public static string FilaCursoExtintoArquivarSync => "googleclass.gsa.curso.extinto.arquivar.sync";
         public static string FilaCursoExtintoArquivarSyncErro => "googleclass.gsa.curso.extinto.arquivar.sync.erro";
+
+        public static string FilaCursoArquivarSemestreAnoAnteriorCarregar => "googleclass.gsa.curso.arquivar.carregar";
+
         #endregion
 
         #region Alunos

@@ -69,6 +69,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoExtintoArquivarSyncErro, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoExtintoArquivarSyncErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoExtintoArquivarSyncErro);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoArquivarSemestreAnoAnteriorCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoArquivarSemestreAnoAnteriorCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoArquivarSemestreAnoAnteriorCarregar);
+            
         }
 
         private static void RegistrarFilasAlunoSync(IModel canalRabbit)
