@@ -126,6 +126,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             // Arquivar cursos por semestre e ano
             comandos.Add(RotasRabbit.FilaCursoArquivarSemestreAnoAnteriorCarregar, new ComandoRabbit("Carregar arquivamento de cursos arquivados para o ano e semestre EOL", typeof(IIniciarProcessoArquivarCursosPorAnoSemestreUseCase)));
+
+            comandos.Add(RotasRabbit.FilaCursoArquivarCarregar, new ComandoRabbit("Carregar cursos para arquivamento do EOL", typeof(ICarregarArquivamentoCursosUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
