@@ -2,8 +2,6 @@
 {
     public class FiltroTurmasArquivarDto : FiltroPaginacaoBaseDto
     {
-        public int ano { get; set; }
-
-        public int? semestre { get; set; }
+        public int anoLetivo { get; set; }
     }
 }

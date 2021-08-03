@@ -8,13 +8,11 @@ namespace SME.GoogleClassroom.Aplicacao
     public class ObterCursosParaArquivarPorAnoPaginadoQuery : IRequest<PaginacaoResultadoDto<CursoArquivarEolDto>>
     {
         public int AnoLetivo { get; }
-        public int? Semestre { get; }
         public Paginacao Paginacao { get; }
 
-        public ObterCursosParaArquivarPorAnoPaginadoQuery(int anoLetivo, int? semestre, Paginacao paginacao)
+        public ObterCursosParaArquivarPorAnoPaginadoQuery(int anoLetivo, Paginacao paginacao)
         {
             AnoLetivo = anoLetivo;
-            Semestre = semestre;
             Paginacao = paginacao;
         }
     }

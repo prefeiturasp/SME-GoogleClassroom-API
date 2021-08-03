@@ -1158,26 +1158,19 @@ namespace SME.GoogleClassroom.Dados
             return query;
         }
 
-        private string MontaQueryCursosParaArquivaPorAno(int anoLetivo, int? semestre, bool paginacao, bool contador)
+        private string MontaQueryCursosParaArquivaPorAno(int anoLetivo, bool paginacao, bool contador)
         {
             string query = contador ?
                 "select count(*) " :
                 @"select distinct
-					cd_turma_escola as TurmaId, 
-					se2.cd_modalidade_ensino as Modalidade,
-					st_turma_escola as Situacao ";
+					cd_turma_escola as TurmaId ";
 
             query += @" from turma_escola te (NOLOCK)
 							inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
-							inner join serie_escola se (NOLOCK) ON se.cd_escola = esc.cd_escola 
-							inner join serie_ensino se2 (NOLOCK) ON se2.cd_serie_ensino = se.cd_serie_ensino 
 							where st_turma_escola = 'C' 
 								AND te.cd_tipo_turma in (1,2,3,5,6,7)
 								AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								and an_letivo = @anoLetivo ";
-
-            if (semestre.HasValue)
-                query += " ... ";
 
             if (!contador)
                 query += " order by cd_turma_escola ";
@@ -1207,13 +1200,13 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, int? semestre, Paginacao paginacao)
+        public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, Paginacao paginacao)
         {
-            var query = MontaQueryCursosParaArquivaPorAno(anoLetivo, semestre, true, false);
-            query += MontaQueryCursosParaArquivaPorAno(anoLetivo, semestre, false, false);
+            var query = MontaQueryCursosParaArquivaPorAno(anoLetivo, true, false);
+            query += MontaQueryCursosParaArquivaPorAno(anoLetivo, false, false);
 
             using var conn = ObterConexao();
-            using var multi = await conn.QueryMultipleAsync(query, new { anoLetivo, semestre, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+            using var multi = await conn.QueryMultipleAsync(query, new { anoLetivo, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
 
             var retorno = new PaginacaoResultadoDto<CursoArquivarEolDto>
             {

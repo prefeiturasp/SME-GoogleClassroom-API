@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> Executar(FiltroTurmasArquivarDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterCursosParaArquivarPorAnoPaginadoQuery(filtro.ano, filtro.semestre, paginacao));
+            return await mediator.Send(new ObterCursosParaArquivarPorAnoPaginadoQuery(filtro.anoLetivo, paginacao));
         }
     }
 }
