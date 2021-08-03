@@ -123,7 +123,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarCarregar, new ComandoRabbit("Carregar arquivamento de cursos extintos no EOL", typeof(ICarregarArquivamentoCursosExtintosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarTratar, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ITratarArquivamentoCursosExtintosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ISincronizarArquivamentoCursosExtintosUseCase)));
-            
+
+            comandos.Add(RotasRabbit.FilaCursoArquivarCarregar, new ComandoRabbit("Carregar arquivamento de cursos no EOL", typeof(ICarregarArquivamentoCursosUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
