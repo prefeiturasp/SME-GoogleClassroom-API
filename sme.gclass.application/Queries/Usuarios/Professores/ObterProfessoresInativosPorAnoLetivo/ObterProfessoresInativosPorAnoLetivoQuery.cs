@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
-    public class ObterProfessoresInativosPorAnoLetivoQuery : IRequest<IEnumerable<string>>
+    public class ObterProfessoresInativosPorAnoLetivoQuery : IRequest<IEnumerable<long>>
     {
         public ObterProfessoresInativosPorAnoLetivoQuery(int anoLetivo, DateTime dataReferencia, string rf)
         {

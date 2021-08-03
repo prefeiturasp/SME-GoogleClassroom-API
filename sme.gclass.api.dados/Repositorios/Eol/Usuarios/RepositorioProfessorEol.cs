@@ -564,7 +564,7 @@ namespace SME.GoogleClassroom.Dados
 
 		}
 
-        public async Task<IEnumerable<string>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, string rf)
+        public async Task<IEnumerable<long>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, string rf)
         {
 			var query = new StringBuilder();
 				query.AppendLine(@" SELECT distinct serv.cd_registro_funcional
@@ -593,7 +593,7 @@ namespace SME.GoogleClassroom.Dados
 			};
 
 			using var conn = ObterConexao();
-			return await conn.QueryAsync<string>(query.ToString(), parametros);
+			return await conn.QueryAsync<long>(query.ToString(), parametros);
 		}
     }
 }

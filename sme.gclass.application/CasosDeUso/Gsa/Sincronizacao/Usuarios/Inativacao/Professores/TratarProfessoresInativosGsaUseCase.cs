@@ -26,10 +26,13 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 foreach (var professor in professoresEFuncionariosGoogle)
                 {
-                    var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(professor.Id.ToString()));
+                    var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(professor.GoogleClassroomId.ToString()));
 
-                    var professorFuncionarioInativar = new ProfessorInativoDto(professor.Rf, professor.Indice, professor.Email, (int)usuario.UsuarioTipo);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorIncluir, professorFuncionarioInativar));
+                    if (usuario != null)
+                    {
+                        var professorFuncionarioInativar = new ProfessorInativoDto(usuario.Indice, professor.Indice, professor.Email, (int)usuario.UsuarioTipo);
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorIncluir, professorFuncionarioInativar));
+                    }
                 }
                 return true;
             }

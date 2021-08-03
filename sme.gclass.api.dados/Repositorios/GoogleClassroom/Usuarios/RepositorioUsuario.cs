@@ -662,11 +662,11 @@ namespace SME.GoogleClassroom.Dados
 
         }
 
-        public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(string[] Codigos)
+        public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(long[] Codigos)
         {
             var query = @"SELECT
                                  u.indice,
-                                 u.id as Codigo,
+                                 u.id as Rf,
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
@@ -674,7 +674,7 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao,
                                  u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
-                           WHERE usuario_tipo = @professor and usuario_tipo = @funcionario
+                           WHERE (usuario_tipo = @professor OR usuario_tipo = @funcionario)
                                  and id = any(@Codigos)";
 
             var parametros = new

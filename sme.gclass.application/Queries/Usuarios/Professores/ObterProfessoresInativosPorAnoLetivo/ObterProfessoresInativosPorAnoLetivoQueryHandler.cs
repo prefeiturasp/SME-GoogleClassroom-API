@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
-    public class ObterProfessoresInativosPorAnoLetivoQueryHandler : IRequestHandler<ObterProfessoresInativosPorAnoLetivoQuery, IEnumerable<string>>
+    public class ObterProfessoresInativosPorAnoLetivoQueryHandler : IRequestHandler<ObterProfessoresInativosPorAnoLetivoQuery, IEnumerable<long>>
     {
         private readonly IRepositorioProfessorEol repositorioProfessorEol;
 
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
             this.repositorioProfessorEol = repositorioProfessorEol ?? throw new ArgumentNullException(nameof(repositorioProfessorEol));
         }
 
-        public async Task<IEnumerable<string>> Handle(ObterProfessoresInativosPorAnoLetivoQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<long>> Handle(ObterProfessoresInativosPorAnoLetivoQuery request, CancellationToken cancellationToken)
         {
             return await repositorioProfessorEol.ObterCodigosProfessoresInativosPorAnoLetivo(request.AnoLetivo, request.DataReferencia, request.Rf);
         }
