@@ -5,10 +5,10 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarTratamentoErroCursoArquivadosSyncUseCase : AbstractTratarFilaErrosUseCase<ArquivarCursoExtintoDto>, IIniciarTratamentoErroCursoArquivadosSyncUseCase
+    public class IniciarTratamentoErroCursoArquivadosSyncUseCase : AbstractTratarFilaErrosUseCase<ArquivarCursoDto>, IIniciarTratamentoErroCursoArquivadosSyncUseCase
     {
         public IniciarTratamentoErroCursoArquivadosSyncUseCase(IConfiguration configuration, IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
-            : base(RotasRabbit.FilaCursoExtintoArquivarSyncErro, RotasRabbit.FilaCursoExtintoArquivarSync, configuration, mediator, registry)
+            : base(RotasRabbit.FilaCursoArquivarSyncErro, RotasRabbit.FilaCursoArquivarSync, configuration, mediator, registry)
         {
         }
     }

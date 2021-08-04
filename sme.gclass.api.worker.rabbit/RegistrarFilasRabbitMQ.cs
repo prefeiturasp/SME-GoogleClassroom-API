@@ -58,17 +58,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoExtintoArquivarCarregar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoExtintoArquivarCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoExtintoArquivarCarregar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoExtintoArquivarTratar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoExtintoArquivarTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoExtintoArquivarTratar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoArquivarTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoArquivarTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoArquivarTratar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoExtintoArquivarTratarErro, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoExtintoArquivarTratarErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoExtintoArquivarTratarErro);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoArquivarTratarErro, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoArquivarTratarErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoArquivarTratarErro);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoExtintoArquivarSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoExtintoArquivarSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoExtintoArquivarSync);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoArquivarSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoArquivarSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoArquivarSync);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoExtintoArquivarSyncErro, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaCursoExtintoArquivarSyncErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoExtintoArquivarSyncErro);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoArquivarSyncErro, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoArquivarSyncErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoArquivarSyncErro);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar);

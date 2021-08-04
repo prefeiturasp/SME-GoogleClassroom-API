@@ -5,21 +5,21 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosPorAnoLetivoQuery: IRequest<IEnumerable<CursoEolDto>>
+    public class ObterTurmasConcluidasPorAnoLetivoQuery: IRequest<IEnumerable<CursoEolDto>>
     {
         public int AnoLetivo { get; set; }
         public long? TurmaId { get; set; }
 
-        public ObterCursosPorAnoLetivoQuery(int anoLetivo, long? turmaId)
+        public ObterTurmasConcluidasPorAnoLetivoQuery(int anoLetivo, long? turmaId)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
         }
     }
 
-    public class ObterCursosPorAnoSemestreQueryValidator : AbstractValidator<ObterCursosPorAnoLetivoQuery>
+    public class ObterTurmasConcluidasPorAnoLetivoQueryValidator : AbstractValidator<ObterTurmasConcluidasPorAnoLetivoQuery>
     {
-        public ObterCursosPorAnoSemestreQueryValidator()
+        public ObterTurmasConcluidasPorAnoLetivoQueryValidator()
         {
             RuleFor(a => a.AnoLetivo)
                 .NotEmpty()
