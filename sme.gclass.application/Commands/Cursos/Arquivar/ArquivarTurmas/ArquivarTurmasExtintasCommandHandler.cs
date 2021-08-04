@@ -36,12 +36,12 @@ namespace SME.GoogleClassroom.Aplicacao
         private bool DefinaExclusaoOuArquivamento(DateTime dataExtincao, DateTime dataInicioAnoLetivo)
             => (dataExtincao < dataInicioAnoLetivo);
 
-        private async Task<ParametrosSistema> ObterParametroDeSistema(int ano)
+        private async Task<ParametrosSistema> ObterParametroDeSistema(int anoLetivo)
         {
-            var parametrosSistema = await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(TipoParametroSistema.InicioAnoLetivo, ano));
+            var parametrosSistema = await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(TipoParametroSistema.InicioAnoLetivo, anoLetivo));
 
             if (parametrosSistema is null)
-                throw new NegocioException($"Não localizado o parametro de data de inicio do ano letivo para o ano {ano}");
+                throw new NegocioException($"Não localizado o parametro de data de inicio do ano letivo para o ano {anoLetivo}");
 
             return parametrosSistema;
         }
