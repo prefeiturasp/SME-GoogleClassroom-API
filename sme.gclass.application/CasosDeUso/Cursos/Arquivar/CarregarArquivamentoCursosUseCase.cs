@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagem.ObterObjetoMensagem<FiltroArquivamentoCursoDto>();
             
-            await mediator.Send(new ArquivarCursosCommand(dto.AnoLetivo, dto.TurmaId));
+            await mediator.Send(new ArquivarTurmasCommand(dto.AnoLetivo, dto.TurmaId));
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ArquivarCursosPorAnoLetivo));
 

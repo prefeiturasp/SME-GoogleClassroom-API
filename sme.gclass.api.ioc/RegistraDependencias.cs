@@ -168,8 +168,8 @@ namespace SME.GoogleClassroom.IoC
 
             //Curso Arquivar
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosUseCase, CarregarArquivamentoCursosExtintosUseCase>();
-            services.TryAddScoped<ITratarArquivamentoCursosExtintosUseCase, TratarArquivamentoCursosExtintosUseCase>();
-            services.TryAddScoped<ISincronizarArquivamentoCursosExtintosUseCase, SincronizarArquivamentoCursosExtintosUseCase>();
+            services.TryAddScoped<ITratarArquivamentoCursosUseCase, TratarArquivamentoCursosUseCase>();
+            services.TryAddScoped<ISincronizarArquivamentoCursosUseCase, SincronizarArquivamentoCursosUseCase>();
             services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosTratarUseCase, IniciarTratamentoErroCursoArquivadosTratarUseCase>();
             services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosSyncUseCase, IniciarTratamentoErroCursoArquivadosSyncUseCase>();
             services.TryAddScoped<IObterCursosExtintosParaArquivarPaginadoUseCase, ObterCursosExtintosParaArquivarPaginadoUseCase>();

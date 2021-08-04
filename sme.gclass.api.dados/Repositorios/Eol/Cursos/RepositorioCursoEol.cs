@@ -1218,7 +1218,7 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
-		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivo(int anoLetivo, long? turmaId)
+		public async Task<IEnumerable<CursoEolDto>> ObterTurmasConcluidasPorAnoLetivo(int anoLetivo, long? turmaId)
         {
 			var query = @"	select 
 								cd_turma_escola as TurmaId
