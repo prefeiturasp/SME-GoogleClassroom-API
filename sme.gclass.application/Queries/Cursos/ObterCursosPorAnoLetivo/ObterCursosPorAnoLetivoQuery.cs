@@ -7,12 +7,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosPorAnoLetivoQuery: IRequest<IEnumerable<CursoEolDto>>
     {
-        public ObterCursosPorAnoLetivoQuery(int anoLetivo)
+        public int AnoLetivo { get; set; }
+        public long? TurmaId { get; set; }
+
+        public ObterCursosPorAnoLetivoQuery(int anoLetivo, long? turmaId)
         {
             AnoLetivo = anoLetivo;
+            TurmaId = turmaId;
         }
-
-        public int AnoLetivo { get; set; }
     }
 
     public class ObterCursosPorAnoSemestreQueryValidator : AbstractValidator<ObterCursosPorAnoLetivoQuery>

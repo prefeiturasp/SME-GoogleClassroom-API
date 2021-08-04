@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 await SincronizarArquivamentoCurso(cursoDto.CursoId, cursoDto.Excluir);
             }
-            catch (System.Exception ex)
+            catch (Exception)
             {
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarSyncErro, cursoDto));
             }

@@ -4,11 +4,13 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ArquivarCursosCommand: IRequest
     {
-        public ArquivarCursosCommand(int anoLetivo)
+        public int AnoLetivo { get; set; }
+        public long? TurmaId { get; set; }
+
+        public ArquivarCursosCommand(int anoLetivo, long? turmaId = null)
         {
             AnoLetivo = anoLetivo;
+            TurmaId = turmaId;
         }
-
-        public int AnoLetivo { get; set; }
     }
 }

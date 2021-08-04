@@ -125,8 +125,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoExtintoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos extintas no EOL", typeof(ISincronizarArquivamentoCursosExtintosUseCase)));
 
             // Arquivar cursos por semestre e ano
-            comandos.Add(RotasRabbit.FilaCursoArquivarSemestreAnoAnteriorCarregar, new ComandoRabbit("Carregar arquivamento de cursos arquivados para o ano e semestre EOL", typeof(IIniciarProcessoArquivarCursosPorAnoSemestreUseCase)));
-
+            comandos.Add(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, new ComandoRabbit("Carregar arquivamento de cursos arquivados para o ano e semestre EOL", typeof(IIniciarProcessoArquivarCursosPorAnoUseCase)));
             comandos.Add(RotasRabbit.FilaCursoArquivarCarregar, new ComandoRabbit("Carregar cursos para arquivamento do EOL", typeof(ICarregarArquivamentoCursosUseCase)));
         }
 
@@ -292,9 +291,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarSync, false, consumer);
 
-                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarSemestreAnoAnteriorCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
 
-                
+
 
             }
 

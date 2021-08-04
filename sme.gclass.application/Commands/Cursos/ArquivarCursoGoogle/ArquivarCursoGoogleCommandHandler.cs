@@ -33,9 +33,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task ArquivarCursoGoogle(long cursoId, ClassroomService servicoClassroom)
         {
-            var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoId.ToString());
-            requestUpdate.UpdateMask = "courseState";
-            await requestUpdate.ExecuteAsync();
+            try
+            {
+                var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoId.ToString());
+                requestUpdate.UpdateMask = "courseState";
+                await requestUpdate.ExecuteAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

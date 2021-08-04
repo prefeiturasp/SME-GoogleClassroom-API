@@ -1175,7 +1175,7 @@ namespace SME.GoogleClassroom.Dados
 			return retorno;
 		}
 
-		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivo(int anoLetivo)
+		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivo(int anoLetivo, long? turmaId)
         {
 			var query = @"	select 
 								cd_turma_escola as TurmaId
@@ -1184,8 +1184,11 @@ namespace SME.GoogleClassroom.Dados
 							where st_turma_escola = 'C' 
 							and an_letivo = @anoLetivo";
 
+			if (turmaId.HasValue)
+				query += " and te.cd_turma_escola = @turmaId ";
+
 			using var conn = ObterConexao();
-			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo });
+			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo, turmaId });
 		}
 	}
 }

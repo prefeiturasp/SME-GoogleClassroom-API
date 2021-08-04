@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -24,9 +25,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 var cursos = await mediator.Send(new ObterIdsCursosPorTurmaQuery(dto.TurmaId));
                 foreach (var cursoId in cursos)
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarSync, new ArquivarCursoExtintoDto(cursoId, dto.DataExtincao, dto.Excluir)));
-
             }
-            catch (System.Exception ex)
+            catch (Exception)
             {
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarTratarErro, dto));
             }
