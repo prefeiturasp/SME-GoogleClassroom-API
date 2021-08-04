@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            var parametros = new { componenteCurricularId, turmaId, anoLetivo};
+            var parametros = new { componenteCurricularId, turmaId, anoLetivo };
 
             return await conn.QuerySingleOrDefaultAsync<CursoEol>(query, parametros, commandTimeout: 300);
         }
@@ -1120,23 +1120,23 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<bool>(query, new { turmaId });
         }
 
-		public async Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
-		{
-			var query = MontaQueryCursosExtintos(turmaId, false, false);
+        public async Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
+        {
+            var query = MontaQueryCursosExtintos(turmaId, false, false);
 
-			using var conn = ObterConexao();
-				return await conn.QueryAsync<CursoExtintoEolDto>(query, new { dataInicio, dataFim, anoLetivo, turmaId });
-		}
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<CursoExtintoEolDto>(query, new { dataInicio, dataFim, anoLetivo, turmaId });
+        }
 
         private string MontaQueryCursosExtintos(long? turmaId, bool paginacao, bool contador)
         {
-			string query = contador ? 
-				"select count(*) " : 
-				@"select 
+            string query = contador ?
+                "select count(*) " :
+                @"select 
 					cd_turma_escola as TurmaId, 
 					dt_fim as DataExtincao ";
 
-			query += @"from turma_escola te (NOLOCK)
+            query += @"from turma_escola te (NOLOCK)
 				 inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
 					  where st_turma_escola = 'E' 
 						AND te.cd_tipo_turma in (1,2,3,5,6,7)
@@ -1144,34 +1144,81 @@ namespace SME.GoogleClassroom.Dados
 						and an_letivo = @anoLetivo 
 						and dt_fim between @dataInicio and @dataFim ";
 
-			if (turmaId.HasValue)
-				query += " and te.cd_turma_escola = @turmaId ";
+            if (turmaId.HasValue)
+                query += " and te.cd_turma_escola = @turmaId ";
 
-			if (!contador)
-				query += " order by dt_fim ";
+            if (!contador)
+                query += " order by dt_fim ";
 
-			if (paginacao)
-				query += " OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ";
+            if (paginacao)
+                query += " OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ";
 
-			query += "; ";
+            query += "; ";
 
-			return query;
-		}
+            return query;
+        }
 
-		public async Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
-		{
-			var query = MontaQueryCursosExtintos(turmaId, true, false);
-			query += MontaQueryCursosExtintos(turmaId, false, true);
+        private string MontaQueryCursosParaArquivaPorAno(int anoLetivo, bool paginacao, bool contador)
+        {
+            string query = contador ?
+                "select count(*) " :
+                @"select distinct
+					cd_turma_escola as TurmaId ";
 
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query, new { dataInicio, dataFim, anoLetivo, turmaId, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+            query += @" from turma_escola te (NOLOCK)
+							inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
+							where st_turma_escola = 'C' 
+								AND te.cd_tipo_turma in (1,2,3,5,6,7)
+								AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
+								and an_letivo = @anoLetivo ";
 
-			var retorno = new PaginacaoResultadoDto<CursoExtintoEolDto>();
+            if (!contador)
+                query += " order by cd_turma_escola ";
 
-			retorno.Items = multi.Read<CursoExtintoEolDto>();
-			retorno.TotalRegistros = multi.ReadFirst<int>();
-			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            if (paginacao)
+                query += " OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ";
 
+            query += "; ";
+
+            return query;
+        }
+
+        public async Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
+        {
+            var query = MontaQueryCursosExtintos(turmaId, true, false);
+            query += MontaQueryCursosExtintos(turmaId, false, true);
+
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query, new { dataInicio, dataFim, anoLetivo, turmaId, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+
+            var retorno = new PaginacaoResultadoDto<CursoExtintoEolDto>();
+
+            retorno.Items = multi.Read<CursoExtintoEolDto>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
+
+        public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, Paginacao paginacao)
+        {
+            var query = MontaQueryCursosParaArquivaPorAno(anoLetivo, true, false);
+            query += MontaQueryCursosParaArquivaPorAno(anoLetivo, false, false);
+
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query, new { anoLetivo, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+
+            var retorno = new PaginacaoResultadoDto<CursoArquivarEolDto>
+            {
+                Items = multi.Read<CursoArquivarEolDto>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
+
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+
+            return retorno;
+        }
+    }
 			return retorno;
 		}
 
@@ -1188,4 +1235,5 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo });
 		}
 	}
+
 }
