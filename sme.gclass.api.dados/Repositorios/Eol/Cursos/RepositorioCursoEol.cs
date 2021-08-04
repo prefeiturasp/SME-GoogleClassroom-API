@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dados.Help;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -202,7 +203,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<ProfessorCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
         }
 
-        public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId)
+        public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
 
@@ -246,9 +247,17 @@ namespace SME.GoogleClassroom.Dados
 					AND matr.an_letivo = @anoLetivo
 					AND te.an_letivo = @anoLetivo
 					AND te.cd_turma_escola = @turmaId";
+            
+            var sql = new StringBuilder(query);
+            
+            sql.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.TiposUes, "esc.tp_escola");
+            sql.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Ues, "te.st_turma_escola");
+            sql.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma");
 
-            return await conn.QueryAsync<AlunoCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
+            return await conn.QueryAsync<AlunoCursoEol>(sql.ToString(), new { turmaId, componenteCurricularId, anoLetivo });
         }
+
+
 
         public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia, Paginacao paginacao, long? turmaId, long? componenteCurricularId)
         {
@@ -1174,5 +1183,6 @@ namespace SME.GoogleClassroom.Dados
 
 			return retorno;
 		}
-	}
+
+    }
 }

@@ -3,8 +3,11 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dados.Help;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -203,11 +206,11 @@ namespace SME.GoogleClassroom.Dados
         }
 
         public async Task<PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>> ObterAtribuicoesDeCursosDoProfessorAsync(DateTime dataReferencia, Paginacao paginacao, string rf,
-            long? turmaId, long? componenteCurricularId)
+            long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryAtribuicoesDeCursosDosProfessores(aplicarPaginacao, rf, turmaId, componenteCurricularId);
+            var query = MontaQueryAtribuicoesDeCursosDosProfessores(aplicarPaginacao, rf, turmaId, componenteCurricularId, parametrosCargaInicialDto);
 
             var parametros = new
             {
@@ -285,7 +288,7 @@ namespace SME.GoogleClassroom.Dados
             return query.ToString();
         }
 
-        private static string MontaQueryAtribuicoesDeCursosDosProfessores(bool aplicarPaginacao, string rf, long? turmaId, long? componenteCurricularId)
+        private static string MontaQueryAtribuicoesDeCursosDosProfessores(bool aplicarPaginacao, string rf, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             const string queryBaseRegulares = @"-- 1. Busca atribuições dos cursos regulares
 								IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL 
@@ -359,10 +362,7 @@ namespace SME.GoogleClassroom.Dados
 									v_servidor_cotic serv (NOLOCK) 
 									ON serv.cd_servidor = vcbc.cd_servidor
 								WHERE  
-									te.st_turma_escola in ('O', 'A', 'C')
-									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
-									AND   te.an_letivo = @anoLetivo
+									te.an_letivo = @anoLetivo
 									AND	  atb_ser.dt_atribuicao_aula >= @dataReferencia ";
 
             const string queryBaseProgramas = @"-- 2. Busca os cursos de programa do Professor
@@ -421,10 +421,7 @@ namespace SME.GoogleClassroom.Dados
 									v_servidor_cotic serv (NOLOCK) 
 									ON serv.cd_servidor = vcbc.cd_servidor
 								WHERE  
-									te.st_turma_escola in ('O', 'A', 'C')
-									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
-									AND   te.an_letivo = @anoLetivo
+									te.an_letivo = @anoLetivo
 									AND	  atb_pro.dt_atribuicao_aula >= @dataReferencia ";
 
             var queryRegulares = new StringBuilder(queryBaseRegulares);
@@ -435,6 +432,15 @@ namespace SME.GoogleClassroom.Dados
                 queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
             }
 
+            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.TiposUes, "esc.tp_escola");
+            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Ues, "te.st_turma_escola");
+            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma");
+            
+            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.TiposUes, "esc.tp_escola");
+            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Ues, "te.st_turma_escola");
+            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma");
+
+            
             if (turmaId.HasValue)
             {
                 queryRegulares.AppendLine("AND te.cd_turma_escola = @turmaId ");
@@ -560,5 +566,8 @@ namespace SME.GoogleClassroom.Dados
             }
 
 		}
+
+
+		
 	}
 }
