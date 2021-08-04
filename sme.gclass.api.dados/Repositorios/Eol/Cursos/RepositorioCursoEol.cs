@@ -1218,10 +1218,6 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
-    }
-			return retorno;
-		}
-
 		public async Task<IEnumerable<CursoEolDto>> ObterCursosPorAnoLetivo(int anoLetivo, long? turmaId)
         {
 			var query = @"	select 
@@ -1237,6 +1233,8 @@ namespace SME.GoogleClassroom.Dados
 			using var conn = ObterConexao();
 			return await conn.QueryAsync<CursoEolDto>(query, new { anoLetivo, turmaId });
 		}
-	}
+
+
+    }
 
 }
