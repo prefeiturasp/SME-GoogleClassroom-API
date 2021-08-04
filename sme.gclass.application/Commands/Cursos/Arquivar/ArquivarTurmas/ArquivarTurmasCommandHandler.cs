@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    class ArquivarTurmasCommandHandler : AsyncRequestHandler<ArquivarTurmasCommand>
+    public class ArquivarTurmasCommandHandler : AsyncRequestHandler<ArquivarTurmasCommand>
     {
         private readonly IMediator mediator;
         
