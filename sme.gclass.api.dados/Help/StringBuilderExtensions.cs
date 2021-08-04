@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Dados.Help
             }
             
             var parametro = string.Join(",", parametros).Trim();
-            query.AppendLine($"AND {coluna.Trim()} in ({parametro}) ");
+            query.AppendLine($" AND {coluna.Trim()} in ({parametro}) ");
             return query;
         }
     }
