@@ -1,13 +1,12 @@
-﻿using MediatR;
-
-namespace SME.GoogleClassroom.Aplicacao
+﻿namespace SME.GoogleClassroom.Infra
 {
-    public class ArquivarTurmasCommand: IRequest
+    public class FiltroArquivamentoCursoDto
     {
         public int AnoLetivo { get; set; }
+
         public long? TurmaId { get; set; }
 
-        public ArquivarTurmasCommand(int anoLetivo, long? turmaId = null)
+        public FiltroArquivamentoCursoDto(int anoLetivo, long? turmaId)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;

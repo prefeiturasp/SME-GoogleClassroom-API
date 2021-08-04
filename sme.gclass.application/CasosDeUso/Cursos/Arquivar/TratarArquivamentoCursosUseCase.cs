@@ -2,13 +2,14 @@
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarArquivamentoCursosExtintosUseCase : AbstractUseCase, ITratarArquivamentoCursosExtintosUseCase
+    public class TratarArquivamentoCursosUseCase : AbstractUseCase, ITratarArquivamentoCursosUseCase
     {
-        public TratarArquivamentoCursosExtintosUseCase(IMediator mediator) : base(mediator)
+        public TratarArquivamentoCursosUseCase(IMediator mediator) : base(mediator)
         {
         }
 
@@ -17,18 +18,18 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível tratar a exinção de turmas. Mensagem não recebida");
 
-            var dto = mensagem.ObterObjetoMensagem<ArquivarTurmaExtintaDto>();
+            var dto = mensagem.ObterObjetoMensagem<ArquivarTurmaDto>();
 
             try
             {
                 var cursos = await mediator.Send(new ObterIdsCursosPorTurmaQuery(dto.TurmaId));
-                foreach (var cursoId in cursos)
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarSync, new ArquivarCursoExtintoDto(cursoId, dto.DataExtincao, dto.Excluir)));
 
+                foreach (var cursoId in cursos)
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoArquivarSync, new ArquivarCursoDto(cursoId, dto.DataExtincao, dto.Excluir)));
             }
-            catch (System.Exception ex)
+            catch (Exception)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarTratarErro, dto));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoArquivarTratarErro, dto));
             }
             return true;
         }

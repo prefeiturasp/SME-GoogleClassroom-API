@@ -2,9 +2,9 @@
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class ArquivarCursoExtintoDto
+    public class ArquivarCursoDto
     {
-        public ArquivarCursoExtintoDto(long cursoId, DateTime dataExtincao, bool excluir)
+        public ArquivarCursoDto(long cursoId, DateTime dataExtincao, bool excluir)
         {
             CursoId = cursoId;
             DataExtincao = dataExtincao;
