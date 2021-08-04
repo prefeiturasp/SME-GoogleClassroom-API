@@ -351,6 +351,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             return Ok(retorno);
         }
 
+        /// <summary>
+        /// Retorna os cursos arquivados por ano e semestre EOL
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos-para-arquivar")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoArquivarEolDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosArquivados([FromServices] IObterCursosParaArquivarPaginadoUseCase useCase,
+            [FromQuery] FiltroTurmasArquivarDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
 
         /// <summary>
         /// Inicia a sincronização para arquivar cursos por ano e semestre - GSA.

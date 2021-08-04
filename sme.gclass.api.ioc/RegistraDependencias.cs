@@ -181,7 +181,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
 
             // Arquivamento de cursos por ano e semestre
-            services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
+            services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoSemestreUseCase, IniciarProcessoArquivarCursosPorAnoSemestreUseCase>();
+            services.TryAddScoped<IObterCursosParaArquivarPaginadoUseCase, ObterCursosParaArquivarPaginadoUseCase>();
+
 
             RegistrarCasosDeUsoGsa(services);
         }
