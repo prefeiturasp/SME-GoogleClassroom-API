@@ -209,8 +209,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok(retorno);
         }
 
-        }
-
         /// <summary>
         /// Retorna os funcionários inativos
         /// </summary>

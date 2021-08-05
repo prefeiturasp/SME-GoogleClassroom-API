@@ -441,38 +441,38 @@ namespace SME.GoogleClassroom.Dados
 
             return query.ToString();
 
-		}
+        }
 
         public async Task<PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>> ObterFuncionariosParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao)
         {
-			var parametros = new
-			{
-				turmaId,
-				dataInicio,
-				dataFim,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados
-			};
-			var queryContador = MontarQueryFuncionariosRemoverCursos(turmaId, true, false);
+            var parametros = new
+            {
+                turmaId,
+                dataInicio,
+                dataFim,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados
+            };
+            var queryContador = MontarQueryFuncionariosRemoverCursos(turmaId, true, false);
 
-			var retorno = new PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>();
+            var retorno = new PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>();
 
-			using var conn = ObterConexao();
-			var totalRegistros = await conn.QueryFirstOrDefaultAsync<int>(queryContador, parametros);
+            using var conn = ObterConexao();
+            var totalRegistros = await conn.QueryFirstOrDefaultAsync<int>(queryContador, parametros);
 
-			var query = MontarQueryFuncionariosRemoverCursos(turmaId, false, true);
-			retorno.Items = await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
-			retorno.TotalRegistros = totalRegistros;
-			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            var query = MontarQueryFuncionariosRemoverCursos(turmaId, false, true);
+            retorno.Items = await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
+            retorno.TotalRegistros = totalRegistros;
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
-			return retorno;
-		}
+            return retorno;
+        }
 
-		private string MontarQueryFuncionariosRemoverCursos(string turmaId, bool contador, bool paginar)
+        private string MontarQueryFuncionariosRemoverCursos(string turmaId, bool contador, bool paginar)
         {
-			var filtroTurma = string.IsNullOrEmpty(turmaId) ? "" : "and te.cd_turma_escola = @turmaId";
+            var filtroTurma = string.IsNullOrEmpty(turmaId) ? "" : "and te.cd_turma_escola = @turmaId";
 
-			var query = $@"DECLARE @cargoCP AS INT = 3379;
+            var query = $@"DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
 				DECLARE @tipoFuncaoPAP AS INT = 30;
@@ -653,8 +653,8 @@ namespace SME.GoogleClassroom.Dados
 					etapa_ensino (NOLOCK) 
 					ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino; ";
 
-			query += contador ? "select count(*) " :
-				@"SELECT
+            query += contador ? "select count(*) " :
+                @"SELECT
 					servidor.Rf as UsuarioRf,
 					serv.nm_pessoa as UsuarioNome,
 					cursos.TurmaId as TurmaCodigo,
@@ -662,8 +662,8 @@ namespace SME.GoogleClassroom.Dados
 					cursos.CdUe AS UeCodigo,
 					servidor.FimNomeacao ";
 
-			query +=
-				@"FROM
+            query +=
+                @"FROM
 					#tempServidorCargos servidor
 				INNER JOIN
 					#tempTurmasComponentesRegulares cursos
@@ -672,29 +672,83 @@ namespace SME.GoogleClassroom.Dados
 					v_servidor_cotic serv
 					on serv.cd_registro_funcional = servidor.Rf ";
 
-			if (!contador)
-				query += " order by servidor.FimNomeacao, cursos.CdUe, cursos.TurmaId ";
+            if (!contador)
+                query += " order by servidor.FimNomeacao, cursos.CdUe, cursos.TurmaId ";
 
-			if (paginar)
-				query += " OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY ";
+            if (paginar)
+                query += " OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY ";
 
-			query += ";";
+            query += ";";
 
-			return query;
-		}
+            return query;
+        }
 
         public async Task<IEnumerable<RemoverAtribuicaoFuncionarioTurmaEolDto>> ObterFuncionariosParaRemoverCurso(string turmaId, DateTime dataInicio, DateTime dataFim)
         {
-			var query = MontarQueryFuncionariosRemoverCursos(turmaId, false, false);
-			var parametros = new
-			{
-				turmaId,
-				dataInicio,
-				dataFim
-			};
+            var query = MontarQueryFuncionariosRemoverCursos(turmaId, false, false);
+            var parametros = new
+            {
+                turmaId,
+                dataInicio,
+                dataFim
+            };
 
-			using var conn = ObterConexao();
-			return await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
-		}
-	}
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
+        }
+
+        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia, string codigoRf)
+        {
+            var querySelectDados = @$" SELECT DISTINCT 
+											serv.cd_registro_funcional as rf,
+											serv.nm_pessoa as NomePessoa,
+											serv.nm_social as NomeSocial ";
+
+            var querySelectCount = "SELECT COUNT(DISTINCT serv.cd_registro_funcional) ";
+
+            var queryFrom = new StringBuilder(@$" FROM v_servidor_cotic serv
+														INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+														INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+														INNER JOIN lotacao_servidor AS ls
+																	ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+														WHERE cba.dt_fim_nomeacao <= @dataReferencia
+															{(String.IsNullOrEmpty(codigoRf) == false ? " AND serv.cd_registro_funcional = @codigoRf " : "")}
+															AND serv.cd_registro_funcional NOT IN(
+																SELECT
+																	distinct serv.cd_registro_funcional
+																FROM v_servidor_cotic serv
+																	INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+																	INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+																	INNER JOIN lotacao_servidor AS ls
+																ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+																WHERE cba.dt_fim_nomeacao IS NULL) ");
+
+            var queryPaginacao = @"ORDER BY serv.cd_registro_funcional offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+
+            var query = new StringBuilder(querySelectDados);
+            query.Append(queryFrom);
+            query.Append(queryPaginacao);
+            query.Append(querySelectCount);
+            query.Append(queryFrom);
+
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query.ToString(),
+                new
+                {
+                    quantidadeRegistros = paginacao.QuantidadeRegistros,
+                    quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                    dataReferencia,
+                    codigoRf
+                }, commandTimeout: 6000);
+
+            var retorno = new PaginacaoResultadoDto<FuncionarioEol>
+            {
+                Items = multi.Read<FuncionarioEol>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
+
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            return retorno;
+        }
+    }
 }

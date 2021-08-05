@@ -608,7 +608,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId)
         {
             var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo ");
-            if(turmaId > 0)
+            if (turmaId > 0)
                 query.AppendLine(" AND c.turma_id = @turmaId");
 
             if (turmaId > 0)
@@ -643,30 +643,22 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
-            try
-            {
-                const string updateQuery = @"update public.usuarios
+            const string updateQuery = @"update public.usuarios
                                          set
                                             organization_path = @estruturaOrganizacional,
                                             data_atualizacao = current_timestamp
                                          where
                                             indice = @id";
 
-                var parametros = new
-                {
-                    id,
-                    estruturaOrganizacional
-                };
-
-                using var conn = ObterConexao();
-                await conn.ExecuteAsync(updateQuery, parametros);
-                return true;
-
-            }
-            catch (Exception ex)
+            var parametros = new
             {
-                throw ex;
-            }
+                id,
+                estruturaOrganizacional
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(updateQuery, parametros);
+            return true;
         }
 
         public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(long[] Codigos)
@@ -709,7 +701,7 @@ namespace SME.GoogleClassroom.Dados
                                 and cu.curso_id = @cursoId;";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new {usuarioRF, cursoId});
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new { usuarioRF, cursoId });
         }
     }
 }
