@@ -220,7 +220,10 @@ namespace SME.GoogleClassroom.Dados
                 turmaId,
                 componenteCurricularId,
                 paginacao.QuantidadeRegistros,
-                paginacao.QuantidadeRegistrosIgnorados
+                paginacao.QuantidadeRegistrosIgnorados,
+                parametrosCargaInicialDto.TiposUes,
+                parametrosCargaInicialDto.Ues,
+                parametrosCargaInicialDto.Turmas,
             };
 
             using var multi = await conn.QueryMultipleAsync(query, parametros);
@@ -432,13 +435,13 @@ namespace SME.GoogleClassroom.Dados
                 queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
             }
 
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
             
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryProgramas.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryProgramas.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryProgramas.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
 
             
             if (turmaId.HasValue)
