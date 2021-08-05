@@ -581,37 +581,18 @@ namespace SME.GoogleClassroom.Dados
 
 				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
 					DROP TABLE #tempServidorCargos
-				SELECT distinct
-					base.Rf, 
-					CASE
-						WHEN NOT sobreposto.CdCagoFuncao IS NULL THEN sobreposto.CdCagoFuncao
-						WHEN NOT funcao.CdCagoFuncao IS NULL THEN funcao.CdCagoFuncao
-						ELSE base.CdCagoFuncao
-					END AS CdCagoFuncao,
-					CASE
-						WHEN NOT sobreposto.CdUe IS NULL THEN sobreposto.CdUe
-						WHEN NOT funcao.CdUe IS NULL THEN funcao.CdUe
-						ELSE base.CdUe
-					END AS CdUe,
-					CASE
-						WHEN NOT sobreposto.CdTurma IS NULL THEN sobreposto.CdTurma
-						WHEN NOT funcao.CdTurma IS NULL THEN funcao.CdTurma
-						ELSE base.CdTurma
-					END AS CdTurma,
-					CASE
-						WHEN NOT sobreposto.FimNomeacao IS NULL THEN sobreposto.FimNomeacao
-						WHEN NOT funcao.FimNomeacao IS NULL THEN funcao.FimNomeacao
-						ELSE base.FimNomeacao
-					END AS FimNomeacao
+				select * 
 				INTO #tempServidorCargos
-				FROM
-					#tempServidorCargosBase base
-				LEFT JOIN
-					#tempServidorCargosSobrepostos sobreposto
-					ON base.cd_cargo_base_servidor = sobreposto.cd_cargo_base_servidor
-				LEFT JOIN
-					#tempServidorFuncao funcao
-					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor;
+				from (
+					select base.Rf, base.CdCagoFuncao, base.CdUe, base.CdTurma, base.FimNomeacao, 1 AS TipoCargo
+					FROM #tempServidorCargosBase base
+					union all
+					select sobreposto.Rf, sobreposto.CdCagoFuncao, sobreposto.CdUe, sobreposto.CdTurma, sobreposto.FimNomeacao, 2 AS TipoCargo
+					FROM #tempServidorCargosSobrepostos sobreposto
+					union all
+					select funcao.Rf, funcao.CdCagoFuncao, funcao.CdUe, funcao.CdTurma, funcao.FimNomeacao, 3 AS TipoCargo
+					FROM #tempServidorFuncao funcao
+				) tmp;
 
 
 				IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
@@ -660,7 +641,12 @@ namespace SME.GoogleClassroom.Dados
 					cursos.TurmaId as TurmaCodigo,
 					cursos.ComponenteCurricularId as ComponenteCurricularCodigo,
 					cursos.CdUe AS UeCodigo,
-					servidor.FimNomeacao ";
+					servidor.FimNomeacao,
+					case servidor.TipoCargo
+						when 1 then 'Cargo Base'
+						when 2 then 'Cargo Sobreposto'
+						else 'Função Atividade'
+					end as TipoCargo ";
 
             query +=
                 @"FROM

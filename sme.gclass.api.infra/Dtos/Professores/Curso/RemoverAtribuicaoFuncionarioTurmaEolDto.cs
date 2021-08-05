@@ -10,5 +10,6 @@ namespace SME.GoogleClassroom.Infra
         public long ComponenteCurricularCodigo { get; set; }
         public long UeCodigo { get; set; }
         public DateTime FimNomeacao { get; set; }
+        public string TipoCargo { get; set; }
     }
 }

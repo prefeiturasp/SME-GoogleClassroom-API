@@ -168,13 +168,15 @@ namespace SME.GoogleClassroom.IoC
 
             //Curso Arquivar
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosUseCase, CarregarArquivamentoCursosExtintosUseCase>();
-            services.TryAddScoped<ITratarArquivamentoCursosExtintosUseCase, TratarArquivamentoCursosExtintosUseCase>();
-            services.TryAddScoped<ISincronizarArquivamentoCursosExtintosUseCase, SincronizarArquivamentoCursosExtintosUseCase>();
+            services.TryAddScoped<ITratarArquivamentoCursosUseCase, TratarArquivamentoCursosUseCase>();
+            services.TryAddScoped<ISincronizarArquivamentoCursosUseCase, SincronizarArquivamentoCursosUseCase>();
             services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosTratarUseCase, IniciarTratamentoErroCursoArquivadosTratarUseCase>();
             services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosSyncUseCase, IniciarTratamentoErroCursoArquivadosSyncUseCase>();
             services.TryAddScoped<IObterCursosExtintosParaArquivarPaginadoUseCase, ObterCursosExtintosParaArquivarPaginadoUseCase>();
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosManualUseCase, CarregarArquivamentoCursosExtintosManualUseCase>();
             services.TryAddScoped<IObterCursosArquivadosPaginadoUseCase, ObterCursosArquivadosPaginadoUseCase>();
+
+            services.TryAddScoped<ICarregarArquivamentoCursosUseCase, CarregarArquivamentoCursosUseCase>();
 
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
 
@@ -187,6 +189,12 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IObterFuncionariosInativosUseCase, ObterFuncionariosInativosUseCase>();
             services.TryAddScoped<IObterFuncionariosQueSeraoInativadosUseCase, ObterFuncionariosQueSeraoInativadosUseCase>();
+
+
+            // Arquivamento de cursos por ano e semestre
+            services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
+            services.TryAddScoped<IObterCursosParaArquivarPaginadoUseCase, ObterCursosParaArquivarPaginadoUseCase>();
+
 
             RegistrarCasosDeUsoGsa(services);
         }

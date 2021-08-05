@@ -4,18 +4,20 @@ namespace SME.GoogleClassroom.Infra
 {
     public class FiltroTurmaRemoverCursoUsuarioDto
     {
-        public FiltroTurmaRemoverCursoUsuarioDto(DateTime dataInicio, DateTime dataFim, long turmaId, bool processarAlunos, bool processarProfessores,  bool processarFuncionario)
+        public FiltroTurmaRemoverCursoUsuarioDto(VigenciaDto datasAluno, VigenciaDto datasProfessor, VigenciaDto datasFuncionario, long turmaId, bool processarAlunos, bool processarProfessores,  bool processarFuncionario)
         {
-            DataInicio = dataInicio;
-            DataFim = dataFim;
+            DatasAluno = datasAluno;
+            DatasProfessor = datasProfessor;
+            DatasFuncionario = datasFuncionario;
             TurmaId = turmaId;
             ProcessarAlunos = processarAlunos;
             ProcessarProfessores = processarProfessores;
             ProcessarFuncionario = processarFuncionario;
         }
 
-        public DateTime DataInicio { get; set; }
-        public DateTime DataFim { get; set; }
+        public VigenciaDto DatasAluno { get; set; }
+        public VigenciaDto DatasProfessor { get; set; }
+        public VigenciaDto DatasFuncionario { get; set; }
         public long TurmaId { get; set; }
         public bool ProcessarAlunos { get; set; }
         public bool ProcessarProfessores { get; set; }

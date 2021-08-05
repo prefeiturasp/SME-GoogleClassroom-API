@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var funcionariosASeremRemovidos = await mediator.Send(
-                    new ObterFuncionariosParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DataInicio, dto.DataFim));
+                    new ObterFuncionariosParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DatasFuncionario.DataInicio, dto.DatasFuncionario.DataFim));
 
                 foreach (var funcionarioASeremRemovido in funcionariosASeremRemovidos)
                 {

@@ -4,6 +4,7 @@
     {
         InicioAnoLetivo = 1,
         DiasRemocaoFuncionario = 2,
-        DiasInativacaoFuncionario = 3
+        DiasRemocaoAluno = 3,
+        DiasRemocaoProfessor = 4,
     }
 }
