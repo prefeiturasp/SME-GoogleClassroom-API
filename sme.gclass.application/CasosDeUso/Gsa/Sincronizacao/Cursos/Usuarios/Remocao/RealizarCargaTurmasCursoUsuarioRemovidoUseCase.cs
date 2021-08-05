@@ -28,8 +28,11 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 foreach (var turma in turmas)
                 {
-                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio, datasReferencias.dataFim, turma, dto.ProcessarAlunos, dto.ProcessarProfessores);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
+                    var filtroTurma = new FiltroTurmaRemoverCursoUsuarioDto(datasReferencias.dataInicio,
+                        datasReferencias.dataFim, turma, dto.ProcessarAlunos, dto.ProcessarProfessores,
+                        dto.ProcessarFuncionario);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar,
+                        filtroTurma));
                 }
             }
             else
@@ -37,14 +40,17 @@ namespace SME.GoogleClassroom.Aplicacao
                 SentrySdk.CaptureMessage($"Não foi possível localizar curso de turma id {dto.TurmaId} na base do GSA!");
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
+            if (!dto.TurmaId.HasValue)
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));
+
             return true;
         }
 
         private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatasReferencias()
         {
             var totalDiasConsiderar = 10;
-            var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
+            var dataUltimaExecucao =
+                await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.UsuarioCursoRemover));
             return (dataUltimaExecucao.AddDays(-totalDiasConsiderar), DateTime.Today.AddDays(-totalDiasConsiderar));
         }
     }

@@ -5,6 +5,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IObterProfessoresQueSeraoRemovidosUseCase
     {
-        Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> Executar(FiltroObterProfessoresQueSeraoRemovidosDto filtro);
+        Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> Executar(FiltroObterUsuariosQueSeraoRemovidosDto filtro);
     }
 }

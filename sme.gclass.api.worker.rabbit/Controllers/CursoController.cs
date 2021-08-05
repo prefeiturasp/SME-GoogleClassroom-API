@@ -311,10 +311,45 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterProfessoresRemovidosCursosUseCase([FromServices] IObterProfessoresRemovidosCursosUseCase useCase,
-            [FromQuery] FiltroObterProfessoresRemovidosCursosDto filtro)
+            [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Retorna os professores removidos dos cursos no GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("funcionarios/removidos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosRemovidosCursosUseCase([FromServices] IObterFuncionariosRemovidosCursosUseCase useCase,
+            [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+
+        /// <summary>
+        /// Inicia a sincronização para remoção funcionarios sem atribuição - GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("funcionarios/remover")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoRemoverFuncionariosCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, long? turmaId = null)
+        {
+            var retorno = await useCase.Executar(turmaId, false, false);
+            return Ok(retorno);
+        }
+
     }
 }

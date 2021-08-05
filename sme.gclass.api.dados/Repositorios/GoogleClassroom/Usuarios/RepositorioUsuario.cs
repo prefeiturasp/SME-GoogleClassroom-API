@@ -695,5 +695,21 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
+
+        public async Task<FuncionarioCurso> ObterFuncionarioECursoPorUsuarioRFECursoId(long usuarioRF, long cursoId)
+        {
+            var query = @"select 
+                                cu.id as CursoUsuarioId,
+                                u.indice as UsuarioId,
+                                u.google_classroom_id as UsuarioGsaId,
+                                u.email as Email
+                          from cursos_usuarios cu
+                                inner join usuarios u on u.indice = cu.usuario_id
+                           where u.id = @usuarioRF
+                                and cu.curso_id = @cursoId;";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new {usuarioRF, cursoId});
+        }
     }
 }

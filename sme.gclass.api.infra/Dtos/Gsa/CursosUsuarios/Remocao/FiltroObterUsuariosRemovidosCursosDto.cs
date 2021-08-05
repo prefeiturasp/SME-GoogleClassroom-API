@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroObterProfessoresRemovidosCursosDto : FiltroPaginacaoBaseDto
+    public class FiltroObterUsuariosRemovidosCursosDto : FiltroPaginacaoBaseDto
     {
         public long CursoId { get; set; }
     }

@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task<ParametrosSistema> ObterParametroDeSistema(int ano)
         {
-            var parametrosSistema = await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(ETipoParametroSistema.InicioAnoLetivo, ano));
+            var parametrosSistema = await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(TipoParametroSistema.InicioAnoLetivo, ano));
 
             if (parametrosSistema is null)
                 throw new NegocioException($"Não localizado o parametro de data de inicio do ano letivo para o ano {ano}");

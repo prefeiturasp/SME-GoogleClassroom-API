@@ -170,7 +170,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosAlunosQueSeraoRemovidos([FromServices] IObterProfessoresQueSeraoRemovidosUseCase useCase,
-            [FromQuery] FiltroObterProfessoresQueSeraoRemovidosDto filtro)
+            [FromQuery] FiltroObterUsuariosQueSeraoRemovidosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
