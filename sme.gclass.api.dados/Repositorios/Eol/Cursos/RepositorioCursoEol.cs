@@ -259,9 +259,9 @@ namespace SME.GoogleClassroom.Dados
 
             var sql = new StringBuilder(query);
 
-            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
-            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
-            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
             sql.Append(";");
             
             
@@ -269,9 +269,9 @@ namespace SME.GoogleClassroom.Dados
                 new { turmaId,
 	                componenteCurricularId,
 	                anoLetivo,
-	                tipoUes = parametrosCargaInicialDto.TiposUes,
-	                ues = parametrosCargaInicialDto.Ues,
-	                turmas = parametrosCargaInicialDto.Turmas
+	                parametrosCargaInicialDto.TiposUes,
+	                parametrosCargaInicialDto.Ues,
+	                parametrosCargaInicialDto.Turmas
                 });
         }
 
@@ -396,19 +396,19 @@ namespace SME.GoogleClassroom.Dados
             var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoSobreposto);
             var queryBuscafuncionarioPorFuncaoStringBuilder = new StringBuilder(queryBuscafuncionarioPorFuncao);
             
-            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
-            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
-            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.TiposUes));
             queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
             
-            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
-            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
-            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
             queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
             
-            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
-            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
-            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
             queryBuscafuncionarioPorFuncaoStringBuilder.Append(";");
             
             var query = $@" {queryBuscafuncionarioPorCargoFixoStringBuilder} 
@@ -462,9 +462,9 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryAsync<FuncionarioCursoEol>(query,
                 new { turmaId, componenteCurricularId, anoLetivo ,
-	                tipoUes = parametrosCargaInicialDto.TiposUes,
-	                ues = parametrosCargaInicialDto.Ues,
-	                turmas = parametrosCargaInicialDto.Turmas});
+	                parametrosCargaInicialDto.TiposUes,
+	                parametrosCargaInicialDto.Ues,
+	                parametrosCargaInicialDto.Turmas});
         }
 
         private static string MontaQueryCursosParaInclusao(DateTime? dataReferencia, bool ehParaPaginar,
