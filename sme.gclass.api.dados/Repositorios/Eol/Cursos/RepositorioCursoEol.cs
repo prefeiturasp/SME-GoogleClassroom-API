@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dados.Help;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -16,7 +17,8 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(DateTime? dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+        public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(DateTime? dataReferencia,
+            int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             dataReferencia = dataReferencia?.Add(new TimeSpan(0, 0, 0));
 
@@ -25,7 +27,11 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            var parametros = new { anoLetivo, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados, componenteCurricularId, turmaId };
+            var parametros = new
+            {
+                anoLetivo, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados,
+                componenteCurricularId, turmaId
+            };
 
             using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 600);
 
@@ -33,24 +39,27 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = multi.Read<CursoEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = paginar ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            retorno.TotalPaginas =
+                paginar ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
             return retorno;
         }
 
-        public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo)
+        public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId,
+            int anoLetivo)
         {
             var paginar = false;
             var query = MontaQueryCursosParaInclusao(null, paginar, componenteCurricularId, turmaId);
 
             using var conn = ObterConexao();
 
-            var parametros = new { componenteCurricularId, turmaId, anoLetivo};
+            var parametros = new { componenteCurricularId, turmaId, anoLetivo };
 
             return await conn.QuerySingleOrDefaultAsync<CursoEol>(query, parametros, commandTimeout: 300);
         }
 
-        public async Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo, long turmaId, long componenteCurricularId)
+        public async Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo,
+            long turmaId, long componenteCurricularId)
         {
             using var conn = ObterConexao();
 
@@ -202,7 +211,8 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<ProfessorCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
         }
 
-        public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId)
+        public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId,
+            long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
 
@@ -247,10 +257,27 @@ namespace SME.GoogleClassroom.Dados
 					AND te.an_letivo = @anoLetivo
 					AND te.cd_turma_escola = @turmaId";
 
-            return await conn.QueryAsync<AlunoCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
+            var sql = new StringBuilder(query);
+
+            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
+            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
+            sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            sql.Append(";");
+            
+            
+            return await conn.QueryAsync<AlunoCursoEol>(sql.ToString(),
+                new { turmaId,
+	                componenteCurricularId,
+	                anoLetivo,
+	                tipoUes = parametrosCargaInicialDto.TiposUes,
+	                ues = parametrosCargaInicialDto.Ues,
+	                turmas = parametrosCargaInicialDto.Turmas
+                });
         }
 
-        public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia, Paginacao paginacao, long? turmaId, long? componenteCurricularId)
+
+        public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia,
+            Paginacao paginacao, long? turmaId, long? componenteCurricularId)
         {
             using var conn = ObterConexao();
 
@@ -272,16 +299,19 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = multi.Read<GradeCursoEol>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            retorno.TotalPaginas = aplicarPaginacao
+                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
+                : 1;
 
             return retorno;
         }
 
-        public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId)
+        public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo,
+            long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
 
-            const string query = @"
+            const string queryBuscafuncionarioPorCargoFixo = @"
 				-- 1. Busca os funcionários por cargo fixo
 				IF OBJECT_ID('tempdb..#tempServidorCargosBase') IS NOT NULL
 					DROP TABLE #tempServidorCargosBase;
@@ -304,9 +334,9 @@ namespace SME.GoogleClassroom.Dados
 					ON ls.cd_unidade_educacao = esc.cd_escola
 				WHERE
 					dt_fim_nomeacao IS NULL
-					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE()) ";
 
+            const string queryBuscafuncionarioPorCargoSobreposto = @"
 				-- 2. Busca os funcionários por cargo sobreposto fixo
 				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
 					DROP TABLE #tempServidorCargosSobrepostos;
@@ -331,9 +361,9 @@ namespace SME.GoogleClassroom.Dados
 					escola esc
 					ON css.cd_unidade_local_servico = esc.cd_escola
 				WHERE
-					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) ";
 
+            const string queryBuscafuncionarioPorFuncao = @"
 				-- 3. Busca os funcionários por função
 				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
 					DROP TABLE #tempServidorFuncao;
@@ -359,9 +389,31 @@ namespace SME.GoogleClassroom.Dados
 					ON facs.cd_unidade_local_servico = esc.cd_escola
 				WHERE
 					(facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
-					AND dt_fim_nomeacao IS NULL
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+					AND dt_fim_nomeacao IS NULL ";
 
+
+            var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoFixo);
+            var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoSobreposto);
+            var queryBuscafuncionarioPorFuncaoStringBuilder = new StringBuilder(queryBuscafuncionarioPorFuncao);
+            
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
+            
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
+            
+            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
+            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
+            queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
+            queryBuscafuncionarioPorFuncaoStringBuilder.Append(";");
+            
+            var query = $@" {queryBuscafuncionarioPorCargoFixoStringBuilder} 
+						    {queryBuscafuncionarioPorCargoSobrepostoStringBuilder}
+						   {queryBuscafuncionarioPorFuncaoStringBuilder}
 				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
 					DROP TABLE #tempServidorCargos;
 				SELECT
@@ -406,10 +458,17 @@ namespace SME.GoogleClassroom.Dados
 					temp.CdCagoFuncao IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
 					AND temp.CdUe = @cdUe;";
 
-            return await conn.QueryAsync<FuncionarioCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
+
+
+            return await conn.QueryAsync<FuncionarioCursoEol>(query,
+                new { turmaId, componenteCurricularId, anoLetivo ,
+	                tipoUes = parametrosCargaInicialDto.TiposUes,
+	                ues = parametrosCargaInicialDto.Ues,
+	                turmas = parametrosCargaInicialDto.Turmas});
         }
 
-        private static string MontaQueryCursosParaInclusao(DateTime? dataReferencia, bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
+        private static string MontaQueryCursosParaInclusao(DateTime? dataReferencia, bool ehParaPaginar,
+            long? componenteCurricularId, long? turmaId)
         {
             var query = new StringBuilder();
             query.AppendLine(@$"-- 2) Busca os cursos regulares
@@ -691,10 +750,12 @@ namespace SME.GoogleClassroom.Dados
 							order by 1 ");
 
             if (ehParaPaginar)
-                query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+                query.AppendLine(
+                    "OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
             else query.AppendLine(";");
 
-            query.AppendLine(@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
+            query.AppendLine(
+                @"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
 							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicao') IS NOT NULL
 								DROP TABLE #tempUEsSemAtribuicao
 							SELECT
@@ -763,7 +824,8 @@ namespace SME.GoogleClassroom.Dados
             return query.ToString();
         }
 
-        private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId, long? componenteCurricularId)
+        private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId,
+            long? componenteCurricularId)
         {
             var query = new StringBuilder();
             query.AppendLine(@"-- 2) Busca os cursos regulares
@@ -1045,10 +1107,12 @@ namespace SME.GoogleClassroom.Dados
 							ORDER by 1 ");
 
             if (aplicarPaginacao)
-                query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+                query.AppendLine(
+                    "OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
             else query.AppendLine(";");
 
-            query.AppendLine(@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
+            query.AppendLine(
+                @"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
 							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicao') IS NOT NULL 
 								DROP TABLE #tempUEsSemAtribuicao
 							SELECT
@@ -1120,23 +1184,24 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<bool>(query, new { turmaId });
         }
 
-		public async Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId)
-		{
-			var query = MontaQueryCursosExtintos(turmaId, false, false);
+        public async Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(DateTime dataInicio,
+            DateTime dataFim, int anoLetivo, long? turmaId)
+        {
+            var query = MontaQueryCursosExtintos(turmaId, false, false);
 
-			using var conn = ObterConexao();
-				return await conn.QueryAsync<CursoExtintoEolDto>(query, new { dataInicio, dataFim, anoLetivo, turmaId });
-		}
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<CursoExtintoEolDto>(query, new { dataInicio, dataFim, anoLetivo, turmaId });
+        }
 
         private string MontaQueryCursosExtintos(long? turmaId, bool paginacao, bool contador)
         {
-			string query = contador ? 
-				"select count(*) " : 
-				@"select 
+            string query = contador
+                ? "select count(*) "
+                : @"select 
 					cd_turma_escola as TurmaId, 
 					dt_fim as DataExtincao ";
 
-			query += @"from turma_escola te (NOLOCK)
+            query += @"from turma_escola te (NOLOCK)
 				 inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
 					  where st_turma_escola = 'E' 
 						AND te.cd_tipo_turma in (1,2,3,5,6,7)
@@ -1144,35 +1209,41 @@ namespace SME.GoogleClassroom.Dados
 						and an_letivo = @anoLetivo 
 						and dt_fim between @dataInicio and @dataFim ";
 
-			if (turmaId.HasValue)
-				query += " and te.cd_turma_escola = @turmaId ";
+            if (turmaId.HasValue)
+                query += " and te.cd_turma_escola = @turmaId ";
 
-			if (!contador)
-				query += " order by dt_fim ";
+            if (!contador)
+                query += " order by dt_fim ";
 
-			if (paginacao)
-				query += " OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ";
+            if (paginacao)
+                query += " OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ";
 
-			query += "; ";
+            query += "; ";
 
-			return query;
-		}
+            return query;
+        }
 
-		public async Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
-		{
-			var query = MontaQueryCursosExtintos(turmaId, true, false);
-			query += MontaQueryCursosExtintos(turmaId, false, true);
+        public async Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(
+            DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
+        {
+            var query = MontaQueryCursosExtintos(turmaId, true, false);
+            query += MontaQueryCursosExtintos(turmaId, false, true);
 
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query, new { dataInicio, dataFim, anoLetivo, turmaId, paginacao.QuantidadeRegistrosIgnorados, paginacao.QuantidadeRegistros });
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query,
+                new
+                {
+                    dataInicio, dataFim, anoLetivo, turmaId, paginacao.QuantidadeRegistrosIgnorados,
+                    paginacao.QuantidadeRegistros
+                });
 
-			var retorno = new PaginacaoResultadoDto<CursoExtintoEolDto>();
+            var retorno = new PaginacaoResultadoDto<CursoExtintoEolDto>();
 
-			retorno.Items = multi.Read<CursoExtintoEolDto>();
-			retorno.TotalRegistros = multi.ReadFirst<int>();
-			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.Items = multi.Read<CursoExtintoEolDto>();
+            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
-			return retorno;
-		}
-	}
+            return retorno;
+        }
+    }
 }

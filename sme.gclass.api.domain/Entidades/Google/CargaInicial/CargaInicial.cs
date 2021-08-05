@@ -11,8 +11,8 @@ namespace SME.GoogleClassroom.Dominio
         public string Turmas { get; set; }
         public DateTime CriadoEm { get; set; }
 
-        public bool PossuiTiposUe() => !string.IsNullOrEmpty(TiposUe.Trim());
-        public bool PossuiUes() => !string.IsNullOrEmpty(Ues.Trim());
-        public bool PossuiTurmas() => !string.IsNullOrEmpty(Turmas.Trim());
+        public bool PossuiTiposUe() => !string.IsNullOrEmpty(TiposUe?.Trim());
+        public bool PossuiUes() => !string.IsNullOrEmpty(Ues?.Trim());
+        public bool PossuiTurmas() => !string.IsNullOrEmpty(Turmas?.Trim());
     }
 }

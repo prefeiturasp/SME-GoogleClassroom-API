@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Professores.ObterAtribuicoesDeCu
         }
 
         public async Task<PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>> Handle(ObterAtribuicoesDeCursosDosProfessoresQuery request, CancellationToken cancellationToken)
-            => await repositorioProfessorEol.ObterAtribuicoesDeCursosDoProfessorAsync(request.UltimaDataExecucao, request.Paginacao, request.Rf, request.TurmaId, request.ComponenteCurricularId);
+            => await repositorioProfessorEol.ObterAtribuicoesDeCursosDoProfessorAsync(request.UltimaDataExecucao, request.Paginacao, request.Rf, request.TurmaId, request.ComponenteCurricularId, request.parametrosCargaInicialDto);
     }
 }

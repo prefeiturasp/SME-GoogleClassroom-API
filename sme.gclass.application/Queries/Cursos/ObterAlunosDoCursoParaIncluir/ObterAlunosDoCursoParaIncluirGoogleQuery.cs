@@ -2,6 +2,7 @@
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using System.Collections.Generic;
+using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -10,12 +11,14 @@ namespace SME.GoogleClassroom.Aplicacao
         public int AnoLetivo { get; set; }
         public long TurmaId { get; set; }
         public long ComponenteCurricularId { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }
 
-        public ObterAlunosDoCursoParaIncluirGoogleQuery(int anoLetivo, long turmaId, long componenteCurricularId)
+        public ObterAlunosDoCursoParaIncluirGoogleQuery(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
     }
 

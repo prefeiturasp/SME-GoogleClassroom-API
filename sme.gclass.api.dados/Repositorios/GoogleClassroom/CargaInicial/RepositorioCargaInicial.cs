@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Dados
                             , Ues
                             , Turmas
                             , criado_em as CriadoEm
-                     from carga_incial
+                     from public.carga_inicial
                     where ano = @ano";
 
             using (var conexao = ObterConexao())

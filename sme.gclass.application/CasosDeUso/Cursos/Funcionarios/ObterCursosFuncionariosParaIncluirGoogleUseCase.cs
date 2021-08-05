@@ -17,6 +17,11 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<FuncionarioCursoEol>> Executar(long turmaId, long componenteCurricularId)
-            => await mediator.Send(new ObterFuncionariosDoCursoParaIncluirGoogleQuery(DateTime.Now.Year, turmaId, componenteCurricularId));
+        {
+            var parametrosCargaInicialDto =
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            return await mediator.Send(new ObterFuncionariosDoCursoParaIncluirGoogleQuery(DateTime.Now.Year, turmaId,
+                componenteCurricularId, parametrosCargaInicialDto));
+        }
     }
 }
