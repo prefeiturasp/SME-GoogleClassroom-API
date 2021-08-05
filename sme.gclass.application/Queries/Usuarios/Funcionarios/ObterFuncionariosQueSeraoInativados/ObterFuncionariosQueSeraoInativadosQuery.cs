@@ -8,14 +8,16 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 {
     public class ObterFuncionariosQueSeraoInativadosQuery: IRequest<PaginacaoResultadoDto<FuncionarioEol>>
     {
-        public ObterFuncionariosQueSeraoInativadosQuery(Paginacao paginacao, DateTime dataReferencia)
+        public ObterFuncionariosQueSeraoInativadosQuery(Paginacao paginacao, DateTime dataReferencia, string codigoRf)
         {
             Paginacao = paginacao;
             DataReferencia = dataReferencia;
+            CodigoRf = codigoRf;
         }
 
         public Paginacao Paginacao { get; set; }
         public DateTime DataReferencia { get; set; }
+        public string CodigoRf { get; set; }
     }
 
     public class ObterFuncionariosQueSeraoInativadosQueryValidator : AbstractValidator<ObterFuncionariosQueSeraoInativadosQuery>

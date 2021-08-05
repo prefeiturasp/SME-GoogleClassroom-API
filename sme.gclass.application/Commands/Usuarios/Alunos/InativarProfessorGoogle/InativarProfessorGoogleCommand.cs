@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -7,9 +8,12 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public string Email { get; set; }
 
-        public InativarProfessorGoogleCommand(string email)
+        public UsuarioTipo UsuarioTipo { get; set; }
+
+        public InativarProfessorGoogleCommand(string email, UsuarioTipo usuarioTipo)
         {
             Email = email;
+            UsuarioTipo = usuarioTipo;
         }
     }
 

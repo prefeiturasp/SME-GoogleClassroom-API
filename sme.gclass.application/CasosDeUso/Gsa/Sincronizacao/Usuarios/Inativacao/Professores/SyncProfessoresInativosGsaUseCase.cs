@@ -35,10 +35,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var unidadeOrganizacionalAtualizada = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId, unidadeOrganizacional));
 
-                var professorInativoGoogle = await mediator.Send(new InativarProfessorGoogleCommand(filtro.EmailUsuario));
+                var professorInativoGoogle = await mediator.Send(new InativarProfessorGoogleCommand(filtro.EmailUsuario, usuarioTipo));
 
                 if (usuarioInativado == false || unidadeOrganizacionalAtualizada == false || professorInativoGoogle == false)
-                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o professor no GSA!");
+                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o professor / funcioário no GSA!");
             }
             catch (Exception ex)
             {

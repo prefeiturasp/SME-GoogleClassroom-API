@@ -3,6 +3,7 @@ using Google.Apis.Admin.Directory.directory_v1;
 using MediatR;
 using Polly;
 using Polly.Registry;
+using Sentry;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
@@ -32,10 +33,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                await policy.ExecuteAsync(() => InativarProfessorGoogleGsa(request.Email, diretorioClassroom));
+                if (request.UsuarioTipo == Dominio.UsuarioTipo.Professor)
+                    await policy.ExecuteAsync(() => InativarProfessorGoogleGsa(request.Email, diretorioClassroom));
+                else
+                    await policy.ExecuteAsync(() => InativarFuncionarioGoogleGsa(request.Email, diretorioClassroom));
             }
             catch (GoogleApiException gex)
             {
+                SentrySdk.CaptureException(gex);
                 throw gex;
             }
 
@@ -44,13 +49,28 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InativarProfessorGoogleGsa(string email, DirectoryService diretorioClassroom)
         {
-            var requestAlunoExiste = diretorioClassroom.Users.Get(email);
-            var alunoExiste = await requestAlunoExiste.ExecuteAsync();
-            if (alunoExiste != null)
+            var requestObter = diretorioClassroom.Users.Get(email);
+            var professorExiste = await requestObter.ExecuteAsync();
+            if (professorExiste != null)
             {
-                alunoExiste.OrgUnitPath = "/Professores/Inativos";
-                alunoExiste.Suspended = true;
-                var request = diretorioClassroom.Users.Update(alunoExiste, alunoExiste.Id);
+                professorExiste.OrgUnitPath = "/Professores/Inativos";
+                professorExiste.Suspended = true;
+                
+                var request = diretorioClassroom.Users.Update(professorExiste, professorExiste.Id);
+                await request.ExecuteAsync();
+            }
+        }
+
+        private async Task InativarFuncionarioGoogleGsa(string email, DirectoryService diretorioClassroom)
+        {
+            var requestObter = diretorioClassroom.Users.Get(email);
+            var funcionarioExiste = await requestObter.ExecuteAsync();
+            if (funcionarioExiste != null)
+            {
+                funcionarioExiste.OrgUnitPath = "/Funcionarios/Inativos";
+                funcionarioExiste.Suspended = true;
+
+                var request = diretorioClassroom.Users.Update(funcionarioExiste, funcionarioExiste.Id);
                 await request.ExecuteAsync();
             }
         }

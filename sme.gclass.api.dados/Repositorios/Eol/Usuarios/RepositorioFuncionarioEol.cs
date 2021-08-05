@@ -443,23 +443,24 @@ namespace SME.GoogleClassroom.Dados
 
         }
 
-        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia)
+        public async Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia, string codigoRf)
         {
-            try
+			try
             {
-				var querySelectDados = @" SELECT DISTINCT 
+				var querySelectDados = @$" SELECT DISTINCT 
 											serv.cd_registro_funcional as rf,
 											serv.nm_pessoa as NomePessoa,
 											serv.nm_social as NomeSocial ";
 
 				var querySelectCount = "SELECT COUNT(DISTINCT serv.cd_registro_funcional) ";
 
-				var queryFrom = new StringBuilder(@" FROM v_servidor_cotic serv
+				var queryFrom = new StringBuilder(@$" FROM v_servidor_cotic serv
 														INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
 														INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
 														INNER JOIN lotacao_servidor AS ls
 																	ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
 														WHERE cba.dt_fim_nomeacao <= @dataReferencia
+															{(String.IsNullOrEmpty(codigoRf) == false ? " AND serv.cd_registro_funcional = @codigoRf " : "")}
 															AND serv.cd_registro_funcional NOT IN(
 																SELECT
 																	distinct serv.cd_registro_funcional
@@ -484,8 +485,9 @@ namespace SME.GoogleClassroom.Dados
                     {
                         quantidadeRegistros = paginacao.QuantidadeRegistros,
                         quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
-                        dataReferencia
-                    }, commandTimeout: 6000);
+                        dataReferencia,
+						codigoRf
+					}, commandTimeout: 6000);
 
                 var retorno = new PaginacaoResultadoDto<FuncionarioEol>
                 {
@@ -495,7 +497,6 @@ namespace SME.GoogleClassroom.Dados
 
                 retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
                 return retorno;
-
             }
             catch (Exception ex)
             {

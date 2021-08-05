@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
-            return await mediator.Send(new ObterFuncionariosQueSeraoInativadosQuery(paginacao, filtro.DataReferencia));
+            return await mediator.Send(new ObterFuncionariosQueSeraoInativadosQuery(paginacao, filtro.DataReferencia, filtro.CodigoRf));
         }
     }
 }

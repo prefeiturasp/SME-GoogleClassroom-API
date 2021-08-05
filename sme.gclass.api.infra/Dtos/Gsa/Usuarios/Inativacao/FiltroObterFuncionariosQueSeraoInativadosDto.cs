@@ -7,5 +7,7 @@ namespace SME.GoogleClassroom.Infra
     {
         [Required]
         public DateTime DataReferencia { get; set; }
+
+        public string CodigoRf { get; set; }
     }
 }

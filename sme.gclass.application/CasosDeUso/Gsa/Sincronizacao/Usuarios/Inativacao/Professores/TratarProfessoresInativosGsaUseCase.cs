@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                     if (usuario != null)
                     {
-                        var professorFuncionarioInativar = new ProfessorInativoDto(usuario.Indice, professor.Indice, professor.Email, (int)usuario.UsuarioTipo);
+                        var professorFuncionarioInativar = new ProfessorInativoDto(usuario.Indice, professor.Indice, professor.Email, usuario.UsuarioTipo);
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorIncluir, professorFuncionarioInativar));
                     }
                 }

@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<int> AtualizarAsync(long id, string nome, string organizationPath);
         Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId);
-        Task<UsuarioGoogle> ObteUsuarioPorClassroomId(string classroomId);
+        Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId);
         Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId);
 
         Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorRfs(long[] rfs);

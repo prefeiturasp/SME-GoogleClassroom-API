@@ -624,7 +624,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new { googleClassroomId });
         }
 
-        public async Task<UsuarioGoogle> ObteUsuarioPorClassroomId(string classroomId)
+        public async Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId)
         {
             var query = @"select u.indice,
                                  u.id,
@@ -638,28 +638,35 @@ namespace SME.GoogleClassroom.Dados
                            where u.google_classroom_id = @classroomId";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, new { classroomId });
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { classroomId });
         }
 
         public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
-            const string updateQuery = @"update public.usuarios
+            try
+            {
+                const string updateQuery = @"update public.usuarios
                                          set
                                             organization_path = @estruturaOrganizacional,
                                             data_atualizacao = current_timestamp
                                          where
-                                            id = @id";
+                                            indice = @id";
 
-            var parametros = new
+                var parametros = new
+                {
+                    id,
+                    estruturaOrganizacional
+                };
+
+                using var conn = ObterConexao();
+                await conn.ExecuteAsync(updateQuery, parametros);
+                return true;
+
+            }
+            catch (Exception ex)
             {
-                id,
-                estruturaOrganizacional
-            };
-
-            using var conn = ObterConexao();
-            await conn.ExecuteAsync(updateQuery, parametros);
-            return true;
-
+                throw ex;
+            }
         }
 
         public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(long[] Codigos)
