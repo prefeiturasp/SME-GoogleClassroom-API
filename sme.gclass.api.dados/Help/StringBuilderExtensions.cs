@@ -6,16 +6,15 @@ namespace SME.GoogleClassroom.Dados.Help
 {
     public static class StringBuilderExtensions
     {
-        public static StringBuilder AdicionarParametrosCargaInicial<T>(this StringBuilder query, IList<T> parametros,
-            string coluna)
+        public static StringBuilder AdicionarCondicaoIn<T>(this StringBuilder query, IList<T> parametros,
+            string coluna, string parametrosSql)
         {
             if (!parametros.Any())
             {
                 return query;
             }
             
-            var parametro = string.Join(",", parametros).Trim();
-            query.AppendLine($" AND {coluna.Trim()} in ({parametro}) ");
+            query.AppendLine($" AND {coluna.Trim()} in @{parametrosSql}");
             return query;
         }
     }

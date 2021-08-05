@@ -432,13 +432,13 @@ namespace SME.GoogleClassroom.Dados
                 queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
             }
 
-            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.TiposUes, "esc.tp_escola");
-            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Ues, "te.st_turma_escola");
-            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
             
-            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.TiposUes, "esc.tp_escola");
-            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Ues, "te.st_turma_escola");
-            queryRegulares.AdicionarParametrosCargaInicial(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", "tipoUes");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", "ues");
+            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", "turmas");
 
             
             if (turmaId.HasValue)
