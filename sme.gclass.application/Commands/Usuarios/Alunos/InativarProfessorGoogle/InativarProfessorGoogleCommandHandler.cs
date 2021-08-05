@@ -35,7 +35,8 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 if (request.UsuarioTipo == Dominio.UsuarioTipo.Professor)
                     await policy.ExecuteAsync(() => InativarProfessorGoogleGsa(request.Email, diretorioClassroom));
-                else
+                
+                if (request.UsuarioTipo == Dominio.UsuarioTipo.Funcionario || request.UsuarioTipo == Dominio.UsuarioTipo.FuncionarioIndireto)
                     await policy.ExecuteAsync(() => InativarFuncionarioGoogleGsa(request.Email, diretorioClassroom));
             }
             catch (GoogleApiException gex)
@@ -69,7 +70,6 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 funcionarioExiste.OrgUnitPath = "/Funcionarios/Inativos";
                 funcionarioExiste.Suspended = true;
-
                 var request = diretorioClassroom.Users.Update(funcionarioExiste, funcionarioExiste.Id);
                 await request.ExecuteAsync();
             }
