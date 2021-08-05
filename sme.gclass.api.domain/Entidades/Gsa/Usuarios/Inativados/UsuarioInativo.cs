@@ -13,11 +13,10 @@ namespace SME.GoogleClassroom.Dominio
         {
 
         }
-
-        public UsuarioInativo(long usuarioId)
+        public UsuarioInativo(long usuarioId, UsuarioTipo usuarioTipo)
         {
             UsuarioId = usuarioId;
-            UsuarioTipo = UsuarioTipo.Aluno;
+            UsuarioTipo = usuarioTipo;
             InativadoEm = DateTime.Now;
         }
     }

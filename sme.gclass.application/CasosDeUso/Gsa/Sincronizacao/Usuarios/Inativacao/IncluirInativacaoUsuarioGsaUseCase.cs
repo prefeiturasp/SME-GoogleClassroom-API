@@ -27,17 +27,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                // registra aluno inativo
-                var usuarioInativado = await mediator.Send(new IncluirUsuarioInativoCommand(new UsuarioInativo(filtro.UsuarioId)));
+                var usuarioInativado = await mediator.Send(new IncluirUsuarioInativoCommand(new UsuarioInativo(filtro.UsuarioId, UsuarioTipo.Aluno)));
 
-                // Atualiza Unidade Organizacional
-                var alunoInativado = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId));
+                var unidadeOrganizacionalAtualizada = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId, "Alunos/Inativos"));
 
-                // Google API
-                var alunoRemovidoGoogle = await mediator.Send(new RemoverAlunoGoogleCommand(filtro.EmailUsuario));
+                var alunoRemovidoGoogle = await mediator.Send(new InativarAlunoGoogleCommand(filtro.EmailUsuario));
 
-                if (usuarioInativado == false || alunoInativado == false || alunoRemovidoGoogle == false)
-                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o Usuário");
+                if (usuarioInativado == false || unidadeOrganizacionalAtualizada == false || alunoRemovidoGoogle == false)
+                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o Usuário!");
             }
             catch (Exception ex)
             {

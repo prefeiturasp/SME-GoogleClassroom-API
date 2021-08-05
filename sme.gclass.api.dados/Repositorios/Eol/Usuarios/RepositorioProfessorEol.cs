@@ -527,6 +527,9 @@ namespace SME.GoogleClassroom.Dados
 			return query.ToString();
 		}
 
+
+
+
 		public async Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao)
         {
             try
@@ -560,5 +563,37 @@ namespace SME.GoogleClassroom.Dados
             }
 
 		}
-	}
+
+        public async Task<IEnumerable<long>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, string rf)
+        {
+			var query = new StringBuilder();
+				query.AppendLine(@" SELECT distinct serv.cd_registro_funcional
+									FROM v_servidor_cotic serv
+									INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+									INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+									INNER JOIN lotacao_servidor AS ls
+											   ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+									WHERE cba.dt_fim_nomeacao <= CURRENT_TIMESTAMP-15
+										AND serv.cd_registro_funcional NOT IN (SELECT 
+											distinct serv.cd_registro_funcional
+										 FROM v_servidor_cotic serv
+											 INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
+											 INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
+											 INNER JOIN lotacao_servidor AS ls
+														ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
+														WHERE cba.dt_fim_nomeacao IS NULL) ");
+
+			if (!string.IsNullOrEmpty(rf))
+				query.AppendLine(" and serv.cd_registro_funcional = @rf ");
+
+			var parametros = new
+			{
+				anoLetivo = anoLetivo,
+				rf
+			};
+
+			using var conn = ObterConexao();
+			return await conn.QueryAsync<long>(query.ToString(), parametros);
+		}
+    }
 }

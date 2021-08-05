@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarAlunosInativacaoUsuarioGsaUseCase : ITratarAlunosInativacaoUsuarioUseCase
+    public class TratarAlunosInativacaoUsuarioUseCase : ITratarAlunosInativacaoUsuarioUseCase
     {
         private readonly IMediator mediator;
 
-        public TratarAlunosInativacaoUsuarioGsaUseCase(IMediator mediator)
+        public TratarAlunosInativacaoUsuarioUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
@@ -18,6 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroAlunoInativacaoUsuarioDto>();
+            
             var alunosCodigos = dto.AlunosIds.ToArray();
             var alunosGoogle = await mediator.Send(new ObterAlunosPorCodigosQuery(alunosCodigos));
 
@@ -26,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 foreach (var alunoGoogle in alunosGoogle)
                 {
                     var alunoInativar = new AlunoUsuarioInativarDto(alunoGoogle.Codigo, alunoGoogle.Indice, alunoGoogle.Email);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioIncluir, RotasRabbit.FilaGsaInativarUsuarioIncluir, alunoInativar));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioIncluir, alunoInativar));
                 }
                 return true;
             }

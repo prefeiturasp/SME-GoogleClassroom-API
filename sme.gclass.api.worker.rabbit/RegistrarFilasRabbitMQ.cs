@@ -30,6 +30,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RegistrarFilasUsuarioSync(canalRabbit);
             RegistrarFilasRemoverUsuariosCursoSync(canalRabbit);
             RegistrarFilasInativarAlunosSync(canalRabbit);
+            RegistrarFilasInativarProfessoresEFuncionariosSync(canalRabbit);
         }
 
         private static void RegistrarFilasCursoSync(IModel canalRabbit)
@@ -182,8 +183,26 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarUsuarioTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarUsuarioTratar);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarUsuarioIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarUsuarioIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarUsuarioIncluir);        }
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarUsuarioIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarUsuarioIncluir);        
+        }
 
+        private static void RegistrarFilasInativarProfessoresEFuncionariosSync(IModel canalRabbit)
+        {
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorIniciar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorIniciar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorIniciar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorCarregar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorCarregar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorTratar);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorIncluir);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorSync);
+        }
         #endregion Filas Sync
 
         #region Filas de Inclusão/Atualização/Tratamento

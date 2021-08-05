@@ -608,7 +608,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId)
         {
             var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo ");
-            if(turmaId > 0)
+            if (turmaId > 0)
                 query.AppendLine(" AND c.turma_id = @turmaId");
 
             if (turmaId > 0)
@@ -624,7 +624,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new { googleClassroomId });
         }
 
-        public async Task<UsuarioGoogle> ObteUsuarioPorClassroomId(string classroomId)
+        public async Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId)
         {
             var query = @"select u.indice,
                                  u.id,
@@ -638,27 +638,54 @@ namespace SME.GoogleClassroom.Dados
                            where u.google_classroom_id = @classroomId";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<FuncionarioGoogle>(query, new { classroomId });
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { classroomId });
         }
 
-        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id)
+        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
             const string updateQuery = @"update public.usuarios
                                          set
-                                            organization_path = 'Alunos/Inativos',
+                                            organization_path = @estruturaOrganizacional,
                                             data_atualizacao = current_timestamp
                                          where
-                                            id = @id";
+                                            indice = @id";
 
             var parametros = new
             {
-                id
+                id,
+                estruturaOrganizacional
             };
 
             using var conn = ObterConexao();
             await conn.ExecuteAsync(updateQuery, parametros);
             return true;
+        }
 
+        public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(long[] Codigos)
+        {
+            var query = @"SELECT
+                                 u.indice,
+                                 u.id as Rf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           WHERE (usuario_tipo = @professor OR usuario_tipo = @funcionario)
+                                 and id = any(@Codigos)";
+
+            var parametros = new
+            {
+                Codigos,
+                professor = UsuarioTipo.Professor,
+                funcionario = UsuarioTipo.Funcionario,
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
         }
 
         public async Task<FuncionarioCurso> ObterFuncionarioECursoPorUsuarioRFECursoId(long usuarioRF, long cursoId)
@@ -674,7 +701,7 @@ namespace SME.GoogleClassroom.Dados
                                 and cu.curso_id = @cursoId;";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new {usuarioRF, cursoId});
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new { usuarioRF, cursoId });
         }
     }
 }
