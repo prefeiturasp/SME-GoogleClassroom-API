@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SincronizarArquivamentoCursosExtintosUseCase : AbstractUseCase, ISincronizarArquivamentoCursosExtintosUseCase
+    public class SincronizarArquivamentoCursosUseCase : AbstractUseCase, ISincronizarArquivamentoCursosUseCase
     {
-        public SincronizarArquivamentoCursosExtintosUseCase(IMediator mediator) : base(mediator)
+        public SincronizarArquivamentoCursosUseCase(IMediator mediator) : base(mediator)
         {
         }
 
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível sincronizar a exinção de turmas. Mensagem não recebida");
 
-            var cursoDto = mensagem.ObterObjetoMensagem<ArquivarCursoExtintoDto>();
+            var cursoDto = mensagem.ObterObjetoMensagem<ArquivarCursoDto>();
 
             try
             {
@@ -26,9 +26,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 await SincronizarArquivamentoCurso(cursoDto.CursoId, cursoDto.Excluir);
             }
-            catch (System.Exception ex)
+            catch (Exception)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarSyncErro, cursoDto));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoArquivarSyncErro, cursoDto));
             }
 
             return true;

@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var dto = mensagem.ObterObjetoMensagem<FiltroArquivamentoTurmasDto>();
-            await mediator.Send(new ArquivarTurmasCommand(dto.TurmaId));
+            await mediator.Send(new ArquivarTurmasExtintasCommand(dto.TurmaId));
 
             if (!dto.TurmaId.HasValue)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ArquivarCursosTurmasExtintas));

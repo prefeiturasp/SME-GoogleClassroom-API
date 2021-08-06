@@ -3,6 +3,7 @@ using Google.Apis.Classroom.v1.Data;
 using MediatR;
 using Polly;
 using Polly.Registry;
+using Sentry;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
@@ -33,9 +34,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task ArquivarCursoGoogle(long cursoId, ClassroomService servicoClassroom)
         {
-            var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoId.ToString());
-            requestUpdate.UpdateMask = "courseState";
-            await requestUpdate.ExecuteAsync();
+            try
+            {
+                var requestUpdate = servicoClassroom.Courses.Patch(new Course() { CourseState = "ARCHIVED", }, cursoId.ToString());
+                requestUpdate.UpdateMask = "courseState";
+                await requestUpdate.ExecuteAsync();
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+            }
         }
     }
 }

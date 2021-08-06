@@ -154,7 +154,7 @@ namespace SME.GoogleClassroom.IoC
             // Usuario Inativação (Aluno)
             services.TryAddScoped<IIniciarProcessoInativacaoUsuariosGsaUseCase, IniciarProcessoInativacaoUsuariosGsaUseCase>();
             services.TryAddScoped<IRealizarCargaAlunoInativacaoUsuarioUseCase, RealizarCargaAlunoInativacaoUsuarioUseCase>();
-            services.TryAddScoped<ITratarAlunosInativacaoUsuarioUseCase, TratarAlunosInativacaoUsuarioGsaUseCase>();
+            services.TryAddScoped<ITratarAlunosInativacaoUsuarioUseCase, TratarAlunosInativacaoUsuarioUseCase>();
             services.TryAddScoped<IIncluirInativacaoUsuarioGsaUseCase, IncluirInativacaoUsuarioGsaUseCase>();
             services.TryAddScoped<IObterAlunosInativosUseCase, ObterAlunosInativosUseCase>();            
             services.TryAddScoped<IObterAlunosQueSeraoInativadosUseCase, ObterAlunosQueSeraoInativadosUseCase>();
@@ -172,16 +172,34 @@ namespace SME.GoogleClassroom.IoC
 
             //Curso Arquivar
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosUseCase, CarregarArquivamentoCursosExtintosUseCase>();
-            services.TryAddScoped<ITratarArquivamentoCursosExtintosUseCase, TratarArquivamentoCursosExtintosUseCase>();
-            services.TryAddScoped<ISincronizarArquivamentoCursosExtintosUseCase, SincronizarArquivamentoCursosExtintosUseCase>();
+            services.TryAddScoped<ITratarArquivamentoCursosUseCase, TratarArquivamentoCursosUseCase>();
+            services.TryAddScoped<ISincronizarArquivamentoCursosUseCase, SincronizarArquivamentoCursosUseCase>();
             services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosTratarUseCase, IniciarTratamentoErroCursoArquivadosTratarUseCase>();
             services.TryAddScoped<IIniciarTratamentoErroCursoArquivadosSyncUseCase, IniciarTratamentoErroCursoArquivadosSyncUseCase>();
             services.TryAddScoped<IObterCursosExtintosParaArquivarPaginadoUseCase, ObterCursosExtintosParaArquivarPaginadoUseCase>();
             services.TryAddScoped<ICarregarArquivamentoCursosExtintosManualUseCase, CarregarArquivamentoCursosExtintosManualUseCase>();
             services.TryAddScoped<IObterCursosArquivadosPaginadoUseCase, ObterCursosArquivadosPaginadoUseCase>();
 
+            services.TryAddScoped<ICarregarArquivamentoCursosUseCase, CarregarArquivamentoCursosUseCase>();
+
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
-            
+
+            // Usuario inativação (Professores e Funcionarios)
+            services.TryAddScoped<IIniciarProcessoInativacaoProfessoresGsaUseCase, IniciarProcessoInativacaoProfessoresGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaProfessoresInativosUseCase, RealizarCargaProfessoresInativosUseCase>();
+            services.TryAddScoped<ITratarProfessoresInativosGsaUseCase, TratarProfessoresInativosGsaUseCase>();
+            services.TryAddScoped<ISyncProfessoresInativosGsaUseCase, SyncProfessoresInativosGsaUseCase>();
+            services.TryAddScoped<IIniciarSyncProfessoresInativadosComErrosUseCase, IniciarSyncProfessoresInativadosComErrosUseCase>();
+
+            services.TryAddScoped<IObterFuncionariosInativosUseCase, ObterFuncionariosInativosUseCase>();
+            services.TryAddScoped<IObterFuncionariosQueSeraoInativadosUseCase, ObterFuncionariosQueSeraoInativadosUseCase>();
+
+
+            // Arquivamento de cursos por ano e semestre
+            services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
+            services.TryAddScoped<IObterCursosParaArquivarPaginadoUseCase, ObterCursosParaArquivarPaginadoUseCase>();
+
+
             RegistrarCasosDeUsoGsa(services);
         }
 
@@ -235,7 +253,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarCargaAtividadesGsaUseCase, RealizarCargaAtividadesGsaUseCase>();
             services.TryAddScoped<ITratarImportacaoAtividadesCursoGsaUseCase, TratarImportacaoAtividadesCursoGsaUseCase>();
             services.TryAddScoped<IImportarAtividadesCursoGsaUseCase, ImportarAtividadesCursoGsaUseCase>();
-            
         }
     }
 }

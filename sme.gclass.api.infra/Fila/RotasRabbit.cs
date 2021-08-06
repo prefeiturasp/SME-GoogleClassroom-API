@@ -14,10 +14,13 @@
         public static string FilaCursoGradeSync => "googleclass.curso.grade.sync";
         public static string FilaCursoFuncionarioSync => "googleclass.curso.funcionario.sync";
         public static string FilaCursoExtintoArquivarCarregar => "googleclass.gsa.curso.extinto.arquivar.carregar";
-        public static string FilaCursoExtintoArquivarTratar => "googleclass.gsa.curso.extinto.arquivar.tratar";
-        public static string FilaCursoExtintoArquivarTratarErro => "googleclass.gsa.curso.extinto.arquivar.tratar.erro";
-        public static string FilaCursoExtintoArquivarSync => "googleclass.gsa.curso.extinto.arquivar.sync";
-        public static string FilaCursoExtintoArquivarSyncErro => "googleclass.gsa.curso.extinto.arquivar.sync.erro";
+        public static string FilaCursoArquivarAnoAnteriorCarregar => "googleclass.gsa.curso.arquivar.iniciar";
+        public static string FilaCursoArquivarCarregar => "googleclass.gsa.curso.arquivar.carregar";
+        public static string FilaCursoArquivarTratar => "googleclass.gsa.curso.arquivar.tratar";
+        public static string FilaCursoArquivarSync => "googleclass.gsa.curso.arquivar.sync";
+        public static string FilaCursoArquivarTratarErro => "googleclass.gsa.curso.arquivar.tratar.erro";
+        public static string FilaCursoArquivarSyncErro => "googleclass.gsa.curso.arquivar.sync.erro";
+
         #endregion
 
         #region Alunos
@@ -86,6 +89,16 @@
         public static string FilaGsaInativarUsuarioSync => "googleclass.gsa.inativar.usuario.sync";
         public static string FilaGsaInativarUsuarioTratar => "googleclass.gsa.inativar.usuario.tratar";
         public static string FilaGsaInativarUsuarioIncluir => "googleclass.gsa.inativar.usuario.incluir";
+
+        #endregion
+
+        #region Inativação de Professores
+        public static string FilaGsaInativarProfessorIniciar => "googleclass.gsa.inativar.professor.iniciar";
+        public static string FilaGsaInativarProfessorCarregar => "googleclass.gsa.inativar.professor.carregar";
+        public static string FilaGsaInativarProfessorSync => "googleclass.gsa.inativar.professor.sync";
+        public static string FilaGsaInativarProfessorTratar => "googleclass.gsa.inativar.professor.tratar";
+        public static string FilaGsaInativarProfessorIncluir => "googleclass.gsa.inativar.professor.incluir";
+        public static string FilaGsaInativarProfessorErroTratar => "googleclass.gsa.inativar.professor.erro.tratar";
 
         #endregion 
 

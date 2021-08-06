@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuarioPorClassroomIdQueryHandler : IRequestHandler<ObterUsuarioPorClassroomIdQuery, UsuarioGoogle>
+    public class ObterUsuarioPorClassroomIdQueryHandler : IRequestHandler<ObterUsuarioPorClassroomIdQuery, UsuarioGoogleDto>
     {
         private readonly IRepositorioUsuario repositorioUsuario;
 
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
         }
 
-        public async Task<UsuarioGoogle> Handle(ObterUsuarioPorClassroomIdQuery request, CancellationToken cancellationToken)
+        public async Task<UsuarioGoogleDto> Handle(ObterUsuarioPorClassroomIdQuery request, CancellationToken cancellationToken)
             => await repositorioUsuario.ObteUsuarioPorClassroomId(request.GoogleClassroomId);
     }
 }

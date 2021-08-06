@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.Aplicacao
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesIncluirErro, atividadeGsa));
         }
 
-        private async Task<UsuarioGoogle> ObterUsuario(string usuarioClassroomId)
+        private async Task<UsuarioGoogleDto> ObterUsuario(string usuarioClassroomId)
         {
             var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(usuarioClassroomId));
 
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return usuario;
         }
 
-        private async Task<bool> EnviarParaSgp(AtividadeGsaDto atividadeGsa, UsuarioGoogle usuario)
+        private async Task<bool> EnviarParaSgp(AtividadeGsaDto atividadeGsa, UsuarioGoogleDto usuario)
         {
             var curso = await mediator.Send(new ObterCursoGooglePorIdQuery(atividadeGsa.CursoId));
 

@@ -14,6 +14,7 @@ namespace SME.GoogleClassroom.Dados
             long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<ProfessorEol> ObterProfessorParaTratamentoDeErroAsync(long rf, int anoLetivo);
         Task<IEnumerable<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCurso(string turmaId, DateTime dataInicio, DateTime dataFim);
+        Task<IEnumerable<long>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, string rf);
         Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao);
     }
 }

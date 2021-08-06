@@ -6,5 +6,6 @@
         DiasRemocaoFuncionario = 2,
         DiasRemocaoAluno = 3,
         DiasRemocaoProfessor = 4,
+        DiasInativacaoFuncionario = 5,
     }
 }
