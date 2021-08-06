@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarProfessoresInativosGsaUseCase : ITratarProfessoresInativosGsaUseCase
+    public class TratarProfessoresInativosGsaUseCase : ITratarProfessoresEFuncionariosParaInativarUseCase
     {
         private readonly IMediator mediator;
 
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var dto = mensagemRabbit.ObterObjetoMensagem<FiltroProfessoresInativosDto>();
+            var dto = mensagemRabbit.ObterObjetoMensagem<FiltroProfessoresEFuncionarioInativosDto>();
             
             var professoresEFuncionariosGoogle = await mediator.Send(new ObterProfessoresEFuncionariosPorCodigosQuery(dto.Rfs.ToArray()));
 
@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     if (usuario != null)
                     {
                         var professorFuncionarioInativar = new ProfessorInativoDto(usuario.Indice, professor.Indice, professor.Email, usuario.UsuarioTipo);
-                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorIncluir, professorFuncionarioInativar));
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, professorFuncionarioInativar));
                     }
                 }
                 return true;

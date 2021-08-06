@@ -6,11 +6,13 @@ namespace SME.GoogleClassroom.Infra
     {
         public DateTime DataReferencia { get; set; }
         public string Rf { get; set; }
+        public string Cpf { get; set; }
 
-        public CarregarProfessoresInativosDto(DateTime dataReferencia, string rf)
+        public CarregarProfessoresInativosDto(DateTime dataReferencia, string rf, string cpf)
         {
             DataReferencia = dataReferencia;
             Rf = rf;
+            Cpf = cpf;
         }
     }
 }

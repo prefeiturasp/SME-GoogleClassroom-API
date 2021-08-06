@@ -180,18 +180,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Inicia a sincronização de Inativação professores e funcionário inativos GSA.
+        /// Inicia a sincronização para inativar professores, funcionários e funcionários indiretos.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpPost("cursos/professores-inativos")]
+        [HttpPost("funcionarios-professores-inativos")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoInativacaoProfessoresGsa([FromServices] IIniciarProcessoInativacaoProfessoresGsaUseCase useCase, string codigoRf)
+        public async Task<IActionResult> IniciarProcessoInativacaoProfessoresFuncionarios([FromServices] IIniciarInativacaoProfessoresEFuncionariosUseCase useCase, string codigoRf, string cpf)
         {
-            var retorno = await useCase.Executar(codigoRf);
+            var retorno = await useCase.Executar(codigoRf, cpf);
             return Ok(retorno);
         }
 

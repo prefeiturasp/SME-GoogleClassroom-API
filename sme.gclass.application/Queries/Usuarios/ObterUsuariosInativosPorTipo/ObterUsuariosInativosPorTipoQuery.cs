@@ -5,16 +5,16 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosInativosPorTipoQuery: IRequest<PaginacaoResultadoDto<UsuarioInativo>>
+    public class ObterUsuariosInativosPorTipoQuery: IRequest<PaginacaoResultadoDto<UsuarioInativoDto>>
     {
-        public ObterUsuariosInativosPorTipoQuery(Paginacao paginacao, UsuarioTipo[] tiposDeUsuarios = null)
+        public Paginacao Paginacao { get; set; }
+        public UsuarioTipo UsuarioTipo { get; set; }
+
+        public ObterUsuariosInativosPorTipoQuery(Paginacao paginacao, UsuarioTipo usuarioTipo)
         {
             Paginacao = paginacao;
-            TiposDeUsuarios = tiposDeUsuarios;
+            UsuarioTipo = usuarioTipo;
         }
-
-        public Paginacao Paginacao { get; set; }
-        public UsuarioTipo[] TiposDeUsuarios { get; set; }
     }
     public class ObterUsuariosInativosPorTipoQueryValidator : AbstractValidator<ObterUsuariosInativosPorTipoQuery>
     {

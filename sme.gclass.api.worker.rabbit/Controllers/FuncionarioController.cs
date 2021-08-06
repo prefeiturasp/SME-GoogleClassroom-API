@@ -216,7 +216,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("inativados")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioInativo>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioInativoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterFuncionariosInativos([FromServices] IObterFuncionariosInativosUseCase useCase, [FromQuery] FiltroObterFuncionariosInativosDto filtro)

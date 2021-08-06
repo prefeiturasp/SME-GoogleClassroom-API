@@ -3,7 +3,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface ISyncProfessoresInativosGsaUseCase : IUseCase<MensagemRabbit, bool>
+    public interface ISyncProfessoresEFuncionariosInativarUseCase : IUseCase<MensagemRabbit, bool>
     {
     }
 }

@@ -129,13 +129,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCursoArquivarTratar, new ComandoRabbit("Tratar arquivamento de cursos no EOL", typeof(ITratarArquivamentoCursosUseCase)));
             comandos.Add(RotasRabbit.FilaCursoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos no EOL", typeof(ISincronizarArquivamentoCursosUseCase)));
 
-            // Inativação Professores e Funcionários
-            comandos.Add(RotasRabbit.FilaGsaInativarProfessorIniciar, new ComandoRabbit("Inicia o processo de inativar professores e funcionários", typeof(IIniciarProcessoInativacaoProfessoresGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarProfessorCarregar, new ComandoRabbit("Carregar professores e funcionários que devem ser inativados", typeof(IRealizarCargaProfessoresInativosUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarProfessorTratar, new ComandoRabbit("Tratar os professores e funcioários GSA a serem inativados", typeof(ITratarProfessoresInativosGsaUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarProfessorIncluir, new ComandoRabbit("Sincroniza a inativação de professores e funcionários GSA ", typeof(ISyncProfessoresInativosGsaUseCase)));
+            // Inativação Professores, Funcionários e Funcionários indiretos
+            comandos.Add(RotasRabbit.FilaInativarProfessoresEFuncionariosIniciar, new ComandoRabbit("Inicia o processo de inativar professores, funcionários e funcionários indiretos", typeof(IIniciarInativacaoProfessoresEFuncionariosUseCase)));
+            comandos.Add(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, new ComandoRabbit("Carregar professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ICarregarProfessoresEFuncionariosParaInativar)));
+            comandos.Add(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, new ComandoRabbit("Tratar os professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ITratarProfessoresEFuncionariosParaInativarUseCase)));
+            comandos.Add(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, new ComandoRabbit("Sincroniza a inativação de professores, funcionários e funcionários indiretos", typeof(ISyncProfessoresEFuncionariosInativarUseCase)));
             comandos.Add(RotasRabbit.FilaGsaInativarProfessorErroTratar, new ComandoRabbit("Incluir na fila de erro na inativação de alunos GSA ", typeof(ITrataSyncGoogleAlunoInativoErroUseCase)));
-
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -296,10 +295,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, false, consumer);
 
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorIniciar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorCarregar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorTratar, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaInativarProfessoresEFuncionariosIniciar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorSync, false, consumer);
 
 

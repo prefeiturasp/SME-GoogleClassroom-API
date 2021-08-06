@@ -180,15 +180,16 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IIniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase, IniciarSyncGoogleProfessoresRemovidosCursoComErrosUseCase>();
 
-            // Usuario inativação (Professores e Funcionarios)
-            services.TryAddScoped<IIniciarProcessoInativacaoProfessoresGsaUseCase, IniciarProcessoInativacaoProfessoresGsaUseCase>();
-            services.TryAddScoped<IRealizarCargaProfessoresInativosUseCase, RealizarCargaProfessoresInativosUseCase>();
-            services.TryAddScoped<ITratarProfessoresInativosGsaUseCase, TratarProfessoresInativosGsaUseCase>();
-            services.TryAddScoped<ISyncProfessoresInativosGsaUseCase, SyncProfessoresInativosGsaUseCase>();
+            // Usuario inativação (Professores, Funcionarios e Funcionários indiretos)
+            services.TryAddScoped<IIniciarInativacaoProfessoresEFuncionariosUseCase, IniciarProcessoInativacaoProfessoresGsaUseCase>();
+            services.TryAddScoped<ICarregarProfessoresEFuncionariosParaInativar, RealizarCargaProfessoresInativosUseCase>();
+            services.TryAddScoped<ITratarProfessoresEFuncionariosParaInativarUseCase, TratarProfessoresInativosGsaUseCase>();
+            services.TryAddScoped<ISyncProfessoresEFuncionariosInativarUseCase, SyncProfessoresInativosGsaUseCase>();
             services.TryAddScoped<IIniciarSyncProfessoresInativadosComErrosUseCase, IniciarSyncProfessoresInativadosComErrosUseCase>();
-
             services.TryAddScoped<IObterFuncionariosInativosUseCase, ObterFuncionariosInativosUseCase>();
             services.TryAddScoped<IObterFuncionariosQueSeraoInativadosUseCase, ObterFuncionariosQueSeraoInativadosUseCase>();
+            services.TryAddScoped<IObterFuncionariosIndiretosQueSeraoInativadosUseCase, ObterFuncionariosIndiretosQueSeraoInativadosUseCase>();
+            
 
 
             // Arquivamento de cursos por ano e semestre

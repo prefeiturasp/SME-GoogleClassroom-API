@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarProcessoInativacaoProfessoresGsaUseCase : IIniciarProcessoInativacaoProfessoresGsaUseCase
+    public class IniciarProcessoInativacaoProfessoresGsaUseCase : IIniciarInativacaoProfessoresEFuncionariosUseCase
     {
         private readonly IMediator mediator;
 
@@ -13,10 +13,10 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(string rf)
+        public async Task<bool> Executar(string rf, string cpf)
         {
-            var dto = new FiltroInativacaoProfessoresGoogleDto(rf);
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorCarregar, dto));
+            var dto = new FiltroInativarProfessoresEFuncionariosDto(rf, cpf);
+            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, dto));
         }
     }
 }

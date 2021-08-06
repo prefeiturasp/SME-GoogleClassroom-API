@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SyncProfessoresInativosGsaUseCase : ISyncProfessoresInativosGsaUseCase
+    public class SyncProfessoresInativosGsaUseCase : ISyncProfessoresEFuncionariosInativarUseCase
     {
         private readonly IMediator mediator;
 
