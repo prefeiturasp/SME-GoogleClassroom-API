@@ -4,6 +4,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarInativacaoProfessoresEFuncionariosUseCase
     {
-        Task<bool> Executar(string rf, string cpf);
+        Task<bool> Executar(string codigo, string cpf, bool processarProfessoresEFuncionarios, bool processarFuncionariosIndiretos);
     }
 }

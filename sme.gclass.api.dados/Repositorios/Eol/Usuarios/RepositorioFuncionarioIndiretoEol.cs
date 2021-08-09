@@ -91,59 +91,6 @@ namespace SME.GoogleClassroom.Dados
             return query.ToString();
         }
 
-        //public Task<PaginacaoResultadoDto<FuncionarioIndiretoEol>> ObterFuncionariosIndiretosQueSeraoInativadosPaginados(Paginacao paginacao, string cpf)
-        //{
-
-        //   // var querySelectDados = @$" SELECT DISTINCT 
-								//			//serv.cd_registro_funcional as rf,
-								//			//serv.nm_pessoa as NomePessoa,
-								//			//serv.nm_social as NomeSocial ";
-
-        //   // var querySelectCount = "SELECT COUNT(DISTINCT serv.cd_registro_funcional) ";
-
-        //   // var queryFrom = new StringBuilder(@$" FROM v_servidor_cotic serv
-								//			//			INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
-								//			//			INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
-								//			//			INNER JOIN lotacao_servidor AS ls
-								//			//						ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
-								//			//			WHERE cba.dt_fim_nomeacao <= @dataReferencia
-								//			//				AND serv.cd_registro_funcional NOT IN(
-								//			//					SELECT
-								//			//						distinct serv.cd_registro_funcional
-								//			//					FROM v_servidor_cotic serv
-								//			//						INNER JOIN v_cargo_base_cotic AS cba ON cba.CD_SERVIDOR = serv.cd_servidor
-								//			//						INNER JOIN cargo AS car ON cba.cd_cargo = car.cd_cargo
-								//			//						INNER JOIN lotacao_servidor AS ls
-								//			//					ON cba.cd_cargo_base_servidor = ls.cd_cargo_base_servidor
-								//			//					WHERE cba.dt_fim_nomeacao IS NULL) ");
-
-        //   // var queryPaginacao = @"ORDER BY serv.cd_registro_funcional offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
-
-        //   // var query = new StringBuilder(querySelectDados);
-        //   // query.Append(queryFrom);
-        //   // query.Append(queryPaginacao);
-        //   // query.Append(querySelectCount);
-        //   // query.Append(queryFrom);
-
-        //   // using var conn = ObterConexao();
-        //   // using var multi = await conn.QueryMultipleAsync(query.ToString(),
-        //   //     new
-        //   //     {
-        //   //         quantidadeRegistros = paginacao.QuantidadeRegistros,
-        //   //         quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
-        //   //         cpf
-        //   //     }, commandTimeout: 6000);
-
-        //   // var retorno = new PaginacaoResultadoDto<FuncionarioIndiretoEol>
-        //   // {
-        //   //     Items = multi.Read<FuncionarioIndiretoEol>(),
-        //   //     TotalRegistros = multi.ReadFirst<int>()
-        //   // };
-
-        //   // retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
-        //   // return retorno;
-        //}
-
         public async Task<IEnumerable<string>> ObterFuncionariosIndiretosQueSeraoInativados(string cpf)
         {
             var query = new StringBuilder();

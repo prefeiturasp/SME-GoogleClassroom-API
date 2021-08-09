@@ -628,6 +628,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"select u.indice,
                                  u.id,
+                                 u.cpf,
                                  u.usuario_tipo as usuariotipo,
                                  u.email,
                                  u.organization_path as organizationpath,
@@ -702,6 +703,41 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new { usuarioRF, cursoId });
+        }
+
+
+        public async Task<IEnumerable<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretosPorCpfs(string[] Cpfs)
+        {
+            try
+            {
+                var query = @"SELECT
+                                 u.indice,
+                                 u.id as Rf,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           WHERE usuario_tipo = @funcionarioIndireto
+                                 and cpf = any(@Cpfs)";
+
+                var parametros = new
+                {
+                    Cpfs,
+                    funcionarioIndireto = UsuarioTipo.FuncionarioIndireto,
+                };
+
+                using var conn = ObterConexao();
+
+                return await conn.QueryAsync<FuncionarioIndiretoGoogle>(query, parametros);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

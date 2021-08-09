@@ -203,8 +203,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorSync);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorErroTratar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorErroTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorErroTratar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaInativarProfessorErroTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaInativarProfessorErroTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaInativarProfessorErroTratar);
         }
         #endregion Filas Sync
 

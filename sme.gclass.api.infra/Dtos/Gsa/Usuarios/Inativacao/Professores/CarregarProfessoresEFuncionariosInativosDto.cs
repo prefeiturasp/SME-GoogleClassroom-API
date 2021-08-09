@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class FiltroProfessoresEFuncionarioInativosDto
+    public class CarregarProfessoresEFuncionariosInativosDto
     {
         public DateTime DataReferencia { get; set; }
-        public IEnumerable<long> Rfs { get; set; }
-        public IEnumerable<string> Cpfs { get; set; }
+        public string Rf { get; set; }
+        public string Cpf { get; set; }
         public bool ProcessarProfessoresEFuncionarios { get; set; }
         public bool ProcessarFuncionariosIndiretos { get; set; }
 
-        public FiltroProfessoresEFuncionarioInativosDto(DateTime dataReferencia, IEnumerable<long> rfs, IEnumerable<string> cpfs, bool processarProfessoresEFuncionarios, bool processarFuncionariosIndiretos)
+
+
+        public CarregarProfessoresEFuncionariosInativosDto(DateTime dataReferencia, string rf, string cpf, bool processarProfessoresEFuncionarios, bool processarFuncionariosIndiretos)
         {
             DataReferencia = dataReferencia;
-            Rfs = rfs;
-            Cpfs = cpfs;
+            Rf = rf;
+            Cpf = cpf;
             ProcessarProfessoresEFuncionarios = processarProfessoresEFuncionarios;
             ProcessarFuncionariosIndiretos = processarFuncionariosIndiretos;
         }

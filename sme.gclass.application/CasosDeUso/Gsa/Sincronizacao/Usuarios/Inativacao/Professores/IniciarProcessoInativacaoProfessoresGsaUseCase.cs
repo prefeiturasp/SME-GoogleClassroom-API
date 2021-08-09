@@ -13,9 +13,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(string rf, string cpf)
+        public async Task<bool> Executar(string codigo, string cpf, bool processarProfessoresEFuncionarios, bool processarFuncionariosIndiretos)
         {
-            var dto = new FiltroInativarProfessoresEFuncionariosDto(rf, cpf);
+            var dto = new FiltroInativarProfessoresEFuncionariosDto(codigo, cpf, processarProfessoresEFuncionarios, processarFuncionariosIndiretos);
             return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, dto));
         }
     }

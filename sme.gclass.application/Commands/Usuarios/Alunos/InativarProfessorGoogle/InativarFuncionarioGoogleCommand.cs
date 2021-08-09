@@ -4,13 +4,13 @@ using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InativarProfessorGoogleCommand : IRequest<bool>
+    public class InativarFuncionarioGoogleCommand : IRequest<bool>
     {
         public string Email { get; set; }
 
         public UsuarioTipo UsuarioTipo { get; set; }
 
-        public InativarProfessorGoogleCommand(string email, UsuarioTipo usuarioTipo)
+        public InativarFuncionarioGoogleCommand(string email, UsuarioTipo usuarioTipo)
         {
             Email = email;
             UsuarioTipo = usuarioTipo;

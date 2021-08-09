@@ -134,7 +134,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, new ComandoRabbit("Carregar professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ICarregarProfessoresEFuncionariosParaInativar)));
             comandos.Add(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, new ComandoRabbit("Tratar os professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ITratarProfessoresEFuncionariosParaInativarUseCase)));
             comandos.Add(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, new ComandoRabbit("Sincroniza a inativação de professores, funcionários e funcionários indiretos", typeof(ISyncProfessoresEFuncionariosInativarUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaInativarProfessorErroTratar, new ComandoRabbit("Incluir na fila de erro na inativação de alunos GSA ", typeof(ITrataSyncGoogleAlunoInativoErroUseCase)));
+            comandos.Add(RotasRabbit.FilaInativarProfessorErroTratar, new ComandoRabbit("Tratar erros na fila de erro na inativação de professores, funcionários e funcionários indiretos", typeof(IIniciarSyncProfessoresInativadosComErrosUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
