@@ -24,7 +24,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
             await AtualizarUltimaExecucao(dto);
 
-            var alunosParaInativar = await mediator.Send(new ObterAlunosInativosPorAnoLetivoQuery(DateTime.Now.Year, dto.DataReferencia, dto.AlunoId));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var alunosParaInativar = await mediator.Send(new ObterAlunosInativosPorAnoLetivoQuery(parametrosCargaInicialDto, DateTime.Now.Year, dto.DataReferencia, dto.AlunoId));
 
             if (alunosParaInativar != null && alunosParaInativar.Any())
             {

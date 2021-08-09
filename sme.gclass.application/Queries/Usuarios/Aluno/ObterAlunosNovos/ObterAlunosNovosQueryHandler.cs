@@ -19,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(ObterAlunosNovosQuery request, CancellationToken cancellationToken)
         {
-            var anoLetivo = request.DataReferencia?.Year ?? DateTime.Now.Year;
-            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusaoAsync(request.Paginacao, anoLetivo, request.DataReferencia, request.CodigoEol);
+            var anoLetivo = request.DataReferencia?.Year ?? DateTime.Now.Year;            
+            var alunos = await repositorioAlunoEol.ObterAlunosParaInclusaoAsync(request.Paginacao, anoLetivo, request.DataReferencia, request.CodigoEol, request.ParametrosCargaInicialDto);
             return alunos;
         }
     }

@@ -18,6 +18,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<CursoEolDto>> Handle(ObterTurmasConcluidasPorAnoLetivoQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoEol.ObterTurmasConcluidasPorAnoLetivo(request.AnoLetivo, request.TurmaId);
+            => await repositorioCursoEol.ObterTurmasConcluidasPorAnoLetivo(request.ParametrosCargaInicialDto, request.AnoLetivo, request.TurmaId);
     }
 }

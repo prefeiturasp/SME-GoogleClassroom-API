@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<CursoExtintoEolDto>> Handle(ObterCursosExtintosPorPeriodoQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoEol.ObterCursosExtintosPorPeriodo(request.DataInicio, request.DataFim, request.AnoLetivo, request.TurmaId);
+            => await repositorioCursoEol.ObterCursosExtintosPorPeriodo(request.ParametrosCargaInicialDto, request.DataInicio, request.DataFim, request.AnoLetivo, request.TurmaId);
 
     }
 }
