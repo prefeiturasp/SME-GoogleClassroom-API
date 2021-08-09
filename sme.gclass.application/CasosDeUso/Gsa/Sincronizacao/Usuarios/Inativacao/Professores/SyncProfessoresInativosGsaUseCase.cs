@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SyncProfessoresInativosGsaUseCase : ISyncProfessoresInativosGsaUseCase
+    public class SyncProfessoresInativosGsaUseCase : ISyncProfessoresEFuncionariosInativarUseCase
     {
         private readonly IMediator mediator;
 
@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit?.Mensagem is null)
                 throw new NegocioException("Não foi possível gerar a carga de dados para a inativação professores / funcionários GSA.");
 
-            var filtro = mensagemRabbit?.ObterObjetoMensagem<ProfessorInativoDto>();
+            var filtro = mensagemRabbit?.ObterObjetoMensagem<ProfessorEFuncionarioInativoDto>();
             if (filtro is null)
                 throw new NegocioException("A mensagem enviada é inválida.");
 
@@ -35,10 +35,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var unidadeOrganizacionalAtualizada = await mediator.Send(new AtualizarUnidadeOrganizacionalUsuarioCommand(filtro.UsuarioId, unidadeOrganizacional));
 
-                var professorInativoGoogle = await mediator.Send(new InativarProfessorGoogleCommand(filtro.EmailUsuario, usuarioTipo));
+                var usuarioInativadoGoogle = await mediator.Send(new InativarFuncionarioGoogleCommand(filtro.EmailUsuario, usuarioTipo));
 
-                if (usuarioInativado == false || unidadeOrganizacionalAtualizada == false || professorInativoGoogle == false)
-                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o professor / funcioário no GSA!");
+                if (usuarioInativado == false || unidadeOrganizacionalAtualizada == false || usuarioInativadoGoogle == false)
+                    await InserirMensagemErroIntegracaoAsync(filtro, "Não foi possível Inativar o professor, funcionário ou funcionário indireto no GSA!");
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private static UsuarioTipo ObterUsuarioTipo(ProfessorInativoDto filtro)
+        private static UsuarioTipo ObterUsuarioTipo(ProfessorEFuncionarioInativoDto filtro)
         {
             var usuarioTipo = new UsuarioTipo();
             switch (filtro.UsuarioTipo)
@@ -72,7 +72,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return usuarioTipo;
         }
 
-        private static string ObterDescricaoUnidadeOrganizacional(ProfessorInativoDto filtro)
+        private static string ObterDescricaoUnidadeOrganizacional(ProfessorEFuncionarioInativoDto filtro)
         {
             var unidadeOrganizacional = "";
             switch (filtro.UsuarioTipo)
@@ -95,10 +95,10 @@ namespace SME.GoogleClassroom.Aplicacao
             return unidadeOrganizacional;
         }
 
-        private async Task InserirMensagemErroIntegracaoAsync(ProfessorInativoDto filtro, string mensagem)
+        private async Task InserirMensagemErroIntegracaoAsync(ProfessorEFuncionarioInativoDto filtro, string mensagem)
         {
-            SentrySdk.CaptureMessage($"Erro ao processar inativação do funcioário / professor {filtro.EmailUsuario}-{mensagem}" );
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarProfessorErroTratar, filtro));
+            SentrySdk.CaptureMessage($"Erro ao processar inativação do funcionário / professor {filtro.EmailUsuario}-{mensagem}" );
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessorErroTratar, filtro));
         }
     }
 }

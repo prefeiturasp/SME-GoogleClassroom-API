@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterUsuariosInativosPorTipoQueryHandler: IRequestHandler<ObterUsuariosInativosPorTipoQuery, PaginacaoResultadoDto<UsuarioInativo>>
+    public class ObterUsuariosInativosPorTipoQueryHandler: IRequestHandler<ObterUsuariosInativosPorTipoQuery, PaginacaoResultadoDto<UsuarioInativoDto>>
     {
         private readonly IRepositorioUsuarioInativo repositorio;
 
@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
         }
 
-        public async Task<PaginacaoResultadoDto<UsuarioInativo>> Handle(ObterUsuariosInativosPorTipoQuery request, CancellationToken cancellationToken)
-            => await repositorio.ObterUsuariosInativosPorTipo(request.Paginacao, request.TiposDeUsuarios);
+        public async Task<PaginacaoResultadoDto<UsuarioInativoDto>> Handle(ObterUsuariosInativosPorTipoQuery request, CancellationToken cancellationToken)
+            => await repositorio.ObterUsuariosInativosPorTipo(request.Paginacao, request.UsuarioTipo);
     }
 }

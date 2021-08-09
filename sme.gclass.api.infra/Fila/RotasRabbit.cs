@@ -93,12 +93,12 @@
         #endregion
 
         #region Inativação de Professores
-        public static string FilaGsaInativarProfessorIniciar => "googleclass.gsa.inativar.professor.iniciar";
-        public static string FilaGsaInativarProfessorCarregar => "googleclass.gsa.inativar.professor.carregar";
+        public static string FilaInativarProfessoresEFuncionariosIniciar => "googleclass.gsa.inativar.professor.iniciar";
+        public static string FilaCarregarProfessoresEFuncionariosInativar => "googleclass.gsa.inativar.professor.carregar";
         public static string FilaGsaInativarProfessorSync => "googleclass.gsa.inativar.professor.sync";
-        public static string FilaGsaInativarProfessorTratar => "googleclass.gsa.inativar.professor.tratar";
-        public static string FilaGsaInativarProfessorIncluir => "googleclass.gsa.inativar.professor.incluir";
-        public static string FilaGsaInativarProfessorErroTratar => "googleclass.gsa.inativar.professor.erro.tratar";
+        public static string FilaTratarPreofessoresEFuncionariosInativar => "googleclass.gsa.inativar.professor.tratar";
+        public static string FilaInativarPrefessoresEFuncionariosInativarSync => "googleclass.gsa.inativar.professor.incluir";
+        public static string FilaInativarProfessorErroTratar => "googleclass.gsa.inativar.professor.erro.tratar";
 
         #endregion 
 

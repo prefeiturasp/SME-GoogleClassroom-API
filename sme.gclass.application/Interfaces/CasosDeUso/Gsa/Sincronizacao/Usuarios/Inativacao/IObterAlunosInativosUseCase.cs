@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterAlunosInativosUseCase
     {
-        Task<PaginacaoResultadoDto<UsuarioInativo>> Executar(FiltroObterAlunosInativosDto filtro);
+        Task<PaginacaoResultadoDto<UsuarioInativoDto>> Executar(FiltroObterAlunosInativosDto filtro);
     }
 }

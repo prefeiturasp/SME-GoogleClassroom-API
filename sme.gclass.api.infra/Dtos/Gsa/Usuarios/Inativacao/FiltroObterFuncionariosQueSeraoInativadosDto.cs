@@ -10,4 +10,9 @@ namespace SME.GoogleClassroom.Infra
 
         public string CodigoRf { get; set; }
     }
+
+    public class FiltroObterFuncionariosIndiretosQueSeraoInativadosDto : FiltroPaginacaoBaseDto
+    {
+        public string Cpf { get; set; }
+    }
 }

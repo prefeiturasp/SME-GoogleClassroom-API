@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InativarProfessorGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<InativarProfessorGoogleCommand>
+    public class InativarProfessorGoogleCommandHandler : EnvioDeDadosIntegracaoGoogleClassroomHandler<InativarFuncionarioGoogleCommand>
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
         }
 
-        protected override async Task<bool> ExecutarAsync(InativarProfessorGoogleCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ExecutarAsync(InativarFuncionarioGoogleCommand request, CancellationToken cancellationToken)
         {
             var diretorioClassroom = await mediator.Send(new ObterDirectoryServiceGoogleClassroomQuery());
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -74,6 +75,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleFuncionarioIndiretoUseCase iniciarSyncGoogleFuncionarioIndiretoUseCase)
         {
             var retorno = await iniciarSyncGoogleFuncionarioIndiretoUseCase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os funcionários indiretos que serão inativados - EOL
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("funcionarios-inativos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<FuncionarioIndiretoEol>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosIndiretosQueSeraoInativados([FromServices] IObterFuncionariosIndiretosQueSeraoInativadosUseCase useCase,
+            [FromQuery] FiltroObterFuncionariosIndiretosQueSeraoInativadosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
     }
