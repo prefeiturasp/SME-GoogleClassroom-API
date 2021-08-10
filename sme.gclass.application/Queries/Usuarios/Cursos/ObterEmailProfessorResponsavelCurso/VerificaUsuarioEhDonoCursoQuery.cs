@@ -4,19 +4,19 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterEmailProfessorResponsavelCursoQuery : IRequest<bool>
+    public class VerificaUsuarioEhDonoCursoQuery : IRequest<bool>
     {
         public long UsuarioId { get; set; }
         public string Email { get; set; }
 
-        public ObterEmailProfessorResponsavelCursoQuery(long usuarioId, string email)
+        public VerificaUsuarioEhDonoCursoQuery(long usuarioId, string email)
         {
             UsuarioId = usuarioId;
             Email = email;
         }
     }
 
-    public class ObterEmailProfessorResponsavelCursoQueryValidator : AbstractValidator<ObterEmailProfessorResponsavelCursoQuery>
+    public class ObterEmailProfessorResponsavelCursoQueryValidator : AbstractValidator<VerificaUsuarioEhDonoCursoQuery>
     {
         public ObterEmailProfessorResponsavelCursoQueryValidator()
         {

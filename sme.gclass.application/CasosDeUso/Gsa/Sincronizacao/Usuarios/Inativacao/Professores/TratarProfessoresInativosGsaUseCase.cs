@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             foreach (var funcionarioIndireto in funcionariosIndiretosGoogle)
             {
                 var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(funcionarioIndireto.GoogleClassroomId.ToString()));
-                var UsuarioEhDonoDoCurso = await mediator.Send(new ObterEmailProfessorResponsavelCursoQuery(usuario.Indice, usuario.Email));
+                var UsuarioEhDonoDoCurso = await mediator.Send(new VerificaUsuarioEhDonoCursoQuery(usuario.Indice, usuario.Email));
 
                 if (UsuarioEhDonoDoCurso)
                 {
@@ -64,7 +64,7 @@ namespace SME.GoogleClassroom.Aplicacao
             foreach (var professor in professoresEFuncionariosGoogle)
             {
                 var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(professor.GoogleClassroomId.ToString()));
-                var UsuarioEhDonoDoCurso = await mediator.Send(new ObterEmailProfessorResponsavelCursoQuery(usuario.Indice, usuario.Email));
+                var UsuarioEhDonoDoCurso = await mediator.Send(new VerificaUsuarioEhDonoCursoQuery(usuario.Indice, usuario.Email));
 
                 if (UsuarioEhDonoDoCurso)
                 {
