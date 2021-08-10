@@ -194,11 +194,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaTratarProfessoresEFuncionariosInativar);
 
-            canalRabbit.QueueDeclare(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaInativarProfessorSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaInativarProfessorSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaInativarProfessorSync);

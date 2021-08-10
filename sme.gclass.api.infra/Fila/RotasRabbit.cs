@@ -96,8 +96,8 @@
         public static string FilaInativarProfessoresEFuncionariosIniciar => "googleclass.gsa.inativar.professor.iniciar";
         public static string FilaCarregarProfessoresEFuncionariosInativar => "googleclass.gsa.inativar.professor.carregar";
         public static string FilaGsaInativarProfessorSync => "googleclass.gsa.inativar.professor.sync";
-        public static string FilaTratarPreofessoresEFuncionariosInativar => "googleclass.gsa.inativar.professor.tratar";
-        public static string FilaInativarPrefessoresEFuncionariosInativarSync => "googleclass.gsa.inativar.professor.incluir";
+        public static string FilaTratarProfessoresEFuncionariosInativar => "googleclass.gsa.inativar.professor.tratar";
+        public static string FilaInativarProfessoresEFuncionariosInativarSync => "googleclass.gsa.inativar.professor.incluir";
         public static string FilaInativarProfessorErroTratar => "googleclass.gsa.inativar.professor.erro.tratar";
 
         #endregion 

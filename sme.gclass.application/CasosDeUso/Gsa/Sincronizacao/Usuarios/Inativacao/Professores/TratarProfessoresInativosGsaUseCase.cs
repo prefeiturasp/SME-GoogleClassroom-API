@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Collections.Generic;
@@ -33,7 +34,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (professoresEFuncionariosGoogle != null && professoresEFuncionariosGoogle.Any())
                     await TratarProfessoresEFuncionarios(professoresEFuncionariosGoogle);
             }
-
             return true;
         }
 
@@ -42,10 +42,19 @@ namespace SME.GoogleClassroom.Aplicacao
             foreach (var funcionarioIndireto in funcionariosIndiretosGoogle)
             {
                 var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(funcionarioIndireto.GoogleClassroomId.ToString()));
-                if (usuario != null)
+                var UsuarioEhDonoDoCurso = await mediator.Send(new ObterEmailProfessorResponsavelCursoQuery(usuario.Indice, usuario.Email));
+
+                if (UsuarioEhDonoDoCurso)
+                {
+                    SentrySdk.CaptureMessage($"Não foi possível prosseguir com a inativação.(Usuário é o dono do curso) Email: {usuario.Email}");
+                    var funcionarioIndiretoInativar = new ProfessorEFuncionarioInativoDto(usuario.Indice, funcionarioIndireto.Indice, funcionarioIndireto.Email, usuario.UsuarioTipo);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessorErroTratar, funcionarioIndiretoInativar));
+                }
+
+                if (usuario != null & UsuarioEhDonoDoCurso == false)
                 {
                     var funcionarioIndiretoInativar = new ProfessorEFuncionarioInativoDto(usuario.Indice, funcionarioIndireto.Indice, funcionarioIndireto.Email, usuario.UsuarioTipo);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, funcionarioIndiretoInativar));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, funcionarioIndiretoInativar));
                 }
             }
         }
@@ -55,11 +64,19 @@ namespace SME.GoogleClassroom.Aplicacao
             foreach (var professor in professoresEFuncionariosGoogle)
             {
                 var usuario = await mediator.Send(new ObterUsuarioPorClassroomIdQuery(professor.GoogleClassroomId.ToString()));
+                var UsuarioEhDonoDoCurso = await mediator.Send(new ObterEmailProfessorResponsavelCursoQuery(usuario.Indice, usuario.Email));
 
-                if (usuario != null)
+                if (UsuarioEhDonoDoCurso)
+                {
+                    SentrySdk.CaptureMessage($"Não foi possível prosseguir com a inativação.(Usuário é o dono do curso) Email: {usuario.Email}");
+                    var funcionarioIndiretoInativar = new ProfessorEFuncionarioInativoDto(usuario.Indice, professor.Indice, professor.Email, usuario.UsuarioTipo);
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessorErroTratar, funcionarioIndiretoInativar));
+                }
+
+                if (usuario != null & UsuarioEhDonoDoCurso == false)
                 {
                     var professorFuncionarioInativar = new ProfessorEFuncionarioInativoDto(usuario.Indice, professor.Indice, professor.Email, usuario.UsuarioTipo);
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarPrefessoresEFuncionariosInativarSync, professorFuncionarioInativar));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, professorFuncionarioInativar));
                 }
             }
         }
