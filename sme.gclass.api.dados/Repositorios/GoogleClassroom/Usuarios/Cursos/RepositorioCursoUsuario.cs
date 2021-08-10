@@ -516,6 +516,26 @@ namespace SME.GoogleClassroom.Dados
 
         }
 
+        public async Task<bool> UsuarioEhDonoCurso(long usuarioId, string email)
+        {
+         const string query = @"SELECT exists(select 1  
+                                from cursos_usuarios cu 
+                                inner join cursos c on c.id = cu.curso_id 
+                                inner join usuarios u on u.indice = cu.usuario_id 
+                                where usuario_id = @usuarioId 
+                                and c.email = @email
+                                and not cu.excluido limit 1) ";
+
+            var parametros = new
+            {
+                usuarioId,
+                email
+            };
+
+            using var conn = ObterConexao();
+            return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
+        }
+
         public Task<IEnumerable<CursoUsuarioRemoverDto>> ObterPorUsuarioIdETurmaId(long usuarioId, long turmaId)
         {
             throw new NotImplementedException();

@@ -41,7 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (professoresEFuncionariosParaInativar != null && professoresEFuncionariosParaInativar.Any())
             {
                 var professoresEFuncionariosInativacao = new FiltroProfessoresEFuncionarioInativosDto(dto.DataReferencia, professoresEFuncionariosParaInativar, null, dto.ProcessarProfessoresEFuncionarios, dto.ProcessarFuncionariosIndiretos);
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, professoresEFuncionariosInativacao));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, professoresEFuncionariosInativacao));
             }
             else
             {
@@ -55,7 +55,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (funcionariosIndiretosInativar != null && funcionariosIndiretosInativar.Any())
             {
                 var funcionariosIndiretosInativacao = new FiltroProfessoresEFuncionarioInativosDto(dto.DataReferencia, null, funcionariosIndiretosInativar, dto.ProcessarProfessoresEFuncionarios, dto.ProcessarFuncionariosIndiretos);
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaTratarPreofessoresEFuncionariosInativar, funcionariosIndiretosInativacao));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, funcionariosIndiretosInativacao));
             }
             else
             {
