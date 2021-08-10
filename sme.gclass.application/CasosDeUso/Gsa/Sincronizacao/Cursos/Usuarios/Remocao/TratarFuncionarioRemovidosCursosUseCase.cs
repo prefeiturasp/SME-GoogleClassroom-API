@@ -26,8 +26,9 @@ namespace SME.GoogleClassroom.Aplicacao
             
             try
             {
+                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
                 var funcionariosASeremRemovidos = await mediator.Send(
-                    new ObterFuncionariosParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DatasFuncionario.DataInicio, dto.DatasFuncionario.DataFim));
+                    new ObterFuncionariosParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DatasFuncionario.DataInicio, dto.DatasFuncionario.DataFim, parametrosCargaInicialDto));
 
                 foreach (var funcionarioASeremRemovido in funcionariosASeremRemovidos)
                 {

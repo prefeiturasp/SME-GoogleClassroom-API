@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Dados.Help
                 return query;
             }
             
-            query.AppendLine($" AND {coluna.Trim()} in @{parametrosSql}");
+            query.AppendLine($" AND {coluna.Trim()} in (@{parametrosSql})");
             return query;
         }
     }

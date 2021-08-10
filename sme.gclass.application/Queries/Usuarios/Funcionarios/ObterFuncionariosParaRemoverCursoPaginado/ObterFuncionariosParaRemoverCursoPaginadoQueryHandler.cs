@@ -19,6 +19,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<PaginacaoResultadoDto<RemoverAtribuicaoFuncionarioTurmaEolDto>> Handle(ObterFuncionariosParaRemoverCursoPaginadoQuery request, CancellationToken cancellationToken)
-            => await repositorio.ObterFuncionariosParaRemoverCursoPaginado(request.TurmaId, request.DataInicio, request.DataFim, request.Paginacao);
+            => await repositorio.ObterFuncionariosParaRemoverCursoPaginado(request.TurmaId, request.DataInicio, request.DataFim, request.Paginacao, request.ParametrosCargaInicialDto);
     }
 }
