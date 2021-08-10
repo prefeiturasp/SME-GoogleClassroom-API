@@ -9,11 +9,13 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public int AnoLetivo { get; set; }
         public long? TurmaId { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }
 
-        public ObterTurmasConcluidasPorAnoLetivoQuery(int anoLetivo, long? turmaId)
+        public ObterTurmasConcluidasPorAnoLetivoQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, long? turmaId)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
     }
 
@@ -24,6 +26,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(a => a.AnoLetivo)
                 .NotEmpty()
                 .WithMessage("O Ano deve ser informada");
+
+            RuleFor(x => x.ParametrosCargaInicialDto)
+                .NotEmpty()
+                .WithMessage("A configuração de parâmetros deve ser informada.");
         }
     }
 }

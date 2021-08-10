@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<CursoExtintoEolDto>> Handle(ObterCursosExtintosPorPeriodoPaginadoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursoEol.ObterCursosExtintosPorPeriodoPaginado(request.DataInicio, request.DataFim, request.AnoLetivo, request.TurmaId, request.Paginacao);
+            return await repositorioCursoEol.ObterCursosExtintosPorPeriodoPaginado(request.ParametrosCargaInicialDto, request.DataInicio, request.DataFim, request.AnoLetivo, request.TurmaId, request.Paginacao);
         }
     }
 }

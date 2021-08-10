@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -7,10 +8,13 @@ namespace SME.GoogleClassroom.Aplicacao
         public int AnoLetivo { get; set; }
         public long? TurmaId { get; set; }
 
-        public ArquivarTurmasCommand(int anoLetivo, long? turmaId = null)
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }
+
+        public ArquivarTurmasCommand(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, long? turmaId = null)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
     }
 }

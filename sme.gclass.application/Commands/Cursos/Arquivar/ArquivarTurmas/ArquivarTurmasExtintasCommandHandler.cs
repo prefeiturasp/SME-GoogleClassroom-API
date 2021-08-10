@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var dataInicio = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ArquivarCursosTurmasExtintas));
             var dataFim = DateTime.Today;
-            var turmasExtintas = await mediator.Send(new ObterCursosExtintosPorPeriodoQuery(dataInicio, dataFim, ano, request.TurmaId));
+            var turmasExtintas = await mediator.Send(new ObterCursosExtintosPorPeriodoQuery(request.ParametrosCargaInicialDto, dataInicio, dataFim, ano, request.TurmaId));
 
             foreach (var item in turmasExtintas)
             {

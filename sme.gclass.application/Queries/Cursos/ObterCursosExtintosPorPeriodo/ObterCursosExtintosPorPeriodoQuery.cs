@@ -8,18 +8,20 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosExtintosPorPeriodoQuery: IRequest<IEnumerable<CursoExtintoEolDto>>
     {
-        public ObterCursosExtintosPorPeriodoQuery(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId = null)
+        public ObterCursosExtintosPorPeriodoQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId = null)
         {
             DataInicio = dataInicio;
             DataFim = dataFim;
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
 
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
         public int AnoLetivo { get; set; }
         public long? TurmaId { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }
     }
 
     public class ObterCursosExtintosQueryPorPeriodoQueryValidator : AbstractValidator<ObterCursosExtintosPorPeriodoQuery>
@@ -37,6 +39,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(a => a.DataFim)
                 .NotEmpty()
                 .WithMessage("O ano letivo deve ser informada");
+
+            RuleFor(x => x.ParametrosCargaInicialDto)
+                .NotEmpty()
+                .WithMessage("A configuração de parâmetros deve ser informada.");
         }
     }
 }

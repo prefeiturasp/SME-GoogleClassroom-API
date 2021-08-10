@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -54,11 +55,11 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QuerySingleOrDefaultAsync<FuncionarioEol>(query, parametros);
         }
 
-        public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo)
+        public async Task<IEnumerable<FuncionarioCursoEol>> ObterCursosDoFuncionarioParaIncluirAsync(long? rf, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
 
-            const string query = @"
+			const string queryFuncionariosPorCargoFixo = @"
 				DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
@@ -66,7 +67,7 @@ namespace SME.GoogleClassroom.Dados
 				DECLARE @tipoFuncaoPAEE AS INT = 6;
 				DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
 				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
-				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
+				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44; 
 
 				-- 1. Busca os funcionários por cargo fixo
 				IF OBJECT_ID('tempdb..#tempServidorCargosBase') IS NOT NULL
@@ -91,9 +92,9 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					serv.cd_registro_funcional = @rf
 					AND dt_fim_nomeacao IS NULL
-					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE());";
 
+			const string queryFuncionariosPorCargoSobrepostoFixo = @"
 				-- 2. Busca os funcionários por cargo sobreposto fixo
 
 				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
@@ -117,9 +118,9 @@ namespace SME.GoogleClassroom.Dados
 					ON css.cd_unidade_local_servico = esc.cd_escola
 				WHERE
 					serv.cd_registro_funcional = @rf
-					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE());";
 
+			const string queryFuncionariosPorFuncionarios = @"
 				-- 3. Busca os funcionários por função
 
 				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
@@ -144,9 +145,9 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					serv.cd_registro_funcional = @rf
 					AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
-					AND dt_fim_nomeacao IS NULL
-					AND esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31);
+					AND dt_fim_nomeacao IS NULL;";
 
+			const string queryMain = @"
 				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
 					DROP TABLE #tempServidorCargos;
 				SELECT
@@ -236,9 +237,7 @@ namespace SME.GoogleClassroom.Dados
 					ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino
 				WHERE  
 					te.an_letivo = @anoLetivo
-					AND	  te.st_turma_escola in ('O', 'A', 'C')
-					AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-					AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
+					AND	  te.st_turma_escola in ('O', 'A', 'C')								
 					AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE());				
 
 				SELECT
@@ -251,7 +250,44 @@ namespace SME.GoogleClassroom.Dados
 				INNER JOIN
 					#tempTurmasComponentesRegulares cursos
 					ON servidor.CdUe = cursos.CdUe;";
-            return await conn.QueryAsync<FuncionarioCursoEol>(query, new { rf, anoLetivo });
+
+			var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryFuncionariosPorCargoFixo);
+			var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryFuncionariosPorCargoSobrepostoFixo);
+			var queryBuscafuncionarioPorFuncaoStringBuilder = new StringBuilder(queryFuncionariosPorFuncionarios);
+			var queryMainStringBuilder = new StringBuilder(queryMain);
+
+			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
+
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.Append(";");
+
+			queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
+			queryBuscafuncionarioPorFuncaoStringBuilder.Append(";");
+
+			queryMainStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryMainStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryMainStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
+			queryMainStringBuilder.Append(";");
+
+			string query = $@"	{queryBuscafuncionarioPorCargoFixoStringBuilder}
+								{queryBuscafuncionarioPorCargoSobrepostoStringBuilder}
+								{queryBuscafuncionarioPorFuncaoStringBuilder}
+								{queryMainStringBuilder}";
+
+			return await conn.QueryAsync<FuncionarioCursoEol>(query, new { 
+				rf, 
+				anoLetivo,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas,
+			});
         }
 
         private static string MontaQueryCursosParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf)

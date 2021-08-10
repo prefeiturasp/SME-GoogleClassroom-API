@@ -30,8 +30,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     SentrySdk.CaptureMessage($"Não foi possível realizar o tratamento de erro do usuário {usuarioErro.UsuarioId}. O usuário informado não é um aluno.");
                     return false;
                 }
-
-                var alunoEol = await mediator.Send(new ObterAlunoParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault()));
+                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                var alunoEol = await mediator.Send(new ObterAlunoParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault(), parametrosCargaInicialDto));
                 if (alunoEol is null)
                 {
                     var mensagem = $"Não foi possível realizar o tratamento de erro do aluno RA{usuarioErro.UsuarioId} na fila. Aluno não encontrado no Eol.";
