@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -9,11 +10,13 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public long Rf { get; set; }
         public int AnoLetivo { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }
 
-        public ObterCursosDoProfessorParaIncluirGoogleQuery(long rf, int anoLetivo)
+        public ObterCursosDoProfessorParaIncluirGoogleQuery(long rf, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             Rf = rf;
             AnoLetivo = anoLetivo;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
     }
 
@@ -21,6 +24,10 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public ObterCursosDoProfessorParaIncluirGoogleQueryValidator()
         {
+            RuleFor(x => x.ParametrosCargaInicialDto)
+                .NotEmpty()
+                .WithMessage("A configuração de parâmetros deve ser informada.");
+
             RuleFor(x => x.Rf)
                 .NotEmpty()
                 .WithMessage("O Rf do professor deve ser informado.");

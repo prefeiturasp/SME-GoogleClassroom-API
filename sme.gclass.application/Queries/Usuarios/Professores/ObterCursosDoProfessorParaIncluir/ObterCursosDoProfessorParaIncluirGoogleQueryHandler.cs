@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<ProfessorCursoEol>> Handle(ObterCursosDoProfessorParaIncluirGoogleQuery request, CancellationToken cancellationToken)
-            => await repositorioProfessorEol.ObterCursosDoProfessorParaInclusaoAsync(request.Rf, request.AnoLetivo);
+            => await repositorioProfessorEol.ObterCursosDoProfessorParaInclusaoAsync(request.Rf, request.AnoLetivo, request.ParametrosCargaInicialDto);
     }
 }

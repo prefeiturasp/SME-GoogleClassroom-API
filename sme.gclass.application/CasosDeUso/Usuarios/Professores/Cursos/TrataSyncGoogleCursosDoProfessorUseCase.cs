@@ -27,8 +27,10 @@ namespace SME.GoogleClassroom.Aplicacao
                 await IncluirCursoDoProfessorComErroAsync(professorParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos professores no Google Classroom. O professor não foi informado corretamente.");
                 return true;
             }
-
-            var cursosDoProfessorParaIncluir = await mediator.Send(new ObterCursosDoProfessorParaIncluirGoogleQuery(professorParaIncluirCursos.Rf, DateTime.Now.Year));
+            
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var cursosDoProfessorParaIncluir = await mediator.Send(new ObterCursosDoProfessorParaIncluirGoogleQuery(professorParaIncluirCursos.Rf, DateTime.Now.Year, parametrosCargaInicialDto));
+            
             if (!cursosDoProfessorParaIncluir?.Any() ?? true) return true;
 
             foreach (var cursoDoProfessorParaIncluir in cursosDoProfessorParaIncluir)
