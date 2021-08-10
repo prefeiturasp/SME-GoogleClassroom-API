@@ -59,7 +59,15 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            var parametros = new { componenteCurricularId, turmaId, anoLetivo };
+            var parametros = new 
+			{ 
+				componenteCurricularId, 
+				turmaId, 
+				anoLetivo,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas
+			};
 
             return await conn.QuerySingleOrDefaultAsync<CursoEol>(query, parametros, commandTimeout: 300);
         }
@@ -221,7 +229,16 @@ namespace SME.GoogleClassroom.Dados
 									(SELECT * FROM #tempProfessoresDeTurmasComponentesPrograma);");
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<ProfessorCursoEol>(query.ToString(), new { turmaId, componenteCurricularId, anoLetivo });
+            return await conn.QueryAsync<ProfessorCursoEol>(query.ToString()
+				, new 
+				{ 
+					turmaId, 
+					componenteCurricularId, 
+					anoLetivo,
+					parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.Ues,
+					parametrosCargaInicialDto.Turmas,
+				});
         }
 
         public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
@@ -300,8 +317,11 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 paginacao.QuantidadeRegistrosIgnorados,
                 turmaId,
-                componenteCurricularId
-            };
+                componenteCurricularId,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas
+			};
 
             using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
