@@ -18,20 +18,27 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(DateTime? dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+        public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             dataReferencia = dataReferencia?.Add(new TimeSpan(0, 0, 0));
 
             var paginar = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryCursosParaInclusao(dataReferencia, paginar, componenteCurricularId, turmaId);
+            var query = MontaQueryCursosParaInclusao(parametrosCargaInicialDto, dataReferencia, paginar, componenteCurricularId, turmaId);
 
             using var conn = ObterConexao();
 
             var parametros = new
             {
-                anoLetivo, dataReferencia, paginacao.QuantidadeRegistros, paginacao.QuantidadeRegistrosIgnorados,
-                componenteCurricularId, turmaId
-            };
+                anoLetivo, 
+				dataReferencia, 
+				paginacao.QuantidadeRegistros, 
+				paginacao.QuantidadeRegistrosIgnorados,
+                componenteCurricularId, 
+				turmaId,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas,
+			};
 
             using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 600);
 
@@ -45,10 +52,10 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo)
+        public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             var paginar = false;
-            var query = MontaQueryCursosParaInclusao(null, paginar, componenteCurricularId, turmaId);
+            var query = MontaQueryCursosParaInclusao(parametrosCargaInicialDto, null, paginar, componenteCurricularId, turmaId);
 
             using var conn = ObterConexao();
 
@@ -981,7 +988,7 @@ namespace SME.GoogleClassroom.Dados
 			return queryBuilder.ToString();
         }
 		
-		private static string MontaQueryCursosParaInclusao(DateTime? dataReferencia, bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
+		private static string MontaQueryCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
 		{
 			var query = new StringBuilder();
 			query.AppendLine(@$"-- 2) Busca os cursos regulares
@@ -1079,10 +1086,12 @@ namespace SME.GoogleClassroom.Dados
 							WHERE
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
-								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}								
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
+
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
 
 			if (componenteCurricularId.HasValue)
 			{
@@ -1185,10 +1194,12 @@ namespace SME.GoogleClassroom.Dados
 							WHERE
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
-								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
+
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
 
 			if (componenteCurricularId.HasValue)
 			{

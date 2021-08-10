@@ -10,13 +10,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery : IRequest<PaginacaoResultadoDto<AlunoEol>>
     {
-        public ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery(Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
+        public ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {
             Paginacao = paginacao;
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
             DataReferencia = dataReferencia;
             EhDataReferenciaPrincipal = ehDataReferenciaPrincipal;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
 
         public Paginacao Paginacao { get; set; }
@@ -24,5 +25,6 @@ namespace SME.GoogleClassroom.Aplicacao
         public long TurmaId { get; set; }
         public DateTime DataReferencia { get; set; }
         public bool EhDataReferenciaPrincipal { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
         Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim, ParametrosCargaInicialDto parametrosCargaInicialDto);
-        Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal);
+        Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal);
         Task<IEnumerable<long>> ObterCodigosAlunosInativosPorAnoLetivo(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, DateTime dataReferencia, long? alunoId);
         Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia);
     }
