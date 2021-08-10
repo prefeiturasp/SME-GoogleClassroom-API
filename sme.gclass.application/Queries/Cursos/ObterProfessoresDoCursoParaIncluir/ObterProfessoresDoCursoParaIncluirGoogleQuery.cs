@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -10,12 +11,14 @@ namespace SME.GoogleClassroom.Aplicacao
         public int AnoLetivo { get; set; }
         public long TurmaId { get; set; }
         public long ComponenteCurricularId { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; }
 
-        public ObterProfessoresDoCursoParaIncluirGoogleQuery(int anoLetivo, long turmaId, long componenteCurricularId)
+        public ObterProfessoresDoCursoParaIncluirGoogleQuery(int anoLetivo, long turmaId, long componenteCurricularId, Infra.ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
     }
 

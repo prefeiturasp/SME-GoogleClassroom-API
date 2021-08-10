@@ -18,7 +18,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<GradeCursoEol>> Executar(FiltroObterGradesDeCursosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterGradesDeCursosQuery(filtro.DataReferencia, paginacao, filtro.TurmaId, filtro.ComponenteCurricularId));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
+            return await mediator.Send(new ObterGradesDeCursosQuery(filtro.DataReferencia, paginacao, filtro.TurmaId, filtro.ComponenteCurricularId, parametrosCargaInicialDto));
         }
     }
 }

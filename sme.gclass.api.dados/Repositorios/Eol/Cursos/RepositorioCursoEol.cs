@@ -64,11 +64,9 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QuerySingleOrDefaultAsync<CursoEol>(query, parametros, commandTimeout: 300);
         }
 
-        public async Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo, long turmaId, long componenteCurricularId)
+        public async Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
-            using var conn = ObterConexao();
-
-            const string query = @"-- 1. Busca os cursos regulares do Professor
+			var query = new StringBuilder(@"-- 1. Busca os cursos regulares do Professor
 								IF OBJECT_ID('tempdb..#tempProfessoresDeTurmasComponentesRegulares') IS NOT NULL
 									DROP TABLE #tempProfessoresDeTurmasComponentesRegulares
 								SELECT
@@ -140,12 +138,16 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
-									AND   gcc.cd_componente_curricular = @componenteCurricularId;
+									AND   gcc.cd_componente_curricular = @componenteCurricularId 
+			");
 
-								-- 2. Busca os cursos de programa do Professor
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+
+			query.AppendLine(@";--2. Busca os cursos de programa do Professor
 								IF OBJECT_ID('tempdb..#tempProfessoresDeTurmasComponentesPrograma') IS NOT NULL
 									DROP TABLE #tempProfessoresDeTurmasComponentesPrograma
 								SELECT
@@ -201,19 +203,25 @@ namespace SME.GoogleClassroom.Dados
 								WHERE
 									te.st_turma_escola in ('O', 'A', 'C')
 									AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)
 									AND   te.an_letivo = @anoLetivo
 									AND	  te.cd_turma_escola = @turmaId
-									AND   pgcc.cd_componente_curricular = @componenteCurricularId;
+									AND   pgcc.cd_componente_curricular = @componenteCurricularId
+			");
 
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+
+			query.AppendLine(@";
 								SELECT
 									*
 								FROM
 									(SELECT * FROM #tempProfessoresDeTurmasComponentesRegulares) AS Regulares
 								UNION
-									(SELECT * FROM #tempProfessoresDeTurmasComponentesPrograma);";
+									(SELECT * FROM #tempProfessoresDeTurmasComponentesPrograma);");
 
-            return await conn.QueryAsync<ProfessorCursoEol>(query, new { turmaId, componenteCurricularId, anoLetivo });
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<ProfessorCursoEol>(query.ToString(), new { turmaId, componenteCurricularId, anoLetivo });
         }
 
         public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
@@ -279,12 +287,12 @@ namespace SME.GoogleClassroom.Dados
                 });
         }
 
-        public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia, Paginacao paginacao, long? turmaId, long? componenteCurricularId)
+        public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia, Paginacao paginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryGradesCursosParaInclusao(aplicarPaginacao, turmaId, componenteCurricularId);
+            var query = MontaQueryGradesCursosParaInclusao(aplicarPaginacao, turmaId, componenteCurricularId, parametrosCargaInicialDto);
             var parametros = new
             {
                 anoLetivo = dataReferencia.Year,
@@ -607,7 +615,7 @@ namespace SME.GoogleClassroom.Dados
 			});
 		}
         
-		private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId, long? componenteCurricularId)
+		private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             var query = new StringBuilder();
             query.AppendLine(@"-- 2) Busca os cursos regulares
@@ -706,11 +714,14 @@ namespace SME.GoogleClassroom.Dados
 								te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
 								AND   serie_turma_grade.dt_inicio >= @dataReferencia
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
-            if (componenteCurricularId.HasValue)
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+
+			if (componenteCurricularId.HasValue)
             {
                 if (componenteCurricularId.Value == 512)
                 {
@@ -812,11 +823,14 @@ namespace SME.GoogleClassroom.Dados
 								te.an_letivo = @anoLetivo
 								AND   te.st_turma_escola in ('O', 'A', 'C')
 								AND   te.cd_tipo_turma in (1,2,3,5,6,7)
-								AND   esc.tp_escola in (1,2,3,4,10,13,16,17,18,19,23,28,31)	
 								AND   tegp.dt_inicio >= @dataReferencia
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
-            if (componenteCurricularId.HasValue)
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+
+			if (componenteCurricularId.HasValue)
             {
                 if (componenteCurricularId.Value != 512)
                 {
@@ -1091,7 +1105,7 @@ namespace SME.GoogleClassroom.Dados
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 
 			if (componenteCurricularId.HasValue)
 			{
@@ -1199,7 +1213,7 @@ namespace SME.GoogleClassroom.Dados
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_tipo_turma", nameof(parametrosCargaInicialDto.Turmas));
+			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 
 			if (componenteCurricularId.HasValue)
 			{
