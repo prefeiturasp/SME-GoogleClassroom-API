@@ -51,7 +51,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task ExcluirUsuarioErroAsync(UsuarioErro usuarioErro)
         {
-            if (!_deveExecutarIntegracao) return;
             if (!await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id)))
             {
                 SentrySdk.CaptureMessage($"Não foi possível excluir o erro Id {usuarioErro.Id} do aluno RA{usuarioErro.UsuarioId}.");

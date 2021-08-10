@@ -75,8 +75,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirFuncionarioAsync(FuncionarioGoogle funcionarioGoogle)
         {
-            if (_deveExecutarIntegracao) 
-                funcionarioGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioGoogle));
+            funcionarioGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioGoogle));
             await IniciarSyncGoogleCursosDoFuncionarioAsync(funcionarioGoogle);
         }
 
