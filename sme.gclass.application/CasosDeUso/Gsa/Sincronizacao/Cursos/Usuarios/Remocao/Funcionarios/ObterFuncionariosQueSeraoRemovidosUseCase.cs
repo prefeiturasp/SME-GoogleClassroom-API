@@ -20,7 +20,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var ano = DateTime.Now.Year;
             var periodo = await ObterDatas(ano);
 
-            return await mediator.Send(new ObterFuncionariosParaRemoverCursoPaginadoQuery(filtro.TurmaId, periodo.dataInicio, periodo.dataFim, paginacao));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            return await mediator.Send(new ObterFuncionariosParaRemoverCursoPaginadoQuery(filtro.TurmaId, periodo.dataInicio, periodo.dataFim, paginacao, parametrosCargaInicialDto));
         }
 
         private async Task<(DateTime dataInicio, DateTime dataFim)> ObterDatas(int ano)

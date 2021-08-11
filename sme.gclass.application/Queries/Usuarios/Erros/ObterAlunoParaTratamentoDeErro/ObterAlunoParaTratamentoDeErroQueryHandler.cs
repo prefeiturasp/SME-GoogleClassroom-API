@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Erros.ObterAlunoParaTra
         }
 
         public async Task<AlunoEol> Handle(ObterAlunoParaTratamentoDeErroQuery request, CancellationToken cancellationToken) 
-            => await repositorioAlunoEol.ObterAlunoParaTratamentoDeErroAsync(request.CodigoEol, DateTime.Now.Year);
+            => await repositorioAlunoEol.ObterAlunoParaTratamentoDeErroAsync(request.CodigoEol, DateTime.Now.Year, request.ParametrosCargaInicialDto);
     }
 }

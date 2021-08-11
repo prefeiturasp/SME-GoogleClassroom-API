@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Aluno.ObterGradesDeCursosDosAlun
         }
 
         public async Task<PaginacaoResultadoDto<GradeCursoEol>> Handle(ObterGradesDeCursosQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoEol.ObterGradesDeCursosAsync(request.UltimaDataExecucao, request.Paginacao, request.TurmaId, request.ComponenteCurricularId);
+            => await repositorioCursoEol.ObterGradesDeCursosAsync(request.UltimaDataExecucao, request.Paginacao, request.TurmaId, request.ComponenteCurricularId, request.ParametrosCargaInicialDto);
     }
 }

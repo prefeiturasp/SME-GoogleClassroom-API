@@ -76,10 +76,9 @@ namespace SME.GoogleClassroom.Dominio
 
         private void SetGoogleClassroomId(string googleClassroomId)
         {
-            if (string.IsNullOrWhiteSpace(googleClassroomId))
-                throw new NegocioException($"O identificador do usuário {nome} no Google Classroom informado é inválido.");
-
-            this.googleClassroomId = googleClassroomId;
+            if (!string.IsNullOrWhiteSpace(googleClassroomId))
+                this.googleClassroomId = googleClassroomId;
+            
         }
     }
 }

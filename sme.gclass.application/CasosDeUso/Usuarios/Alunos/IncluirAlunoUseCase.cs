@@ -84,8 +84,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirAlunoAsync(AlunoGoogle alunoGoogle)
         {
-            if (_deveExecutarIntegracao)
-                alunoGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(alunoGoogle));
+            alunoGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(alunoGoogle));
             await IniciarSyncGoogleCursosDoAlunoAsync(alunoGoogle);
         }
 

@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioAlunoEol.ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(request.Paginacao, request.AnoLetivo, request.TurmaId, request.DataReferencia, request.EhDataReferenciaPrincipal);
+            return await repositorioAlunoEol.ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(request.ParametrosCargaInicialDto, request.Paginacao, request.AnoLetivo, request.TurmaId, request.DataReferencia, request.EhDataReferenciaPrincipal);
         }
     }
 }

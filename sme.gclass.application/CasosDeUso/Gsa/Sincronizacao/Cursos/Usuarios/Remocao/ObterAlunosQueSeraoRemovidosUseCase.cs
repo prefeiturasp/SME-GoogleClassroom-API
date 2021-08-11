@@ -23,7 +23,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 ehDataReferenciaPrincipal = true;
             }
 
-            return await mediator.Send(new ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery(paginacao, filtro.AnoLetivo, filtro.TurmaId, filtro.DataReferencia, ehDataReferenciaPrincipal));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            return await mediator.Send(new ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery(parametrosCargaInicialDto, paginacao, filtro.AnoLetivo, filtro.TurmaId, filtro.DataReferencia, ehDataReferenciaPrincipal));
         }
     }
 }

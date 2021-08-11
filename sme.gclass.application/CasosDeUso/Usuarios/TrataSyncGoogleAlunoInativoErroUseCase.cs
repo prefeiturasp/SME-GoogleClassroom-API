@@ -58,7 +58,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task ExcluirCursoErroAsync(UsuarioInativoErro usuarioInativoErro)
         {
-            if (!_deveExecutarIntegracao) return;
             var usuarioId = usuarioInativoErro.UsuarioId ??
                             throw new ArgumentNullException(nameof(usuarioInativoErro.UsuarioId));
             if (!await mediator.Send(new ExluirAlunoInativoErroQuery(usuarioId)))

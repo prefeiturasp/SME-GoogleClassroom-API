@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> Handle(ObterCursosParaArquivarPorAnoPaginadoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursoEol.ObterCursosParaArquivarPorAnoPaginado(request.AnoLetivo, request.Paginacao);
+            return await repositorioCursoEol.ObterCursosParaArquivarPorAnoPaginado(request.AnoLetivo, request.Paginacao, request.ParametrosCargaInicialDto);
         }
     }
 }

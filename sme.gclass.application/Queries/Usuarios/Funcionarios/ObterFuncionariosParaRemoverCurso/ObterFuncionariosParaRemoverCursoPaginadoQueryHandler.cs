@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<RemoverAtribuicaoFuncionarioTurmaEolDto>> Handle(ObterFuncionariosParaRemoverCursoQuery request, CancellationToken cancellationToken)
-            => await repositorio.ObterFuncionariosParaRemoverCurso(request.TurmaId, request.DataInicio, request.DataFim);
+            => await repositorio.ObterFuncionariosParaRemoverCurso(request.TurmaId, request.DataInicio, request.DataFim, request.ParametrosCargaInicialDto);
 
     }
 }

@@ -31,7 +31,9 @@ namespace SME.GoogleClassroom.Aplicacao
                     return false;
                 }
 
-                var professorEol = await mediator.Send(new ObterProfessorParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault()));
+                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                var professorEol = await mediator.Send(new ObterProfessorParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault(), parametrosCargaInicialDto));
+
                 if (professorEol is null)
                 {
                     var mensagem = $"Não foi possível realizar o tratamento de erro do professor RF{usuarioErro.UsuarioId} na fila. Professor não encontrado no Eol.";

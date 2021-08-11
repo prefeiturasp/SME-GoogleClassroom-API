@@ -19,8 +19,10 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var dto = mensagem.ObterObjetoMensagem<FiltroArquivamentoCursoDto>();
-            
-            await mediator.Send(new ArquivarTurmasCommand(dto.AnoLetivo, dto.TurmaId));
+
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
+            await mediator.Send(new ArquivarTurmasCommand(parametrosCargaInicialDto, dto.AnoLetivo, dto.TurmaId));
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ArquivarCursosPorAnoLetivo));
 

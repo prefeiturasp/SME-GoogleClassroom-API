@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 
@@ -7,24 +8,30 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery : IRequest<IEnumerable<long>>
     {
-        public ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim)
+        public ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             AnoLetivo = anoLetivo;
             TurmaId = turmaId;
             DataInicio = dataInicio;
             DataFim = dataFim;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
 
         public int AnoLetivo { get; set; }
         public long TurmaId { get; set; }
         public DateTime DataInicio { get; }
         public DateTime DataFim { get; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto{ get; set; }
     }
 
     public class ObterAlunosCodigosInativosPorAnoLetivoETurmaQueryValidator : AbstractValidator<ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery>
     {
         public ObterAlunosCodigosInativosPorAnoLetivoETurmaQueryValidator()
         {
+            RuleFor(x => x.ParametrosCargaInicialDto)
+                .NotEmpty()
+                .WithMessage("A configuração de parâmetros deve ser informada.");
+
             RuleFor(x => x.AnoLetivo)
                 .GreaterThan(0)
                 .NotNull()

@@ -14,15 +14,17 @@ namespace SME.GoogleClassroom.Aplicacao
         public string Rf { get; set; }
         public long? TurmaId { get; set; }
         public long? ComponenteCurricularId { get; set; }
+        public ParametrosCargaInicialDto parametrosCargaInicialDto;
 
-        public ObterAtribuicoesDeCursosDosProfessoresQuery(DateTime ultimaDataExecucao, Paginacao paginacao)
+        public ObterAtribuicoesDeCursosDosProfessoresQuery(DateTime ultimaDataExecucao, Paginacao paginacao, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             UltimaDataExecucao = ultimaDataExecucao;
             Paginacao = paginacao;
+            this.parametrosCargaInicialDto = parametrosCargaInicialDto;
         }
 
-        public ObterAtribuicoesDeCursosDosProfessoresQuery(DateTime ultimaDataExecucao, Paginacao paginacao, string rf, long? turmaId, long? componenteCurricularId)
-            :this(ultimaDataExecucao, paginacao)
+        public ObterAtribuicoesDeCursosDosProfessoresQuery(DateTime ultimaDataExecucao, Paginacao paginacao, string rf, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+            :this(ultimaDataExecucao, paginacao, parametrosCargaInicialDto)
         {
             Rf = rf;
             TurmaId = turmaId;
@@ -51,6 +53,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 .NotEmpty()
                 .When(x => !(x.ComponenteCurricularId is null))
                 .WithMessage("O componente curricular informado é inválido.");
+            
+            RuleFor(x => x.ComponenteCurricularId)
+                .NotNull()
+                .When(x => !(x.parametrosCargaInicialDto is null))
+                .WithMessage("O parametros de carga inicial informado é inválido.");
         }
     }
 }

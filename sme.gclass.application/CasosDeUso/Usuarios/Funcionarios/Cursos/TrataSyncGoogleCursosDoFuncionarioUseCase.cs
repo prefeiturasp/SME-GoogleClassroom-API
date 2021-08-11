@@ -28,7 +28,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            var cursosDoFuncionarioParaIncluir = await mediator.Send(new ObterCursosDoFuncionarioParaIncluirGoogleQuery(funcionarioParaIncluirCursos.Rf.GetValueOrDefault(), DateTime.Now.Year));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var cursosDoFuncionarioParaIncluir = await mediator.Send(new ObterCursosDoFuncionarioParaIncluirGoogleQuery(funcionarioParaIncluirCursos.Rf.GetValueOrDefault(), DateTime.Now.Year, parametrosCargaInicialDto));
+
             if (!cursosDoFuncionarioParaIncluir?.Any() ?? true) return true;
 
             foreach (var cursoDoFuncionarioParaIncluir in cursosDoFuncionarioParaIncluir)

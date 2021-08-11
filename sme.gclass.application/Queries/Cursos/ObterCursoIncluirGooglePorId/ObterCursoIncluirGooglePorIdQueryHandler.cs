@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<CursoEol> Handle(ObterCursoIncluirGooglePorIdQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoEol.ObterCursoPorIdParaInclusao(request.ComponenteCurricularId, request.TurmaId, request.AnoLetivo);
+            => await repositorioCursoEol.ObterCursoPorIdParaInclusao(request.ComponenteCurricularId, request.TurmaId, request.AnoLetivo, request.ParametrosCargaInicialDto);
     }
 }

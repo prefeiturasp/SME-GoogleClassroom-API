@@ -19,8 +19,9 @@ namespace SME.GoogleClassroom.Aplicacao
             var dataFim = DateTime.Today;
 
             var paginacao = new Paginacao(param.PaginaNumero, param.RegistrosQuantidade);
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
-            return await mediator.Send(new ObterCursosExtintosPorPeriodoPaginadoQuery(dataInicio, dataFim, dataFim.Year, param.TurmaId, paginacao));
+            return await mediator.Send(new ObterCursosExtintosPorPeriodoPaginadoQuery(parametrosCargaInicialDto, dataInicio, dataFim, dataFim.Year, param.TurmaId, paginacao));
         }
     }
 }

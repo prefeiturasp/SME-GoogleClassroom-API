@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<CursoEol>> Handle(ObterCursosIncluirGoogleQuery request, CancellationToken cancellationToken)
         {
             var anoLetivo = request.UltimaExecucao?.Year ?? DateTime.Now.Year;
-            return await repositorioCursoEol.ObterCursosParaInclusao(request.UltimaExecucao, anoLetivo, request.Paginacao, request.ComponenteCurricularId, request.TurmaId);
+            return await repositorioCursoEol.ObterCursosParaInclusao(request.ParametrosCargaInicialDto, request.UltimaExecucao, anoLetivo, request.Paginacao, request.ComponenteCurricularId, request.TurmaId);
         }
     }
 }

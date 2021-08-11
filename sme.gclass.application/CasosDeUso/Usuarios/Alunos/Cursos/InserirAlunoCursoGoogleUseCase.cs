@@ -74,7 +74,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirAlunoCursoAsync(AlunoCursoGoogle alunoCursoGoogle)
         {
-            if (!_deveExecutarIntegracao) return;
             alunoCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(alunoCursoGoogle.UsuarioId, alunoCursoGoogle.CursoId));
         }
     }

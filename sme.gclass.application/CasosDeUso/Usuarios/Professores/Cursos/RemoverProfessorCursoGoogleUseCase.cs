@@ -74,7 +74,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task RemoverProfessorCursoAsync(CursoUsuario cursoUsuario)
         {
-            if (!_deveExecutarIntegracao) return;
             if (!await mediator.Send(new RemoverCursoUsuarioCommand(cursoUsuario.Id)))
             {
                 throw new NegocioException($"Não foi possível remover a atribuição do professor do curso {cursoUsuario.CursoId}");

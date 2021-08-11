@@ -74,8 +74,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirFuncionarioIndiretoAsync(FuncionarioIndiretoGoogle funcionarioIndiretoGoogle)
         {
-            if (_deveExecutarIntegracao)
-                funcionarioIndiretoGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioIndiretoGoogle));
+             funcionarioIndiretoGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioIndiretoGoogle));
         }
     }
 }

@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursosExtintosPorPeriodoPaginadoQuery : IRequest<PaginacaoResultadoDto<CursoExtintoEolDto>>
     {
-        public ObterCursosExtintosPorPeriodoPaginadoQuery(DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Dominio.Paginacao paginacao)
+        public ObterCursosExtintosPorPeriodoPaginadoQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
         {
             DataInicio = dataInicio;
             DataFim = dataFim;
@@ -22,6 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public int AnoLetivo { get; }
         public long? TurmaId { get; }
         public Paginacao Paginacao { get; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; set; }        
     }
 
     public class ObterCursosExtintosPorPeriodoPaginadoQueryValidator : AbstractValidator<ObterCursosExtintosPorPeriodoPaginadoQuery>
@@ -39,6 +40,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(a => a.AnoLetivo)
                 .NotEmpty()
                 .WithMessage("O ano letivo deve ser informado para consulta de turmas a arquivar");
+
+            RuleFor(x => x.ParametrosCargaInicialDto)
+                .NotEmpty()
+                .WithMessage("A configuração de parâmetros deve ser informada.");
         }
     }
 }

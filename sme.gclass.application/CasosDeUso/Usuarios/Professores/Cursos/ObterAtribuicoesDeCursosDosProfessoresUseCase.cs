@@ -20,7 +20,8 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<AtribuicaoProfessorCursoEolDto>> Executar(FiltroObterAtribuicoesDeCursosDosProfessoresDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            var resultadoDto = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(filtro.DataReferencia, paginacao, filtro.Rf.ToString(), filtro.TurmaId, filtro.ComponenteCurricularId));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var resultadoDto = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(filtro.DataReferencia, paginacao, filtro.Rf.ToString(), filtro.TurmaId, filtro.ComponenteCurricularId, parametrosCargaInicialDto));
 
             return new PaginacaoResultadoDto<AtribuicaoProfessorCursoEolDto>()
             {

@@ -21,7 +21,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-            var alunosCodigosInativosEOL = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(DateTime.Today.Year, dto.TurmaId, dto.DatasAluno.DataInicio, dto.DatasAluno.DataFim));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var alunosCodigosInativosEOL = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(DateTime.Today.Year, dto.TurmaId, dto.DatasAluno.DataInicio, dto.DatasAluno.DataFim, parametrosCargaInicialDto));
+
             if (alunosCodigosInativosEOL != null && alunosCodigosInativosEOL.Any())
             {
                 var cursosUsuarios = await mediator.Send(new ObterAlunosCodigosComRegistroEmCursosQuery(alunosCodigosInativosEOL, dto.TurmaId));
