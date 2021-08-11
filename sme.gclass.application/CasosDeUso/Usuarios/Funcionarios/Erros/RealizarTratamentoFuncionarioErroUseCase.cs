@@ -31,7 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     return false;
                 }
 
-                var funcionarioEol = await mediator.Send(new ObterFuncionarioParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault()));
+                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                var funcionarioEol = await mediator.Send(new ObterFuncionarioParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault(), parametrosCargaInicialDto));
                 if (funcionarioEol is null)
                 {
                     var mensagem = $"Não foi possível realizar o tratamento de erro do funcionário RF{usuarioErro.UsuarioId} na fila. Funcionario não encontrado no Eol.";

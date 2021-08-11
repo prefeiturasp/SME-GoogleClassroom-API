@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioEol>> Handle(ObterFuncionariosParaIncluirGoogleQuery request, CancellationToken cancellationToken)
-            => await repositorioFuncionarioEol.ObterFuncionariosParaInclusaoAsync(request.UltimaDataExecucao, request.Paginacao, request.Rf);
+            => await repositorioFuncionarioEol.ObterFuncionariosParaInclusaoAsync(request.UltimaDataExecucao, request.Paginacao, request.Rf, request.ParametrosCargaInicialDto);
     }
 }
