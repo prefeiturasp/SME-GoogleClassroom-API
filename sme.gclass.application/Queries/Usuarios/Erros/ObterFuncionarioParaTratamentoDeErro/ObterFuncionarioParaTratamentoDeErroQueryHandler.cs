@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<FuncionarioEol> Handle(ObterFuncionarioParaTratamentoDeErroQuery request, CancellationToken cancellationToken)
-            => await repositorioFuncionarioEol.ObterFuncionarioParaTratamentoDeErroAsync(request.Rf, DateTime.Now.Year);
+            => await repositorioFuncionarioEol.ObterFuncionarioParaTratamentoDeErroAsync(request.Rf, DateTime.Now.Year, request.ParametrosCargaInicialDto);
     }
 }
