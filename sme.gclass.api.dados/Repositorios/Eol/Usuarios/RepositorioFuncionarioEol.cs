@@ -343,7 +343,7 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE, @cargoAuxDesenvolvimentoInfantil)
 					AND (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE())
-					{(dataReferencia.HasValue ? "AND cbc.dt_nomeacao >= @dataReferencia " : " ")} ");
+					{(dataReferencia.HasValue ? "AND cbc.dt_inicio_exercicio >= @dataReferencia " : " ")} ");
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
