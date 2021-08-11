@@ -18,22 +18,19 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao, string rf, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        public async Task<PaginacaoResultadoDto<ProfessorEol>> ObterProfessoresParaInclusaoAsync(DateTime dataReferencia, Paginacao paginacao, string rf)
         {
             using var conn = ObterConexao();
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferencia, rf, parametrosCargaInicialDto);
+            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferencia, rf);
             var parametros = new
             {
                 anoLetivo = dataReferencia.Year,
                 dataReferencia = dataReferencia.Date,
                 paginacao.QuantidadeRegistros,
                 paginacao.QuantidadeRegistrosIgnorados,
-                rf,
-				parametrosCargaInicialDto.TiposUes,
-				parametrosCargaInicialDto.Ues,
-				parametrosCargaInicialDto.Turmas,
+                rf
 			};
 
             using var multi = await conn.QueryMultipleAsync(query, parametros);
@@ -47,16 +44,13 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		public async Task<ProfessorEol> ObterProfessorParaTratamentoDeErroAsync(long rf, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
+		public async Task<ProfessorEol> ObterProfessorParaTratamentoDeErroAsync(long rf, int anoLetivo)
 		{
-			var query = MontaQueryProfessorParaInclusao(false, null, rf.ToString(), parametrosCargaInicialDto);
+			var query = MontaQueryProfessorParaInclusao(false, null, rf.ToString());
 			var parametros = new
 			{
 				anoLetivo = anoLetivo,
-				rf,
-				parametrosCargaInicialDto.TiposUes,
-				parametrosCargaInicialDto.Ues,
-				parametrosCargaInicialDto.Turmas,
+				rf
 			};
 
 			using var conn = ObterConexao();
@@ -258,7 +252,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf)
         {
 			var query = new StringBuilder();
 
@@ -293,13 +287,7 @@ namespace SME.GoogleClassroom.Dados
                                         INNER JOIN
 	                                        #tempCargosProfessores temp
 	                                        ON cbc.cd_cargo_base_servidor = temp.cd_cargo_base_servidor
-                                        {(!string.IsNullOrEmpty(rf) ? $"WHERE serv.cd_registro_funcional = @rf; " : "; ")} ");
-
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-			query.AppendLine(";");
-
+											{(!string.IsNullOrEmpty(rf) ? $"WHERE serv.cd_registro_funcional = @rf; " : "; ")}");
 			query.AppendLine(@"SELECT
 	                            *
                             FROM

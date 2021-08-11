@@ -77,9 +77,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 .NotEmpty()
                 .WithMessage("A data de inclusão do usuário deve ser informada.");
 
-            RuleFor(x => x.GoogleClassroomId)
-                .NotEmpty()
-                .WithMessage("O identificador do usuário no Google Classroom é inválido.");
         }
     }
 }

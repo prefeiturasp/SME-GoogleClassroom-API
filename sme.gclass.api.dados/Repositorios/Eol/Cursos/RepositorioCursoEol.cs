@@ -1018,7 +1018,7 @@ namespace SME.GoogleClassroom.Dados
 				queryBuilder.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
 			queryBuilder.Append("; ");
-
+	
 			return queryBuilder.ToString();
         }
 		

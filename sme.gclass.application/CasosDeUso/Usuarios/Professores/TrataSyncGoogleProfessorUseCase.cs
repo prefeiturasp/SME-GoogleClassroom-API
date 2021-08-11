@@ -22,8 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
             var paginacao = new Paginacao(0, 0);
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty, parametrosCargaInicialDto));
+            var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty));
 
             foreach (var professorParaIncluirGoogle in professoresParaIncluirGoogle.Items)
             {

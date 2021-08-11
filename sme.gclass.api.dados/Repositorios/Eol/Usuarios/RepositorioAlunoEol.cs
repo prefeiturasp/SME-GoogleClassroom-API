@@ -565,7 +565,7 @@ namespace SME.GoogleClassroom.Dados
 					WHERE
 						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
-						and matr.an_letivo = @anoLetivo;";
+						and matr.an_letivo = @anoLetivo";
 
             var queryBuilder = new StringBuilder(query);
 
@@ -614,7 +614,7 @@ namespace SME.GoogleClassroom.Dados
 						AND te.an_letivo = @anoLetivo
 						AND NOT matr.cd_tipo_programa IS NULL
 
-						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol;" : ";")} ";
+						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol " : " ")} ";
 
             var queryBuilder = new StringBuilder(query);
 
@@ -696,7 +696,7 @@ namespace SME.GoogleClassroom.Dados
 					WHERE
 						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
-						and matr.an_letivo = @anoLetivo;";
+						and matr.an_letivo = @anoLetivo";
 
             var queryBuilder = new StringBuilder(query);
 
@@ -755,7 +755,7 @@ namespace SME.GoogleClassroom.Dados
 						AND te.an_letivo = @anoLetivo
 						AND NOT cd_serie_ensino IS NULL
 
-						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}";
+						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol " : " ")}";
 
             var queryBuilder = new StringBuilder(query);
 
