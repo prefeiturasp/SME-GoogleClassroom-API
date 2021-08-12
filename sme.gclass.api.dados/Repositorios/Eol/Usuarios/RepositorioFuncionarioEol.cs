@@ -787,8 +787,11 @@ namespace SME.GoogleClassroom.Dados
             {
                 turmaId,
                 dataInicio,
-                dataFim
-            };
+                dataFim,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas,
+			};
 
             using var conn = ObterConexao();
             return await conn.QueryAsync<RemoverAtribuicaoFuncionarioTurmaEolDto>(query, parametros);
