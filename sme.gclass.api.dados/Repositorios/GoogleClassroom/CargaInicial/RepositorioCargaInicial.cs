@@ -18,6 +18,7 @@ namespace SME.GoogleClassroom.Dados
             var query = @"select id
                             , ano
                             , tipos_ue as TiposUe
+                            , tipos_ue_cursos as TiposUeCursos
                             , Ues
                             , Turmas
                             , criado_em as CriadoEm
