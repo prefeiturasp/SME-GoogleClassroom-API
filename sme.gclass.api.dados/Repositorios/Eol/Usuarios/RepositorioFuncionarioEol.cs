@@ -32,17 +32,25 @@ namespace SME.GoogleClassroom.Dados
 				parametrosCargaInicialDto.Turmas
 			};
 
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query, parametros);
+            try
+            {
+                using var conn = ObterConexao();
+                using var multi = await conn.QueryMultipleAsync(query, parametros);
 
-            var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
+                var retorno = new PaginacaoResultadoDto<FuncionarioEol>();
 
-            retorno.Items = multi.Read<FuncionarioEol>();
-            retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+                retorno.Items = multi.Read<FuncionarioEol>();
+                retorno.TotalRegistros = multi.ReadFirst<int>();
+                retorno.TotalPaginas = aplicarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
-            return retorno;
-        }
+                return retorno;
+
+            }
+            catch (Exception e)
+            {
+                throw;
+            }        
+		}
 
         public async Task<FuncionarioEol> ObterFuncionarioParaTratamentoDeErroAsync(long rf, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
