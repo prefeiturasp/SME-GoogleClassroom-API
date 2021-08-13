@@ -5,9 +5,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ExisteCursoGsaPorIdQuery : IRequest<bool>
     {
-        public string UsuarioId { get; set; }
+        public long UsuarioId { get; set; }
 
-        public ExisteCursoGsaPorIdQuery(string usuarioId)
+        public ExisteCursoGsaPorIdQuery(long usuarioId)
         {
             UsuarioId = usuarioId;
         }

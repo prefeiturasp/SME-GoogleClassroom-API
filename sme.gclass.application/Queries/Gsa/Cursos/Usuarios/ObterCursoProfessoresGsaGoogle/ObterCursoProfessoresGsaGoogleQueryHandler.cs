@@ -43,7 +43,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return resultado;
         }
 
-        private async Task ObterCursoProfessoresGsaGoogleTotalDePaginasPorExecucaoAsync(ClassroomService servicoClassroom, PaginaConsultaCursoUsuariosGsaDto paginaConsulta, string cursoId, int contadorDePagina)
+        private async Task ObterCursoProfessoresGsaGoogleTotalDePaginasPorExecucaoAsync(ClassroomService servicoClassroom, PaginaConsultaCursoUsuariosGsaDto paginaConsulta, long cursoId, int contadorDePagina)
         {
             var resultadoPagina = await policy.ExecuteAsync(() => ObterCursoProfessoresGsaGoogleAsync(servicoClassroom, cursoId, paginaConsulta.TokenProximaPagina));
             if (!resultadoPagina.Teachers?.Any() ?? true) return;
@@ -64,9 +64,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 await ObterCursoProfessoresGsaGoogleTotalDePaginasPorExecucaoAsync(servicoClassroom, paginaConsulta, cursoId, contadorDePagina);
         }
 
-        private async Task<ListTeachersResponse> ObterCursoProfessoresGsaGoogleAsync(ClassroomService servicoClassroom, string cursoId, string tokenPagina)
+        private async Task<ListTeachersResponse> ObterCursoProfessoresGsaGoogleAsync(ClassroomService servicoClassroom, long cursoId, string tokenPagina)
         {
-            var requestList = servicoClassroom.Courses.Teachers.List(cursoId);
+            var requestList = servicoClassroom.Courses.Teachers.List(cursoId.ToString());
             requestList.PageToken = tokenPagina;
 
             RegistraRequisicaoGoogleClassroom();

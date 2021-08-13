@@ -6,10 +6,10 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterCursoProfessoresGsaGoogleQuery : IRequest<PaginaConsultaCursoUsuariosGsaDto>
     {
-        public string CursoId { get; set; }
+        public long CursoId { get; set; }
         public string TokenPagina { get; set; }
 
-        public ObterCursoProfessoresGsaGoogleQuery(string cursoId, string tokenPagina)
+        public ObterCursoProfessoresGsaGoogleQuery(long cursoId, string tokenPagina)
         {
             CursoId = cursoId;
             TokenPagina = tokenPagina;
