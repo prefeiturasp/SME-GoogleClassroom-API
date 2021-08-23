@@ -1,0 +1,11 @@
+--delete from cursos_usuarios 
+--where curso_id in(
+--select
+--cu.curso_id
+--from usuarios u
+--inner join cursos_usuarios cu on u.indice = cu.usuario_id
+--inner join cursos c on cu.curso_id = c.id
+--where u.usuario_tipo is not null
+--and u.id = 5922672
+--) 
+--and usuario_id = 733009
