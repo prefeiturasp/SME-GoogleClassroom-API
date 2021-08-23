@@ -37,6 +37,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
+                        var rf = Convert.ToInt64(cursoParaAdicionar.Email.Substring(cursoParaAdicionar.Email.IndexOf('@') - 7, 7));
+                        var professores = await mediator.Send(new ObterProfessoresPorRfsQuery(rf));
+                        cursoParaAdicionar.Email = professores != null && professores.Any() && !professores.First().Email.Equals(cursoParaAdicionar.Email) ? professores.First().Email : cursoParaAdicionar.Email;
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
                     }
                     catch (Exception ex)
