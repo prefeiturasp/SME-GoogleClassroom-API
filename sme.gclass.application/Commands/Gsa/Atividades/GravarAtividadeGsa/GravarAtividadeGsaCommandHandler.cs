@@ -42,9 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                     usuarioId,
                                     cursoId,
                                     criadoEm,
-                                    alteradoEm, 
-                                    null,
-                                    null);
+                                    alteradoEm);
 
         private async Task<bool> RegistroExistente(long id)
             => await repositorioAtividade.RegistroExiste(id);
