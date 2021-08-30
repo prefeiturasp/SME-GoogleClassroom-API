@@ -31,6 +31,13 @@ namespace SME.GoogleClassroom.Aplicacao
                     atividadeGsa.Titulo :
                     atividadeGsa.Descricao;
 
+                if (atividadeGsa.DataEntrega.HasValue)
+                {
+                    var kstZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+                    var dataConvertida = TimeZoneInfo.ConvertTimeFromUtc(atividadeGsa.DataEntrega.Value, kstZone);
+                    atividadeGsa.DataEntrega = dataConvertida;
+                }
+
                 await GravarAtividadeGsa(atividadeGsa, usuario.Indice);
                 if (!await EnviarParaSgp(atividadeGsa, usuario))
                     throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
