@@ -325,6 +325,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioCarregar);
+            } 
+            
+            if (consumoDeFilasOptions.Gsa.CargaNotasGsa)
+            {
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaNotasAtividadesCarregar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaNotasAtividadesCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaNotasAtividadesCarregar);
+                
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaNotasAtividadesSync, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaNotasAtividadesSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaNotasAtividadesSync);
             }
         }
 
