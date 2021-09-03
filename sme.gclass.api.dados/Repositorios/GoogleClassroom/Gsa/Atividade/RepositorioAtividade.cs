@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Dados
         }
 
 
-        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorData(Paginacao paginacao,
+        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataCurso(Paginacao paginacao,
             DateTime dataReferencia, long? cursoId)
         {
             var queryCompleta = new StringBuilder();
@@ -135,21 +135,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from atividades where id = @id", new { id });
         }
 
-        public async Task<IEnumerable<long>> ObterComponentesIdsAtividadesPorAnoLetivo(int anoLetivo)
-        {
-            const string query = @"select distinct(c.componente_curricular_id) as componente_curricular_id
-                                     from atividades a 
-                                    inner join cursos c on a.curso_id = c.id
-                                    where EXTRACT(YEAR FROM a.data_inclusao) = @anoLetivo
-                                    order by c.componente_curricular_id ";
-
-
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<long>(query, new { anoLetivo });
-        }
-
-        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorCompoenteCurricularAno(Paginacao paginacao,
-            long componenteCurricularId, int anoLetivo)
+        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataReferencia(Paginacao paginacao, DateTime dateReferencia)
         {
             var queryCompleta = new StringBuilder();
 
@@ -159,12 +145,10 @@ namespace SME.GoogleClassroom.Dados
             var retorno = new PaginacaoResultadoDto<AtividadeGsa>();
 
             using var conn = ObterConexao();
-            var dataReferencia = new DateTime(anoLetivo, 1, 1);
 
             var parametros = new
             {
-                dataReferencia,
-                componenteCurricularId
+                dateReferencia
             };
 
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
@@ -196,7 +180,7 @@ namespace SME.GoogleClassroom.Dados
 
             queryCompleta.AppendLine(@"FROM atividades A 
                                       INNER JOIN CURSOS U ON U.Id = A.CURSO_ID 
-                                      WHERE A.DATA_INCLUSAO = @dataReferencia 
+                                      WHERE A.DATA_INCLUSAO >= @dataReferencia 
                                         AND C.COMPONENTE_CURRICULAR_ID = @componenteCurricularId");
 
             if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)

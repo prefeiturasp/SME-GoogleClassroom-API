@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Atividades.ObterAtividadesPo
 
         public async Task<PaginacaoResultadoDto<AtividadeGsa>> Handle(ObterAtividadesPorComponenteCurricularEAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioAtividade.ObterAtividadesPorCompoenteCurricularAno(request.Paginacao, request.ComponenteCurricularId, request.AnoLetivo);
+            return await repositorioAtividade.ObterAtividadesPorDataReferencia(request.Paginacao, request.ComponenteCurricularId, request.AnoLetivo);
         }
     }
 }

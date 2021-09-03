@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public DateTime DataAlteracao { get; set; }
 
-        public DateTime DataEntrega { get; set; }
+        public DateTime? DataEntrega { get; set; }
         public double NotaMaxima { get; set; }
 
         public AtividadeGsa()
@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Dominio
             CursoId = cursoId;
             DataInclusao = dataInclusao;
             DataAlteracao = dataAlteracao;
-            DataEntrega = dataEntrega ?? DateTime.UtcNow;
+            DataEntrega = dataEntrega;
             NotaMaxima = notaMaxima ?? 0;
         }
     }

@@ -21,9 +21,16 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
                 var atividadesPaginadas = await mediator.Send(new ObterAtividadesPorComponenteCurricularEAnoLetivoQuery(filtro.ComponenteCurricularId, DateTime.Now.Year, paginacao));
-                foreach(var avaliacao in atividadesPaginadas.Items)
+                foreach(var atividade in atividadesPaginadas.Items)
                 {
-
+                    var dadosAtividades = new DadosAvaliacaoNotasGsaDto(atividade.CursoId, atividade.Id, atividade.DataInclusao, atividade.DataEntrega, atividade.NotaMaxima, filtro.TotalDiasImportacao);
+                    var notas = await mediator.Send(new ObterNotasGooglePorAtividadeQuery(dadosAtividades));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasCarregar, notas));
+                    if (atividadesPaginadas.TotalPaginas <= filtro.PaginaNumero)
+                    {
+                        var componenteFiltro = new FiltroComponenteCurricularAtividadeDto(filtro.ComponenteCurricularId, filtro.LancaNota, filtro.TotalDiasImportacao, filtro.PaginaNumero++, filtro.RegistrosQuantidade);
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSync, componenteFiltro));
+                    }
                 }
             }
             return true;
