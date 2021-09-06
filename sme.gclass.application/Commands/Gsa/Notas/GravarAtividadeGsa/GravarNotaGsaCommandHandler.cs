@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao.Commands
                 await repositorioNota.InserirNota(notaGsa);
         }
 
-        private NotaGsa MapearEntidade(long id, long atividadeId, long usuarioId, double nota, DateTime criadoEm, DateTime alteradoEm)
+        private NotaGsa MapearEntidade(long id, long atividadeId, long usuarioId, double nota, DateTime criadoEm, DateTime? alteradoEm)
             => new NotaGsa(id, atividadeId, usuarioId, nota, criadoEm, alteradoEm);
 
         private async Task<bool> RegistroExistente(long id)

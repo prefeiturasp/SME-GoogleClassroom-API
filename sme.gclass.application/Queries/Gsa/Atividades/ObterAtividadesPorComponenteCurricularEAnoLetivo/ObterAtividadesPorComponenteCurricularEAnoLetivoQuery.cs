@@ -1,19 +1,21 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAtividadesPorComponenteCurricularEAnoLetivoQuery : IRequest<PaginacaoResultadoDto<AtividadeGsa>>
+    public class ObterAtividadesPorComponenteCurricularEAnoLetivoQuery : IRequest<PaginacaoResultadoDto<DadosAvaliacaoDto>>
     {
-        public ObterAtividadesPorComponenteCurricularEAnoLetivoQuery(long componenteCurricularId, int anoLetivo, Paginacao paginacao)
+        public ObterAtividadesPorComponenteCurricularEAnoLetivoQuery(long componenteCurricularId, DateTime dataReferencia, Paginacao paginacao)
         {
             ComponenteCurricularId = componenteCurricularId;
-            AnoLetivo = anoLetivo;
+            DataReferencia = dataReferencia;
+            Paginacao = paginacao;
         }
 
         public long ComponenteCurricularId { get; set; }
-        public int AnoLetivo { get; set; }
+        public DateTime DataReferencia { get; set; }
         public Paginacao Paginacao { get; set; }
     }
 }

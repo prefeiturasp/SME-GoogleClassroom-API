@@ -7,8 +7,6 @@ using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,7 +55,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Notas.ObterNotasGooglePorAti
             }
             catch (Exception ex)
             {
-                throw(ex);
+                throw (ex);
             }
         }
     }

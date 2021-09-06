@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Dominio
     {
         public NotaGsa() { }
 
-        public NotaGsa(long id, long atividadeId, long usuarioId, double nota, DateTime dataInclusao, DateTime dataAlteracao)
+        public NotaGsa(long id, long atividadeId, long usuarioId, double nota, DateTime dataInclusao, DateTime? dataAlteracao)
         {
             Id = id;
             AtividadeId = atividadeId;
@@ -21,6 +21,6 @@ namespace SME.GoogleClassroom.Dominio
         public long UsuarioId { get; set; }
         public double Nota { get; set; }
         public DateTime DataInclusao { get; set; }
-        public DateTime DataAlteracao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
     }
 }

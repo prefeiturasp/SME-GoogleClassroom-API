@@ -1,22 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
     public class DadosAvaliacaoNotasGsaDto
     {
-        public DadosAvaliacaoNotasGsaDto(long cursoId, long atividadeId, DateTime dataCriacao, DateTime? dataEntrega, double? notaMaxima, int totalDiasImportacao, bool lancaNota = false)
+        public DadosAvaliacaoNotasGsaDto(long turmaId, long componenteCurricularId, long cursoId, long atividadeId, DateTime dataCriacao, DateTime? dataEntrega, bool lancaNota, double? notaMaxima, int totalDiasImportacao, string tituloAtividade)
         {
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
             CursoId = cursoId;
             AtividadeId = atividadeId;
             DataCriacao = dataCriacao;
             DataEntrega = dataEntrega;
             LancaNota = lancaNota;
-            TotalDiasImportacao = totalDiasImportacao;
             NotaMaxima = notaMaxima;
+            TotalDiasImportacao = totalDiasImportacao;
+            TituloAtividade = tituloAtividade;
         }
 
+        public long TurmaId { get; set; }
+        public long ComponenteCurricularId { get; set; }
         public long CursoId { get; set; }
         public long AtividadeId { get; set; }
         public DateTime DataCriacao { get; set; }
@@ -24,5 +27,6 @@ namespace SME.GoogleClassroom.Infra
         public bool LancaNota { get; set; }
         public double? NotaMaxima { get; set; }
         public int TotalDiasImportacao { get; set; }
+        public string TituloAtividade { get; set; }
     }
 }

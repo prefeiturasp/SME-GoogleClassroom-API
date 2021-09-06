@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Atividades.ObterAtividadesPorComponenteCurricularEAnoLetivo
 {
-    public class ObterAtividadesPorComponenteCurricularEAnoLetivoQueryHandler : IRequestHandler<ObterAtividadesPorComponenteCurricularEAnoLetivoQuery, PaginacaoResultadoDto<AtividadeGsa>>
+    public class ObterAtividadesPorComponenteCurricularEAnoLetivoQueryHandler : IRequestHandler<ObterAtividadesPorComponenteCurricularEAnoLetivoQuery, PaginacaoResultadoDto<DadosAvaliacaoDto>>
     {
         private readonly IRepositorioAtividade repositorioAtividade;
 
@@ -16,9 +16,9 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Atividades.ObterAtividadesPo
             this.repositorioAtividade = repositorioAtividade ?? throw new System.ArgumentNullException(nameof(repositorioAtividade));
         }
 
-        public async Task<PaginacaoResultadoDto<AtividadeGsa>> Handle(ObterAtividadesPorComponenteCurricularEAnoLetivoQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<DadosAvaliacaoDto>> Handle(ObterAtividadesPorComponenteCurricularEAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioAtividade.ObterAtividadesPorDataReferencia(request.Paginacao, request.ComponenteCurricularId, request.AnoLetivo);
+            return await repositorioAtividade.ObterAtividadesPorComponenteDataReferencia(request.Paginacao, request.ComponenteCurricularId, request.DataReferencia);
         }
     }
 }

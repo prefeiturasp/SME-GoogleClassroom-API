@@ -13,6 +13,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<bool> RegistroExiste(long id);
         Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataCurso(Paginacao paginacao, DateTime dateReferencia,
             long? cursoId);
-        Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataReferencia(Paginacao paginacao, DateTime dateReferencia);
+        Task<PaginacaoResultadoDto<DadosAvaliacaoDto>> ObterAtividadesPorComponenteDataReferencia(Paginacao paginacao, long componenteCurricularId, DateTime dateReferencia);
+        Task<IEnumerable<long>> ObterComponentesIdsAtividadesPorAnoLetivo(int anoLetivo);
     }
 }

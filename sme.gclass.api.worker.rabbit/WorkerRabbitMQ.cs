@@ -139,6 +139,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             //Notas
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesCarregar, new ComandoRabbit("Carregar componentes curriculares das atividades para importacao de notas", typeof(ICarregarComponentesCurricularesNotasUseCase)));
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSync, new ComandoRabbit("Sincronizar componentes curriculares das atividades para importacao de notas", typeof(ISincronizarComponentesCurricularesNotasUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasProcessar, new ComandoRabbit("Processar notas que serão gravadas na base do GSA e mandadas para o SGP", typeof(IObterNotasUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasImportar, new ComandoRabbit("Gravar notas na base do GSA e mandá-las para o SGP", typeof(IImportarNotasGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasImportarErro, new ComandoRabbit("Gravar erros na importação das notas", typeof(IImportarNotasGsaProcessarErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -378,6 +381,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasProcessar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasImportar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasImportarErro, false, consumer);
             }
         }
     }

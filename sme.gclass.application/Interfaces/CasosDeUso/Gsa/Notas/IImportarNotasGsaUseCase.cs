@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
-    public interface ICarregarNotasUseCase : IRabbitUseCase
+    public interface IImportarNotasGsaUseCase : IRabbitUseCase
     {
     }
 }

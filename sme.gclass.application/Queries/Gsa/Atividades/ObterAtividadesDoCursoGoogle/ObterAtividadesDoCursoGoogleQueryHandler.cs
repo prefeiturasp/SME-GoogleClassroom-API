@@ -36,11 +36,14 @@ namespace SME.GoogleClassroom.Aplicacao
             var curso = request.Curso;
 
             var atividadesGsa = await ObterAtividadesDaPagina(servicoClassroom, curso.CursoId, request.TokenProximaPagina);
-            foreach (var work in atividadesGsa.CourseWork)
+            if (atividadesGsa.CourseWork != null)
             {
-                var dueDate = work.DueDate;
-                var dataEntrega = dueDate != null ? new DateTime(dueDate.Year.Value, dueDate.Month.Value, dueDate.Day.Value) : DateTime.MinValue;
-                retorno.Atividades.Add(new AtividadeGsaDto(work.Id, work.CourseId, work.Title, work.Description, work.CreatorUserId, work.CreationTime, work.UpdateTime, dataEntrega, work.MaxPoints));
+                foreach (var work in atividadesGsa.CourseWork)
+                {
+                    var dueDate = work.DueDate;
+                    var dataEntrega = dueDate != null ? new DateTime(dueDate.Year.Value, dueDate.Month.Value, dueDate.Day.Value) : DateTime.MinValue;
+                    retorno.Atividades.Add(new AtividadeGsaDto(work.Id, work.CourseId, work.Title, work.Description, work.CreatorUserId, work.CreationTime, work.UpdateTime, dataEntrega, work.MaxPoints));
+                }
             }
             retorno.TokenProximaPagina = atividadesGsa.NextPageToken;
 
