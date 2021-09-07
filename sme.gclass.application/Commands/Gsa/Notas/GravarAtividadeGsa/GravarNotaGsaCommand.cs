@@ -33,15 +33,15 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(a => a.Id)
                 .NotEmpty()
-                .WithMessage("O indice da nota deve ser informado para geração da atividade avaliativa");
+                .WithMessage("O índice da nota deve ser informado para geração da nota");
 
             RuleFor(a => a.AtividadeId)
                 .NotEmpty()
-                .WithMessage("O indice da atividade deve ser informado para geração da atividade avaliativa");
+                .WithMessage("O índice da atividade deve ser informado para geração da nota");
 
             RuleFor(a => a.UsuarioId)
                 .NotEmpty()
-                .WithMessage("O indice do usuário deve ser informado para geração da atividade avaliativa");
+                .WithMessage("O índice do usuário deve ser informado para geração da nota");
 
             RuleFor(a => a.Nota)
                 .NotNull()
