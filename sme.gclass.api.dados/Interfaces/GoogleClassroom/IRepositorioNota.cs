@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
     public interface IRepositorioNota
     {
         Task<long> InserirNota(NotaGsa notaGsa); 
-        Task<long> AlterarNota(NotaGsa atividadeGsa);
-        Task<bool> RegistroExiste(long id);
+        Task<long> AlterarNota(NotaGsa notaGsa);
+        Task<bool> RegistroExiste(string id);
     }
 }

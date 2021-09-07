@@ -12,24 +12,26 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<long> AlterarNota(NotaGsa atividadeGsa)
+        public async Task<long> AlterarNota(NotaGsa notaGsa)
         {
             const string updateQuery = @"update public.notas
                                             set atividade_id = @atividadeId
                                               , usuario_id = @usuarioId
                                               , nota = @nota
+                                              , status = @status
                                               , data_inclusao = @dataInclusao
                                               , data_alteracao = @dataAlteracao
                                         where id = @id";
 
             var parametros = new
             {
-                id = atividadeGsa.Id,
-                atividadeId = atividadeGsa.AtividadeId,
-                usuarioId = atividadeGsa.UsuarioId,
-                nota = atividadeGsa.Nota,
-                dataInclusao = atividadeGsa.DataInclusao,
-                dataAlteracao = atividadeGsa.DataAlteracao,
+                id = notaGsa.Id,
+                atividadeId = notaGsa.AtividadeId,
+                usuarioId = notaGsa.UsuarioId,
+                nota = notaGsa.Nota,
+                status = (int)notaGsa.Status,
+                dataInclusao = notaGsa.DataInclusao,
+                dataAlteracao = notaGsa.DataAlteracao,
             };
 
             using var conn = ObterConexao();
@@ -39,9 +41,9 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> InserirNota(NotaGsa notaGsa)
         {
             const string insertQuery = @"insert into public.notas
-                                        (id, atividade_id, usuario_id, nota, data_inclusao, data_alteracao)
+                                        (id, atividade_id, usuario_id, nota, status, data_inclusao, data_alteracao)
                                         values
-                                        (@id, @atividadeId, @usuarioId, @nota, @dataInclusao, @dataAlteracao)";
+                                        (@id, @atividadeId, @usuarioId, @nota, @status, @dataInclusao, @dataAlteracao)";
 
             var parametros = new
             {
@@ -49,6 +51,7 @@ namespace SME.GoogleClassroom.Dados
                 atividadeId = notaGsa.AtividadeId,
                 usuarioId = notaGsa.UsuarioId,
                 nota = notaGsa.Nota,
+                status = (int)notaGsa.Status,
                 dataInclusao = notaGsa.DataInclusao,
                 dataAlteracao = notaGsa.DataAlteracao,
             };
@@ -57,7 +60,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(insertQuery, parametros);
         }
 
-        public async Task<bool> RegistroExiste(long id)
+        public async Task<bool> RegistroExiste(string id)
         {
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from notas where id = @id", new { id });

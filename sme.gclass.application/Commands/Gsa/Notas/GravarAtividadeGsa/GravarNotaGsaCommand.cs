@@ -1,25 +1,28 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Dominio;
 using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class GravarNotaGsaCommand : IRequest
     {
-        public GravarNotaGsaCommand(long id, long atividadeId, long usuarioId, double nota, DateTime dataInclusao, DateTime? dataAlteracao)
+        public GravarNotaGsaCommand(string id, long atividadeId, long usuarioId, double nota, StatusGSA status, DateTime dataInclusao, DateTime? dataAlteracao)
         {
             Id = id;
             AtividadeId = atividadeId;
             UsuarioId = usuarioId;
             Nota = nota;
+            Status = status;
             DataInclusao = dataInclusao;
             DataAlteracao = dataAlteracao;
         }
 
-        public long Id { get; set; }
+        public string Id { get; set; }
         public long AtividadeId { get; set; }
         public long UsuarioId { get; set; }
         public double Nota { get; set; }
+        public StatusGSA Status { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAlteracao { get; set; }
     }

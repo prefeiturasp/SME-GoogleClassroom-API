@@ -4,17 +4,17 @@ namespace SME.GoogleClassroom.Dominio
 {
     public enum StatusGSA
     {
-        [Display(Name = "SUBMISSION_STATE_UNSPECIFIED")]
-        NaoEspecificado = 0,
-        [Display(Name = "NEW")]
-        Novo = 1,
-        [Display(Name = "CREATED")]
-        Criado = 2,
-        [Display(Name = "TURNED_IN")]
-        Entregue = 3  ,  
-        [Display(Name = "RETURNED")]
-        Devolvido = 4,
-        [Display(Name = "RECLAIMED_BY_STUDENT")]
-        ReclamadaPeloAluno = 5
+        [Display(Name = "NaoEspecificado")]
+        SUBMISSION_STATE_UNSPECIFIED = 0,
+        [Display(Name = "Novo")]
+        NEW = 1,
+        [Display(Name = "Criado")]
+        CREATED = 2,
+        [Display(Name = "Entregue")]
+        TURNED_IN = 3  ,  
+        [Display(Name = "Devolvido")]
+        RETURNED = 4,
+        [Display(Name = "ReclamadaPeloAluno")]
+        RECLAIMED_BY_STUDENT = 5
     }
 }

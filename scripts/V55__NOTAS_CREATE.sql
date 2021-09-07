@@ -2,10 +2,11 @@ DROP TABLE IF EXISTS public.notas;
 
 CREATE TABLE public.notas
 (
-    id            INT8 		   NOT NULL,
+    id            varchar(50)  NOT NULL,
     atividade_id  INT8         NOT NULL,
     usuario_id    INT8         NOT NULL,
 	nota 		  NUMERIC(5,2) NOT NULL,
+	status		  INT4		   NOT NULL,
     data_inclusao TIMESTAMP    NOT NULL,
     data_alteracao TIMESTAMP   NULL,
 	CONSTRAINT 	  notas_pk PRIMARY KEY (id)

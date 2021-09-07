@@ -135,7 +135,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from atividades where id = @id", new { id });
         }
 
-        public async Task<PaginacaoResultadoDto<DadosAvaliacaoDto>> ObterAtividadesPorComponenteDataReferencia(Paginacao paginacao, long componenteCurricularId, DateTime dateReferencia)
+        public async Task<PaginacaoResultadoDto<DadosAvaliacaoDto>> ObterAtividadesPorComponenteDataReferencia(Paginacao paginacao, long componenteCurricularId, DateTime dataReferencia)
         {
             var queryCompleta = new StringBuilder();
 
@@ -148,7 +148,8 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-                dateReferencia
+                dataReferencia,
+                componenteCurricularId
             };
 
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
@@ -169,8 +170,7 @@ namespace SME.GoogleClassroom.Dados
             {
                 queryCompleta.AppendLine(@" A.id AS Id,
                                             A.titulo AS Titulo,
-                                            C.turma_is as TurmaId,
-                                            A.titulo AS Titulo, 
+                                            C.turma_id as TurmaId,
                                             A.usuario_id AS UsuarioId,
                                             A.curso_id AS CursoId,
                                             A.data_inclusao AS DataInclusao, 

@@ -34,9 +34,12 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Notas.ObterNotasGooglePorAti
             var retorno = new PaginaConsultaNotasGsaDto(dadosAtividade);
 
             var notasGsa = await ObterNotasDaPagina(servicoClassroom, dadosAtividade.CursoId, dadosAtividade.AtividadeId, request.TokenProximaPagina);
-            foreach (var studenSubmission in notasGsa.StudentSubmissions)
+            if (notasGsa.StudentSubmissions != null)
             {
-                retorno.Notas.Add(new NotaGsaDto(long.Parse(studenSubmission.Id), long.Parse(studenSubmission.UserId), studenSubmission.State, studenSubmission.AssignedGrade));
+                foreach (var studenSubmission in notasGsa.StudentSubmissions)
+                {
+                    retorno.Notas.Add(new NotaGsaDto(studenSubmission.Id, studenSubmission.UserId, studenSubmission.State, studenSubmission.AssignedGrade));
+                }
             }
             retorno.TokenProximaPagina = notasGsa.NextPageToken;
 
@@ -51,7 +54,8 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Notas.ObterNotasGooglePorAti
                 requestList.PageToken = tokenPagina;
 
                 RegistraRequisicaoGoogleClassroom();
-                return await requestList.ExecuteAsync();
+                var resposta = await requestList.ExecuteAsync();
+                return resposta;
             }
             catch (Exception ex)
             {

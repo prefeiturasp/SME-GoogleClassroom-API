@@ -2,7 +2,7 @@
 {
     public class NotaGsaDto
     {
-        public NotaGsaDto(long id, long usuarioId, string statusNota, double? nota)
+        public NotaGsaDto(string id, string usuarioId, string statusNota, double? nota)
         {
             Id = id;
             UsuarioId = usuarioId;
@@ -10,8 +10,8 @@
             StatusNota = statusNota;
         }
 
-        public long Id { get; set; }
-        public long UsuarioId { get; set; }
+        public string Id { get; set; }
+        public string UsuarioId { get; set; }
         public string StatusNota { get; set; }
         public double? Nota { get; set; }
     }

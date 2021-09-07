@@ -23,6 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao.Commands
                      request.AtividadeId,
                      request.UsuarioId,
                      request.Nota,
+                     request.Status,
                      request.DataInclusao,
                      request.DataAlteracao);
 
@@ -32,10 +33,10 @@ namespace SME.GoogleClassroom.Aplicacao.Commands
                 await repositorioNota.InserirNota(notaGsa);
         }
 
-        private NotaGsa MapearEntidade(long id, long atividadeId, long usuarioId, double nota, DateTime criadoEm, DateTime? alteradoEm)
-            => new NotaGsa(id, atividadeId, usuarioId, nota, criadoEm, alteradoEm);
+        private NotaGsa MapearEntidade(string id, long atividadeId, long usuarioId, double nota, StatusGSA status, DateTime criadoEm, DateTime? alteradoEm)
+            => new NotaGsa(id, atividadeId, usuarioId, status, nota, criadoEm, alteradoEm);
 
-        private async Task<bool> RegistroExistente(long id)
+        private async Task<bool> RegistroExistente(string id)
             => await repositorioNota.RegistroExiste(id);
     }
 }
