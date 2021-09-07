@@ -4,5 +4,6 @@
     {
         public static string RotaMuralAvisosSync => "sgp.mural.avisos.sync";
         public static string RotaAtividadesSync => "sgp.atividade.avaliativa.sync";
+        public static string RotaAtividadesNotasSync = "sgp.atividade.avaliativa.notas.sync";
     }
 }
