@@ -372,13 +372,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
             {
+                // Atividades
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesTratar, false, consumer);
-            }
-            
-            if (consumoDeFilasOptions.Gsa.CargaNotasGsa)
-            {
+
+                // Notas
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasProcessar, false, consumer);

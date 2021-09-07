@@ -11,7 +11,6 @@
     public class ConsumoDeFilasGsa
     {
         public bool CargaAtividadesGsa { get; set; }
-        public bool CargaNotasGsa { get; set; }
         public bool CargaMuralAvisosGsa { get; set; }
         public bool CargaUsuarioGsa { get; set; }
         public bool ProcessarUsuarioGsa { get; set; }
