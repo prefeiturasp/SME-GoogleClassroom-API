@@ -19,6 +19,6 @@
         ArquivarCursosTurmasExtintas = 16,
         ProfessorInativar = 17,
         ArquivarCursosPorAnoLetivo = 18,
-        NotasAtivicadesCarregar = 19
+        NotasAtividadesCarregar = 19
     }
 }
