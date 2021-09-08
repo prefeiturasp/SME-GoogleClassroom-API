@@ -12,7 +12,12 @@ namespace SME.GoogleClassroom.Dominio
         public DateTime DataInclusao { get; set; }
         public DateTime DataAlteracao { get; set; }
 
-        public DateTime? DataEntrega { get; set; }
+        private DateTime? _dataEntrega;
+        public DateTime? DataEntrega 
+        { 
+            get => _dataEntrega;
+            set => _dataEntrega = value.Equals(DateTime.MinValue) ? null : value;
+        }
         public double NotaMaxima { get; set; }
 
         public AtividadeGsa()

@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 await repositorioAtividade.InserirAtividade(avisoGsa);
         }
 
-        private AtividadeGsa MapearEntidade(long id, long cursoId, long usuarioId, string titulo, string descricao, DateTime criadoEm, DateTime alteradoEm, DateTime dataEntrega, double notaMaxima)
+        private AtividadeGsa MapearEntidade(long id, long cursoId, long usuarioId, string titulo, string descricao, DateTime criadoEm, DateTime alteradoEm, DateTime? dataEntrega, double notaMaxima)
             => new Dominio.AtividadeGsa(id,
                                     titulo,
                                     descricao,
@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                     cursoId,
                                     criadoEm,
                                     alteradoEm, 
-                                    dataEntrega, 
+                                    dataEntrega,
                                     notaMaxima);
 
         private async Task<bool> RegistroExistente(long id)

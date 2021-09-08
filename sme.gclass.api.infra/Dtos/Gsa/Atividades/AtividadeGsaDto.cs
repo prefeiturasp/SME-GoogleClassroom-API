@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Infra
         public string UsuarioClassroomId { get; }
         public DateTime CriadoEm { get; }
         public DateTime AlteradoEm { get; }
-        public DateTime DataEntrega { get; set; }
+        public DateTime? DataEntrega { get; set; }
         public double? NotaMaxima { get; set; }
     }
 }
