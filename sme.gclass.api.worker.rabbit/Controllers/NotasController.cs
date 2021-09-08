@@ -58,5 +58,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Executa o tratamento dos erros de importação de notas GSA.        
+        /// </summary>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("erros/tratamentos")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ProcessarErros([FromServices] IImportarNotasGsaProcessarErroUseCase useCase)
+        {
+            await useCase.Executar();
+
+            return Ok();
+        }
     }
 }
