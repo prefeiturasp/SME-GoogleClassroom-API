@@ -36,7 +36,9 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
             retorno.Items = multi.Read<AtividadeGsa>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = retorno.TotalRegistros > 0 ? (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 0;
+            retorno.TotalPaginas = retorno.TotalRegistros > 0
+                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
+                : 0;
 
             return retorno;
         }
@@ -74,7 +76,7 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        
+
         public async Task<long> AlterarAtividade(AtividadeGsa atividadeGsa)
         {
             const string updateQuery = @"update public.atividades
@@ -144,9 +146,10 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<long>(query, new { anoLetivo });
         }
 
-        public async Task<IEnumerable<DadosAvaliacaoDto>> ObterAtividadesPorPeriodo(DateTime dataInicio, DateTime dataFim)
+        public async Task<IEnumerable<DadosAvaliacaoDto>> ObterAtividadesPorPeriodo(DateTime dataInicio,
+            DateTime dataFim, long? cursoId)
         {
-            var query = @"select
+            var query = new StringBuilder(@"select
                                 A.id AS Id, 
                                 A.titulo AS Titulo, 
                                 A.descricao AS Descricao,  
@@ -160,11 +163,19 @@ namespace SME.GoogleClassroom.Dados
                                 A.nota_maxima as NotaMaxima
                           from atividades a 
                          inner join cursos c on c.id = a.curso_id
-                         where (a.data_entrega is null and a.data_inclusao between @dataInicio and @dataFim)
-                           or (a.data_entrega between CURRENT_DATE-1 and CURRENT_DATE)";
+                         where 1=1 ");
+
+            if (cursoId.HasValue)
+            {
+                query.AppendLine(" and c.id = @cursoId ");
+            }
+
+            query.AppendLine(
+                @" and ((a.data_entrega is null and a.data_inclusao between @dataInicio and @dataFim) 
+                    or (a.data_entrega between CURRENT_DATE-1 and CURRENT_DATE))");
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<DadosAvaliacaoDto>(query, new { dataInicio, dataFim });
+            return await conn.QueryAsync<DadosAvaliacaoDto>(query.ToString(), new { dataInicio, dataFim, cursoId });
         }
     }
 }
