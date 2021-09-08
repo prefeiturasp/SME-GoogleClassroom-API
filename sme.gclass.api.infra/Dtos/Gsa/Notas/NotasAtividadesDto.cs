@@ -14,6 +14,7 @@ namespace SME.GoogleClassroom.Infra
         public StatusGSA Status { get; set; }
         public string CursoNome { get; set; }
         public string CursoSecao { get; set; }
+        public DateTime DataImportacao { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAlteracao { get; set; }
     }

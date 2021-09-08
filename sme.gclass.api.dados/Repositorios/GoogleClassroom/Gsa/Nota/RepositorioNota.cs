@@ -114,6 +114,7 @@ namespace SME.GoogleClassroom.Dados
                                             n.status,
                                             c.nome as cursoNome,
                                             c.secao cursoSecao,
+                                            n.data_importacao AS DataImportacao, 
                                             n.data_inclusao AS DataInclusao, 
                                             n.data_alteracao AS DataAlteracao ");
 
