@@ -10,6 +10,6 @@ namespace SME.GoogleClassroom.Infra
 
         [Required]
         [DefaultValue("2021-02-20")]
-        public DateTime DataReferencia { get; set; }
+        public DateTime DataImportacao { get; set; }
     }
 }

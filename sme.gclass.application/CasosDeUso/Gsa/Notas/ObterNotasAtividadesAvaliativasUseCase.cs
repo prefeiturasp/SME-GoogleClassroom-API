@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
-            return await mediator.Send(new ObterNotasAtividadesAvaliativasQuery(paginacao, filtro.AtividadeId, filtro.DataReferencia));
+            return await mediator.Send(new ObterNotasAtividadesAvaliativasQuery(paginacao, filtro.AtividadeId, filtro.DataImportacao));
         }
     }
 }
