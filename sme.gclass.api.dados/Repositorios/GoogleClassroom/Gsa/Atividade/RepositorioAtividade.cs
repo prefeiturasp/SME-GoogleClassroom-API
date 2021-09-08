@@ -15,7 +15,6 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-
         public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataCurso(Paginacao paginacao,
             DateTime dataReferencia, long? cursoId)
         {
@@ -41,7 +40,6 @@ namespace SME.GoogleClassroom.Dados
 
             return retorno;
         }
-
 
         private string MontaQueryObterAvisosPorData(bool ehParaPaginacao, Paginacao paginacao, long? cursoId)
         {
@@ -76,8 +74,6 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        
-        
         
         public async Task<long> AlterarAtividade(AtividadeGsa atividadeGsa)
         {
@@ -135,62 +131,6 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from atividades where id = @id", new { id });
         }
 
-        public async Task<PaginacaoResultadoDto<DadosAvaliacaoDto>> ObterAtividadesPorComponenteDataReferencia(Paginacao paginacao, long componenteCurricularId, DateTime dataReferencia)
-        {
-            var queryCompleta = new StringBuilder();
-
-            queryCompleta.AppendLine(MontaQueryObterAtividadesPorComponenteCurricular(false, paginacao));
-            queryCompleta.AppendLine(MontaQueryObterAtividadesPorComponenteCurricular(true, paginacao));
-
-            var retorno = new PaginacaoResultadoDto<DadosAvaliacaoDto>();
-
-            using var conn = ObterConexao();
-
-            var parametros = new
-            {
-                dataReferencia,
-                componenteCurricularId
-            };
-
-            using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
-            retorno.Items = multi.Read<DadosAvaliacaoDto>();
-            retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = retorno.TotalRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 0;
-
-            return retorno;
-        }
-
-        private string MontaQueryObterAtividadesPorComponenteCurricular(bool ehParaPaginacao, Paginacao paginacao)
-        {
-            var queryCompleta = new StringBuilder("SELECT ");
-
-            if (ehParaPaginacao)
-                queryCompleta.AppendLine("count(*)");
-            else
-            {
-                queryCompleta.AppendLine(@" A.id AS Id,
-                                            A.titulo AS Titulo,
-                                            C.turma_id as TurmaId,
-                                            A.usuario_id AS UsuarioId,
-                                            A.curso_id AS CursoId,
-                                            A.data_inclusao AS DataInclusao, 
-                                            A.data_alteracao AS DataAlteracao,
-                                            A.data_entrega as DataEntrega,
-                                            A.nota_maxima as NotaMaxima");
-            }
-
-            queryCompleta.AppendLine(@"FROM atividades A 
-                                      INNER JOIN CURSOS C ON C.Id = A.CURSO_ID 
-                                      WHERE A.DATA_INCLUSAO >= @dataReferencia 
-                                        AND C.COMPONENTE_CURRICULAR_ID = @componenteCurricularId");
-
-            if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
-                queryCompleta.AppendLine(
-                    $" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
-
-            return queryCompleta.ToString();
-        }
-
         public async Task<IEnumerable<long>> ObterComponentesIdsAtividadesPorAnoLetivo(int anoLetivo)
         {
             const string query = @"select distinct(c.componente_curricular_id) as componente_curricular_id
@@ -202,6 +142,29 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.QueryAsync<long>(query, new { anoLetivo });
+        }
+
+        public async Task<IEnumerable<DadosAvaliacaoDto>> ObterAtividadesPorPeriodo(DateTime dataInicio, DateTime dataFim)
+        {
+            var query = @"select
+                                A.id AS Id, 
+                                A.titulo AS Titulo, 
+                                A.descricao AS Descricao,  
+                                A.usuario_id AS UsuarioId,
+                                c.turma_id AS TurmaId,
+                                c.componente_curricular_id as ComponenteCurricularId,
+                                A.curso_id AS CursoId,
+                                A.data_inclusao AS DataInclusao, 
+                                A.data_alteracao AS DataAlteracao,
+                                A.data_entrega as DataEntrega,
+                                A.nota_maxima as NotaMaxima
+                          from atividades a 
+                         inner join cursos c on c.id = a.curso_id
+                         where (a.data_entrega is null and a.data_inclusao between @dataInicio and @dataFim)
+                           or (a.data_entrega between CURRENT_DATE-1 and CURRENT_DATE)";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<DadosAvaliacaoDto>(query, new { dataInicio, dataFim });
         }
     }
 }

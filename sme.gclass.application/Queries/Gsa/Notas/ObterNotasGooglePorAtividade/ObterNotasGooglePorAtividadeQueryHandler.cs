@@ -10,7 +10,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Notas.ObterNotasGooglePorAtividade
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterNotasGooglePorAtividadeQueryHandler : BaseIntegracaoGoogleClassroomHandler<ObterNotasGooglePorAtividadeQuery, PaginaConsultaNotasGsaDto>
     {
@@ -33,12 +33,17 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Gsa.Notas.ObterNotasGooglePorAti
             var dadosAtividade = request.DadosAtividade;
             var retorno = new PaginaConsultaNotasGsaDto(dadosAtividade);
 
-            var notasGsa = await ObterNotasDaPagina(servicoClassroom, dadosAtividade.CursoId, dadosAtividade.AtividadeId, request.TokenProximaPagina);
+            var notasGsa = await ObterNotasDaPagina(servicoClassroom, dadosAtividade.CursoId, dadosAtividade.Id, request.TokenProximaPagina);
             if (notasGsa.StudentSubmissions != null)
             {
                 foreach (var studenSubmission in notasGsa.StudentSubmissions)
                 {
-                    retorno.Notas.Add(new NotaGsaDto(studenSubmission.Id, studenSubmission.UserId, studenSubmission.State, studenSubmission.AssignedGrade));
+                    retorno.Notas.Add(new NotaGsaDto(studenSubmission.Id,
+                                                     studenSubmission.UserId,
+                                                     studenSubmission.State,
+                                                     studenSubmission.AssignedGrade,
+                                                     (DateTime)studenSubmission.CreationTime,
+                                                     (DateTime?)studenSubmission.UpdateTime));
                 }
             }
             retorno.TokenProximaPagina = notasGsa.NextPageToken;

@@ -7,6 +7,7 @@ CREATE TABLE public.notas
     usuario_id    INT8         NOT NULL,
 	nota 		  NUMERIC(5,2) NOT NULL,
 	status		  INT4		   NOT NULL,
+    data_importacao TIMESTAMP  NOT NULL,
     data_inclusao TIMESTAMP    NOT NULL,
     data_alteracao TIMESTAMP   NULL,
 	CONSTRAINT 	  notas_pk PRIMARY KEY (id)

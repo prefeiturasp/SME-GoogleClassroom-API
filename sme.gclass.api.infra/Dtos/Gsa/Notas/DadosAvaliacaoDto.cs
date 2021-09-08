@@ -7,6 +7,7 @@ namespace SME.GoogleClassroom.Infra
         public long Id { get; set; }
         public string Titulo { get; set; }
         public long TurmaId { get; set; }
+        public long ComponenteCurricularId { get; set; }
         public long UsuarioId { get; set; }
         public long CursoId { get; set; }
         public DateTime DataInclusao { get; set; }
@@ -19,10 +20,10 @@ namespace SME.GoogleClassroom.Infra
         {
         }
 
-        public DadosAvaliacaoDto(long id, string Titulo, long turmaId, long usuarioId, long cursoId, DateTime dataInclusao, DateTime dataAlteracao, DateTime? dataEntrega, double? notaMaxima)
+        public DadosAvaliacaoDto(long id, string titulo, long turmaId, long usuarioId, long cursoId, DateTime dataInclusao, DateTime dataAlteracao, DateTime? dataEntrega, double? notaMaxima)
         {
             Id = id;
-            this.Titulo = Titulo;
+            Titulo = titulo;
             TurmaId = turmaId;
             UsuarioId = usuarioId;
             CursoId = cursoId;

@@ -262,10 +262,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IImportarAtividadesCursoGsaUseCase, ImportarAtividadesCursoGsaUseCase>();
 
             //Notas
-            services.TryAddScoped<IObterNotasUseCase, ObterNotasUseCase>();
-            services.TryAddScoped<ICarregarComponentesCurricularesNotasUseCase, CarregarComponentesCurricularesNotasUseCase>();
-            services.TryAddScoped<ISincronizarComponentesCurricularesNotasUseCase, SincronizarComponentesCurricularesNotasUseCase>();
-            services.TryAddScoped<IImportarNotasGsaUseCase, ImportarNotasGsaUseCase>();
+            services.TryAddScoped<ICarregarAtividadesParaSincronizarNotasUseCase, CarregarAtividadesParaSincronizarNotasUseCase>();
+            services.TryAddScoped<ITratarImportacaoDeNotasDaAtividadeUseCase, TratarImportacaoDeNotasDaAtividadeUseCase>();
+            services.TryAddScoped<IExecutarImportacaoDeNotasDaAtividadeUseCase, ExecutarImportacaoDeNotasDaAtividadeUseCase>();
             services.TryAddScoped<IImportarNotasGsaProcessarErroUseCase, ImportarNotasGsaProcessarErroUseCase>();
             services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
 

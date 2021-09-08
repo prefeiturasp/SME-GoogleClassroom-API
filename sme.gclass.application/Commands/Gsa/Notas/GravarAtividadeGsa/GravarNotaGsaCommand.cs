@@ -7,7 +7,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class GravarNotaGsaCommand : IRequest
     {
-        public GravarNotaGsaCommand(string id, long atividadeId, long usuarioId, double nota, StatusGSA status, DateTime dataInclusao, DateTime? dataAlteracao)
+        public GravarNotaGsaCommand(string id, long atividadeId, long usuarioId, double? nota, StatusGSA status, DateTime dataInclusao, DateTime? dataAlteracao = null)
         {
             Id = id;
             AtividadeId = atividadeId;
@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public string Id { get; set; }
         public long AtividadeId { get; set; }
         public long UsuarioId { get; set; }
-        public double Nota { get; set; }
+        public double? Nota { get; set; }
         public StatusGSA Status { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataAlteracao { get; set; }
@@ -42,10 +42,6 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(a => a.UsuarioId)
                 .NotEmpty()
                 .WithMessage("O índice do usuário deve ser informado para geração da nota");
-
-            RuleFor(a => a.Nota)
-                .NotNull()
-                .WithMessage("A nota ser informada");
 
             RuleFor(a => a.DataInclusao)
                 .NotEmpty()
