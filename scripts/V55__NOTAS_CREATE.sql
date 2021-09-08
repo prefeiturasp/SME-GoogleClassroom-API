@@ -5,7 +5,7 @@ CREATE TABLE public.notas
     id            varchar(50)  NOT NULL,
     atividade_id  INT8         NOT NULL,
     usuario_id    INT8         NOT NULL,
-	nota 		  NUMERIC(5,2) NOT NULL,
+	nota 		  NUMERIC(5,2) NULL,
 	status		  INT4		   NOT NULL,
     data_importacao TIMESTAMP  NOT NULL,
     data_inclusao TIMESTAMP    NOT NULL,
