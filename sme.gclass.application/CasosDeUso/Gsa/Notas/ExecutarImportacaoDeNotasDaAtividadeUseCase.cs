@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception e)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasImportarErro, importacaoDto));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSyncErro, importacaoDto));
                 SentrySdk.CaptureMessage($"Não foi possível importar a nota {importacaoDto.Nota.Id} referente a atividade {importacaoDto.DadosAvaliacao.Id} do aluno {importacaoDto.Nota.UsuarioId}");
                 throw e;
             }
