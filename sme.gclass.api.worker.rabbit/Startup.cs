@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
 using Prometheus;
 using Sentry;
 using SME.GoogleClassroom.Infra;
@@ -15,6 +17,7 @@ using SME.GoogleClassroom.Worker.Rabbit.Middlewares;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
@@ -36,6 +39,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             ConfiguraVariaveisAmbiente(services);
 
             RegistraDependencias.Registrar(services, Configuration);
+
+            RegistrarHttpClients(services, Configuration);
 
             services.AddRabbit();
             services.AddPolicies();
@@ -86,6 +91,25 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddSingleton(variaveisGlobais);
             services.AddSingleton(consumoDeFilasOptions);
             services.AddSingleton(gsaSyncOptions);
+        }
+
+        private static void RegistrarHttpClients(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient(name: "servicoSgp", c =>
+            {
+                c.BaseAddress = new Uri(configuration.GetSection("UrlSgp").Value);
+                c.DefaultRequestHeaders.Add("Accept", "application/json");
+                c.DefaultRequestHeaders.Add("x-sgp-api-key", configuration.GetSection("ChaveIntegracaoSgpApi").Value);
+
+            }).AddPolicyHandler(GetRetryPolicy());
+        }
+
+        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(3,
+                                                                            retryAttempt)));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

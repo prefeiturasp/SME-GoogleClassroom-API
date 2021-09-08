@@ -7,5 +7,6 @@
         DiasRemocaoAluno = 3,
         DiasRemocaoProfessor = 4,
         DiasInativacaoFuncionario = 5,
+        TotalDiasImportacaoNotas = 6,
     }
 }

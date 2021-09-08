@@ -27,7 +27,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 request.AtividadeDto.Titulo,
                 request.AtividadeDto.Descricao,
                 request.AtividadeDto.CriadoEm,
-                request.AtividadeDto.AlteradoEm);
+                request.AtividadeDto.AlteradoEm,
+                request.AtividadeDto.DataEntrega,
+                request.AtividadeDto.NotaMaxima.Value) ;
 
             if (await RegistroExistente(request.AtividadeDto.Id))
                 await repositorioAtividade.AlterarAtividade(avisoGsa);
@@ -35,14 +37,16 @@ namespace SME.GoogleClassroom.Aplicacao
                 await repositorioAtividade.InserirAtividade(avisoGsa);
         }
 
-        private AtividadeGsa MapearEntidade(long id, long cursoId, long usuarioId, string titulo, string descricao, DateTime criadoEm, DateTime alteradoEm)
+        private AtividadeGsa MapearEntidade(long id, long cursoId, long usuarioId, string titulo, string descricao, DateTime criadoEm, DateTime alteradoEm, DateTime? dataEntrega, double notaMaxima)
             => new Dominio.AtividadeGsa(id,
                                     titulo,
                                     descricao,
                                     usuarioId,
                                     cursoId,
                                     criadoEm,
-                                    alteradoEm);
+                                    alteradoEm, 
+                                    dataEntrega,
+                                    notaMaxima);
 
         private async Task<bool> RegistroExistente(long id)
             => await repositorioAtividade.RegistroExiste(id);

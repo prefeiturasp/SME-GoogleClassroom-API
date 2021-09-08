@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -14,8 +15,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-
-        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorData(Paginacao paginacao,
+        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataCurso(Paginacao paginacao,
             DateTime dataReferencia, long? cursoId)
         {
             var queryCompleta = new StringBuilder();
@@ -41,7 +41,6 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-
         private string MontaQueryObterAvisosPorData(bool ehParaPaginacao, Paginacao paginacao, long? cursoId)
         {
             var queryCompleta = new StringBuilder("SELECT ");
@@ -56,7 +55,9 @@ namespace SME.GoogleClassroom.Dados
                                             A.usuario_id AS UsuarioId,
                                             A.curso_id AS CursoId,
                                             A.data_inclusao AS DataInclusao, 
-                                            A.data_alteracao AS DataAlteracao ");
+                                            A.data_alteracao AS DataAlteracao,
+                                            A.data_entrega as DataEntrega,
+                                            A.nota_maxima as NotaMaxima");
             }
 
             queryCompleta.AppendLine("FROM atividades A ");
@@ -73,8 +74,6 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        
-        
         
         public async Task<long> AlterarAtividade(AtividadeGsa atividadeGsa)
         {
@@ -105,9 +104,9 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> InserirAtividade(AtividadeGsa avisoGsa)
         {
             const string insertQuery = @"insert into public.atividades
-                                        (id, titulo, descricao, usuario_id, curso_id, data_inclusao, data_alteracao)
+                                        (id, titulo, descricao, usuario_id, curso_id, data_inclusao, data_alteracao, data_entrega, nota_maxima)
                                         values
-                                        (@id, @titulo, @descricao, @usuarioId, @cursoId, @dataInclusao, @dataAlteracao)";
+                                        (@id, @titulo, @descricao, @usuarioId, @cursoId, @dataInclusao, @dataAlteracao, @dataEntrega, @notaMaxima)";
 
             var parametros = new
             {
@@ -118,6 +117,8 @@ namespace SME.GoogleClassroom.Dados
                 cursoId = avisoGsa.CursoId,
                 dataInclusao = avisoGsa.DataInclusao,
                 dataAlteracao = avisoGsa.DataAlteracao,
+                dataEntrega = avisoGsa.DataEntrega,
+                notaMaxima = avisoGsa.NotaMaxima
             };
 
             using var conn = ObterConexao();
@@ -128,6 +129,42 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from atividades where id = @id", new { id });
+        }
+
+        public async Task<IEnumerable<long>> ObterComponentesIdsAtividadesPorAnoLetivo(int anoLetivo)
+        {
+            const string query = @"select distinct(c.componente_curricular_id) as componente_curricular_id
+                                     from atividades a 
+                                    inner join cursos c on a.curso_id = c.id
+                                    where EXTRACT(YEAR FROM a.data_inclusao) = @anoLetivo
+                                    order by c.componente_curricular_id ";
+
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query, new { anoLetivo });
+        }
+
+        public async Task<IEnumerable<DadosAvaliacaoDto>> ObterAtividadesPorPeriodo(DateTime dataInicio, DateTime dataFim)
+        {
+            var query = @"select
+                                A.id AS Id, 
+                                A.titulo AS Titulo, 
+                                A.descricao AS Descricao,  
+                                A.usuario_id AS UsuarioId,
+                                c.turma_id AS TurmaId,
+                                c.componente_curricular_id as ComponenteCurricularId,
+                                A.curso_id AS CursoId,
+                                A.data_inclusao AS DataInclusao, 
+                                A.data_alteracao AS DataAlteracao,
+                                A.data_entrega as DataEntrega,
+                                A.nota_maxima as NotaMaxima
+                          from atividades a 
+                         inner join cursos c on c.id = a.curso_id
+                         where (a.data_entrega is null and a.data_inclusao between @dataInicio and @dataFim)
+                           or (a.data_entrega between CURRENT_DATE-1 and CURRENT_DATE)";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<DadosAvaliacaoDto>(query, new { dataInicio, dataFim });
         }
     }
 }
