@@ -24,9 +24,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [HttpPost("sincronizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSincronizacaoNotasUseCase useCase)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSincronizacaoNotasUseCase useCase,
+            [FromQuery] FiltroNotasAtividadesSincronizacaoDto filtro)
         {
-            await useCase.Executar();
+            await useCase.Executar(filtro);
 
             return Ok();
         }

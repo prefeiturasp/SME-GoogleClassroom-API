@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public async Task<IEnumerable<DadosAvaliacaoDto>> Handle(ObterAtividadesPorPeriodoQuery request, CancellationToken cancellationToken)
-            => await repositorioAtividade.ObterAtividadesPorPeriodo(request.DataInicio, request.DataFim);
+            => await repositorioAtividade.ObterAtividadesPorPeriodo(request.DataInicio, request.DataFim, request.CursoId);
     }
 }
