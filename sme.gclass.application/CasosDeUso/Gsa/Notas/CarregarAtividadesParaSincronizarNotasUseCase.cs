@@ -15,10 +15,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
+            var filtro = mensagem.ObterObjetoMensagem<FiltroNotasAtividadesSincronizacaoDto>();
             var ultimaExecucao = await ObterUltimaExecucao();
             var periodo = await ObterPeriodoDatasImportacaoAtividades(ultimaExecucao);
 
-            var atividades = await mediator.Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim));
+            var atividades = await mediator.Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim, filtro.CursoId));
             foreach(var atividade in atividades)
             {
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, new TratarImportacaoNotasAvalidacaoDto(atividade)));

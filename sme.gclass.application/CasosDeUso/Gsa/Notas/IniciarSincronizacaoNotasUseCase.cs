@@ -11,9 +11,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public async Task Executar()
+        public async Task Executar(FiltroNotasAtividadesSincronizacaoDto filtro)
         {
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesCarregar, null));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesCarregar, filtro));
         }
     }
 }
