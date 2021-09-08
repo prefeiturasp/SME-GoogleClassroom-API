@@ -120,7 +120,7 @@ namespace SME.GoogleClassroom.Dados
             queryCompleta.AppendLine("FROM notas n ");
             queryCompleta.AppendLine(@"INNER JOIN atividades a on a.id = n.atividade_id
                                        INNER JOIN cursos c on c.id = a.curso_id ");
-            queryCompleta.AppendLine("WHERE n.data_inclusao = @dataReferencia ");
+            queryCompleta.AppendLine("WHERE n.data_importacao = @dataReferencia ");
 
 
             if (atividadeId.HasValue)
