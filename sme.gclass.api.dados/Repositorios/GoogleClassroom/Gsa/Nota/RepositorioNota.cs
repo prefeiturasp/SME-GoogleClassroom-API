@@ -19,6 +19,7 @@ namespace SME.GoogleClassroom.Dados
                                               , usuario_id = @usuarioId
                                               , nota = @nota
                                               , status = @status
+                                              , data_importacao = @dataImportacao
                                               , data_inclusao = @dataInclusao
                                               , data_alteracao = @dataAlteracao
                                         where id = @id";
@@ -30,6 +31,7 @@ namespace SME.GoogleClassroom.Dados
                 usuarioId = notaGsa.UsuarioId,
                 nota = notaGsa.Nota,
                 status = (int)notaGsa.Status,
+                dataImportacao = notaGsa.DataImportacao,
                 dataInclusao = notaGsa.DataInclusao,
                 dataAlteracao = notaGsa.DataAlteracao,
             };
@@ -41,9 +43,9 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> InserirNota(NotaGsa notaGsa)
         {
             const string insertQuery = @"insert into public.notas
-                                        (id, atividade_id, usuario_id, nota, status, data_inclusao, data_alteracao)
+                                        (id, atividade_id, usuario_id, nota, status, data_importacao, data_inclusao, data_alteracao)
                                         values
-                                        (@id, @atividadeId, @usuarioId, @nota, @status, @dataInclusao, @dataAlteracao)";
+                                        (@id, @atividadeId, @usuarioId, @nota, @status, @dataImportacao, @dataInclusao, @dataAlteracao)";
 
             var parametros = new
             {
@@ -52,6 +54,7 @@ namespace SME.GoogleClassroom.Dados
                 usuarioId = notaGsa.UsuarioId,
                 nota = notaGsa.Nota,
                 status = (int)notaGsa.Status,
+                dataImportacao = notaGsa.DataImportacao,
                 dataInclusao = notaGsa.DataInclusao,
                 dataAlteracao = notaGsa.DataAlteracao,
             };
