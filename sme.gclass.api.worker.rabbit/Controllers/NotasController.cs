@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Retorna as notas das atividades que estão incluídas no Google Classroom.
+        /// Retorna as notas das atividades que foram importadas do Google Classroom.
         /// </summary>
         /// <remarks>
         /// **Importante:** Para retornar todos os registros sem aplicar paginação informe o valor 0 (zero) nos campos *PaginaNumero* e *RegistrosQuantidade*:
@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         ///     GET
         ///     {
         ///        "AtividadeId": "0",
-        ///        "DataReferencia": "2021-02-20",
+        ///        "DataImportacao": "2021-02-20",
         ///        "PaginaNumero" :" 0",
         ///        "RegistrosQuantidade" : "0"
         ///     }
