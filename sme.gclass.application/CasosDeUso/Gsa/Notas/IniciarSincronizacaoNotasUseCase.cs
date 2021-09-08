@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task Executar(FiltroNotasAtividadesSincronizacaoDto filtro)
         {
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesCarregar, filtro.CursoId));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesCarregar, filtro));
         }
     }
 }
