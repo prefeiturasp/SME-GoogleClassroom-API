@@ -171,7 +171,7 @@ namespace SME.GoogleClassroom.Dados
             }
 
             query.AppendLine(
-                @" and ((a.data_entrega is null and a.data_inclusao between @dataInicio and @dataFim) 
+                @" and ((a.data_inclusao between @dataInicio and @dataFim) 
                     or (a.data_entrega = CURRENT_DATE))");
 
             using var conn = ObterConexao();
