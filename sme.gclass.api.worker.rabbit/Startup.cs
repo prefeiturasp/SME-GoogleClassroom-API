@@ -100,7 +100,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 c.BaseAddress = new Uri(configuration.GetSection("UrlSgp").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
                 c.DefaultRequestHeaders.Add("x-sgp-api-key", configuration.GetSection("ChaveIntegracaoSgpApi").Value);
-
             }).AddPolicyHandler(GetRetryPolicy());
         }
 
