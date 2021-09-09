@@ -9,8 +9,9 @@ namespace SME.GoogleClassroom.Infra
         public string DataAvaliacao { get; set; }
         public string Titulo { get; set; }
         public long AtividadeId { get; set; }
-        public long UsuarioId { get; set; }
-        public double Nota { get; set; }
+        public string UsuarioId { get; set; }
+        public string CodigoAluno { get; set; }
+        public double? Nota { get; set; }
         public StatusGSA Status { get; set; }
         public string CursoNome { get; set; }
         public string CursoSecao { get; set; }

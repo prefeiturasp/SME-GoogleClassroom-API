@@ -25,7 +25,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, new TratarImportacaoNotasAvalidacaoDto(atividade)));
             }
 
-            await AtualizarUltimaExecucao();
+            if (!filtro.CursoId.HasValue)
+                await AtualizarUltimaExecucao();
+
             return true;
         }
 
@@ -39,7 +41,22 @@ namespace SME.GoogleClassroom.Aplicacao
             var anoLetivo = DateTime.Now.Year;
 
             var totalDiasParaImportacao = await ObterTotalDiasParaImportacaoDeNotas(anoLetivo);
-            return (ultimaExecucao.AddDays(-totalDiasParaImportacao), DateTime.Today.AddDays(-totalDiasParaImportacao));
+            var dataFim = await ObterDataFim(totalDiasParaImportacao);
+
+            return (ultimaExecucao.AddDays(-totalDiasParaImportacao), dataFim);
+        }
+
+        private async Task<DateTime> ObterDataFim(int totalDiasParaImportacao)
+        {
+            return await EstaEmFechamento() ?
+                DateTime.Today :
+                DateTime.Today.AddDays(-totalDiasParaImportacao);
+        }
+
+        private async Task<bool> EstaEmFechamento()
+        {
+            var periodoFechamento = await mediator.Send(new ObterPeriodoFechamentoVigentePorAnoModalidadeQuery(DateTime.Now.Year));
+            return periodoFechamento != null;
         }
 
         private async Task<DateTime> ObterUltimaExecucao()
