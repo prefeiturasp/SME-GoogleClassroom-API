@@ -11,7 +11,6 @@ namespace SME.GoogleClassroom.Infra
         }
 
         public string ConnectionStringEol => configuration.GetConnectionString("EolConnection");
-        public string ConnectionStringSgp => configuration.GetConnectionString("SGP_Postgres");
         public string ConnectionStringGoogleClassroom => configuration.GetConnectionString("GoogleClassroomConnection");
     }
 }

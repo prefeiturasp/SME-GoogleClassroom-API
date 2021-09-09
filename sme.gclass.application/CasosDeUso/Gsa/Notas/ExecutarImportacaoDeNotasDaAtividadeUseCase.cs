@@ -23,11 +23,14 @@ namespace SME.GoogleClassroom.Aplicacao
                 var status = Enum.Parse<StatusGSA>(importacaoDto.Nota.StatusNota);
                 await mediator.Send(new GravarNotaGsaCommand(importacaoDto.Nota.Id,
                                                              importacaoDto.DadosAvaliacao.Id,
-                                                             usuario.Indice,
+                                                             importacaoDto.Nota.UsuarioId,
                                                              importacaoDto.Nota.Nota,
                                                              status,
                                                              importacaoDto.Nota.DataInclusao,
                                                              importacaoDto.Nota.DataAlteracao));
+
+                if (usuario == null)
+                    return true;
 
                 var notaFinal = TratarNotaAluno(importacaoDto.DadosAvaliacao, importacaoDto.Nota);
                 var notaSgpDto = new NotaSgpDto(importacaoDto.DadosAvaliacao.TurmaId,

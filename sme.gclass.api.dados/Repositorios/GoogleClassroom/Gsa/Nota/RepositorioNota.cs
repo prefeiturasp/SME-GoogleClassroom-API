@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Dados
         {
             const string updateQuery = @"update public.notas
                                             set atividade_id = @atividadeId
-                                              , usuario_id = @usuarioId
+                                              , usuario_classroom_id = @usuarioClassroomId
                                               , nota = @nota
                                               , status = @status
                                               , data_importacao = @dataImportacao
@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Dados
             {
                 id = notaGsa.Id,
                 atividadeId = notaGsa.AtividadeId,
-                usuarioId = notaGsa.UsuarioId,
+                usuarioClassroomId = notaGsa.UsuarioClassroomId,
                 nota = notaGsa.Nota,
                 status = (int)notaGsa.Status,
                 dataImportacao = notaGsa.DataImportacao,
@@ -45,15 +45,15 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> InserirNota(NotaGsa notaGsa)
         {
             const string insertQuery = @"insert into public.notas
-                                        (id, atividade_id, usuario_id, nota, status, data_importacao, data_inclusao, data_alteracao)
+                                        (id, atividade_id, usuario_classroom_id, nota, status, data_importacao, data_inclusao, data_alteracao)
                                         values
-                                        (@id, @atividadeId, @usuarioId, @nota, @status, @dataImportacao, @dataInclusao, @dataAlteracao)";
+                                        (@id, @atividadeId, @usuarioClassroomId, @nota, @status, @dataImportacao, @dataInclusao, @dataAlteracao)";
 
             var parametros = new
             {
                 id = notaGsa.Id,
                 atividadeId = notaGsa.AtividadeId,
-                usuarioId = notaGsa.UsuarioId,
+                usuarioClassroomId = notaGsa.UsuarioClassroomId,
                 nota = notaGsa.Nota,
                 status = (int)notaGsa.Status,
                 dataImportacao = notaGsa.DataImportacao,
@@ -108,8 +108,9 @@ namespace SME.GoogleClassroom.Dados
                 queryCompleta.AppendLine(@" n.id AS Id,
 		                                    a.data_inclusao as dataAvaliacao,
 		                                    a.titulo,
-                                            n.atividade_id AS AtividadeId,                                              
-                                            n.usuario_id AS UsuarioId,
+                                            n.atividade_id AS AtividadeId,
+                                            n.usuario_classroom_id AS UsuarioClassroomId,
+                                            u.Indice as CodigoAluno,
                                             n.nota,
                                             n.status,
                                             c.nome as cursoNome,
@@ -121,7 +122,11 @@ namespace SME.GoogleClassroom.Dados
             queryCompleta.AppendLine("FROM notas n ");
             queryCompleta.AppendLine(@"INNER JOIN atividades a on a.id = n.atividade_id
                                        INNER JOIN cursos c on c.id = a.curso_id ");
-            queryCompleta.AppendLine("WHERE n.data_importacao = @dataReferencia ");
+
+            if (!ehParaPaginacao)
+                queryCompleta.AppendLine(" LEFT JOIN usuarios u on u.google_classroom_id = n.usuario_classroom_id");
+
+            queryCompleta.AppendLine("WHERE n.data_importacao::DATE = @dataReferencia ");
 
 
             if (atividadeId.HasValue)
