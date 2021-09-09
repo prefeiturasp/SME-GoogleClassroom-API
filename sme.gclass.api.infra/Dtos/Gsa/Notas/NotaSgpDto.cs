@@ -13,11 +13,11 @@ namespace SME.GoogleClassroom.Infra
         public double? Nota { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime? DataEntregaAvaliacao { get; set; }
-        public long CodigoAluno { get; set; }
+        public string CodigoAluno { get; set; }
         public string Titulo { get; set; }
 
         public NotaSgpDto(long turmaId, long componenteCurricularId, long atividadeGoogleClassroomId,
-            StatusGSA statusGsa, double? nota, DateTime dataInclusao, DateTime? dataEntregaAvaliacao, long codigoAluno, string titulo)
+            StatusGSA statusGsa, double? nota, DateTime dataInclusao, DateTime? dataEntregaAvaliacao, string codigoAluno, string titulo)
         {
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
