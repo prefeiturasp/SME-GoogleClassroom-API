@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                                 notaFinal,
                                                 importacaoDto.DadosAvaliacao.DataInclusao,
                                                 importacaoDto.DadosAvaliacao.DataEntrega,
-                                                usuario.Indice,
+                                                usuario.Id,
                                                 importacaoDto.DadosAvaliacao.Titulo);
 
                 return await EnviaParaSGP(notaSgpDto);
