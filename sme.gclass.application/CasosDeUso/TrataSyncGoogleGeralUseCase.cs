@@ -46,8 +46,10 @@ namespace SME.GoogleClassroom.Aplicacao
             // Atividades
             if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
             {
-                var filtroAvisosGsa = new FiltroCargaGsaDto();
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroAvisosGsa));
+                var filtroGsa = new FiltroCargaGsaDto();
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroGsa));
+
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesCarregar, filtroGsa));
             }
             #endregion
 

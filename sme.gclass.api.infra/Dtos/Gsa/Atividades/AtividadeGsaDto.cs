@@ -4,8 +4,7 @@ namespace SME.GoogleClassroom.Infra
 {
     public class AtividadeGsaDto
     {
-        public AtividadeGsaDto(string id, string cursoId, string titulo, string descricao, string usuarioClassroomId,
-            object criadoEm, object alteradoEm, DateTime? dataEntrega, double? nota)
+        public AtividadeGsaDto(string id, string cursoId, string titulo, string descricao, string usuarioClassroomId, object criadoEm, object alteradoEm, DateTime? dataEntrega = null, double? notaMaxima = 0)
         {
             Id = long.Parse(id);
             CursoId = long.Parse(cursoId);
@@ -14,8 +13,8 @@ namespace SME.GoogleClassroom.Infra
             UsuarioClassroomId = usuarioClassroomId;
             CriadoEm = (DateTime)criadoEm;
             AlteradoEm = (DateTime)alteradoEm;
-            DataEntrega = dataEntrega ?? DateTime.Now;
-            Nota = nota ?? 0;
+            DataEntrega = dataEntrega.Value;
+            NotaMaxima = notaMaxima ?? 0;
         }
 
         public long Id { get; }
@@ -26,6 +25,6 @@ namespace SME.GoogleClassroom.Infra
         public DateTime CriadoEm { get; }
         public DateTime AlteradoEm { get; }
         public DateTime? DataEntrega { get; set; }
-        public double? Nota { get; }
+        public double? NotaMaxima { get; set; }
     }
 }

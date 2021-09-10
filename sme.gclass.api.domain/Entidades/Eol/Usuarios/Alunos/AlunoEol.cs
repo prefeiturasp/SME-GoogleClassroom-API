@@ -1,5 +1,4 @@
-﻿using SME.GoogleClassroom.Infra;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace SME.GoogleClassroom.Dominio
