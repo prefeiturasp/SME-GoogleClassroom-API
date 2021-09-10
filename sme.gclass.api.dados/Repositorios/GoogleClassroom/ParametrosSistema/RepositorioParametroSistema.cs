@@ -49,14 +49,7 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryAsync<ParametrosSistema>(query, new { ano });
         }
-
-        public async Task<int> ObterUltimoAnoParametroSistema()
-        {
-            const string query = @"select max(ano) from parametro_sistema;";
-
-            using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<int>(query);
-        }
+        
 
         public async Task<long> Salvar(ParametrosSistema parametrosSistema, int novoAno)
         {
