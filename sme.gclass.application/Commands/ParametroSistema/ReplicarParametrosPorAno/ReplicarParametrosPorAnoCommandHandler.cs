@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Sentry;
 using SME.GoogleClassroom.Dados;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -24,31 +25,24 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var parametros = await mediator.Send(new ObterParametroSistemaPorAnoQuery(request.Ano));
 
-            if (parametros != null && parametros.Any())
+            if (parametros != null && !parametros.Any())
             {
-                return false;
-            }
-                
-            var utilmoAno = await mediator.Send(new ObterUtilmoParametroSistemaQuery());
-            if (utilmoAno == null || utilmoAno == 0)
-            {
-                return false;
-            }
-
-            var parametrosSistemasUltimoAno = await mediator.Send(new ObterParametroSistemaPorAnoQuery(utilmoAno));
-            try
-            {
-                foreach (var parametrosSistema in parametrosSistemasUltimoAno)
+                try
                 {
-                    await repositorioParametroSistema.Salvar(parametrosSistema, request.Ano);
-                }
+                    var parametrosSistemasUltimoAno = await mediator.Send(new ObterParametroSistemaPorAnoQuery(request.Ano - 1));
+                    foreach (var parametrosSistema in parametrosSistemasUltimoAno)
+                    {
+                        await repositorioParametroSistema.Salvar(parametrosSistema, request.Ano);
+                    }
 
-                return true;
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    SentrySdk.CaptureMessage($"Não foi possível replicar os parametros do sistema para o ano de {request.Ano}");
+                }
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"houve um erro {ex.Message}");
-            }
+            return false;
         }
     }
 }

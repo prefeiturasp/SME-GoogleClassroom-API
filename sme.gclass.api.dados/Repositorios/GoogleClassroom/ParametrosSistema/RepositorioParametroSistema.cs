@@ -67,12 +67,12 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-                parametrosSistema.Nome,
-                parametrosSistema.Tipo,
-                parametrosSistema.Descricao,
-                parametrosSistema.Valor,
-                novoAno,
-                parametrosSistema.Ativo,
+                nome = parametrosSistema.Nome,
+                tipo = parametrosSistema.Tipo,
+                descricao = parametrosSistema.Descricao,
+                valor = parametrosSistema.Valor,
+                ano = novoAno,
+                ativo = parametrosSistema.Ativo,
             };
 
             using var conn = ObterConexao();
