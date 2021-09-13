@@ -60,17 +60,17 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.CargaInicial.IncluirParametroCa
 
                     await repositorio.InserirCargaInicial(request.Ano, tiposUesConvertidas, uesConvertidas,
                         turmasConvertidas);
-
-                    return true;
                 }
             }
             catch (Exception ex)
             {
                 SentrySdk.CaptureMessage(
                     $"Não foi possível incluir os parametros da carga inicial. {ex.Message}");
+
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }

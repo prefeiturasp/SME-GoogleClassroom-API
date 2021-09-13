@@ -204,14 +204,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpPost("manual")]
+        [HttpPost]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciaCargaInicial ([FromServices] ICargaInicialUseCase useCase, [FromQuery] FiltroCargaInicialDto filtro)
+        public async Task<IActionResult> IniciaCargaInicial([FromServices] ICargaInicialUseCase useCase, [FromQuery] FiltroCargaInicialDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
-            return Ok(retorno);
+            return retorno ? Ok(retorno) : StatusCode(500);
         }
 
     }

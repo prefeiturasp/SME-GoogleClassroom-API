@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao.CasosDeUso.Gsa.Sincronizacao.CargaInicia
             {
                 return false;                
             }
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCargaInicialManual, filtro));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCargaInicial, filtro));
             return true;
         }
     }
