@@ -30,14 +30,14 @@ namespace SME.GoogleClassroom.Dados
                 return await conexao.QueryAsync<CargaInicial>(query, new { ano });
         }
 
-        public async Task<int> InserirCargaInicial(int ano, string tiposUes, string ues, string turmas)
+        public async Task InserirCargaInicial(int ano, string tiposUes, string ues, string turmas)
         {
             var query = @"INSERT INTO public.carga_inicial
                                             (ano, tipos_ue, ues, turmas, criado_em)
-                                            VALUES(@ano, @tiposUes, @ues, @turmas, @criadoem) RETURNING ANO";
+                                            VALUES(@ano, @tiposUes, @ues, @turmas, @criadoEm) RETURNING ano;";
 
-            using (var conexao = ObterConexao())
-                return await conexao.ExecuteAsync(query, new { ano, tiposUes, ues, turmas, criadoem = DateTime.Now });
+            using var conexao = ObterConexao();
+            await conexao.ExecuteAsync(query, new { ano, tiposUes, ues, turmas, criadoEm = DateTime.Now });
         }
     }
 }

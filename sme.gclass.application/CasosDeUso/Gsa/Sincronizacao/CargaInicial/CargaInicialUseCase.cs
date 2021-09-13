@@ -1,12 +1,10 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using SME.GoogleClassroom.Aplicacao.Commands.CargaInicial.IncluirParametroCargaInicial;
 using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Gsa.Sincronizacao.CargaInicial;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Dtos.Gsa.Carga_Inicial;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.CasosDeUso.Gsa.Sincronizacao.CargaInicial
 {
@@ -18,12 +16,15 @@ namespace SME.GoogleClassroom.Aplicacao.CasosDeUso.Gsa.Sincronizacao.CargaInicia
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar(FiltroCargaInicial filtro )
+        public async Task<bool> Executar(FiltroCargaInicialDto filtro )
         {
-            var resposta = await mediator.Send(new IncluirParametroCargaInicialCommand(filtro));
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCargaInicialParametrizado, resposta));
-
-            return resposta != null;
+            var inseriu = await mediator.Send(new IncluirParametroCargaInicialCommand(filtro));
+            if (!inseriu)
+            {
+                return false;                
+            }
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCargaInicialManual, filtro));
+            return true;
         }
     }
 }
