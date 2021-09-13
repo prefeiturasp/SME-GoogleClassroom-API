@@ -83,7 +83,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where email = @email and usuario_tipo = @usuarioTipo and id <> @id limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo }));
+            return await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo, id });
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
