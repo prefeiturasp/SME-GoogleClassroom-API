@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Gsa.Sincronizacao.CargaInicial;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Gsa.Carga_Inicial;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
@@ -192,6 +195,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> IniciarProcessoInativacaoProfessoresFuncionarios([FromServices] IIniciarInativacaoProfessoresEFuncionariosUseCase useCase, string codigo, string cpf, bool processarProfessoresEFuncionarios = true, bool processarFuncionariosIndiretos = true)
         {
             var retorno = await useCase.Executar(codigo, cpf, processarProfessoresEFuncionarios, processarFuncionariosIndiretos);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia a carga inicial.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciaCargaInicial ([FromServices] ICargaInicialUseCase useCase, [FromQuery] FiltroCargaInicial filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
 

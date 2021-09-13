@@ -81,6 +81,7 @@
         public static string FilaGsaAtividadesTratar => "googleclass.gsa.atividades.tratar";
         public static string FilaGsaAtividadesIncluir => "googleclass.gsa.atividades.incluir";
         public static string FilaGsaAtividadesIncluirErro => "googleclass.gsa.atividades.incluir.erro";
+        public static string FilaGsaCargaInicialParametrizado => "googleclass.gsa.carga.inicial.parametrizado.sync";
         #endregion
 
         #region Inativação de Usuários

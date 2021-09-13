@@ -2,7 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
+using SME.GoogleClassroom.Aplicacao.CasosDeUso.Gsa.Sincronizacao.CargaInicial;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Gsa.Sincronizacao.CargaInicial;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
@@ -199,6 +201,8 @@ namespace SME.GoogleClassroom.IoC
             // Arquivamento de cursos por ano e semestre
             services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
             services.TryAddScoped<IObterCursosParaArquivarPaginadoUseCase, ObterCursosParaArquivarPaginadoUseCase>();
+
+            services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
 
 
             RegistrarCasosDeUsoGsa(services);
