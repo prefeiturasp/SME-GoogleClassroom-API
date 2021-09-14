@@ -23,14 +23,17 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de cursos. A mensagem enviada é inválida.");
 
+            var filtroCargaManual = ObterParametrosFiltro(mensagemRabbit);
             var filtro = ObterFiltro(mensagemRabbit);
             var aplicarFiltro = filtro?.Valido ?? false;
 
-            var ultimaExecucaoCursosIncluir = !aplicarFiltro
+            var ultimaExecucaoCursosIncluir = !aplicarFiltro 
                 ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar))
                 : default(DateTime?);
+            if (filtroCargaManual != null) ultimaExecucaoCursosIncluir = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
 
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var parametrosCargaInicialDto = filtroCargaManual != null ? new ParametrosCargaInicialDto(filtroCargaManual.TiposUes, filtroCargaManual.Ues, filtroCargaManual.Turmas, filtroCargaManual.AnoLetivo) :
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
             var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
 
             if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
@@ -65,6 +68,19 @@ namespace SME.GoogleClassroom.Aplicacao
             catch
             {
                 SentrySdk.CaptureMessage("A mensagem enviada para sincronização de cursos é inválida. O filtro não será aplicado.");
+                return null;
+            }
+        }
+
+        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
+        {
+            try
+            {
+                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
+                return filtro;
+            }
+            catch
+            {
                 return null;
             }
         }
