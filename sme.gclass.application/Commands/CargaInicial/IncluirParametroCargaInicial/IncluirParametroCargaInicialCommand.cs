@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using FluentValidation;
 
-namespace SME.GoogleClassroom.Aplicacao.Commands.CargaInicial.IncluirParametroCargaInicial
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirParametroCargaInicialCommand : IRequest<bool>
     {

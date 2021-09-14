@@ -1,15 +1,13 @@
-﻿using MediatR;
-using SME.GoogleClassroom.Dados.Interfaces;
-using SME.GoogleClassroom.Infra;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Sentry;
+using SME.GoogleClassroom.Dados.Interfaces;
 
-namespace SME.GoogleClassroom.Aplicacao.Commands.CargaInicial.IncluirParametroCargaInicial
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirParametroCargaInicialCommandHandler : IRequestHandler<IncluirParametroCargaInicialCommand, bool>
     {
