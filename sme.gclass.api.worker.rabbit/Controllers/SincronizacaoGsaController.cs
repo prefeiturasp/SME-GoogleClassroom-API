@@ -2,12 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
-using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Gsa.Sincronizacao.CargaInicial;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos.Gsa.Carga_Inicial;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
