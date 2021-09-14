@@ -235,8 +235,8 @@ namespace SME.GoogleClassroom.Dados
 
             var parametros = new
             {
-                anoLetivo = dataReferenciaAnoLetivo,
-                dataReferencia = dataReferencia.Date,
+                anoLetivo = dataReferenciaAnoLetivo.Year,
+                dataReferencia = dataReferenciaAnoLetivo.Date,
                 rf,
                 turmaId,
                 componenteCurricularId,
