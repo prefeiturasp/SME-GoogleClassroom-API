@@ -8,6 +8,6 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<ParametrosSistema> ObterParametroSistemaPorTipoEAno(TipoParametroSistema tipo, int ano);
         Task<IEnumerable<ParametrosSistema>> ObterParametroSistemaPorAno(int ano);
-        Task<long> Salvar(ParametrosSistema parametrosSistema, int novoAno);
+        Task<long> ReplicarPorAno(ParametrosSistema parametrosSistema, int novoAno);
     }
 }

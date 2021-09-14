@@ -51,7 +51,7 @@ namespace SME.GoogleClassroom.Dados
         }
         
 
-        public async Task<long> Salvar(ParametrosSistema parametrosSistema, int novoAno)
+        public async Task<long> ReplicarPorAno(ParametrosSistema parametrosSistema, int novoAno)
         {
             var query = @"INSERT INTO PUBLIC.PARAMETRO_SISTEMA
                                     (NOME, TIPO, DESCRICAO, VALOR, ANO, ATIVO)

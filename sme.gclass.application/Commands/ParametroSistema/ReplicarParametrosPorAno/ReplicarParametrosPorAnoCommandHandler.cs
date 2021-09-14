@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     var parametrosSistemasUltimoAno = await mediator.Send(new ObterParametroSistemaPorAnoQuery(request.Ano - 1));
                     foreach (var parametrosSistema in parametrosSistemasUltimoAno)
                     {
-                        await repositorioParametroSistema.Salvar(parametrosSistema, request.Ano);
+                        await repositorioParametroSistema.ReplicarPorAno(parametrosSistema, request.Ano);
                     }
 
                     return true;
