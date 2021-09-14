@@ -4,7 +4,6 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
