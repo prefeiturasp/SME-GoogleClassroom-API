@@ -21,20 +21,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var filtro = mensagem.Mensagem != null ? mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar));
             var paginacao = new Paginacao(0, 0);
-            var parametrosCargaInicialDto = new ParametrosCargaInicialDto();
-            if (filtro != null)
-            {
-                parametrosCargaInicialDto = new ParametrosCargaInicialDto()
-                {
-                    TiposUes = filtro.TiposUes,
-                    Turmas = filtro.Turmas,
-                    Ues = filtro.Ues
-                };
-            }
-            else
-            {
-                parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            }
+            var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) : 
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
             var funcionariosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty, parametrosCargaInicialDto));
 
             foreach (var funcionarioParaIncluirGoogle in funcionariosParaIncluirGoogle.Items)

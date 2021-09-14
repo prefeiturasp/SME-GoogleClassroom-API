@@ -13,10 +13,18 @@ namespace SME.GoogleClassroom.Infra
             Turmas = new List<long>();
         }
 
+        public ParametrosCargaInicialDto(IList<int> tiposUes, IList<long> ues, IList<long> turmas, int? anoLetivo)
+        {
+            TiposUes = tiposUes;
+            Ues = ues;
+            Turmas = turmas;
+            AnoLetivo = anoLetivo;
+        }
+
         public IList<int> TiposUes { get; set; }
         public IList<long> Ues { get; set; }
         public IList<long> Turmas { get; set; }
-        
+        public int? AnoLetivo { get; set; }
 
         public void AdicionaTiposUe(string tiposUe)
         {
