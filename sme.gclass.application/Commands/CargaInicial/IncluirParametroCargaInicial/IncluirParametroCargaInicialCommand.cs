@@ -1,10 +1,7 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos.Gsa.Carga_Inicial;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using FluentValidation;
 
 namespace SME.GoogleClassroom.Aplicacao
 {

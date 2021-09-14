@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MediatR;
-using SME.GoogleClassroom.Aplicacao.Commands.CargaInicial.IncluirParametroCargaInicial;
-using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Gsa.Sincronizacao.CargaInicial;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos.Gsa.Carga_Inicial;
 
-namespace SME.GoogleClassroom.Aplicacao.CasosDeUso.Gsa.Sincronizacao.CargaInicial
+namespace SME.GoogleClassroom.Aplicacao
 {
     public class CargaInicialUseCase : ICargaInicialUseCase
     {

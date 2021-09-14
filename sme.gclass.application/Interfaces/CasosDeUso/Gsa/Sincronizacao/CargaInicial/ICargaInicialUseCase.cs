@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using SME.GoogleClassroom.Infra.Dtos.Gsa.Carga_Inicial;
+using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Gsa.Sincronizacao.CargaInicial
+namespace SME.GoogleClassroom.Aplicacao
 {
     public interface ICargaInicialUseCase
     {

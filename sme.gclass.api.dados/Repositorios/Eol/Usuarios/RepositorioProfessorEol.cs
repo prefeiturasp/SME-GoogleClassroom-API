@@ -23,7 +23,8 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferencia, rf, parametrosCargaInicialDto);
+			var dataReferenciaAnoLetivo = parametrosCargaInicialDto.AnoLetivo.HasValue ? new DateTime(parametrosCargaInicialDto.AnoLetivo.Value, 1, 1) : dataReferencia;
+            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferenciaAnoLetivo, rf, parametrosCargaInicialDto);
 			var parametros = new
 			{
 				anoLetivo = dataReferencia.Year,
