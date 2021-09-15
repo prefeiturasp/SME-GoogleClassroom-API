@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             return new CursoGsaDto
             {
-                Id = cursoGoogle.Id,
+                Id = Convert.ToInt64(cursoGoogle.Id),
                 CriadorId = cursoGoogle.OwnerId,
                 Descricao = cursoGoogle.Description,
                 Nome = cursoGoogle.Name,

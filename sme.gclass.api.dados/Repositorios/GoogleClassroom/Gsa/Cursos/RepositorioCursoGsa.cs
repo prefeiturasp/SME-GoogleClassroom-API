@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<bool> ExistePorIdAsync(string cursoId)
+        public async Task<bool> ExistePorIdAsync(long cursoId)
         {
             var query = @"SELECT exists(SELECT 1 from public.cursos_gsa where id = @cursoId limit 1)";
             using var conn = ObterConexao();

@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioCursoGsa
     {
-        Task<bool> ExistePorIdAsync(string cursoId);
+        Task<bool> ExistePorIdAsync(long cursoId);
 
         Task<int> SalvarAsync(CursoGsa cursoComparativo);
 

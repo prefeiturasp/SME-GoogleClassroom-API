@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (cursoGsaDto is null)
                 throw new NegocioException("Não foi possível processaor o curso GSA. A mensagem enviada é inválida.");
 
-            var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(Convert.ToInt64(cursoGsaDto.Id)));
+            var cursoGoogle = await mediator.Send(new ObterCursoGooglePorIdQuery(cursoGsaDto.Id));
 
             var cursoInseridoManualmente = cursoGoogle is null;
             var cursoGsa = new CursoGsa(cursoGsaDto.Id, cursoGsaDto.Nome, cursoGsaDto.Secao, cursoGsaDto.CriadorId, cursoGsaDto.Descricao, cursoInseridoManualmente, cursoGsaDto.DataInclusao);
