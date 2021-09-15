@@ -272,6 +272,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaGoogleSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaGoogleSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaGoogleSync);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCargaInicial, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCargaInicial, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCargaInicial);
 
             RegistrarFilasDeCargasGsa(canalRabbit, consumoDeFilasOptions);
             RegistrarFilasDeProcessamentoGsa(canalRabbit, consumoDeFilasOptions);
