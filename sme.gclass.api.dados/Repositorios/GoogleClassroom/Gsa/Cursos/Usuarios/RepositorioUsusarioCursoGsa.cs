@@ -94,5 +94,40 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             await conn.ExecuteAsync(query);
         }
+
+        public async Task<bool> RemoverAsync(UsuarioCursoGsa usuarioCursoGsa)
+        {
+            const string query = @"DELETE FROM cursos_usuarios_gsa where curso_id = @cursoId and usuario_id = @usuarioId";
+
+            var parametros = new
+            {
+                cursoId = usuarioCursoGsa.CursoId,
+                usuarioId = usuarioCursoGsa.UsuarioId
+            };
+            
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(query, parametros);
+
+            return true;
+        }
+
+        public async Task<IEnumerable<CursoUsuarioRemoverDto>> ObterAlunosCodigosComRegistroEmCurso(IEnumerable<long> alunosCodigos, long turmaId)
+        {
+            var query = @"SELECT
+                    cu.id as CursoUsuarioId,
+                    c.id as CursoId,
+                    u.indice as UsuarioId,
+                    u.google_classroom_id as UsuarioGsaId
+                FROM cursos_usuarios cu
+               inner join usuarios u on u.indice = cu.usuario_id 
+               inner join cursos c on c.id = cu.curso_id 
+               where c.turma_id = @turmaId
+                 and u.id = ANY(@alunosCodigos)
+                 and not cu.excluido
+                 and u.usuario_tipo = 1";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<CursoUsuarioRemoverDto>(query, new { alunosCodigos, turmaId });
+        }
     }
 }

@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Funcionarios.ObterCursosDoFuncio
         }
 
         public async Task<IEnumerable<FuncionarioCursoEol>> Handle(ObterCursosDoFuncionarioParaIncluirGoogleQuery request, CancellationToken cancellationToken)
-            => await repositorioFuncionarioEol.ObterCursosDoFuncionarioParaIncluirAsync(request.Rf, request.AnoLetivo);
+            => await repositorioFuncionarioEol.ObterCursosDoFuncionarioParaIncluirAsync(request.Rf, request.AnoLetivo, request.ParametrosCargaInicialDto);
     }
 }

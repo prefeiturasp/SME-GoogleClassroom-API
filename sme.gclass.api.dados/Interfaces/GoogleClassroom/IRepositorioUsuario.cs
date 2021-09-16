@@ -19,7 +19,8 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao, long? rf, string email);
 
         Task<int> AtualizarAsync(long id, string nome, string organizationPath);
-
+        Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId);
+        Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId);
         Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId);
 
         Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorRfs(long[] rfs);
@@ -51,5 +52,12 @@ namespace SME.GoogleClassroom.Dados
         Task FinalizarAtualizacaoUsuarioGoogleClassroomIdAsync();
 
         Task<bool> ExisteUsuarioPorGoogleClassroomIdAsync(string googleClassroomId);
+        Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId);
+
+        Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(long[] Codigos);
+        Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional);
+        Task<FuncionarioCurso> ObterFuncionarioECursoPorUsuarioRFECursoId(long usuarioRF, long cursoId);
+        Task<IEnumerable<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretosPorCpfs(string[] Cpfs);
+
     }
 }

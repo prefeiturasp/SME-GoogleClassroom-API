@@ -11,7 +11,9 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IRepositorioCursoGsa repositorioCursoGsa;
         private readonly IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa;
 
-        public LimparTabelasGsaCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioGsa, IRepositorioCursoGsa repositorioCursoGsa, IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa)
+        public LimparTabelasGsaCommandHandler(IRepositorioUsuarioGsa repositorioUsuarioGsa, 
+                                              IRepositorioCursoGsa repositorioCursoGsa, 
+                                              IRepositorioUsuarioCursoGsa repositorioUsuarioCursoGsa)
         {
             this.repositorioUsuarioGsa = repositorioUsuarioGsa;
             this.repositorioCursoGsa = repositorioCursoGsa;

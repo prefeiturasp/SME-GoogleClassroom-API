@@ -604,5 +604,140 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
         }
+
+        public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId)
+        {
+            var query = new StringBuilder(@"select distinct(c.turma_id) from cursos c where extract(year from data_inclusao) = @anoLetivo ");
+            if (turmaId > 0)
+                query.AppendLine(" AND c.turma_id = @turmaId");
+
+            if (turmaId > 0)
+                query.AppendLine(" and c.turma_id = @turmaId");
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo, turmaId });
+        }
+
+        public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)
+        {
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new { googleClassroomId });
+        }
+
+        public async Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where u.google_classroom_id = @classroomId";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { classroomId });
+        }
+
+        public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
+        {
+            const string updateQuery = @"update public.usuarios
+                                         set
+                                            organization_path = @estruturaOrganizacional,
+                                            data_atualizacao = current_timestamp
+                                         where
+                                            indice = @id";
+
+            var parametros = new
+            {
+                id,
+                estruturaOrganizacional
+            };
+
+            using var conn = ObterConexao();
+            await conn.ExecuteAsync(updateQuery, parametros);
+            return true;
+        }
+
+        public async Task<IEnumerable<ProfessorGoogle>> ObterFuncionariosEProfessoresPorCodigos(long[] Codigos)
+        {
+            var query = @"SELECT
+                                 u.indice,
+                                 u.id as Rf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           WHERE (usuario_tipo = @professor OR usuario_tipo = @funcionario)
+                                 and id = any(@Codigos)";
+
+            var parametros = new
+            {
+                Codigos,
+                professor = UsuarioTipo.Professor,
+                funcionario = UsuarioTipo.Funcionario,
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<ProfessorGoogle>(query, parametros);
+        }
+
+        public async Task<FuncionarioCurso> ObterFuncionarioECursoPorUsuarioRFECursoId(long usuarioRF, long cursoId)
+        {
+            var query = @"select 
+                                cu.id as CursoUsuarioId,
+                                u.indice as UsuarioId,
+                                u.google_classroom_id as UsuarioGsaId,
+                                u.email as Email
+                          from cursos_usuarios cu
+                                inner join usuarios u on u.indice = cu.usuario_id
+                           where u.id = @usuarioRF
+                                and cu.curso_id = @cursoId;";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new { usuarioRF, cursoId });
+        }
+
+
+        public async Task<IEnumerable<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretosPorCpfs(string[] Cpfs)
+        {
+            try
+            {
+                var query = @"SELECT
+                                 u.indice,
+                                 u.id as Rf,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           WHERE usuario_tipo = @funcionarioIndireto
+                                 and cpf = any(@Cpfs)";
+
+                var parametros = new
+                {
+                    Cpfs,
+                    funcionarioIndireto = UsuarioTipo.FuncionarioIndireto,
+                };
+
+                using var conn = ObterConexao();
+
+                return await conn.QueryAsync<FuncionarioIndiretoGoogle>(query, parametros);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

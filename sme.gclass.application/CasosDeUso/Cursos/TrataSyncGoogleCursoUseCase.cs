@@ -30,7 +30,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar))
                 : default(DateTime?);
 
-            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
+
             if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
             {
                 foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)

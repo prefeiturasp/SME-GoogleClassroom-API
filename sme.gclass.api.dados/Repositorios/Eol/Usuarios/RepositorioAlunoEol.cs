@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
@@ -14,11 +16,11 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusaoAsync(Paginacao paginacao, int anoLetivo, DateTime? dataReferencia, long? codigoEol)
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosParaInclusaoAsync(Paginacao paginacao, int anoLetivo, DateTime? dataReferencia, long? codigoEol, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             dataReferencia = dataReferencia?.Add(new TimeSpan(0, 0, 0));
 
-            var query = MontaQueryAlunosParaInclusao(paginacao, dataReferencia, codigoEol);
+            var query = MontaQueryAlunosParaInclusao(paginacao, dataReferencia, codigoEol, parametrosCargaInicialDto);
 
             using var conn = ObterConexao();
 
@@ -29,8 +31,11 @@ namespace SME.GoogleClassroom.Dados
                     dataReferencia,
                     paginacao.QuantidadeRegistros,
                     paginacao.QuantidadeRegistrosIgnorados,
-                    codigoEol
-                }, commandTimeout: 6000);
+                    codigoEol,
+					parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.Ues,
+					parametrosCargaInicialDto.Turmas,
+				}, commandTimeout: 6000);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -42,24 +47,27 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-		public async Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo)
-		{
-			var query = MontaQueryAlunosParaInclusao(null, null, codigoEol);
+        public async Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            var query = MontaQueryAlunosParaInclusao(null, null, codigoEol, parametrosCargaInicialDto);
 
-			using var conn = ObterConexao();
-			return await conn.QuerySingleOrDefaultAsync<AlunoEol>(query,
-				new
-				{
-					anoLetivo = anoLetivo,
-					codigoEol
+            using var conn = ObterConexao();
+            return await conn.QuerySingleOrDefaultAsync<AlunoEol>(query,
+                new
+                {
+                    anoLetivo = anoLetivo,
+                    codigoEol,
+					parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.Ues,
+					parametrosCargaInicialDto.Turmas,
 				}, commandTimeout: 6000);
-		}
+        }
 
-		public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo)
+        public async Task<IEnumerable<AlunoCursoEol>> ObterCursosDoAlunoParaIncluirAsync(long codigoAluno, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             using var conn = ObterConexao();
 
-            const string query = @"
+			const string queryBuscaMatriculas = @"
 								DECLARE @situacaoAtivo AS CHAR = 1;
 								DECLARE @situacaoPendenteRematricula AS CHAR = 6;
 								DECLARE @situacaoRematriculado AS CHAR = 10;
@@ -99,12 +107,11 @@ namespace SME.GoogleClassroom.Dados
 									AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 									AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 									AND matr.an_letivo = @anoLetivo
-									AND te.st_turma_escola in ('O', 'A', 'C')
-									AND te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
+									AND te.st_turma_escola in ('O', 'A', 'C')									
 									AND te.an_letivo = @anoLetivo
-									AND NOT cd_serie_ensino IS NULL;
+									AND NOT cd_serie_ensino IS NULL; ";
 
+			string queryBuscaCursosTurmas = $@"
 								-- 1.1 Busca os cursos das turmas
 								IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL
 									DROP TABLE #tempTurmasComponentesRegulares
@@ -161,9 +168,9 @@ namespace SME.GoogleClassroom.Dados
 									etapa_ensino (NOLOCK)
 									ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino
 								WHERE
-									(serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())
+									(serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())";
 
-								-- 2. Busca matrículas de programa
+			string queryBuscaProgramas = $@"-- 2. Busca matrículas de programa
 								IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivas') IS NOT NULL
 									DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 								SELECT
@@ -192,12 +199,31 @@ namespace SME.GoogleClassroom.Dados
 									AND matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 									AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 									AND matr.an_letivo = @anoLetivo
-									AND te.st_turma_escola in ('O', 'A', 'C')
-									AND te.cd_tipo_turma in (1,2,3,5,6,7)
-									AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
+									AND te.st_turma_escola in ('O', 'A', 'C')									
 									AND te.an_letivo = @anoLetivo
-									AND NOT matr.cd_tipo_programa IS NULL;
+									AND NOT matr.cd_tipo_programa IS NULL;";
 
+			var queryBuscaMatriculasBuilder = new StringBuilder(queryBuscaMatriculas);
+			queryBuscaMatriculasBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscaMatriculasBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscaMatriculasBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			queryBuscaMatriculasBuilder.Append(";");
+
+			var queryBuscaCursosTurmasBuider = new StringBuilder(queryBuscaCursosTurmas);
+			queryBuscaCursosTurmasBuider.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscaCursosTurmasBuider.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscaCursosTurmasBuider.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			queryBuscaCursosTurmasBuider.Append(";");
+
+			var queryBuscaProgramasBuilder = new StringBuilder(queryBuscaProgramas);
+			queryBuscaProgramasBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscaProgramasBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscaProgramasBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			queryBuscaProgramasBuilder.Append(";");
+
+			string query = $@"	{queryBuscaMatriculas}
+								{queryBuscaCursosTurmas}
+								{queryBuscaProgramas}
 								-- 2.1 Busca os cursos das turmas
 								IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL
 									DROP TABLE #tempTurmasComponentesPrograma
@@ -251,29 +277,317 @@ namespace SME.GoogleClassroom.Dados
 									(SELECT * FROM #tempTurmasComponentesRegulares) AS Regulares
 								UNION
 									(SELECT * FROM #tempTurmasComponentesPrograma);";
-            return await conn.QueryAsync<AlunoCursoEol>(query, new { codigoAluno, anoLetivo });
+
+			return await conn.QueryAsync<AlunoCursoEol>(query, new { 
+				codigoAluno, 
+				anoLetivo,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas,
+			});
         }
 
-        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, DateTime? dataReferecia, long? codigoEol)
+        public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
-            return $@"DECLARE @situacaoAtivo AS CHAR = 1;
-					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
-					DECLARE @situacaoRematriculado AS CHAR = 10;
-					DECLARE @situacaoSemContinuidade AS CHAR = 13;
+            var query = @"
+				SELECT
+					DISTINCT
+					a.cd_aluno AS CodigoAluno
+				FROM
+					v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN 
+					aluno a
+					ON aluno.cd_aluno = a.cd_aluno
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON aluno.cd_aluno = matr.cd_aluno
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON matr.cd_matricula = mte.cd_matricula
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE
+					mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
+					AND matr.an_letivo = @anoLetivo
+					AND te.an_letivo = @anoLetivo
+					AND te.cd_turma_escola = @turmaId 
+					AND mte.dt_situacao_aluno between @dataInicio and @dataFim 
+					AND mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
+													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
+													 where matr2.cd_aluno = a.cd_aluno
+													   and matr2.an_letivo = te.an_letivo
+													   and mte2.cd_turma_escola = te.cd_turma_escola)";
 
-					DECLARE @situacaoAtivoInt AS INT = 1;
-					DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
-					DECLARE @situacaoRematriculadoInt AS INT = 10;
-					DECLARE @situacaoSemContinuidadeInt AS INT = 13;
+			var sql = new StringBuilder(query);
 
-					-- 1. Busca matrículas regulares
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivas') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasAtivas;
+			sql.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			sql.Append(";");
+
+			using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(sql.ToString(), new { 
+				turmaId, 
+				anoLetivo, 
+				dataInicio, 
+				dataFim,
+				parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.Ues,
+				parametrosCargaInicialDto.Turmas,
+			});
+        }
+
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
+        {
+            using var conn = ObterConexao();
+
+            var querySelectDados = @"
+					SELECT
+					DISTINCT a.cd_aluno AS Codigo,
+					a.nm_aluno AS NomePessoa,
+					a.nm_social_aluno AS NomeSocial,
+					a.dt_nascimento_aluno AS DataNascimento,
+				    te.cd_turma_escola AS TurmaId,
+					mte.cd_situacao_aluno as SituacaoMatricula,
+					mte.dt_situacao_aluno as DataSituacao ";
+
+            var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
+
+            var queryFrom = new StringBuilder(@"
+				FROM
+					v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN 
+					aluno a
+					ON aluno.cd_aluno = a.cd_aluno
+				INNER JOIN
+					v_matricula_cotic matr (NOLOCK) 
+					ON aluno.cd_aluno = matr.cd_aluno
+				INNER JOIN 
+					matricula_turma_escola mte (NOLOCK) 
+					ON matr.cd_matricula = mte.cd_matricula
+				INNER JOIN
+					turma_escola te (NOLOCK)
+					ON mte.cd_turma_escola = te.cd_turma_escola
+				INNER JOIN
+					escola esc (NOLOCK)
+					ON te.cd_escola = esc.cd_escola
+				WHERE
+					mte.cd_situacao_aluno IN (2,3,4,7,8,11,12,14,15)
+					AND matr.an_letivo = @anoLetivo
+					AND te.an_letivo = @anoLetivo ");
+
+            if (turmaId > 0)
+                queryFrom.AppendLine("AND te.cd_turma_escola = @turmaId ");
+
+            if (ehDataReferenciaPrincipal)
+                queryFrom.AppendLine("AND mte.dt_situacao_aluno = @dataReferencia ");
+            else
+                queryFrom.AppendLine("AND mte.dt_situacao_aluno <= @dataReferencia ");
+
+            queryFrom.AppendLine(@"and mte.dt_situacao_aluno = (select max(mte2.dt_situacao_aluno) from v_matricula_cotic matr2(NOLOCK)
+													 inner join matricula_turma_escola mte2 (NOLOCK) on mte2.cd_matricula = matr2.cd_matricula
+													 where matr2.cd_aluno = a.cd_aluno
+													   and matr2.an_letivo = te.an_letivo
+													   and mte2.cd_turma_escola = te.cd_turma_escola) ");
+
+			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+
+			var queryPaginacao = @"order by mte.dt_situacao_aluno desc
+								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+
+            var query = new StringBuilder(querySelectDados);
+            query.Append(queryFrom);
+            query.Append(queryPaginacao);
+            query.Append(querySelectCount);
+            query.Append(queryFrom);
+
+            using var multi = await conn.QueryMultipleAsync(query.ToString(),
+                new
+                {
+                    quantidadeRegistros = paginacao.QuantidadeRegistros,
+                    quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                    anoLetivo,
+                    dataReferencia,
+                    turmaId
+                }, commandTimeout: 6000);
+
+            var retorno = new PaginacaoResultadoDto<AlunoEol>
+            {
+                Items = multi.Read<AlunoEol>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
+
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            return retorno;
+        }
+
+        private static string MontaQueryAlunosParaInclusao(Paginacao paginacao, DateTime? dataReferecia, long? codigoEol, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            var queryBuscaMatriculasRegular = QueryBuscaMatriculaRegular(dataReferecia, codigoEol, parametrosCargaInicialDto);
+
+            var queryBuscaRecenteAnoAluno = QueryBuscaRecenteAnoAluno(parametrosCargaInicialDto);
+
+            var queryBuscaMatriculas = QueryBuscaMatriculasPrograma(dataReferecia, codigoEol, parametrosCargaInicialDto);
+
+            var queryAgrupaBuscaRecenteAnoAluno = QueryAgrupaBuscaRecenteAnoAluno(parametrosCargaInicialDto);
+
+            var queryUniaoTopMatricula = QueryUniaoTopMatricula(paginacao);
+
+            return $@"
+					{queryBuscaMatriculasRegular}
+					{queryBuscaRecenteAnoAluno}
+					{queryBuscaMatriculas}
+					{queryAgrupaBuscaRecenteAnoAluno}
+					{queryUniaoTopMatricula}
+				";
+        }
+
+        private static string QueryUniaoTopMatricula(Paginacao paginacao)
+        {
+            return $@"
+					-- 3. União dos dois tipos de matrículas
+					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasFinal') IS NOT NULL
+						DROP TABLE #tempAlunosMatriculasAtivasFinal;
+					SELECT
+						DISTINCT
+						 cd_aluno_classroom,
+						 cd_aluno_eol,
+						 in_ativo,
+						 nm_organizacao,
+						 email_alterado,
+						 AlunoRegular,
+						 AlunoPrograma
+					INTO #tempAlunosMatriculasAtivasFinal
+					FROM
+						(SELECT DISTINCT
+						 cd_aluno_classroom,
+						 cd_aluno_eol,
+						 in_ativo,
+						 nm_organizacao,
+						 email_alterado,
+						 AlunoRegular,
+						 AlunoPrograma FROM #tempAlunosAtivos) AS Regulares
+					UNION
+						(SELECT DISTINCT
+						 cd_aluno_classroom,
+						 cd_aluno_eol,
+						 in_ativo,
+						 nm_organizacao,
+						 email_alterado,
+						 AlunoRegular,
+						 AlunoPrograma
+						FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
+
+					SELECT
+						cd_aluno_eol Codigo,
+						aluno.nm_aluno NomePessoa,
+						aluno.nm_social_aluno NomeSocial,
+						nm_organizacao OrganizationPath,
+						aluno.dt_nascimento_aluno DataNascimento
+					FROM
+						#tempAlunosMatriculasAtivasFinal temp
+					INNER JOIN
+						v_aluno_cotic aluno (NOLOCK)
+						ON temp.cd_aluno_eol = aluno.cd_aluno
+					ORDER BY
+						cd_aluno_eol
+					{(paginacao?.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
+					FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";")}
+
+					-- Totalizacao
+					SELECT
+						COUNT(*)
+					FROM
+						#tempAlunosMatriculasAtivasFinal temp;";
+        }
+
+        private static StringBuilder QueryAgrupaBuscaRecenteAnoAluno(ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            string query = $@" 
+					--- 2.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
+					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes') IS NOT NULL
+						DROP TABLE #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes;
+					SELECT
+						cd_aluno,
+						MAX(dt_status_matricula) AS dt_status_matricula
+					INTO #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes
+					FROM #tempAlunosMatriculasProgramaAtivas
+					GROUP BY cd_aluno;
+
+					--- 2.2 Mantém apenas a matrícula mais recente de cada aluno
+					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas') IS NOT NULL
+						DROP TABLE #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas;
+					SELECT
+						t1.*
+					INTO #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas
+					FROM
+						#tempAlunosMatriculasProgramaAtivas t1
+					INNER JOIN
+						#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes t2
+						ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
+
+					--- 2.3 Montagem da tabela de inserção
+					IF OBJECT_ID('tempdb..#tempAlunosProgramaAtivos') IS NOT NULL
+						DROP TABLE #tempAlunosProgramaAtivos;
+					SELECT
+						DISTINCT
+						NULL AS cd_aluno_classroom,
+						aluno.cd_aluno AS cd_aluno_eol,
+						'True' AS in_ativo,
+						CASE WHEN esc.tp_escola = 23 THEN '/Alunos/PROFISSIONAL' ELSE '/Alunos/PROGRAMA' END AS nm_organizacao,
+						0 AS email_alterado,
+						0 AS AlunoRegular,
+						1 AS AlunoPrograma
+					INTO #tempAlunosProgramaAtivos
+					FROM
+						#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas temp
+					INNER JOIN
+						v_aluno_cotic aluno (NOLOCK)
+						ON aluno.cd_aluno = temp.cd_aluno
+					INNER JOIN
+						v_matricula_cotic matr (NOLOCK)
+						ON aluno.cd_aluno = matr.cd_aluno AND matr.cd_matricula = temp.cd_matricula
+					INNER JOIN
+						matricula_turma_escola mte (NOLOCK)
+						ON matr.cd_matricula = mte.cd_matricula
+					INNER JOIN
+						turma_escola te (NOLOCK)
+						ON mte.cd_turma_escola = te.cd_turma_escola
+					INNER JOIN
+						escola esc (NOLOCK)
+						ON te.cd_escola = esc.cd_escola
+					WHERE
+						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
+						and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
+						and matr.an_letivo = @anoLetivo";
+
+            var queryBuilder = new StringBuilder(query);
+
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            queryBuilder.Append(";");
+
+			return queryBuilder;
+        }
+
+        private static StringBuilder QueryBuscaMatriculasPrograma(DateTime? dataReferecia, long? codigoEol, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            string query = $@"
+					-- 2. Busca matrículas de programa
+					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivas') IS NOT NULL
+						DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 					SELECT
 						aluno.cd_aluno,
 						matr.cd_matricula,
 						matr.dt_status_matricula
-					INTO #tempAlunosMatriculasAtivas
+					INTO #tempAlunosMatriculasProgramaAtivas
 					FROM
 						v_aluno_cotic aluno (NOLOCK)
 					INNER JOIN
@@ -297,14 +611,24 @@ namespace SME.GoogleClassroom.Dados
 						AND matr.an_letivo = @anoLetivo
 						{(dataReferecia.HasValue ? "AND matr.dt_status_matricula >= @dataReferencia " : "")}
 						AND te.st_turma_escola in ('O', 'A', 'C')
-						AND te.cd_tipo_turma in (1,2,3,5,6,7)
-						AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
 						AND te.an_letivo = @anoLetivo
-						AND NOT cd_serie_ensino IS NULL
+						AND NOT matr.cd_tipo_programa IS NULL
 
-						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
+						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol " : " ")} ";
 
-					--- 1.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
+            var queryBuilder = new StringBuilder(query);
+
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            queryBuilder.Append(";");
+
+			return queryBuilder; 
+		}
+
+        private static StringBuilder QueryBuscaRecenteAnoAluno(ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            var query = $@"-- - 1.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
 					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasDatasMaisRecentes') IS NOT NULL
 						DROP TABLE #tempAlunosMatriculasAtivasDatasMaisRecentes;
 					SELECT
@@ -372,16 +696,39 @@ namespace SME.GoogleClassroom.Dados
 					WHERE
 						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
-						and matr.an_letivo = @anoLetivo;
+						and matr.an_letivo = @anoLetivo";
 
-					-- 2. Busca matrículas de programa
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivas') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasProgramaAtivas;
+            var queryBuilder = new StringBuilder(query);
+
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            queryBuilder.Append(";");
+
+			return queryBuilder;
+		}
+        
+		private static StringBuilder QueryBuscaMatriculaRegular(DateTime? dataReferecia, long? codigoEol, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            string query =
+                $@"DECLARE @situacaoAtivo AS CHAR = 1;
+					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
+					DECLARE @situacaoRematriculado AS CHAR = 10;
+					DECLARE @situacaoSemContinuidade AS CHAR = 13;
+
+					DECLARE @situacaoAtivoInt AS INT = 1;
+					DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
+					DECLARE @situacaoRematriculadoInt AS INT = 10;
+					DECLARE @situacaoSemContinuidadeInt AS INT = 13;
+
+					-- 1. Busca matrículas regulares
+					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivas') IS NOT NULL
+						DROP TABLE #tempAlunosMatriculasAtivas;
 					SELECT
 						aluno.cd_aluno,
 						matr.cd_matricula,
 						matr.dt_status_matricula
-					INTO #tempAlunosMatriculasProgramaAtivas
+					INTO #tempAlunosMatriculasAtivas
 					FROM
 						v_aluno_cotic aluno (NOLOCK)
 					INNER JOIN
@@ -404,125 +751,147 @@ namespace SME.GoogleClassroom.Dados
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
 						{(dataReferecia.HasValue ? "AND matr.dt_status_matricula >= @dataReferencia " : "")}
-						AND te.st_turma_escola in ('O', 'A', 'C')
-						AND te.cd_tipo_turma in (1,2,3,5,6,7)
-						AND esc.tp_escola in (1,2,3,4,10,11,12,13,16,17,18,19,23,28,31)
+						AND te.st_turma_escola in ('O', 'A', 'C')											
 						AND te.an_letivo = @anoLetivo
-						AND NOT matr.cd_tipo_programa IS NULL
+						AND NOT cd_serie_ensino IS NULL
 
-						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol;" : ";")}
+						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol " : " ")}";
 
-					--- 2.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes;
-					SELECT
-						cd_aluno,
-						MAX(dt_status_matricula) AS dt_status_matricula
-					INTO #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes
-					FROM #tempAlunosMatriculasProgramaAtivas
-					GROUP BY cd_aluno;
+            var queryBuilder = new StringBuilder(query);
 
-					--- 2.2 Mantém apenas a matrícula mais recente de cada aluno
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas;
-					SELECT
-						t1.*
-					INTO #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas
-					FROM
-						#tempAlunosMatriculasProgramaAtivas t1
-					INNER JOIN
-						#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes t2
-						ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+            queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            queryBuilder.Append(";");
 
-					--- 2.3 Montagem da tabela de inserção
-					IF OBJECT_ID('tempdb..#tempAlunosProgramaAtivos') IS NOT NULL
-						DROP TABLE #tempAlunosProgramaAtivos;
-					SELECT
-						DISTINCT
-						NULL AS cd_aluno_classroom,
-						aluno.cd_aluno AS cd_aluno_eol,
-						'True' AS in_ativo,
-						CASE WHEN esc.tp_escola = 23 THEN '/Alunos/PROFISSIONAL' ELSE '/Alunos/PROGRAMA' END AS nm_organizacao,
-						0 AS email_alterado,
-						0 AS AlunoRegular,
-						1 AS AlunoPrograma
-					INTO #tempAlunosProgramaAtivos
-					FROM
-						#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas temp
-					INNER JOIN
-						v_aluno_cotic aluno (NOLOCK)
-						ON aluno.cd_aluno = temp.cd_aluno
-					INNER JOIN
-						v_matricula_cotic matr (NOLOCK)
-						ON aluno.cd_aluno = matr.cd_aluno AND matr.cd_matricula = temp.cd_matricula
-					INNER JOIN
-						matricula_turma_escola mte (NOLOCK)
-						ON matr.cd_matricula = mte.cd_matricula
-					INNER JOIN
-						turma_escola te (NOLOCK)
-						ON mte.cd_turma_escola = te.cd_turma_escola
-					INNER JOIN
-						escola esc (NOLOCK)
-						ON te.cd_escola = esc.cd_escola
-					WHERE
-						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
-						and mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
-						and matr.an_letivo = @anoLetivo;
+            return queryBuilder;
+        }
 
-					-- 3. União dos dois tipos de matrículas
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasFinal') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasAtivasFinal;
-					SELECT
-						DISTINCT
-						 cd_aluno_classroom,
-						 cd_aluno_eol,
-						 in_ativo,
-						 nm_organizacao,
-						 email_alterado,
-						 AlunoRegular,
-						 AlunoPrograma
-					INTO #tempAlunosMatriculasAtivasFinal
-					FROM
-						(SELECT DISTINCT
-						 cd_aluno_classroom,
-						 cd_aluno_eol,
-						 in_ativo,
-						 nm_organizacao,
-						 email_alterado,
-						 AlunoRegular,
-						 AlunoPrograma FROM #tempAlunosAtivos) AS Regulares
-					UNION
-						(SELECT DISTINCT
-						 cd_aluno_classroom,
-						 cd_aluno_eol,
-						 in_ativo,
-						 nm_organizacao,
-						 email_alterado,
-						 AlunoRegular,
-						 AlunoPrograma
-						FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
+        public async Task<IEnumerable<long>> ObterCodigosAlunosInativosPorAnoLetivo(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, DateTime dataReferencia, long? alunoId)
+        {
+            try
+            {
+                var query = new StringBuilder(@"
+							   SELECT DISTINCT a.cd_aluno AS CodigoAluno 
+							   FROM
+									v_aluno_cotic aluno (NOLOCK)
+								INNER JOIN
+									aluno a
+									ON aluno.cd_aluno = a.cd_aluno
+								INNER JOIN
+									v_matricula_cotic matr (NOLOCK)
+									ON aluno.cd_aluno = matr.cd_aluno
+								INNER JOIN
+									matricula_turma_escola mte (NOLOCK)
+									ON matr.cd_matricula = mte.cd_matricula
+								INNER JOIN
+									turma_escola te (NOLOCK)
+									ON mte.cd_turma_escola = te.cd_turma_escola
+								INNER JOIN
+									escola esc (NOLOCK)
+									ON te.cd_escola = esc.cd_escola
+								WHERE
+									mte.cd_situacao_aluno IN (2,3,4,5,7,8,11,12,14,15)
+									AND matr.an_letivo = @anoLetivo
+									AND te.an_letivo = @anoLetivo
+									AND matr.dt_status_matricula >= @dataReferencia
+									AND NOT EXISTS (select 1 from v_matricula_cotic where an_letivo >= matr.an_letivo and st_matricula IN(1,6,10,13) and cd_aluno = a.cd_aluno) ");
 
-					SELECT
-						cd_aluno_eol Codigo,
-						aluno.nm_aluno NomePessoa,
-						aluno.nm_social_aluno NomeSocial,
-						nm_organizacao OrganizationPath,
-						aluno.dt_nascimento_aluno DataNascimento
-					FROM
-						#tempAlunosMatriculasAtivasFinal temp
-					INNER JOIN
-						v_aluno_cotic aluno (NOLOCK)
-						ON temp.cd_aluno_eol = aluno.cd_aluno
-					ORDER BY
-						cd_aluno_eol
-					{(paginacao?.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
-					FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";")}
+                if (alunoId != null && alunoId > 0)
+                    query.AppendLine("AND a.cd_aluno = @alunoId ");
+				
+				query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+				query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+				query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+				query.Append(";");
 
-					-- Totalizacao
-					SELECT
-						COUNT(*)
-					FROM
-						#tempAlunosMatriculasAtivasFinal temp;";
+				using var conn = ObterConexao();
+                return await conn.QueryAsync<long>(query.ToString(), new { 
+					anoLetivo, 
+					dataReferencia, 
+					alunoId,
+					parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.Ues,
+					parametrosCargaInicialDto.Turmas,
+				});
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
+        {
+            var querySelectDados = @" SELECT 					
+										DISTINCT a.cd_aluno AS Codigo,
+										a.nm_aluno AS NomePessoa,
+										a.nm_social_aluno AS NomeSocial,
+										a.dt_nascimento_aluno AS DataNascimento,
+										te.cd_turma_escola AS TurmaId,
+										mte.cd_situacao_aluno as SituacaoMatricula,
+										mte.dt_situacao_aluno as DataSituacao";
+
+            var querySelectCount = "SELECT COUNT(DISTINCT a.cd_aluno) ";
+
+            var queryFrom = new StringBuilder(@" FROM
+											v_aluno_cotic aluno (NOLOCK)
+										INNER JOIN
+											aluno a
+											ON aluno.cd_aluno = a.cd_aluno
+										INNER JOIN
+											v_matricula_cotic matr (NOLOCK)
+											ON aluno.cd_aluno = matr.cd_aluno
+										INNER JOIN
+											matricula_turma_escola mte (NOLOCK)
+											ON matr.cd_matricula = mte.cd_matricula
+										INNER JOIN
+											turma_escola te (NOLOCK)
+											ON mte.cd_turma_escola = te.cd_turma_escola
+										INNER JOIN
+											escola esc (NOLOCK)
+											ON te.cd_escola = esc.cd_escola
+										WHERE
+												mte.cd_situacao_aluno IN (2,3,4,5,7,8,11,12,14,15)
+											AND matr.an_letivo = @anoLetivo
+											AND te.an_letivo = @anoLetivo
+											AND matr.dt_status_matricula >= @dataReferencia
+											AND NOT EXISTS (select 1 
+												from v_matricula_cotic v2
+											   inner join matricula_turma_escola m2 ON 
+													v2.cd_matricula = m2.cd_matricula
+											   where v2.an_letivo >= matr.an_letivo 
+											     and v2.cd_aluno = a.cd_aluno
+											     and m2.cd_situacao_aluno IN(1,6,10,13) )
+										");
+
+            var queryPaginacao = @"order by a.cd_aluno
+								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+
+            var query = new StringBuilder(querySelectDados);
+            query.Append(queryFrom);
+            query.Append(queryPaginacao);
+            query.Append(querySelectCount);
+            query.Append(queryFrom);
+
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query.ToString(),
+                new
+                {
+                    quantidadeRegistros = paginacao.QuantidadeRegistros,
+                    quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                    anoLetivo,
+                    dataReferencia
+                }, commandTimeout: 6000);
+
+            var retorno = new PaginacaoResultadoDto<AlunoEol>
+            {
+                Items = multi.Read<AlunoEol>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
+
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            return retorno;
         }
     }
 }

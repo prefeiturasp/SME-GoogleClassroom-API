@@ -22,4 +22,8 @@
     <Folder Include="Contexto\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\sme.gclass.api.domain\SME.GoogleClassroom.Dominio.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Erros.ObterProfessorPar
         }
 
         public async Task<ProfessorEol> Handle(ObterProfessorParaTratamentoDeErroQuery request, CancellationToken cancellationToken)
-            => await repositorioProfessorEol.ObterProfessorParaTratamentoDeErroAsync(request.Rf, DateTime.Now.Year);
+            => await repositorioProfessorEol.ObterProfessorParaTratamentoDeErroAsync(request.Rf, DateTime.Now.Year, request.ParametrosCargaInicialDto);
     }
 }

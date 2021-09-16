@@ -16,7 +16,10 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<IEnumerable<AlunoCursoEol>> Executar(long codigoAluno) 
-            => await mediator.Send(new ObterCursosDoAlunoParaIncluirGoogleQuery(codigoAluno, DateTime.Now.Year));
+        public async Task<IEnumerable<AlunoCursoEol>> Executar(long codigoAluno)
+        {
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            return await mediator.Send(new ObterCursosDoAlunoParaIncluirGoogleQuery(codigoAluno, DateTime.Now.Year, parametrosCargaInicialDto));
+        }
     }
 }

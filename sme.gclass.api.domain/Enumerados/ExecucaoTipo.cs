@@ -11,6 +11,14 @@
         AlunoCursoAdicionar = 7,
         CursoGradesAdicionar = 8,
         FuncionarioCursoAdicionar = 9,
-        FuncionarioIndiretoAdicionar = 10
+        FuncionarioIndiretoAdicionar = 10,
+        UsuarioCursoRemover = 11,
+        AlunoInativar = 12,
+        MuralAvisosCarregar = 13,
+        AtividadesCarregar = 14,
+        ArquivarCursosTurmasExtintas = 16,
+        ProfessorInativar = 17,
+        ArquivarCursosPorAnoLetivo = 18,
+        NotasAtividadesCarregar = 19
     }
 }

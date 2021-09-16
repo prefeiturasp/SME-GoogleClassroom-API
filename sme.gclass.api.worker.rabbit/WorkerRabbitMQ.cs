@@ -1,4 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -10,12 +17,6 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
 {
@@ -44,7 +45,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit = conexaoRabbit.CreateModel();
             canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
 
-            canalRabbit.ExchangeDeclare(RotasRabbit.ExchangeGoogleSync, "topic", true, false);
+            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
             RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
 
             comandos = new Dictionary<string, ComandoRabbit>();
@@ -95,6 +96,52 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaUsuarioValidar, new ComandoRabbit("Realiza validação de usuários GSA", typeof(IValidarUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioCarregar, new ComandoRabbit("Sincroniza os cursos do usuário GSA a serem adicionados na base", typeof(IRealizarCargaCursoUsuariosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoUsuarioIncluir, new ComandoRabbit("Processar curso do usuário GSA e adiciona na base", typeof(IProcessarCursoUsuarioGsaUseCase)));
+
+            // Remover 
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, new ComandoRabbit("Carregar turmas dos usuários para remoção de cursos", typeof(IRealizarCargaTurmasCursoUsuarioRemovidoUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, new ComandoRabbit("Carregar turmas dos usuários para remoção de cursos", typeof(ITratarTurmaCursoUsuarioRemovidoUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, new ComandoRabbit("Carregar codigos dos alunos para remoção de cursos", typeof(ITratarAlunosCursoUsuarioRemovidoUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, new ComandoRabbit("Carregar codigos dos professores para remoção de cursos", typeof(ITratarProfessoresRemovidosCursosUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, new ComandoRabbit("Carregar codigos dos funcionários para remoção de cursos", typeof(ITratarFuncionarioRemovidosCursosUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, new ComandoRabbit("Sincroniza curso do usuário GSA e exclui registro", typeof(ISincronizarRemocaoUsuarioCursoGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoErroTratar, new ComandoRabbit("Sincroniza erro de exclusão de curso do usuário GSA e exclui registro", typeof(ITrataSyncGoogleRemovidoAlunoCursoErroUseCase)));
+
+            // Inativação Alunos
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIniciar, new ComandoRabbit("Inicia o processo de inativar alunos", typeof(IIniciarProcessoInativacaoUsuariosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioCarregar, new ComandoRabbit("Carregar alunos para inativação", typeof(IRealizarCargaAlunoInativacaoUsuarioUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioSync, new ComandoRabbit("Tratar os alunos GSA a serem inativados", typeof(ITratarAlunosInativacaoUsuarioUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaInativarUsuarioIncluir, new ComandoRabbit("Incluir na fila de inativação de alunos GSA ", typeof(IIncluirInativacaoUsuarioGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaUsuarioGoogleTratarErro, new ComandoRabbit("Incluir na fila de erro na inativação de alunos GSA ", typeof(ITrataSyncGoogleAlunoInativoErroUseCase)));            
+            
+            // Mural 
+            comandos.Add(RotasRabbit.FilaGsaMuralAvisosCarregar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(IRealizarCargaMuralAvisosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaMuralAvisosTratar, new ComandoRabbit("Tratar os avisos do mural GSA a serem carregados na base", typeof(ITratarImportacaoMuralAvisosCursoGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaMuralAvisosIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IImportarMuralAvisosCursoGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaAtividadesCarregar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(IRealizarCargaAtividadesGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaAtividadesTratar, new ComandoRabbit("Sincroniza os avisos do mural GSA a serem carregados na base", typeof(ITratarImportacaoAtividadesCursoGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaAtividadesIncluir, new ComandoRabbit("Incluir os avisos do mural GSA a serem carregados na base", typeof(IImportarAtividadesCursoGsaUseCase)));
+
+            // Arquivamento de Cursos - (Anual / Extintos)
+            comandos.Add(RotasRabbit.FilaCursoExtintoArquivarCarregar, new ComandoRabbit("Carregar arquivamento de cursos extintos no EOL", typeof(ICarregarArquivamentoCursosExtintosUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, new ComandoRabbit("Carregar arquivamento de cursos arquivados para o ano e semestre EOL", typeof(IIniciarProcessoArquivarCursosPorAnoUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoArquivarCarregar, new ComandoRabbit("Carregar cursos do EOL para arquivamento", typeof(ICarregarArquivamentoCursosUseCase)));
+
+            comandos.Add(RotasRabbit.FilaCursoArquivarTratar, new ComandoRabbit("Tratar arquivamento de cursos no EOL", typeof(ITratarArquivamentoCursosUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoArquivarSync, new ComandoRabbit("Tratar arquivamento de cursos no EOL", typeof(ISincronizarArquivamentoCursosUseCase)));
+
+            // Inativação Professores, Funcionários e Funcionários indiretos
+            comandos.Add(RotasRabbit.FilaInativarProfessoresEFuncionariosIniciar, new ComandoRabbit("Inicia o processo de inativar professores, funcionários e funcionários indiretos", typeof(IIniciarInativacaoProfessoresEFuncionariosUseCase)));
+            comandos.Add(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, new ComandoRabbit("Carregar professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ICarregarProfessoresEFuncionariosParaInativar)));
+            comandos.Add(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, new ComandoRabbit("Tratar os professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ITratarProfessoresEFuncionariosParaInativarUseCase)));
+            comandos.Add(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, new ComandoRabbit("Sincroniza a inativação de professores, funcionários e funcionários indiretos", typeof(ISyncProfessoresEFuncionariosInativarUseCase)));
+            comandos.Add(RotasRabbit.FilaInativarProfessorErroTratar, new ComandoRabbit("Tratar erros na fila de erro na inativação de professores, funcionários e funcionários indiretos", typeof(IIniciarSyncProfessoresInativadosComErrosUseCase)));
+
+            //Notas
+            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesCarregar, new ComandoRabbit("Carrega atividades para importacao de notas", typeof(ICarregarAtividadesParaSincronizarNotasUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesTratar, new ComandoRabbit("Tratar carga de notas das atividades para importacao", typeof(ITratarImportacaoDeNotasDaAtividadeUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSync, new ComandoRabbit("Executar importação de notas da atividade", typeof(IExecutarImportacaoDeNotasDaAtividadeUseCase)));
+
+           comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSyncErro, new ComandoRabbit("Gravar erros na importação das notas", typeof(IImportarNotasGsaProcessarErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -106,9 +153,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 using (SentrySdk.Init(sentryDSN))
                 {
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
-                    SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
+                    //SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
+                    Console.WriteLine($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
-                    var tempoExecucao = System.Diagnostics.Stopwatch.StartNew();
+                    var tempoExecucao = Stopwatch.StartNew();
                     try
                     {
                         using var scope = serviceScopeFactory.CreateScope();
@@ -125,6 +173,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                         SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
                         RegistrarSentry(ea, mensagemRabbit, nex);
+                        Console.Write($"Erros de Negocio: {nex.Message}");
                     }
                     catch (ValidacaoException vex)
                     {
@@ -132,6 +181,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                         SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
                         RegistrarSentry(ea, mensagemRabbit, vex);
+                        Console.Write($"Erros de Validação: {vex.Message}");
                     }
                     catch (Exception ex)
                     {
@@ -139,6 +189,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                         SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
                         RegistrarSentry(ea, mensagemRabbit, ex);
+                        Console.Write($"Erros: {ex.Message}");
                     }
                     finally
                     {
@@ -235,6 +286,38 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoErroTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoErroTratar, false, consumer);
+                
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIniciar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaInativarProfessoresEFuncionariosIniciar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCarregarProfessoresEFuncionariosInativar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorSync, false, consumer);
+
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarSync, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
+
+
+
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -279,6 +362,27 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioGsa)
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioIncluir, false, consumer);
+
+            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaMuralAvisosCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaMuralAvisosIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaMuralAvisosTratar, false, consumer);
+            }
+
+            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            {
+                // Atividades
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesTratar, false, consumer);
+
+                // Notas
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSyncErro, false, consumer);
+            }
         }
     }
 }

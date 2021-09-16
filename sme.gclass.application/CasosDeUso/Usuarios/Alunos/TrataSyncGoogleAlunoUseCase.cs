@@ -25,7 +25,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var codigoAlunoFiltro = ObterCodigoAlunoFiltro(mensagemRabbit);
             var ultimaAtualizacao = codigoAlunoFiltro is null ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar)) : default(DateTime?);
             var paginacao = new Paginacao(0, 0);
-            var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro, parametrosCargaInicialDto));
 
             alunosParaIncluirGoogle.Items
                 .AsParallel()

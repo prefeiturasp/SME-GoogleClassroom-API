@@ -40,10 +40,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (curso is null) return false;
 
                 var existeProfessorCursoLocal = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professor.First().Indice, curso.Id));
-                var existeProfessorCursoGoogle = await mediator.Send(new ExisteProfessorCursoGoogleCommand(curso.Id, professor.First().Email));
-                if (existeProfessorCursoLocal && existeProfessorCursoGoogle) return true;
+                if (existeProfessorCursoLocal) return true;
 
-                await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal, existeProfessorCursoGoogle);
+                await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
 
                 return true;
             }
@@ -56,13 +55,13 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal, bool existeProfessorCursoGoogle)
+        private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal)
         {
             var professorCursoGoogle = new ProfessorCursoGoogle(professorGoogle.Indice, cursoGoogle.Id);
 
             try
             {
-                var professorCursoSincronizado = !existeProfessorCursoGoogle && await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professorGoogle.Email));
+                var professorCursoSincronizado = !existeProfessorCursoLocal && await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professorGoogle.Email));
                 if(professorCursoSincronizado && !existeProfessorCursoLocal)
                 {
                     await InserirProfessorCursoAsync(professorCursoGoogle);
@@ -79,7 +78,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirProfessorCursoAsync(ProfessorCursoGoogle professorCursoGoogle)
         {
-            if (!_deveExecutarIntegracao) return;
             professorCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(professorCursoGoogle.UsuarioId, professorCursoGoogle.CursoId));
         }
     }

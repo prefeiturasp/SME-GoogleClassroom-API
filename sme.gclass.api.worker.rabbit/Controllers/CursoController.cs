@@ -218,5 +218,170 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var retorno = await useCase.Executar(turmaId, componenteCurricularId);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Obtem lista de turmas extintas no EOL que terão seus cursos arquivados no Google Sala de Aula ao executar a rotina de arquivamento
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("extintos/arquivar")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoExtintoEolDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosArquivar([FromServices] IObterCursosExtintosParaArquivarPaginadoUseCase useCase, [FromQuery] FiltroTurmasExtintasArquivarDto filtro)
+        {
+            return Ok(await useCase.Executar(filtro));
+        }
+
+        /// <summary>
+        /// Executar manualmente o Arquivamento de Turmas 
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("extintos/arquivar")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ArquivarTurmasExtintas([FromServices] ICarregarArquivamentoCursosExtintosManualUseCase useCase, [FromQuery] long? turmaId)
+        {
+            await useCase.Executar(turmaId);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Reprocessar erros ao tratar arquivamento de cursos extintos
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("extintos/arquivar/erros/tratar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> TratarErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosTratarUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Reprocessar erros ao sincronizar arquivamento de cursos extintos
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("extintos/arquivar/erros/sincronizar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
+        
+        
+        /// <summary>
+        /// Obtem lista de cursos arquivados no Google Sala de Aula
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("extintos/arquivados")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoArquivadoDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosArquivados(
+            [FromServices] IObterCursosArquivadosPaginadoUseCase useCase,
+            [FromQuery] FiltroCursoArquivadoDto filtro)
+        {
+            return Ok(await useCase.Executar(filtro));
+        }
+
+        /// <summary>
+        /// Retorna os professores removidos dos cursos no GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("professores/removidos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterProfessoresRemovidosCursosUseCase([FromServices] IObterProfessoresRemovidosCursosUseCase useCase,
+            [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os professores removidos dos cursos no GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("funcionarios/removidos")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterFuncionariosRemovidosCursosUseCase([FromServices] IObterFuncionariosRemovidosCursosUseCase useCase,
+            [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+
+        /// <summary>
+        /// Inicia a sincronização para remoção funcionarios sem atribuição - GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("funcionarios/remover")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoRemoverFuncionariosCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, long? turmaId = null)
+        {
+            var retorno = await useCase.Executar(turmaId, false, false);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Retorna os cursos arquivados por ano e semestre EOL
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("cursos-para-arquivar")]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoArquivarEolDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterCursosArquivados([FromServices] IObterCursosParaArquivarPaginadoUseCase useCase,
+            [FromQuery] FiltroTurmasArquivarDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia a sincronização para arquivar cursos por ano e semestre - GSA.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpPost("arquivar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, int anoLetivo, long? turmaId = null)
+        {
+            await useCase.Executar(anoLetivo, turmaId);
+            return Ok();
+        }
     }
 }

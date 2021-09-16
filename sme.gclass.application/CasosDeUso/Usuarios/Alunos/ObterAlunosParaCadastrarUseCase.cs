@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -17,7 +18,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<PaginacaoResultadoDto<AlunoEol>> Executar(FiltroObterAlunosIncluirGoogleDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            return await mediator.Send(new ObterAlunosNovosQuery(paginacao, filtro.UltimaExecucao, filtro.CodigoEol));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
+            return await mediator.Send(new ObterAlunosNovosQuery(paginacao, filtro.UltimaExecucao, filtro.CodigoEol, parametrosCargaInicialDto));
         }
     }
 }

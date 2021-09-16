@@ -51,7 +51,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
 
-                if (_deveExecutarIntegracao) await InserirCursoAsync(cursoGoogle);
+                await InserirCursoAsync(cursoGoogle);
                 await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
                 return true;
             }
@@ -64,7 +64,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         private async Task InserirCursoAsync(CursoGoogle cursoGoogle)
-        {
+        {   
             try
             {
                 await mediator.Send(new InserirCursoCommand(cursoGoogle));

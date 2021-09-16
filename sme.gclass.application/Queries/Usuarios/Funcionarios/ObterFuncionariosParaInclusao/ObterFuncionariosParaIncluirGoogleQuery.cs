@@ -8,16 +8,18 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterFuncionariosParaIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<FuncionarioEol>>
     {
-        public ObterFuncionariosParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao, string rf)
+        public ObterFuncionariosParaIncluirGoogleQuery(DateTime ultimaDataExecucao, Paginacao paginacao, string rf, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             UltimaDataExecucao = ultimaDataExecucao;
             Paginacao = paginacao;
             Rf = rf;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
         }
 
         public DateTime UltimaDataExecucao { get; set; }
         public Paginacao Paginacao { get; set; }
         public string Rf { get; set; }
+        public ParametrosCargaInicialDto ParametrosCargaInicialDto { get; }
     }
 
     public class ObterFuncionariosParaInclusaoQueryValidator : AbstractValidator<ObterFuncionariosParaIncluirGoogleQuery>

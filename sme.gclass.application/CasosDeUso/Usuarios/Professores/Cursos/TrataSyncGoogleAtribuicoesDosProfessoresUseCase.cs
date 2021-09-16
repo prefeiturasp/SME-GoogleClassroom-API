@@ -22,7 +22,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
-            var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao, parametrosCargaInicialDto));
 
             foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
             {
