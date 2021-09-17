@@ -8,12 +8,12 @@ using SME.GoogleClassroom.Dados;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ReplicarParametrosPorAnoCommandHandler : IRequestHandler<ReplicarParametrosPorAnoCommand, bool>
+    public class ReplicarParametrosDoSistemaPorAnoCommandHandler : IRequestHandler<ReplicarParametrosDoSistemaPorAnoCommand, bool>
     {
         private readonly IMediator mediator;
         private readonly IRepositorioParametroSistema repositorioParametroSistema;
 
-        public ReplicarParametrosPorAnoCommandHandler(IMediator mediator,
+        public ReplicarParametrosDoSistemaPorAnoCommandHandler(IMediator mediator,
             IRepositorioParametroSistema repositorioParametroSistema)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                                throw new ArgumentNullException(nameof(repositorioParametroSistema));
         }
 
-        public async Task<bool> Handle(ReplicarParametrosPorAnoCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ReplicarParametrosDoSistemaPorAnoCommand request, CancellationToken cancellationToken)
         {
             var parametros = await mediator.Send(new ObterParametroSistemaPorAnoQuery(request.Ano));
 
@@ -34,15 +34,14 @@ namespace SME.GoogleClassroom.Aplicacao
                     {
                         await repositorioParametroSistema.ReplicarPorAno(parametrosSistema, request.Ano);
                     }
-
-                    return true;
                 }
                 catch (Exception ex)
                 {
                     SentrySdk.CaptureMessage($"Não foi possível replicar os parametros do sistema para o ano de {request.Ano}");
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
     }
 }
