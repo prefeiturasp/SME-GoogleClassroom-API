@@ -22,10 +22,16 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de alunos. A mensagem enviada é inválida.");
 
+            var filtroCargaManual = ObterParametrosFiltro(mensagemRabbit);
+
             var codigoAlunoFiltro = ObterCodigoAlunoFiltro(mensagemRabbit);
             var ultimaAtualizacao = codigoAlunoFiltro is null ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar)) : default(DateTime?);
             var paginacao = new Paginacao(0, 0);
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
+            if (filtroCargaManual != null) ultimaAtualizacao = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
+            var parametrosCargaInicialDto = filtroCargaManual != null ? new ParametrosCargaInicialDto(filtroCargaManual.TiposUes, filtroCargaManual.Ues, filtroCargaManual.Turmas, filtroCargaManual.AnoLetivo) :
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
             var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro, parametrosCargaInicialDto));
 
             alunosParaIncluirGoogle.Items
@@ -57,6 +63,19 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var alunoParaIncluir = JsonConvert.DeserializeObject<IniciarSyncGoogleAlunoDto>(mensagemRabbit.Mensagem.ToString());
                 return alunoParaIncluir?.CodigoAluno;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
+        {
+            try
+            {
+                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
+                return filtro;
             }
             catch
             {
