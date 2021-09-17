@@ -35,7 +35,7 @@ namespace SME.GoogleClassroom.Dados
 				paginacao.QuantidadeRegistrosIgnorados,
                 componenteCurricularId, 
 				turmaId,
-				TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			};
@@ -64,7 +64,7 @@ namespace SME.GoogleClassroom.Dados
 				componenteCurricularId, 
 				turmaId, 
 				anoLetivo,
-				TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas
 			};
@@ -235,7 +235,7 @@ namespace SME.GoogleClassroom.Dados
 					turmaId, 
 					componenteCurricularId, 
 					anoLetivo,
-					TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.TiposUes,
 					parametrosCargaInicialDto.Ues,
 					parametrosCargaInicialDto.Turmas,
 				});
@@ -298,7 +298,7 @@ namespace SME.GoogleClassroom.Dados
                 new { turmaId,
 	                componenteCurricularId,
 	                anoLetivo,
-	                TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+	                parametrosCargaInicialDto.TiposUes,
 	                parametrosCargaInicialDto.Ues,
 	                parametrosCargaInicialDto.Turmas
                 });
@@ -318,7 +318,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistrosIgnorados,
                 turmaId,
                 componenteCurricularId,
-                TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+                parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas
 			};
@@ -489,7 +489,7 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryAsync<FuncionarioCursoEol>(query,
                 new { turmaId, componenteCurricularId, anoLetivo ,
-	                TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+	                parametrosCargaInicialDto.TiposUes,
 	                parametrosCargaInicialDto.Ues,
 	                parametrosCargaInicialDto.Turmas});
         }
@@ -516,7 +516,7 @@ namespace SME.GoogleClassroom.Dados
 				dataFim, 
 				anoLetivo, 
 				turmaId,
-				TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			});
@@ -537,7 +537,7 @@ namespace SME.GoogleClassroom.Dados
 					turmaId,
 					paginacao.QuantidadeRegistrosIgnorados,
 					paginacao.QuantidadeRegistros,
-					TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.TiposUes,
 					parametrosCargaInicialDto.Ues,
 					parametrosCargaInicialDto.Turmas,
 				});
@@ -590,7 +590,7 @@ namespace SME.GoogleClassroom.Dados
 				anoLetivo, 
 				paginacao.QuantidadeRegistrosIgnorados, 
 				paginacao.QuantidadeRegistros,
-				TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			});
@@ -629,7 +629,7 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<CursoEolDto>(queryMainStringBuilder.ToString(), new { 
 				anoLetivo, 
 				turmaId,
-				TiposUesCursos = parametrosCargaInicialDto.TiposUes,
+				parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			});
@@ -1126,7 +1126,7 @@ namespace SME.GoogleClassroom.Dados
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-
+			
 			if (componenteCurricularId.HasValue)
 			{
 				if (componenteCurricularId.Value == 512)
@@ -1234,6 +1234,7 @@ namespace SME.GoogleClassroom.Dados
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			
 
 			if (componenteCurricularId.HasValue)
 			{

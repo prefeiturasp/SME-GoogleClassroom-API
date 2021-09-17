@@ -372,6 +372,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesTratar, false, consumer);
             }
+            
+            if (consumoDeFilasOptions.Gsa.CargaInicial)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCargaInicial, false, consumer);
+            }
         }
     }
 }

@@ -28,34 +28,34 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (!publicarCurso)
                 throw new NegocioException("Erro ao enviar a sync de cursos.");
-
+            
             if (!publicarFuncionario)
                 throw new NegocioException("Erro ao enviar a sync de funcionários.");
-
+            
             if (!publicarProfessor)
                 throw new NegocioException("Erro ao enviar a sync de professores.");
-
+            
             if (!publicarAluno)
                 throw new NegocioException("Erro ao enviar a sync de alunos.");
-
+            
             if (!publicarAtribuicoesProfessores)
                 throw new NegocioException("Erro ao enviar a sync de atribuições de professores.");
-
+            
             if (!publicarGradesAlunos)
                 throw new NegocioException("Erro ao enviar a sync de grades.");
-
+            
             if (!publicarFuncionarioIndireto)
                 throw new NegocioException("Erro ao enviar a sync de funcionários indiretos.");
-
+            
             if (!publicarTratamentoDeErrosAlunos)
                 throw new NegocioException("Erro ao enviar o tratamento de erros de alunos.");
-
+            
             if (!publicarTratamentoDeErrosProfessores)
                 throw new NegocioException("Erro ao enviar o tratamento de erros de professores.");
-
+            
             if (!publicarTratamentoDeErrosFuncionarios)
                 throw new NegocioException("Erro ao enviar o tratamento de erros de funcionarios.");
-
+            
             if (!publicarCursoErro)
                 throw new NegocioException("Erro ao enviar a sync de cursos erro.");
 
