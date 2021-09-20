@@ -1,4 +1,4 @@
-﻿namespace SME.GoogleClassroom.Infra
+﻿namespace SME.GoogleClassroom.Dominio
 {
     public static class StringExtensions
     {
