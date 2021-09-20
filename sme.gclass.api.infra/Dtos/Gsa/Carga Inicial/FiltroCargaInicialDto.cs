@@ -11,5 +11,17 @@ namespace SME.GoogleClassroom.Infra
         public List<int> TiposUes { get; set; }
         public List<long> Ues { get; set; }
         public List<long> Turmas { get; set; }
+
+        public FiltroCargaInicialDto()
+        {
+        }
+
+        public FiltroCargaInicialDto(int anoLetivo, IList<int> tiposUes, IList<long> ues, IList<long> turmas)
+        {
+            AnoLetivo = anoLetivo;
+            TiposUes = new List<int>(tiposUes);
+            Ues = new List<long>(ues);
+            Turmas = new List<long>(turmas);
+        }
     }
 }

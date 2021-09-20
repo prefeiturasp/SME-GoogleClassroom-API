@@ -6,16 +6,16 @@ using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ReplicarParametrosPorAnoCommand : IRequest<bool>
+    public class ReplicarParametrosDoSistemaPorAnoCommand : IRequest<bool>
     {
         public int Ano { get; set; }
 
-        public ReplicarParametrosPorAnoCommand(int ano)
+        public ReplicarParametrosDoSistemaPorAnoCommand(int ano)
         {
             Ano = ano;
         }
 
-        public class ReplicarParametrosPorAnoCommandValidation : AbstractValidator<ReplicarParametrosPorAnoCommand>
+        public class ReplicarParametrosPorAnoCommandValidation : AbstractValidator<ReplicarParametrosDoSistemaPorAnoCommand>
         {
             public ReplicarParametrosPorAnoCommandValidation()
             {
