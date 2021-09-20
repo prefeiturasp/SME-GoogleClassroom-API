@@ -230,13 +230,12 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var dataReferenciaAnoLetivo = parametrosCargaInicialDto.AnoLetivo.HasValue ? new DateTime(parametrosCargaInicialDto.AnoLetivo.Value, 1, 1) : dataReferencia;
             var query = MontaQueryAtribuicoesDeCursosDosProfessores(aplicarPaginacao, rf, turmaId, componenteCurricularId, parametrosCargaInicialDto);
 
             var parametros = new
             {
-                anoLetivo = dataReferenciaAnoLetivo.Year,
-                dataReferencia = dataReferenciaAnoLetivo.Date,
+                anoLetivo = dataReferencia.Year,
+                dataReferencia = dataReferencia.Date,
                 rf,
                 turmaId,
                 componenteCurricularId,

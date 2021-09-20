@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -18,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            var filtro = mensagem.Mensagem != null ? mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
-            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar));
+            var filtro = ObterParametrosFiltro(mensagem);
+            var ultimaAtualizacao = filtro != null ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar)) : new DateTime(filtro.AnoLetivo,1,1);
             var paginacao = new Paginacao(0, 0);
             var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) : 
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
@@ -61,6 +62,19 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = $"Não foi possível inserir o funcionário RF{cdRegistroFuncional} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}";
+        }
+
+        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
+        {
+            try
+            {
+                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
+                return filtro;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

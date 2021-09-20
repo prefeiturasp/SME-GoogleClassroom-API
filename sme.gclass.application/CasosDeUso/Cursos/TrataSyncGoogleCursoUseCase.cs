@@ -25,11 +25,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var filtroCargaManual = ObterParametrosFiltro(mensagemRabbit);
             var filtro = ObterFiltro(mensagemRabbit);
-            var aplicarFiltro = filtro?.Valido ?? false;
+            var ultimaExecucaoCursosIncluir = default(DateTime?);
 
-            var ultimaExecucaoCursosIncluir = !aplicarFiltro 
-                ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar))
-                : default(DateTime?);
+            var aplicarFiltro = filtro?.Valido ?? false;
+            if (filtro != null)
+            {
+                if (!aplicarFiltro)
+                {
+                    await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+                }
+            }
             if (filtroCargaManual != null) ultimaExecucaoCursosIncluir = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
 
             var parametrosCargaInicialDto = filtroCargaManual != null ? new ParametrosCargaInicialDto(filtroCargaManual.TiposUes, filtroCargaManual.Ues, filtroCargaManual.Turmas, filtroCargaManual.AnoLetivo) :
@@ -55,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            if(!aplicarFiltro)
+            if (!aplicarFiltro)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
 
             return true;

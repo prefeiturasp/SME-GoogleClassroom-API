@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             
             var filtro = mensagemRabbit.Mensagem != null ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
-            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
+            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
             var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) : 

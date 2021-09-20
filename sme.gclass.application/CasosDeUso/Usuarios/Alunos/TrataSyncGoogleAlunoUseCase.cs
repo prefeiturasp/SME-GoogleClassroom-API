@@ -23,12 +23,18 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível iniciar a sincronização de alunos. A mensagem enviada é inválida.");
 
             var filtroCargaManual = ObterParametrosFiltro(mensagemRabbit);
-
             var codigoAlunoFiltro = ObterCodigoAlunoFiltro(mensagemRabbit);
-            var ultimaAtualizacao = codigoAlunoFiltro is null ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar)) : default(DateTime?);
+
+            var ultimaAtualizacao = default(DateTime?);
+
+            if (codigoAlunoFiltro is null && filtroCargaManual is null)
+            {
+                ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
+            }
+            else if (filtroCargaManual != null) ultimaAtualizacao = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
+
             var paginacao = new Paginacao(0, 0);
 
-            if (filtroCargaManual != null) ultimaAtualizacao = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
             var parametrosCargaInicialDto = filtroCargaManual != null ? new ParametrosCargaInicialDto(filtroCargaManual.TiposUes, filtroCargaManual.Ues, filtroCargaManual.Turmas, filtroCargaManual.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
@@ -41,7 +47,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
-                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogleEol));                        
+                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogleEol));
                         if (!publicarAluno)
                             await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
                     }
@@ -51,7 +57,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 });
 
-            if(codigoAlunoFiltro is null)
+            if (codigoAlunoFiltro is null)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoAdicionar, DateTime.Today));
 
             return true;
