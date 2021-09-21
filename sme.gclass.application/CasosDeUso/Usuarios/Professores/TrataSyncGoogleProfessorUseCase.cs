@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -20,7 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            var filtro = mensagem.Mensagem != null ? mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
+            var filtro = ObterParametrosFiltro(mensagem);
             var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
             var paginacao = new Paginacao(0, 0);
             var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
@@ -65,6 +66,19 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = $"Não foi possível inserir o professor RF{cdRegistroFuncional} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}";
+        }
+
+        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
+        {
+            try
+            {
+                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
+                return filtro;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

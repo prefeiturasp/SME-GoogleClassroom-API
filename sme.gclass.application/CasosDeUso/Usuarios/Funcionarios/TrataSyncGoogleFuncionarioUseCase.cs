@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            var filtro = ObterParametrosFiltro(mensagem);
+            var filtro = UtilsDto.ObterFiltroParametrosIniciais(mensagem);
             var ultimaAtualizacao = filtro != null ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioAdicionar)) : new DateTime(filtro.AnoLetivo,1,1);
             var paginacao = new Paginacao(0, 0);
             var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) : 
@@ -62,19 +62,6 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = $"Não foi possível inserir o funcionário RF{cdRegistroFuncional} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}";
-        }
-
-        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
-        {
-            try
-            {
-                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
-                return filtro;
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }

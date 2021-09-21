@@ -24,12 +24,14 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
+                var filtroCargaInicial = UtilsDto.ObterFiltroParametrosIniciais(mensagemRabbit);
                 var usuarioErros = await mediator.Send(new ObtemUsuariosErrosPorTipoQuery(UsuarioTipo.Funcionario));
                 if (!usuarioErros?.Any() ?? true) return true;
 
                 foreach (var usuarioErro in usuarioErros)
                 {
-                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.FilaFuncionarioErroTratar, usuarioErro));
+                    var filtroFuncionarioErro = new FiltroUsuarioErroDto(usuarioErro, filtroCargaInicial);
+                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.FilaFuncionarioErroTratar, filtroFuncionarioErro));
                     if (!publicarFuncionario)
                     {
                         SentrySdk.CaptureMessage($"Não foi possível inserir o tratamento de erro do funcionário RF{usuarioErro.UsuarioId} na fila.");
