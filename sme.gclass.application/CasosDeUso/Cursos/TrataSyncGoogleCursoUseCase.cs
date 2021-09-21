@@ -22,23 +22,24 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de cursos. A mensagem enviada é inválida.");
-
-            var filtroCargaManual = ObterParametrosFiltro(mensagemRabbit);
             var filtro = ObterFiltro(mensagemRabbit);
             var ultimaExecucaoCursosIncluir = default(DateTime?);
+            var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo): 
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
             var aplicarFiltro = filtro?.Valido ?? false;
-            if (filtro != null)
+            if (filtro != null && filtro.AnoLetivo.HasValue)
+            {
+                ultimaExecucaoCursosIncluir = new DateTime(filtro.AnoLetivo.Value, 1, 1);
+            }
+            else
             {
                 if (!aplicarFiltro)
                 {
-                    await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+                    ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
                 }
             }
-            if (filtroCargaManual != null) ultimaExecucaoCursosIncluir = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
-
-            var parametrosCargaInicialDto = filtroCargaManual != null ? new ParametrosCargaInicialDto(filtroCargaManual.TiposUes, filtroCargaManual.Ues, filtroCargaManual.Turmas, filtroCargaManual.AnoLetivo) :
-                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                
             var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
 
             if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
@@ -76,19 +77,6 @@ namespace SME.GoogleClassroom.Aplicacao
             catch
             {
                 SentrySdk.CaptureMessage("A mensagem enviada para sincronização de cursos é inválida. O filtro não será aplicado.");
-                return null;
-            }
-        }
-
-        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
-        {
-            try
-            {
-                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
-                return filtro;
-            }
-            catch
-            {
                 return null;
             }
         }

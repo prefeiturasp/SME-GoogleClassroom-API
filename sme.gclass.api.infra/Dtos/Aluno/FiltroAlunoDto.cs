@@ -1,25 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using SME.GoogleClassroom.Dominio;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class IniciarSyncGoogleAlunoDto
+    public class FiltroAlunoDto
     {
-        public IniciarSyncGoogleAlunoDto()
+        public FiltroAlunoDto(AlunoEol alunoEol, int? anoLetivo, List<int> tiposUes, List<long> ues, List<long> turmas)
         {
-        }
-        public IniciarSyncGoogleAlunoDto(int? anoLetivo, List<int> tiposUes, List<long> ues, List<long> turmas, long? codigoAluno)
-        {
+            AlunoEol = alunoEol;
             AnoLetivo = anoLetivo;
             TiposUes = tiposUes;
             Ues = ues;
             Turmas = turmas;
-            CodigoAluno = codigoAluno;
         }
 
+        public AlunoEol AlunoEol { get; set; }
         public int? AnoLetivo { get; set; }
         public List<int> TiposUes { get; set; }
         public List<long> Ues { get; set; }
         public List<long> Turmas { get; set; }
-        public long? CodigoAluno { get; set; }
     }
 }

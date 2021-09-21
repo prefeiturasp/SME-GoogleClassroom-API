@@ -21,14 +21,17 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var alunoParaIncluirCursos = JsonConvert.DeserializeObject<AlunoGoogle>(mensagemRabbit.Mensagem.ToString());
+            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroAlunoCursoDto>();
+            var alunoParaIncluirCursos = filtro.AlunoGoogle;
             if (alunoParaIncluirCursos is null)
             {
                 await IncluirCursoDoAlunoComErroAsync(alunoParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos professores no Google Classroom. O professor não foi informado corretamente.");
                 return true;
             }
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            var cursosDoAlunoParaIncluir = await mediator.Send(new ObterCursosDoAlunoParaIncluirGoogleQuery(alunoParaIncluirCursos.Codigo, DateTime.Now.Year, parametrosCargaInicialDto));
+            var parametrosCargaInicialDto = filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo.Value) : 
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var anoLetivo = filtro.AnoLetivo ?? DateTime.Now.Year;
+            var cursosDoAlunoParaIncluir = await mediator.Send(new ObterCursosDoAlunoParaIncluirGoogleQuery(alunoParaIncluirCursos.Codigo, anoLetivo, parametrosCargaInicialDto));
 
             if (!cursosDoAlunoParaIncluir?.Any() ?? true) return true;
 

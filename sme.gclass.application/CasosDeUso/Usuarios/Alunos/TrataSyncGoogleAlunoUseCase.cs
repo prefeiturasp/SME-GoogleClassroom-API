@@ -22,20 +22,20 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de alunos. A mensagem enviada é inválida.");
 
-            var filtroCargaManual = ObterParametrosFiltro(mensagemRabbit);
-            var codigoAlunoFiltro = ObterCodigoAlunoFiltro(mensagemRabbit);
+            var filtro = ObterFiltro(mensagemRabbit);
+            var codigoAlunoFiltro = filtro.CodigoAluno;
 
             var ultimaAtualizacao = default(DateTime?);
 
-            if (codigoAlunoFiltro is null && filtroCargaManual is null)
+            if (codigoAlunoFiltro is null && !filtro.AnoLetivo.HasValue)
             {
                 ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
             }
-            else if (filtroCargaManual != null) ultimaAtualizacao = new DateTime(filtroCargaManual.AnoLetivo, 1, 1);
+            else if (filtro.AnoLetivo.HasValue) ultimaAtualizacao = new DateTime(filtro.AnoLetivo.Value, 1, 1);
 
             var paginacao = new Paginacao(0, 0);
 
-            var parametrosCargaInicialDto = filtroCargaManual != null ? new ParametrosCargaInicialDto(filtroCargaManual.TiposUes, filtroCargaManual.Ues, filtroCargaManual.Turmas, filtroCargaManual.AnoLetivo) :
+            var parametrosCargaInicialDto = filtro.AnoLetivo != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
             var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro, parametrosCargaInicialDto));
@@ -47,7 +47,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
-                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoParaIncluirGoogleEol));
+                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, filtro.AnoLetivo.Value, filtro.TiposUes, filtro.Ues, filtro.Turmas);
+                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
                         if (!publicarAluno)
                             await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
                     }
@@ -63,25 +64,12 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private long? ObterCodigoAlunoFiltro(MensagemRabbit mensagemRabbit)
+        private IniciarSyncGoogleAlunoDto ObterFiltro(MensagemRabbit mensagemRabbit)
         {
             try
             {
                 var alunoParaIncluir = JsonConvert.DeserializeObject<IniciarSyncGoogleAlunoDto>(mensagemRabbit.Mensagem.ToString());
-                return alunoParaIncluir?.CodigoAluno;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private FiltroCargaInicialDto ObterParametrosFiltro(MensagemRabbit mensagemRabbit)
-        {
-            try
-            {
-                var filtro = JsonConvert.DeserializeObject<FiltroCargaInicialDto>(mensagemRabbit.Mensagem.ToString());
-                return filtro;
+                return alunoParaIncluir;
             }
             catch
             {

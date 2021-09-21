@@ -20,6 +20,13 @@ namespace SME.GoogleClassroom.Aplicacao
             Paginacao = paginacao;
         }
 
+        public ObterGradesDeCursosQuery(DateTime ultimaDataExecucao, Paginacao paginacao, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            UltimaDataExecucao = ultimaDataExecucao;
+            Paginacao = paginacao;
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
+        }
+
         public ObterGradesDeCursosQuery(DateTime ultimaDataExecucao, Paginacao paginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
             : this(ultimaDataExecucao, paginacao)
         {

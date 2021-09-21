@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            var filtro = mensagem.Mensagem != null ? mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
+            var filtro = ObterFiltro(mensagem);
             var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo,1,1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioIndiretoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
@@ -61,6 +61,18 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = $"Não foi possível inserir o funcionário indireto CPF{cpf} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}";
+        }
+
+        private FiltroCargaInicialDto ObterFiltro(MensagemRabbit mensagem)
+        {
+            try
+            {
+                return mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

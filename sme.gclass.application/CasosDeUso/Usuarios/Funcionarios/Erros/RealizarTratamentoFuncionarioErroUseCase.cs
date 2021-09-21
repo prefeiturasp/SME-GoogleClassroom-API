@@ -20,7 +20,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var usuarioErro = JsonConvert.DeserializeObject<UsuarioErro>(mensagemRabbit.Mensagem.ToString());
+            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroUsuarioErroDto>();
+            var usuarioErro = filtro.UsuarioErro;
+            var filtroCargaInicial = filtro.FiltroCargaInicial;
             if (usuarioErro is null) return true;
 
             try
@@ -31,7 +33,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     return false;
                 }
 
-                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                var parametrosCargaInicialDto = filtroCargaInicial != null? new ParametrosCargaInicialDto(filtroCargaInicial.TiposUes, filtroCargaInicial.Ues, filtroCargaInicial.Turmas, filtroCargaInicial.AnoLetivo) :
+                    await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
                 var funcionarioEol = await mediator.Send(new ObterFuncionarioParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault(), parametrosCargaInicialDto));
                 if (funcionarioEol is null)
                 {
