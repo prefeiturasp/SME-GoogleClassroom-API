@@ -53,11 +53,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 .NotEmpty()
                 .When(x => !(x.ComponenteCurricularId is null))
                 .WithMessage("O componente curricular informado é inválido.");
-            
-            RuleFor(x => x.ComponenteCurricularId)
-                .NotNull()
-                .When(x => !(x.parametrosCargaInicialDto is null))
-                .WithMessage("O parametros de carga inicial informado é inválido.");
+
         }
     }
 }

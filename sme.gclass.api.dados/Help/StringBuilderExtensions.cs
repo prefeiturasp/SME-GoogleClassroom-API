@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Dados.Help
         public static StringBuilder AdicionarCondicaoIn<T>(this StringBuilder query, IList<T> parametros,
             string coluna, string parametrosSql)
         {
-            if (!parametros.Any())
+            if (parametros == null || !parametros.Any())
             {
                 return query;
             }

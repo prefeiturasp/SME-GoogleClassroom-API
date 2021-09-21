@@ -27,7 +27,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistros,
                 paginacao.QuantidadeRegistrosIgnorados,
                 rf,
-				parametrosCargaInicialDto.TiposUes,
+                TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas
 			};
@@ -59,7 +59,7 @@ namespace SME.GoogleClassroom.Dados
             {
                 anoLetivo = anoLetivo,
                 rf,
-				parametrosCargaInicialDto.TiposUes,
+                TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas
 			};
@@ -301,7 +301,7 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<FuncionarioCursoEol>(query, new { 
 				rf, 
 				anoLetivo,
-				parametrosCargaInicialDto.TiposUes,
+				TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			});
@@ -541,7 +541,7 @@ namespace SME.GoogleClassroom.Dados
                 dataFim,
                 paginacao.QuantidadeRegistros,
                 paginacao.QuantidadeRegistrosIgnorados,
-				parametrosCargaInicialDto.TiposUes,
+                TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas
 			};
@@ -788,7 +788,7 @@ namespace SME.GoogleClassroom.Dados
                 turmaId,
                 dataInicio,
                 dataFim,
-				parametrosCargaInicialDto.TiposUes,
+                TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			};

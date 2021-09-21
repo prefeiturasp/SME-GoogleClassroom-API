@@ -87,6 +87,9 @@
         public static string FilaGsaNotasAtividadesTratar => "googleclass.gsa.notas.atividades.tratar";
         public static string FilaGsaNotasAtividadesSync => "googleclass.gsa.notas.atividades.sync";
         public static string FilaGsaNotasAtividadesSyncErro => "googleclass.gsa.notas.atividades.sync.erro";
+
+        //Carga inicial
+        public static string FilaGsaCargaInicial => "googleclass.gsa.carga.inicial.sync";
         #endregion
 
         #region Inativação de Usuários

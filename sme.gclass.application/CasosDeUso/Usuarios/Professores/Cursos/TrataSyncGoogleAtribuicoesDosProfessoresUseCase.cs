@@ -19,10 +19,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
+            
+            var filtro = mensagemRabbit.Mensagem != null ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
+            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) : 
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
             var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao, parametrosCargaInicialDto));
 
             foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)

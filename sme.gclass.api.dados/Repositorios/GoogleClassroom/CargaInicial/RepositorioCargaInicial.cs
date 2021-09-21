@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,8 +18,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"select id
                             , ano
-                            , tipos_ue as TiposUe
-                            , tipos_ue_cursos as TiposUeCursos
+                            , tipos_ue as TiposUe                            
                             , Ues
                             , Turmas
                             , criado_em as CriadoEm
@@ -27,6 +27,16 @@ namespace SME.GoogleClassroom.Dados
 
             using (var conexao = ObterConexao())
                 return await conexao.QueryAsync<CargaInicial>(query, new { ano });
+        }
+
+        public async Task<long> InserirCargaInicial(int ano, string tiposUes, string ues, string turmas)
+        {
+            var query = @"INSERT INTO public.carga_inicial
+                                            (ano, tipos_ue, ues, turmas, criado_em)
+                                            VALUES(@ano, @tiposUes, @ues, @turmas, @criadoEm) RETURNING ano;";
+
+            using var conexao = ObterConexao();
+            return await conexao.ExecuteAsync(query, new { ano, tiposUes, ues, turmas, criadoEm = DateTime.Now });
         }
     }
 }

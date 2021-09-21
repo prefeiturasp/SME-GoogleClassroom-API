@@ -23,7 +23,8 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
             var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferencia, rf, parametrosCargaInicialDto);
+			var dataReferenciaAnoLetivo = parametrosCargaInicialDto.AnoLetivo.HasValue ? new DateTime(parametrosCargaInicialDto.AnoLetivo.Value, 1, 1) : dataReferencia;
+            var query = MontaQueryProfessorParaInclusao(aplicarPaginacao, dataReferenciaAnoLetivo, rf, parametrosCargaInicialDto);
 			var parametros = new
 			{
 				anoLetivo = dataReferencia.Year,
@@ -31,7 +32,7 @@ namespace SME.GoogleClassroom.Dados
 				paginacao.QuantidadeRegistros,
 				paginacao.QuantidadeRegistrosIgnorados,
 				rf,
-				parametrosCargaInicialDto.TiposUes,
+				TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			};
@@ -218,7 +219,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<ProfessorCursoEol>(query.ToString(), new { 
 				rf, 
 				anoLetivo,
-				parametrosCargaInicialDto.TiposUes,
+				TiposUes = parametrosCargaInicialDto.TiposUes,
 				parametrosCargaInicialDto.Ues,
 				parametrosCargaInicialDto.Turmas,
 			});
@@ -240,7 +241,7 @@ namespace SME.GoogleClassroom.Dados
                 componenteCurricularId,
                 paginacao.QuantidadeRegistros,
                 paginacao.QuantidadeRegistrosIgnorados,
-                parametrosCargaInicialDto.TiposUes,
+                TiposUes = parametrosCargaInicialDto.TiposUes,
                 parametrosCargaInicialDto.Ues,
                 parametrosCargaInicialDto.Turmas,
             };

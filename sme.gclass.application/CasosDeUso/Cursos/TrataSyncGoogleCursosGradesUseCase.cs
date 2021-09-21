@@ -20,10 +20,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoGradesAdicionar));
+            var filtro = ObterFiltro(mensagemRabbit);
+            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoGradesAdicionar));
+            var parametrosCargaInicial = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) : null;
 
             var paginacao = new Paginacao(0, 0);
-            var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosQuery(ultimaAtualizacao, paginacao));
+            var gradesDeCursosAlunos = await mediator.Send(new ObterGradesDeCursosQuery(ultimaAtualizacao, paginacao, parametrosCargaInicial));
 
             foreach (var gradeDeCurso in gradesDeCursosAlunos.Items)
             {
@@ -65,6 +67,18 @@ namespace SME.GoogleClassroom.Aplicacao
             var mensagem = $"Não foi possível inserir a grade do curso [TurmaId:{gradeCursoEol.TurmaId}, ComponenteCurricularId:{gradeCursoEol.ComponenteCurricularId}] na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}. {ex.StackTrace}";
-        }        
+        }
+        
+        private FiltroCargaInicialDto ObterFiltro(MensagemRabbit mensagem)
+        {
+            try
+            {
+                return mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>();
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

@@ -22,15 +22,24 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de cursos. A mensagem enviada é inválida.");
-
             var filtro = ObterFiltro(mensagemRabbit);
+            var ultimaExecucaoCursosIncluir = default(DateTime?);
+            var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo): 
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
             var aplicarFiltro = filtro?.Valido ?? false;
-
-            var ultimaExecucaoCursosIncluir = !aplicarFiltro
-                ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar))
-                : default(DateTime?);
-
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            if (filtro != null && filtro.AnoLetivo.HasValue)
+            {
+                ultimaExecucaoCursosIncluir = new DateTime(filtro.AnoLetivo.Value, 1, 1);
+            }
+            else
+            {
+                if (!aplicarFiltro)
+                {
+                    ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+                }
+            }
+                
             var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
 
             if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
@@ -52,7 +61,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            if(!aplicarFiltro)
+            if (!aplicarFiltro)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
 
             return true;
