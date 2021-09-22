@@ -1,13 +1,12 @@
 ﻿using Google;
 using MediatR;
 using Newtonsoft.Json;
-using SME.GoogleClassroom.Aplicacao.Commands.Usuarios.Professores.ObterProfessorCursoGoogle;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -40,19 +39,65 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (curso is null) return false;
 
                 var existeProfessorCursoLocal = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professor.First().Indice, curso.Id));
-                if (existeProfessorCursoLocal) return true;
-
-                await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
+                if (!existeProfessorCursoLocal)
+                    await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
+                
+                await AtribuirProfessorComoDonoDoCurso(professorCursoEolParaIncluir, professor, curso);
 
                 return true;
             }
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirCursoUsuarioErroCommand(professorCursoEolParaIncluir.Rf, professorCursoEolParaIncluir.TurmaId,
-                    professorCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno, 
+                    professorCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno,
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace: {ex.StackTrace}."));
                 throw;
             }
+        }
+
+        private async Task AtribuirProfessorComoDonoDoCurso(ProfessorCursoEol professorCursoEolParaIncluir, IEnumerable<ProfessorGoogle> professor, CursoGoogle curso)
+        {
+            bool ehGestor = false;
+
+            var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(curso.Id));
+
+            ehGestor = DonoDoCursoEhGestor(professor, funcionariosDoCurso, ehGestor);
+
+            if (professorCursoEolParaIncluir.Modalidade != 0 && professorCursoEolParaIncluir.Modalidade != 1 && ehGestor)
+            {
+                var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(professor.First().Email));
+                var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
+                if (retornoGoogle)
+                {
+                    curso.Email = professor.First().Email;
+                    await mediator.Send(new AlterarCursoCommand(curso));
+                }
+            }
+        }
+
+        private static bool DonoDoCursoEhGestor(IEnumerable<ProfessorGoogle> professor, IEnumerable<UsuarioGoogleDto> funcionariosDoCurso, bool ehAdmin)
+        {
+            UsuarioGoogleDto funcionarioResponsavel;
+            var tiposFuncionarios = new[] { "/Admin/CP", "/Admin/AD", "/Admin/DIRETOR" };
+            var funcionarios = funcionariosDoCurso.Where(o => !o.Email.Equals(professor.First().Email)).ToList();
+
+            foreach (var tipoFuncionario in tiposFuncionarios)
+            {
+                funcionarioResponsavel = funcionarios.FirstOrDefault(o => o.OrganizationPath.Equals(tipoFuncionario));
+
+                if (funcionarioResponsavel != null)
+                    ehAdmin = true;
+            }
+
+            return ehAdmin;
+
+            //var funcionarios = funcionariosDoCurso.Where(o => !o.Email.Equals(professor.First().Email)).ToList();
+            //var funcionarioResponsavel = funcionarios.FirstOrDefault(o => o.UsuarioTipo != 2);
+
+            //if (funcionarioResponsavel != null)
+            //    ehAdmin = true;
+
+            //return ehAdmin;
         }
 
         private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal)
@@ -62,7 +107,7 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var professorCursoSincronizado = !existeProfessorCursoLocal && await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professorGoogle.Email));
-                if(professorCursoSincronizado && !existeProfessorCursoLocal)
+                if (professorCursoSincronizado && !existeProfessorCursoLocal)
                 {
                     await InserirProfessorCursoAsync(professorCursoGoogle);
                 }
