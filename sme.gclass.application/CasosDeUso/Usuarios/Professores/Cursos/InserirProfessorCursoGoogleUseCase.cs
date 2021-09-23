@@ -40,8 +40,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var existeProfessorCursoLocal = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professor.First().Indice, curso.Id));
                 if (!existeProfessorCursoLocal)
-                    await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
-                
+                    //await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
+
                 await AtribuirProfessorComoDonoDoCurso(professorCursoEolParaIncluir, professor, curso);
 
                 return true;
@@ -61,7 +61,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(curso.Id));
 
-            ehGestor = DonoDoCursoEhGestor(professor, funcionariosDoCurso, ehGestor);
+            var usuarioAtual = await mediator.Send(new ObterUsuarioPorEmailQuery(curso.Email));
+
+            ehGestor = DonoDoCursoEhGestor(usuarioAtual, ehGestor);
 
             if (professorCursoEolParaIncluir.Modalidade != 0 && professorCursoEolParaIncluir.Modalidade != 1 && ehGestor)
             {
@@ -75,21 +77,9 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private static bool DonoDoCursoEhGestor(IEnumerable<ProfessorGoogle> professor, IEnumerable<UsuarioGoogleDto> funcionariosDoCurso, bool ehAdmin)
+        private static bool DonoDoCursoEhGestor(UsuarioGoogleDto usuarioAtual, bool ehAdmin)
         {
-            UsuarioGoogleDto funcionarioResponsavel;
-            var tiposFuncionarios = new[] { "/Admin/CP", "/Admin/AD", "/Admin/DIRETOR" };
-            var funcionarios = funcionariosDoCurso.Where(o => !o.Email.Equals(professor.First().Email)).ToList();
-
-            foreach (var tipoFuncionario in tiposFuncionarios)
-            {
-                funcionarioResponsavel = funcionarios.FirstOrDefault(o => o.OrganizationPath.Equals(tipoFuncionario));
-
-                if (funcionarioResponsavel != null)
-                    ehAdmin = true;
-            }
-
-            return ehAdmin;
+            return usuarioAtual.UsuarioTipo == 3 ? true : false;
         }
 
         private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal)
