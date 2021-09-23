@@ -90,14 +90,6 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             return ehAdmin;
-
-            //var funcionarios = funcionariosDoCurso.Where(o => !o.Email.Equals(professor.First().Email)).ToList();
-            //var funcionarioResponsavel = funcionarios.FirstOrDefault(o => o.UsuarioTipo != 2);
-
-            //if (funcionarioResponsavel != null)
-            //    ehAdmin = true;
-
-            //return ehAdmin;
         }
 
         private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal)
