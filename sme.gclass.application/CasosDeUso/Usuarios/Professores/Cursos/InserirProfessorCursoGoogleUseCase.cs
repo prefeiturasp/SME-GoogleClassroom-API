@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var existeProfessorCursoLocal = await mediator.Send(new ExisteProfessorCursoGoogleQuery(professor.First().Indice, curso.Id));
                 if (!existeProfessorCursoLocal)
-                    //await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
+                    await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
 
                 await AtribuirProfessorComoDonoDoCurso(professorCursoEolParaIncluir, professor, curso);
 
@@ -57,18 +57,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task AtribuirProfessorComoDonoDoCurso(ProfessorCursoEol professorCursoEolParaIncluir, IEnumerable<ProfessorGoogle> professor, CursoGoogle curso)
         {
-            bool ehGestor = false;
-
-            var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(curso.Id));
-
             var usuarioAtual = await mediator.Send(new ObterUsuarioPorEmailQuery(curso.Email));
 
-            ehGestor = DonoDoCursoEhGestor(usuarioAtual, ehGestor);
+            var ehGestor = DonoDoCursoEhGestor(usuarioAtual);
 
             if (professorCursoEolParaIncluir.Modalidade != 0 && professorCursoEolParaIncluir.Modalidade != 1 && ehGestor)
             {
-                var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(professor.First().Email));
-                var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
+                var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, professor.First().GoogleClassroomId));
                 if (retornoGoogle)
                 {
                     curso.Email = professor.First().Email;
@@ -77,7 +72,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private static bool DonoDoCursoEhGestor(UsuarioGoogleDto usuarioAtual, bool ehAdmin)
+        private static bool DonoDoCursoEhGestor(UsuarioGoogleDto usuarioAtual)
         {
             return usuarioAtual.UsuarioTipo == 3 ? true : false;
         }
