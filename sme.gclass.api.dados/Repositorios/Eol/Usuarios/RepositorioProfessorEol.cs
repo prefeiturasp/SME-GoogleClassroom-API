@@ -339,7 +339,8 @@ namespace SME.GoogleClassroom.Dados
 										cc.cd_componente_curricular
 									END ComponenteCurricularId,
 									te.cd_escola AS CdUe,
-									atb_ser.dt_atribuicao_aula AS DataAtribuicao
+									atb_ser.dt_atribuicao_aula AS DataAtribuicao,
+									etapa_ensino.cd_modalidade_ensino as Modalidade
 								INTO #tempTurmasComponentesRegularesProfessores
 								FROM
 									turma_escola te (NOLOCK)
@@ -410,7 +411,8 @@ namespace SME.GoogleClassroom.Dados
 									pcc.cd_componente_curricular AS ComponenteCurricularId,
 									te.cd_turma_escola TurmaId,
 									te.cd_escola AS CdUe,
-									atb_pro.dt_atribuicao_aula AS DataAtribuicao
+									atb_pro.dt_atribuicao_aula AS DataAtribuicao,
+									0 as Modalidade
 								INTO #tempTurmasComponentesProgramasProfessores
 								FROM
 									turma_escola te (NOLOCK)

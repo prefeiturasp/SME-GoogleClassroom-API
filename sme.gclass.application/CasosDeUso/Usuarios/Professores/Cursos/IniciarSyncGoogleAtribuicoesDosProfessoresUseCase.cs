@@ -15,9 +15,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar()
+        public async Task<bool> Executar(FiltroCargaInicialDto filtro)
         {
-            var publicarSyncAtribuicao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync, true));
+            var publicarSyncAtribuicao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoAtribuicaoSync, RotasRabbit.FilaProfessorCursoAtribuicaoSync, filtro));
             if (!publicarSyncAtribuicao)
             {
                 throw new NegocioException("Não foi possível iniciar a sincronização de atribuições de cursos dos professores.");
