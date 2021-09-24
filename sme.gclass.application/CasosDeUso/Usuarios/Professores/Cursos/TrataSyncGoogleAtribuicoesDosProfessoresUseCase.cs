@@ -18,42 +18,34 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            try
+            var filtro = mensagemRabbit.Mensagem.ToString() != null ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
+            var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
+
+            var paginacao = new Paginacao(0, 0);
+            var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, DateTime.Today.Year) :
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao, parametrosCargaInicialDto));
+
+            foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
             {
-                var filtro = mensagemRabbit.Mensagem.ToString() != null  ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
-                var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
+                var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId, atribuicaoDeCursoDoProfessor.Modalidade);
 
-                var paginacao = new Paginacao(0, 0);
-                var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, DateTime.Today.Year) :
-                    await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-                var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao, parametrosCargaInicialDto));
-
-                foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
+                try
                 {
-                    var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId, atribuicaoDeCursoDoProfessor.Modalidade);
-
-                    try
+                    var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
+                    if (!publicarProfessor)
                     {
-                        var publicarProfessor = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorCursoIncluir, RotasRabbit.FilaProfessorCursoIncluir, cursoDoProfessorParaIncluir));
-                        if (!publicarProfessor)
-                        {
-                            await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
                     }
                 }
-
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar, DateTime.Today));
-                return true;
+                catch (Exception ex)
+                {
+                    await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                }
             }
-            catch (Exception ex)
-            {
 
-                throw ex;
-            }
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar, DateTime.Today));
+            return true;
         }
 
         private async Task IncluirCursoDoProfessorComErroAsync(ProfessorCursoEol cursoDoprofessorParaIncluirGoogle, string mensagem)
