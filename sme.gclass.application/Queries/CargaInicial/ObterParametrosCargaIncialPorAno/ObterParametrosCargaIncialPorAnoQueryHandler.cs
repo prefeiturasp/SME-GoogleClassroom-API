@@ -31,6 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (cargaInicial.PossuiTurmas())
                     parametros.AdicionaTurmas(cargaInicial.Turmas);
+
+                parametros.AnoLetivo = cargaInicial.Ano;
             }
 
             return parametros;
