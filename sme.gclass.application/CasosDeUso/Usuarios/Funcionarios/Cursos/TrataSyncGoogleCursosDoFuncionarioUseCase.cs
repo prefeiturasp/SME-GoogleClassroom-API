@@ -21,15 +21,18 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var funcionarioParaIncluirCursos = JsonConvert.DeserializeObject<FuncionarioGoogle>(mensagemRabbit.Mensagem.ToString());
+            var filtroFuncionarioParaIncluirCursos = mensagemRabbit.ObterObjetoMensagem<FiltroFuncionarioGoogleDto>();
+            var funcionarioParaIncluirCursos = filtroFuncionarioParaIncluirCursos.FuncionarioGoogle;
+            var filtroParametros = filtroFuncionarioParaIncluirCursos.ParametrosCargaInicial;
             if (funcionarioParaIncluirCursos is null)
             {
                 await IncluirCursoDoFuncionarioComErroAsync(funcionarioParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos do funcionário no Google Classroom. O funcionário não foi informado corretamente.");
                 return true;
             }
 
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            var cursosDoFuncionarioParaIncluir = await mediator.Send(new ObterCursosDoFuncionarioParaIncluirGoogleQuery(funcionarioParaIncluirCursos.Rf.GetValueOrDefault(), DateTime.Now.Year, parametrosCargaInicialDto));
+            var parametrosCargaInicialDto = filtroParametros != null ? filtroParametros : await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var anoLetivo = filtroParametros != null ? filtroParametros.AnoLetivo.Value : DateTime.Now.Year;
+            var cursosDoFuncionarioParaIncluir = await mediator.Send(new ObterCursosDoFuncionarioParaIncluirGoogleQuery(funcionarioParaIncluirCursos.Rf.GetValueOrDefault(), anoLetivo, parametrosCargaInicialDto));
 
             if (!cursosDoFuncionarioParaIncluir?.Any() ?? true) return true;
 
@@ -55,7 +58,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task IncluirCursoDoFuncionarioComErroAsync(FuncionarioGoogle funcionarioGoogle, string mensagem)
         {
             var command = new IncluirCursoUsuarioErroCommand(
-                funcionarioGoogle.Rf,
+                funcionarioGoogle?.Rf ?? null,
                 ExecucaoTipo.FuncionarioCursoAdicionar,
                 ErroTipo.Negocio,
                 mensagem);

@@ -102,6 +102,8 @@ namespace SME.GoogleClassroom.Dados
 				INNER JOIN
 					escola esc
 					ON ls.cd_unidade_educacao = esc.cd_escola
+				INNER JOIN
+					turma_escola te on te.cd_escola = esc.cd_escola
 				WHERE
 					serv.cd_registro_funcional = @rf
 					AND dt_fim_nomeacao IS NULL
@@ -110,8 +112,8 @@ namespace SME.GoogleClassroom.Dados
 			var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryFuncionariosPorCargoFixo);
 
 			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 			queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
 
 			const string queryFuncionariosPorCargoSobrepostoFixo = @"
@@ -136,14 +138,16 @@ namespace SME.GoogleClassroom.Dados
 				INNER JOIN
 					escola esc 
 					ON css.cd_unidade_local_servico = esc.cd_escola
+				INNER JOIN
+					turma_escola te on te.cd_escola = esc.cd_escola
 				WHERE
 					serv.cd_registro_funcional = @rf
 					AND (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE())";
 			
 			var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryFuncionariosPorCargoSobrepostoFixo);
 			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.TiposUes));
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.Append(";");
 
 			const string queryFuncionariosPorFuncionarios = @"
@@ -168,6 +172,8 @@ namespace SME.GoogleClassroom.Dados
 				INNER JOIN
 					escola esc 
 					ON facs.cd_unidade_local_servico = esc.cd_escola
+				INNER JOIN
+					turma_escola te on te.cd_escola = esc.cd_escola
 				WHERE
 					serv.cd_registro_funcional = @rf
 					AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())

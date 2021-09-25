@@ -25,7 +25,9 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível incluir o funcionário. A mensagem enviada é inválida.");
 
-            var funcionarioParaIncluir = JsonConvert.DeserializeObject<FuncionarioEol>(mensagemRabbit.Mensagem.ToString());
+            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroFuncionarioDto>();
+            var funcionarioParaIncluir = filtro.FuncionarioEol;
+            var parametrosCargaInicial = filtro.ParametrosCargaInicial;
             if (funcionarioParaIncluir is null) return true;
 
             try
@@ -33,13 +35,14 @@ namespace SME.GoogleClassroom.Aplicacao
                 var funcionarioGoogle = new FuncionarioGoogle(funcionarioParaIncluir.Rf, funcionarioParaIncluir.Nome, funcionarioParaIncluir.Email, funcionarioParaIncluir.OrganizationPath);
 
                 var funcionarioJaIncluido = await mediator.Send(new ExisteFuncionarioPorRfQuery(funcionarioParaIncluir.Rf));
+                var filtroFuncionarioGoogle = new FiltroFuncionarioGoogleDto(funcionarioGoogle, parametrosCargaInicial);
                 if (funcionarioJaIncluido)
                 {
-                    await IniciarSyncGoogleCursosDoFuncionarioAsync(funcionarioGoogle);
+                    await IniciarSyncGoogleCursosDoFuncionarioAsync(filtroFuncionarioGoogle);
                     return true;
                 }
 
-                await InserirFuncionarioGoogleAsync(funcionarioGoogle);
+                await InserirFuncionarioGoogleAsync(filtroFuncionarioGoogle);
                 return true;
             }
             catch (Exception ex)
@@ -50,8 +53,9 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task InserirFuncionarioGoogleAsync(FuncionarioGoogle funcionarioGoogle)
+        private async Task InserirFuncionarioGoogleAsync(FiltroFuncionarioGoogleDto filtroFuncionarioGoogle)
         {
+            var funcionarioGoogle = filtroFuncionarioGoogle.FuncionarioGoogle;
             try
             {
                 var funcionarioSincronizado = await mediator.Send(new InserirFuncionarioGoogleCommand(funcionarioGoogle));
@@ -62,26 +66,28 @@ namespace SME.GoogleClassroom.Aplicacao
                     return;
                 }
 
-                await InserirFuncionarioAsync(funcionarioGoogle);
+                await InserirFuncionarioAsync(filtroFuncionarioGoogle);
             }
             catch (GoogleApiException gEx)
             {
                 if (gEx.EhErroDeDuplicidade())
-                    await InserirFuncionarioAsync(funcionarioGoogle);
+                    await InserirFuncionarioAsync(filtroFuncionarioGoogle);
                 else
                     throw;
             }
         }
 
-        private async Task InserirFuncionarioAsync(FuncionarioGoogle funcionarioGoogle)
+        private async Task InserirFuncionarioAsync(FiltroFuncionarioGoogleDto filtroFuncionarioGoogle)
         {
+            var funcionarioGoogle = filtroFuncionarioGoogle.FuncionarioGoogle;
             funcionarioGoogle.Indice = await mediator.Send(new IncluirUsuarioCommand(funcionarioGoogle));
-            await IniciarSyncGoogleCursosDoFuncionarioAsync(funcionarioGoogle);
+            await IniciarSyncGoogleCursosDoFuncionarioAsync(filtroFuncionarioGoogle);
         }
 
-        private async Task IniciarSyncGoogleCursosDoFuncionarioAsync(FuncionarioGoogle funcionarioGoogle)
+        private async Task IniciarSyncGoogleCursosDoFuncionarioAsync(FiltroFuncionarioGoogleDto filtroFuncionarioGoogle)
         {
-            var publicarCursosDoFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoSync, RotasRabbit.FilaFuncionarioCursoSync, funcionarioGoogle));
+            var funcionarioGoogle = filtroFuncionarioGoogle.FuncionarioGoogle;
+            var publicarCursosDoFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoSync, RotasRabbit.FilaFuncionarioCursoSync, filtroFuncionarioGoogle));
             if (!publicarCursosDoFuncionario)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(funcionarioGoogle?.Rf, funcionarioGoogle?.Email,
