@@ -42,8 +42,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     SentrySdk.CaptureMessage(mensagem);
                     return false;
                 }
-
-                var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.FilaFuncionarioIncluir, funcionarioEol));
+                var filtroFuncionario = new FiltroFuncionarioDto(funcionarioEol, parametrosCargaInicialDto);
+                var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioIncluir, RotasRabbit.FilaFuncionarioIncluir, filtroFuncionario));
                 if (!publicarFuncionario)
                 {
                     var mensagem = $"Não foi possível inserir o funcionário RF{usuarioErro.UsuarioId} na fila de inclusão.";
