@@ -32,17 +32,19 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     var cursoResponsavel = new CursoResponsavelDto(curso.Key, curso.Select(a => a.UsuarioId));
 
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursoResponsavel, ultimaExecucao)));
+                    var mural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(cursoResponsavel));
+
+                    if (mural.Avisos.Any())
+                        await mediator.Send(new TratarImportacaoAvisosCommand(mural.Avisos, cursoResponsavel.CursoId, ultimaExecucao));
                 }
                 catch (Exception ex)
                 {
                     SentrySdk.CaptureException(ex);
-                    continue;
                 }
             }
-
+            
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
             return true;
-        }
+        }        
     }
 }

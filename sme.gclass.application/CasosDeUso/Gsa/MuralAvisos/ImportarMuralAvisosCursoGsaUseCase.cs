@@ -22,22 +22,27 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível realizar a importação do aviso do mural. Mensagem não recebida");
 
-            var avisoGsa = mensagem.ObterObjetoMensagem<AvisoMuralGsaDto>();
-            var usuario = await ObterUsuario(avisoGsa.UsuarioClassroomId);
-            try
-            {
-                await GravarAvisoGsa(avisoGsa, usuario.Indice);
-                if (!await EnviarParaSgp(avisoGsa, usuario))
-                    throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
+            var avisosGsa = mensagem.ObterObjetoMensagem<AvisoMuralGsaDto[]>();
 
-                return true;
-            }
-            catch (Exception ex)
+            foreach (var avisoGsa in avisosGsa)
             {
-                SentrySdk.CaptureMessage($"Não foi possível importar o aviso do mural GSA do curso {avisoGsa.CursoId} e e usuario {avisoGsa.UsuarioClassroomId}: {ex.Message}");
-                await EnviarErro(avisoGsa);
-                throw;
-            }        
+                var usuario = await ObterUsuario(avisoGsa.UsuarioClassroomId);
+                try
+                {
+                    await GravarAvisoGsa(avisoGsa, usuario.Indice);
+                    if (!await EnviarParaSgp(avisoGsa, usuario))
+                        throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
+
+                }
+                catch (Exception ex)
+                {
+                    SentrySdk.CaptureMessage($"Não foi possível importar o aviso do mural GSA do curso {avisoGsa.CursoId} e e usuario {avisoGsa.UsuarioClassroomId}: {ex.Message}");
+                    await EnviarErro(avisoGsa);
+                    throw;
+                }
+            }
+
+            return true;
         }
 
         private async Task EnviarErro(AvisoMuralGsaDto avisoGsa)
