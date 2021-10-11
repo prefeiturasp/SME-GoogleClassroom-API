@@ -4,12 +4,12 @@ namespace SME.GoogleClassroom.Infra
 {
     public class NotaGsaDto
     {
-        public NotaGsaDto(string id, string usuarioId, string statusNota, double? nota, DateTime dataInclusao, DateTime? dataAlteracao = null)
+        public NotaGsaDto(string id, string usuarioId, string statusNota, double? nota, DateTime? dataInclusao, DateTime? dataAlteracao = null)
         {
             Id = id;
             UsuarioId = usuarioId;
             Nota = nota;
-            DataInclusao = dataInclusao;
+            DataInclusao = dataInclusao ?? DateTime.Now;
             DataAlteracao = dataAlteracao;
             StatusNota = statusNota;
         }
