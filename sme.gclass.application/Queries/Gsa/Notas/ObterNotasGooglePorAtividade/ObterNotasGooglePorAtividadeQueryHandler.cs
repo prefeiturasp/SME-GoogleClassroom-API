@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
                                                      studenSubmission.UserId,
                                                      studenSubmission.State,
                                                      studenSubmission.AssignedGrade,
-                                                     (DateTime)studenSubmission.CreationTime,
+                                                     (DateTime?)studenSubmission.CreationTime,
                                                      (DateTime?)studenSubmission.UpdateTime));
                 }
             }
