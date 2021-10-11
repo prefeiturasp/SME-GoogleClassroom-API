@@ -5,6 +5,7 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar(MensagemRabbit mensage)
+        public async Task<bool> Executar(MensagemRabbit mensagem)
         {
-            var filtro = mensage.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
+            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
 
             var anoAtual = DateTime.Now.Year;
             var cursos = await mediator.Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId));
@@ -31,12 +32,14 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 try
                 {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(curso, ultimaExecucao)));
+                    var atividadesCurso = await mediator.Send(new ObterAtividadesDoCursoGoogleQuery(curso));
+
+                    if (atividadesCurso.Atividades.Any())
+                        await mediator.Send(new TratarImportacaoAtividadesCommand(atividadesCurso.Atividades, curso.CursoId, ultimaExecucao));
                 }
                 catch (Exception ex)
                 {
                     SentrySdk.CaptureException(ex);
-                    continue;
                 }
             }
 
