@@ -14,10 +14,11 @@ namespace SME.GoogleClassroom.IoC
                 HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
                 UserName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__UserName"),
                 Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password"),
-                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost")
+                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost"),
+                AutomaticRecoveryEnabled = true,
+                RequestedHeartbeat = TimeSpan.FromSeconds(60)
             };
 
-            factory.AutomaticRecoveryEnabled = true;
             var conexaoRabbit = factory.CreateConnection();
             IModel _channel = conexaoRabbit.CreateModel();
             services.AddSingleton(conexaoRabbit);
