@@ -14,17 +14,15 @@ namespace SME.GoogleClassroom.IoC
                 HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
                 UserName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__UserName"),
                 Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password"),
-                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost")
+                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost"),
+                AutomaticRecoveryEnabled = true,
+                RequestedHeartbeat = TimeSpan.FromSeconds(60)
             };
 
             var conexaoRabbit = factory.CreateConnection();
             IModel _channel = conexaoRabbit.CreateModel();
             services.AddSingleton(conexaoRabbit);
             services.AddSingleton(_channel);
-
-            //_channel.ExchangeDeclare(RotasRabbit.ExchangeSgp, ExchangeType.Topic);
-            //_channel.QueueDeclare(RotasRabbit.FilaSgp, false, false, false, null);
-            //_channel.QueueBind(RotasRabbit.FilaSgp, RotasRabbit.ExchangeSgp, "*");
         }
     }
 }
