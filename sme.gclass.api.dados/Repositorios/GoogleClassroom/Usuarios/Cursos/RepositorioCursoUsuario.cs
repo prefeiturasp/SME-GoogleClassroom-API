@@ -458,7 +458,9 @@ namespace SME.GoogleClassroom.Dados
                 query += "and c.id = @cursoId ";
 
             using var conn = ObterConexao();
-                return await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
+
+            var retorno = await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
+            return retorno;
         }
 
         public async Task<IEnumerable<UsuarioGoogleDto>> ObterFuncionariosPorCursoId(long cursoId)
@@ -518,7 +520,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<bool> UsuarioEhDonoCurso(long usuarioId, string email)
         {
-         const string query = @"SELECT exists(select 1  
+            const string query = @"SELECT exists(select 1  
                                 from cursos_usuarios cu 
                                 inner join cursos c on c.id = cu.curso_id 
                                 inner join usuarios u on u.indice = cu.usuario_id 
