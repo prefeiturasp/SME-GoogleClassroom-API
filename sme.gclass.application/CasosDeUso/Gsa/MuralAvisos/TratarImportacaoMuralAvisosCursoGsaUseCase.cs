@@ -25,14 +25,17 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var filtro = mensagem.ObterObjetoMensagem<FiltroTratarMuralAvisosCursoDto>();
 
-            var paginaMural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(filtro.Curso));
+            foreach (var curso in filtro.Cursos)
+            {
+                var paginaMural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(curso));
 
-            if (paginaMural.Avisos.Any())
-                await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, filtro.Curso.CursoId, filtro.UltimaExecucao));
+                if (paginaMural.Avisos.Any())
+                    await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, curso.CursoId, filtro.UltimaExecucao));
 
-            filtro.TokenProximaPagina = paginaMural.TokenProximaPagina;
-            if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
-                await PublicaProximaPaginaAsync(filtro);
+                filtro.TokenProximaPagina = paginaMural.TokenProximaPagina;
+                if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
+                    await PublicaProximaPaginaAsync(filtro);
+            }
 
             return true;
         }

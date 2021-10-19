@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Infra
 {
     public class FiltroTratarMuralAvisosCursoDto
     {
-        public FiltroTratarMuralAvisosCursoDto(CursoResponsavelDto curso, DateTime ultimaExecucao, string tokenProximaPagina = "")
+        public FiltroTratarMuralAvisosCursoDto(IEnumerable<CursoResponsavelDto> cursos, DateTime ultimaExecucao, string tokenProximaPagina = "")
         {
-            Curso = curso;
+            Cursos = cursos;
             UltimaExecucao = ultimaExecucao;
             TokenProximaPagina = tokenProximaPagina;
         }
 
         public string TokenProximaPagina { get; set; }
-        public CursoResponsavelDto Curso { get; set; }
+        public IEnumerable<CursoResponsavelDto> Cursos { get; set; }
         public DateTime UltimaExecucao { get; set; }
     }
 }
