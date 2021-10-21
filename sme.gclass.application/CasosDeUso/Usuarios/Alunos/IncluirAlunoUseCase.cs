@@ -33,8 +33,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));                
-                if (alunoJaIncluido != null && alunoJaIncluido.Any() && !alunoJaIncluido.First().GoogleClassroomId.Equals(alunoParaIncluir.Codigo.ToString()))
+                var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));
+                var googleClassroomId = alunoJaIncluido.First().GoogleClassroomId;
+                if (alunoJaIncluido != null && alunoJaIncluido.Any() && googleClassroomId != null && !googleClassroomId.Equals(alunoParaIncluir.Codigo.ToString()))
                 {
                     await AtualizarAlunoGoogleSync(filtro, alunoJaIncluido.First());
                     return true;
@@ -95,6 +96,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var alunoEol = filtro.AlunoEol;
             alunoGoogle.Nome = alunoEol.Nome;
+            
             alunoGoogle.OrganizationPath = alunoEol.OrganizationPath;
 
             var incluiuAlunoGoogle = await mediator.Send(new AtualizarAlunoGoogleCommand(alunoGoogle));
