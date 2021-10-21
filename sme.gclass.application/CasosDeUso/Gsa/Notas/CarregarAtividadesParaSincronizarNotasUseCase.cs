@@ -24,6 +24,10 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var filtro = mensagem.ObterObjetoMensagem<FiltroNotasAtividadesSincronizacaoDto>();
             var ultimaExecucao = await ObterUltimaExecucao();
+
+            if (ultimaExecucao.Date.Equals(DateTime.Today.Date))
+                return true;
+
             var periodo = await ObterPeriodoDatasImportacaoAtividades(ultimaExecucao);
 
             var pagina = 1;
