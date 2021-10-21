@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var filtro = mensagem.ObterObjetoMensagem<FiltroNotasAtividadesSincronizacaoDto>();
             var ultimaExecucao = await ObterUltimaExecucao();
 
-            if (ultimaExecucao.Date.Equals(DateTime.Today.Date))
+            if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
                 return true;
 
             var periodo = await ObterPeriodoDatasImportacaoAtividades(ultimaExecucao);
@@ -38,7 +38,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 var retorno = await mediator.Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim, filtro.CursoId, pagina));
                 totalPaginas = retorno.totalPaginas;
 
-                await ExecutarImportacaoNotasAtividades(retorno.atividades);
+                await mediator
+                    .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, ListarAtividadesExecutar(retorno.atividades)));
 
                 pagina++;
 
@@ -50,17 +51,10 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task ExecutarImportacaoNotasAtividades(IEnumerable<DadosAvaliacaoDto> atividades)
+        private IEnumerable<TratarImportacaoNotasAvalidacaoDto> ListarAtividadesExecutar(IEnumerable<DadosAvaliacaoDto> atividades)
         {
             foreach (var atividade in atividades)
-            {
-                var consultaNotas = await mediator.Send(new ObterNotasGooglePorAtividadeQuery(atividade));
-                foreach (var nota in consultaNotas.Notas)
-                {
-                    var filtroNota = JsonConvert.SerializeObject(new SincronizarImportacaoNotasDto(atividade, nota));
-                    await executarImportacaoDeNotasDaAtividadeUseCase.Executar(new MensagemRabbit(filtroNota));
-                }
-            }
+                yield return new TratarImportacaoNotasAvalidacaoDto(atividade);
         }
 
         private async Task AtualizarUltimaExecucao()
