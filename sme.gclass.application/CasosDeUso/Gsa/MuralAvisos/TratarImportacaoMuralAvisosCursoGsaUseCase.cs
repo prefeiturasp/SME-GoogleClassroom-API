@@ -44,7 +44,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtro));
+                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, filtro));
                 if (!syncCursoComparativo)
                     SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos do usuário GSA.");
             }
