@@ -31,6 +31,9 @@ namespace SME.GoogleClassroom.Aplicacao
             var ultimaExecucao = await mediator
                 .Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
 
+            if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
+                return true;
+
             for (int i = 0; i < cursos.TotalBlocos(quantidadeRegistrosBloco); i++)
             {
                 try
