@@ -488,7 +488,7 @@ namespace SME.GoogleClassroom.Dados
                     usuarioTipo = (int)UsuarioCursoGsaTipo.Estudante,
                     pagina,
                     quantidadeRegistrosPagina
-                });
+                }, commandTimeout: 120);
 
                 var lista = retorno.Read<CursoUsuarioDto>();
                 var totalPaginas = pagina.HasValue && pagina.Value.Equals(1) ? retorno.ReadFirst<int>() : (int?)null;
