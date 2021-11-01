@@ -151,13 +151,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             var mensagem = Encoding.UTF8.GetString(ea.Body.Span);
             var rota = ea.RoutingKey;
+            Console.WriteLine(string.Concat(rota, " - ", DateTime.Now.ToString("G")));
             if (comandos.ContainsKey(rota))
             {
                 using (SentrySdk.Init(sentryDSN))
                 {
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                     //SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
-                    Console.WriteLine($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
                     var tempoExecucao = Stopwatch.StartNew();
                     try
@@ -190,9 +190,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
-                        SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
+                        SentrySdk.AddBreadcrumb($"Erros: {ex}");
                         RegistrarSentry(ea, mensagemRabbit, ex);
-                        Console.Write($"Erros: {ex.Message}");
+                        Console.Write($"Erros: {ex}");
                     }
                     finally
                     {
