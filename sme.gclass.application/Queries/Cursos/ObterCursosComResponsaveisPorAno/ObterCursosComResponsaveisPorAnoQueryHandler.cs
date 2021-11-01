@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosComResponsaveisPorAnoQueryHandler : IRequestHandler<ObterCursosComResponsaveisPorAnoQuery, IEnumerable<CursoUsuarioDto>>
+    public class ObterCursosComResponsaveisPorAnoQueryHandler : IRequestHandler<ObterCursosComResponsaveisPorAnoQuery, (IEnumerable<CursoUsuarioDto> cursos, int? totalPaginas)>
     {
         private readonly IRepositorioCursoUsuario repositorioCursoUsuario;
 
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoUsuario = repositorioCursoUsuario ?? throw new System.ArgumentNullException(nameof(repositorioCursoUsuario));
         }
 
-        public async Task<IEnumerable<CursoUsuarioDto>> Handle(ObterCursosComResponsaveisPorAnoQuery request, CancellationToken cancellationToken)
-            => await repositorioCursoUsuario.ObterCursosComResponsaveisPorAno(request.AnoLetivo, request.CursoId);
+        public async Task<(IEnumerable<CursoUsuarioDto> cursos, int? totalPaginas)> Handle(ObterCursosComResponsaveisPorAnoQuery request, CancellationToken cancellationToken)
+            => await repositorioCursoUsuario.ObterCursosComResponsaveisPorAno(request.AnoLetivo, request.CursoId, request.Pagina, request.QuantidadeRegistrosPagina);
     }
 }
