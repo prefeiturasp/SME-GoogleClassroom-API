@@ -445,22 +445,56 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QuerySingleOrDefaultAsync<CursoUsuario>(query, parametros);
         }
 
-        public async Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId)
+        public async Task<(IEnumerable<CursoUsuarioDto>, int? totalPaginas)> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId, int? pagina = null, int? quantidadeRegistrosPagina = null)
         {
-            var query = @"select c.id as CursoId
-	                    , u.google_classroom_id as UsuarioId
-                      from cursos c
-                     inner join cursos_usuarios cu on cu.curso_id = c.id
-                     inner join usuarios u on u.indice = cu.usuario_id and u.usuario_tipo <> 1
-                     where extract(year from c.data_inclusao) = @anoLetivo ";
+            var sqlQuery = new StringBuilder();
+            sqlQuery.AppendLine("drop table if exists tmp_cursos_usuarios;");
+            sqlQuery.AppendLine("create temporary table tmp_cursos_usuarios as");
+            sqlQuery.AppendLine("select c.id as CursoId,");
+            sqlQuery.AppendLine("       u.google_classroom_id as UsuarioId,");
+            sqlQuery.AppendLine("       dense_rank() over (order by c.id) pagina");
+            sqlQuery.AppendLine("from cursos c");
+            sqlQuery.AppendLine("   inner join cursos_usuarios cu");
+            sqlQuery.AppendLine("      on cu.curso_id = c.id");
+            sqlQuery.AppendLine("   inner join usuarios u");
+            sqlQuery.AppendLine("      on u.indice = cu.usuario_id");
+            sqlQuery.AppendLine("where extract(year from c.data_inclusao) = @anoLetivo and");
+            sqlQuery.AppendLine($"     u.usuario_tipo <> 1{(cursoId.HasValue ? string.Empty : ";")}");
 
             if (cursoId.HasValue)
-                query += "and c.id = @cursoId ";
+                sqlQuery.AppendLine("and c.id = @cursoId;");
 
-            using var conn = ObterConexao();
+            var paginacao = pagina.HasValue && quantidadeRegistrosPagina.HasValue;
 
-            var retorno = await conn.QueryAsync<CursoUsuarioDto>(query, new { anoLetivo, cursoId });
-            return retorno;
+            sqlQuery.AppendLine("select CursoId,");
+            sqlQuery.AppendLine("       UsuarioId");
+            sqlQuery.AppendLine($"from tmp_cursos_usuarios{(paginacao ? string.Empty : ";")}");
+
+            if (paginacao)
+                sqlQuery.AppendLine("where pagina between ((@pagina * @quantidadeRegistrosPagina) - (@quantidadeRegistrosPagina - 1)) and (@pagina * @quantidadeRegistrosPagina);");
+
+            if (pagina.HasValue && pagina.Value.Equals(1))
+            {
+                sqlQuery.AppendLine("select case when max(pagina) / @quantidadeRegistrosPagina = 0 then 1 else max(pagina) / @quantidadeRegistrosPagina end");
+                sqlQuery.AppendLine("   from tmp_cursos_usuarios;");
+            }
+
+            using (var conn = ObterConexao())
+            {
+                var retorno = await conn.QueryMultipleAsync(sqlQuery.ToString(), new
+                {
+                    anoLetivo,
+                    cursoId,
+                    usuarioTipo = (int)UsuarioCursoGsaTipo.Estudante,
+                    pagina,
+                    quantidadeRegistrosPagina
+                });
+
+                var lista = retorno.Read<CursoUsuarioDto>();
+                var totalPaginas = pagina.HasValue && pagina.Value.Equals(1) ? retorno.ReadFirst<int>() : (int?)null;
+
+                return (lista, totalPaginas);
+            }
         }
 
         public async Task<IEnumerable<UsuarioGoogleDto>> ObterFuncionariosPorCursoId(long cursoId)

@@ -11,9 +11,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public async Task Executar(long? cursoId = null)
+        public async Task Executar(long? cursoId = null, int? pagina = null, int? totalPaginas = null)
         {
-            var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto(cursoId);
+            var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto(cursoId, pagina, totalPaginas);
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
         }
     }
