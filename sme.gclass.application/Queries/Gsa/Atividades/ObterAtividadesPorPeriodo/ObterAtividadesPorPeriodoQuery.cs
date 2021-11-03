@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAtividadesPorPeriodoQuery : IRequest<(long totalPaginas, IEnumerable<DadosAvaliacaoDto> atividades)>
+    public class ObterAtividadesPorPeriodoQuery : IRequest<(int? totalPaginas, IEnumerable<DadosAvaliacaoDto> atividades)>
     {
         public ObterAtividadesPorPeriodoQuery(DateTime dataInicio, DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
         {

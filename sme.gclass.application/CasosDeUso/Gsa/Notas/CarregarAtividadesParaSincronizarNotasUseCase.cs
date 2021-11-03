@@ -30,20 +30,15 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var periodo = await ObterPeriodoDatasImportacaoAtividades(ultimaExecucao);
 
-            var pagina = 1;
-            long totalPaginas;
+            filtro.Pagina = filtro.Pagina ?? 1;
 
-            do
-            {
-                var retorno = await mediator.Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim, filtro.CursoId, pagina));
-                totalPaginas = retorno.totalPaginas;
+                var retorno = await mediator.Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim, filtro.CursoId, filtro.Pagina.Value));
+                var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
 
                 await mediator
                     .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, ListarAtividadesExecutar(retorno.atividades)));
 
-                pagina++;
 
-            } while (pagina <= totalPaginas);
 
             if (!filtro.CursoId.HasValue)
                 await AtualizarUltimaExecucao();
