@@ -146,7 +146,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<long>(query, new { anoLetivo });
         }
 
-        public async Task<(long totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
+        public async Task<(int? totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
             DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
         {
             var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
