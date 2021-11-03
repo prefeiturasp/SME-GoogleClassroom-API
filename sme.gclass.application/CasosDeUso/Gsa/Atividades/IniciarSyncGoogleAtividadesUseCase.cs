@@ -14,9 +14,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task Executar(long? cursoId = null)
+        public async Task Executar(long? cursoId = null, int? pagina = null, int? totalPaginas = null)
         {
-            var filtro = new FiltroCargaAtividadesCursoDto(cursoId);
+            var filtro = new FiltroCargaAtividadesCursoDto(cursoId, pagina, totalPaginas);
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtro));
         }
     }
