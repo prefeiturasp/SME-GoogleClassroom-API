@@ -149,14 +149,29 @@ namespace SME.GoogleClassroom.Dados
         public async Task<(int? totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
             DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
         {
-            var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
-            var parametros = new { dataInicio, dataFim, cursoId, pagina, quantidadeRegistrosPagina };
-            using var conn = ObterConexao();
+            var totalPaginas = (int?)null;
 
-            var totalRegistros = (long)(await conn.ExecuteScalarAsync(query, parametros));
-            var totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
+            using (var conn = ObterConexao())
+            {
+                var parametros = new
+                {
+                    dataInicio,
+                    dataFim,
+                    cursoId,
+                    pagina = cursoId.HasValue ? (int?)null : pagina,
+                    quantidadeRegistrosPagina = cursoId.HasValue ? (int?)null : quantidadeRegistrosPagina
+                };
 
-            return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+                if (pagina == 1 && !cursoId.HasValue)
+                {
+                    var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
+
+                    var totalRegistros = (long)(await conn.ExecuteScalarAsync(query, parametros));
+                    totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
+                }
+
+                return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+            }
         }
 
         private async Task<string> ObterQueryAtividadePorPeriodo(long? cursoId, bool contagem = false)

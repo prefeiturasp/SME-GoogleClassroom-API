@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
+using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -11,13 +12,9 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class CarregarAtividadesParaSincronizarNotasUseCase : AbstractUseCase, ICarregarAtividadesParaSincronizarNotasUseCase
     {
-        private readonly IExecutarImportacaoDeNotasDaAtividadeUseCase executarImportacaoDeNotasDaAtividadeUseCase;
-
-        public CarregarAtividadesParaSincronizarNotasUseCase(IMediator mediator,
-                                                             IExecutarImportacaoDeNotasDaAtividadeUseCase executarImportacaoDeNotasDaAtividadeUseCase)
+        public CarregarAtividadesParaSincronizarNotasUseCase(IMediator mediator)
             : base(mediator)
         {
-            this.executarImportacaoDeNotasDaAtividadeUseCase = executarImportacaoDeNotasDaAtividadeUseCase ?? throw new ArgumentNullException(nameof(executarImportacaoDeNotasDaAtividadeUseCase));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
@@ -32,18 +29,37 @@ namespace SME.GoogleClassroom.Aplicacao
 
             filtro.Pagina = filtro.Pagina ?? 1;
 
-                var retorno = await mediator.Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim, filtro.CursoId, filtro.Pagina.Value));
-                var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
+            var retorno = await mediator
+                .Send(new ObterAtividadesPorPeriodoQuery(periodo.dataInicio, periodo.dataFim, filtro.CursoId, filtro.Pagina.Value));
 
-                await mediator
-                    .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, ListarAtividadesExecutar(retorno.atividades)));
+            var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
 
+            Console.WriteLine($">>> Carga Notas - Página: {filtro.Pagina}/{totalPaginas}");
 
+            try
+            {
+                await PublicarMensagemTratar(retorno);
 
-            if (!filtro.CursoId.HasValue)
-                await AtualizarUltimaExecucao();
+                if (!filtro.CursoId.HasValue)
+                {
+                    if (filtro.Pagina > totalPaginas)
+                        await AtualizarUltimaExecucao();
+                    else
+                        await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+            }
 
             return true;
+        }
+
+        private async Task PublicarMensagemTratar((int? totalPaginas, IEnumerable<DadosAvaliacaoDto> atividades) retorno)
+        {
+            await mediator
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, ListarAtividadesExecutar(retorno.atividades)));
         }
 
         private IEnumerable<TratarImportacaoNotasAvalidacaoDto> ListarAtividadesExecutar(IEnumerable<DadosAvaliacaoDto> atividades)
@@ -92,6 +108,18 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException($"Parâmetro Total de dias para importação de Notas não localizado para o ano {anoLetivo}");
 
             return int.Parse(parametroTotalDiasImportacao.Valor) - 1;
+        }
+
+        private async Task PublicarMensagemProximaPagina(int proximaPagina, int totalPaginas)
+        {
+            var filtro = new FiltroNotasAtividadesSincronizacaoDto()
+            {
+                Pagina = proximaPagina,
+                TotalPaginas = totalPaginas
+            };
+
+            await mediator
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesCarregar, filtro));
         }
     }
 }

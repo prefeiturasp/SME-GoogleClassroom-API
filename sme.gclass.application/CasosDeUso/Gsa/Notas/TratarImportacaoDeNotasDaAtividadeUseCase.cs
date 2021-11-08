@@ -17,15 +17,21 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem.Mensagem is null)
                 throw new NegocioException("O objeto da atividade avaliativa deve ser informado na mensagem");                        
 
-            var atividades = mensagem.ObterObjetoMensagem<TratarImportacaoNotasAvalidacaoDto[]>();
+            var atividades = mensagem
+                .ObterObjetoMensagem<TratarImportacaoNotasAvalidacaoDto[]>();
 
             foreach (var atividade in atividades)
             {
-                var consultaNotas = await mediator.Send(new ObterNotasGooglePorAtividadeQuery(atividade.DadosAvaliacao));
+                var consultaNotas = await mediator
+                    .Send(new ObterNotasGooglePorAtividadeQuery(atividade.DadosAvaliacao));
+
                 await ProximaPagina(atividade, consultaNotas.TokenProximaPagina);
 
                 foreach (var nota in consultaNotas.Notas)
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSync, new SincronizarImportacaoNotasDto(atividade.DadosAvaliacao, nota)));
+                {
+                    await mediator
+                        .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSync, new SincronizarImportacaoNotasDto(atividade.DadosAvaliacao, nota)));
+                }
             }           
 
             return true;
@@ -34,9 +40,9 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task ProximaPagina(TratarImportacaoNotasAvalidacaoDto atividade, string tokenProximaPagina)
         {
             atividade.TokenProximaPagina = tokenProximaPagina;
+
             if (!string.IsNullOrEmpty(tokenProximaPagina))
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesTratar, atividade));
-
         }
     }
 }
