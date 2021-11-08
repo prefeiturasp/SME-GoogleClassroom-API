@@ -43,10 +43,13 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 await PublicarMensagemTratar(ultimaExecucao, retorno);
 
-                if (filtro.Pagina > totalPaginas)
-                    await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
-                else
-                    await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
+                if (!filtro.CursoId.HasValue)
+                {
+                    if (filtro.Pagina > totalPaginas)
+                        await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
+                    else
+                        await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
+                }
             }
             catch (Exception ex)
             {

@@ -214,8 +214,9 @@ namespace SME.GoogleClassroom.Dados
         public async Task<(IEnumerable<CursoDto> cursos, int? totalPaginas)> ObterCursosPorAno(int anoLetivo, long? cursoId = null, int? pagina = null, int? quantidadeRegistrosPagina = null)
         {
             var sqlQuery = new StringBuilder();
+            var paginacaoComQuantidade = !cursoId.HasValue && pagina.HasValue && pagina.Value.Equals(1);
 
-            if (pagina.HasValue && pagina.Value.Equals(1))
+            if (paginacaoComQuantidade)
             {
                 sqlQuery.AppendLine("drop table if exists tmp_cursos;");
                 sqlQuery.AppendLine("create temporary table tmp_cursos as");
@@ -232,16 +233,16 @@ namespace SME.GoogleClassroom.Dados
             if (cursoId.HasValue)
                 sqlQuery.AppendLine("and c.id = @cursoId;");
 
-            if (pagina.HasValue && pagina.Value.Equals(1) && !cursoId.HasValue)
+            if (paginacaoComQuantidade)
             {
                 sqlQuery.AppendLine("select *");
                 sqlQuery.AppendLine("	from tmp_cursos");
             }
 
-            if (pagina.HasValue && quantidadeRegistrosPagina.HasValue && !cursoId.HasValue)
+            if (!cursoId.HasValue && pagina.HasValue && quantidadeRegistrosPagina.HasValue)
                 sqlQuery.AppendLine("limit @quantidadeRegistrosPagina offset(@pagina - 1) * @quantidadeRegistrosPagina;");
 
-            if (pagina.HasValue && pagina.Value.Equals(1))
+            if (paginacaoComQuantidade)
             {
                 sqlQuery.AppendLine("select case when count(0) / @quantidadeRegistrosPagina = 0 then 1 else count(0) / @quantidadeRegistrosPagina end");
                 sqlQuery.AppendLine("	from tmp_cursos;");
@@ -258,7 +259,7 @@ namespace SME.GoogleClassroom.Dados
                 });
 
                 var lista = retorno.Read<CursoDto>();
-                var totalPaginas = pagina.HasValue && pagina.Value.Equals(1) ? retorno.ReadFirst<int>() : (int?)null;
+                var totalPaginas = paginacaoComQuantidade ? retorno.ReadFirst<int>() : (int?)null;
 
                 return (lista, totalPaginas);
             }
