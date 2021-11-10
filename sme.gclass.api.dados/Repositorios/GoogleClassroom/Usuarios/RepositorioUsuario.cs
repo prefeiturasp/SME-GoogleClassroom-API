@@ -641,7 +641,23 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { classroomId });
         }
+        public async Task<IEnumerable<UsuarioGoogleDto>> ObteUsuariosPorClassroomIdsAsync(IEnumerable<string> classroomIds)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where u.google_classroom_id = ANY(@classroomIds)";
 
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<UsuarioGoogleDto>(query, new { classroomIds });
+        }
         public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
             const string updateQuery = @"update public.usuarios
