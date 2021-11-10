@@ -9,12 +9,24 @@ namespace SME.GoogleClassroom.IoC
     {
         public static void AddRabbit(this IServiceCollection services)
         {
+            //var factory = new ConnectionFactory
+            //{
+            //    HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
+            //    UserName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__UserName"),
+            //    Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password"),
+            //    VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost"),
+            //    AutomaticRecoveryEnabled = true,
+            //    RequestedHeartbeat = TimeSpan.FromSeconds(60)
+            //};
+
             var factory = new ConnectionFactory
             {
                 HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
                 UserName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__UserName"),
                 Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password"),
-                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost")
+                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost"),
+                AutomaticRecoveryEnabled = true,
+                RequestedHeartbeat = TimeSpan.FromSeconds(60)
             };
 
             var conexaoRabbit = factory.CreateConnection();
