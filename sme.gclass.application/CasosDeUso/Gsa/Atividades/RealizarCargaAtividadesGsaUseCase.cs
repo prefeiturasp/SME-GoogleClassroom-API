@@ -19,33 +19,28 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar(MensagemRabbit mensagem)
+        public async Task<bool> Executar(MensagemRabbit mensage)
         {
-            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
+            var filtro = mensage.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
 
             var anoAtual = DateTime.Now.Year;
-
-            var cursos = mediator
-                .Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId)).Result.ToList();
-
-            var ultimaExecucao = await mediator
-                .Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
+            var cursos = await mediator.Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId));
+            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
 
             if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
                 return true;
 
-            for (int i = 0; i < cursos.TotalBlocos(quantidadeRegistrosBloco); i++)
+            foreach (var curso in cursos)
             {
                 try
                 {
-                    await mediator
-                        .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(cursos.ObterBloco(i, quantidadeRegistrosBloco), ultimaExecucao)));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(curso, ultimaExecucao)));
                 }
                 catch (Exception ex)
                 {
                     SentrySdk.CaptureException(ex);
+                    continue;
                 }
-                
             }
 
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));

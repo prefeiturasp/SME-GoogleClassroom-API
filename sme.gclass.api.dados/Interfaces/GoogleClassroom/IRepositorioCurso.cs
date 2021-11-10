@@ -17,5 +17,6 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<CursoDto>> ObterCursosPorAno(int anoLetivo, long? cursoId = null);
         Task<CursoGoogle> ObterCursoPorId(long id);
         Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao);
+        Task<IEnumerable<CursoGoogleDtoParaIntegracao>> ObterCursosPorIdsParaIntegracaoAsync(IEnumerable<long> ids);
     }
 }

@@ -9,6 +9,7 @@ namespace SME.GoogleClassroom.IoC
     {
         public static void AddRabbit(this IServiceCollection services)
         {
+          
             var factory = new ConnectionFactory
             {
                 HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
