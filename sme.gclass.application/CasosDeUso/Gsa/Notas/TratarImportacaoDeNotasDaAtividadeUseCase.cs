@@ -15,14 +15,18 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             if (mensagem.Mensagem is null)
-                throw new NegocioException("O objeto da atividade avaliativa deve ser informado na mensagem");
+                throw new NegocioException("O objeto da atividade avaliativa deve ser informado na mensagem");                        
 
-            var atividade = mensagem.ObterObjetoMensagem<TratarImportacaoNotasAvalidacaoDto>();
-            var consultaNotas = await mediator.Send(new ObterNotasGooglePorAtividadeQuery(atividade.DadosAvaliacao));
-            await ProximaPagina(atividade, consultaNotas.TokenProximaPagina);
+            var atividades = mensagem.ObterObjetoMensagem<TratarImportacaoNotasAvalidacaoDto[]>();
 
-            foreach (var nota in consultaNotas.Notas)
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSync, new SincronizarImportacaoNotasDto(atividade.DadosAvaliacao, nota)));
+            foreach (var atividade in atividades)
+            {
+                var consultaNotas = await mediator.Send(new ObterNotasGooglePorAtividadeQuery(atividade.DadosAvaliacao));
+                await ProximaPagina(atividade, consultaNotas.TokenProximaPagina);
+
+                foreach (var nota in consultaNotas.Notas)
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSync, new SincronizarImportacaoNotasDto(atividade.DadosAvaliacao, nota)));
+            }           
 
             return true;
         }

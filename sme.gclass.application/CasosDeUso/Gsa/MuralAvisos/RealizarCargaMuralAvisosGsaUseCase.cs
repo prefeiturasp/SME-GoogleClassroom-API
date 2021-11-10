@@ -6,11 +6,13 @@ using SME.GoogleClassroom.Infra;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static SME.GoogleClassroom.Infra.ExtensionMethods;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class RealizarCargaMuralAvisosGsaUseCase : IRealizarCargaMuralAvisosGsaUseCase
     {
+        private readonly int quantidadeRegistrosBloco = 100;
         private readonly IMediator mediator;
 
         public RealizarCargaMuralAvisosGsaUseCase(IMediator mediator)
@@ -21,23 +23,32 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var anoAtual = DateTime.Now.Year;
-            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
+
+            var filtro = mensagem
+                .ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
 
             var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual, filtro.CursoId));
-            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
+            var cursosAgrupados = cursos.GroupBy(c => c.CursoId).ToList();
 
-            foreach (var curso in cursos.GroupBy(a => a.CursoId))
+            var ultimaExecucao = await mediator
+                .Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
+
+            if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
+                return true;
+
+            for (int i = 0; i < cursosAgrupados.TotalBlocos(quantidadeRegistrosBloco); i++)
             {
                 try
                 {
-                    var cursoResponsavel = new CursoResponsavelDto(curso.Key, curso.Select(a => a.UsuarioId));
+                    var cursosResponsaveis = from cr in cursosAgrupados.ObterBloco(i, quantidadeRegistrosBloco)
+                                             select new CursoResponsavelDto(cr.Key, cr.Select(c => c.UsuarioId));
 
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursoResponsavel, ultimaExecucao)));
+                    await mediator
+                        .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursosResponsaveis, ultimaExecucao)));
                 }
                 catch (Exception ex)
                 {
                     SentrySdk.CaptureException(ex);
-                    continue;
                 }
             }
 

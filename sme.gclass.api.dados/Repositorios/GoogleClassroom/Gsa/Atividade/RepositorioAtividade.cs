@@ -148,36 +148,52 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<long>(query, new { anoLetivo });
         }
 
-        public async Task<IEnumerable<DadosAvaliacaoDto>> ObterAtividadesPorPeriodo(DateTime dataInicio,
-            DateTime dataFim, long? cursoId)
+        public async Task<(long totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
+            DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
         {
-            var query = new StringBuilder(@"select
-                                A.id AS Id, 
-                                A.titulo AS Titulo, 
-                                A.descricao AS Descricao,  
-                                A.usuario_id AS UsuarioId,
-                                c.turma_id AS TurmaId,
-                                c.componente_curricular_id as ComponenteCurricularId,
-                                A.curso_id AS CursoId,
-                                A.data_inclusao AS DataInclusao, 
-                                A.data_alteracao AS DataAlteracao,
-                                A.data_entrega as DataEntrega,
-                                A.nota_maxima as NotaMaxima
-                          from atividades a 
-                         inner join cursos c on c.id = a.curso_id
-                         where 1=1 ");
+            var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
+            var parametros = new { dataInicio, dataFim, cursoId, pagina, quantidadeRegistrosPagina };
+            using var conn = ObterConexao();
+
+            var totalRegistros = (long)(await conn.ExecuteScalarAsync(query, parametros));
+            var totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
+
+            return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+        }
+
+        private async Task<string> ObterQueryAtividadePorPeriodo(long? cursoId, bool contagem = false)
+        {
+            var colunas = contagem ? " count(0) " :
+                @" a.id AS Id, 
+                   a.titulo AS Titulo, 
+                   a.descricao AS Descricao,  
+                   a.usuario_id AS UsuarioId,
+                   c.turma_id AS TurmaId,
+                   c.componente_curricular_id as ComponenteCurricularId,
+                   a.curso_id AS CursoId,
+                   a.data_inclusao AS DataInclusao, 
+                   a.data_alteracao AS DataAlteracao,
+                   a.data_entrega as DataEntrega,
+                   a.nota_maxima as NotaMaxima ";
+
+            var sqlQuery = new StringBuilder();
+
+            sqlQuery.AppendLine($"select {colunas}");
+            sqlQuery.AppendLine("    from atividades a");
+            sqlQuery.AppendLine("       inner join cursos c");
+            sqlQuery.AppendLine("          on a.curso_id = c.id");
+            sqlQuery.AppendLine("where (a.data_inclusao between @dataInicio and @dataFim or a.data_entrega = CURRENT_DATE)");
 
             if (cursoId.HasValue)
+                sqlQuery.AppendLine("and c.id = @cursoId");
+
+            if (!contagem)
             {
-                query.AppendLine(" and c.id = @cursoId ");
+                sqlQuery.AppendLine("order by a.id");
+                sqlQuery.AppendLine("limit @quantidadeRegistrosPagina offset(@pagina - 1) * @quantidadeRegistrosPagina");
             }
 
-            query.AppendLine(
-                @" and ((a.data_inclusao between @dataInicio and @dataFim) 
-                    or (a.data_entrega = CURRENT_DATE))");
-
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<DadosAvaliacaoDto>(query.ToString(), new { dataInicio, dataFim, cursoId });
+            return await Task.FromResult(sqlQuery.ToString());
         }
 
         public async Task<IEnumerable<AtividadeCursoDto>> ObterAtividadesExistentesAsync(IEnumerable<long> idsParaImportar)

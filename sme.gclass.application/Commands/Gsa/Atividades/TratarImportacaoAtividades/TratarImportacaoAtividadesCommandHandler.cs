@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static SME.GoogleClassroom.Infra.ExtensionMethods;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class TratarImportacaoAtividadesCommandHandler : AsyncRequestHandler<TratarImportacaoAtividadesCommand>
     {
+        private readonly int quantidadeRegistrosBloco = 100;
         private readonly IMediator mediator;
 
         public TratarImportacaoAtividadesCommandHandler(IMediator mediator)
