@@ -58,6 +58,9 @@ namespace SME.GoogleClassroom.IoC
             //Curso Arquivado
             services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
             services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
+
+            //Notas
+            services.TryAddScoped<IRepositorioNota, RepositorioNota>();
             
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
@@ -194,11 +197,17 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterFuncionariosQueSeraoInativadosUseCase, ObterFuncionariosQueSeraoInativadosUseCase>();
             services.TryAddScoped<IObterFuncionariosIndiretosQueSeraoInativadosUseCase, ObterFuncionariosIndiretosQueSeraoInativadosUseCase>();
             
-
+            //Carga inicial
+            services.TryAddScoped<ITrataSyncManualGoogleGeralUseCase, TrataSyncManualGoogleGeralUseCase>();
 
             // Arquivamento de cursos por ano e semestre
             services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
             services.TryAddScoped<IObterCursosParaArquivarPaginadoUseCase, ObterCursosParaArquivarPaginadoUseCase>();
+
+            services.TryAddScoped<IObterNotasAtividadesAvaliativasUseCase, ObterNotasAtividadesAvaliativasUseCase>();
+            services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
+
+
 
 
             RegistrarCasosDeUsoGsa(services);
@@ -254,6 +263,14 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRealizarCargaAtividadesGsaUseCase, RealizarCargaAtividadesGsaUseCase>();
             services.TryAddScoped<ITratarImportacaoAtividadesCursoGsaUseCase, TratarImportacaoAtividadesCursoGsaUseCase>();
             services.TryAddScoped<IImportarAtividadesCursoGsaUseCase, ImportarAtividadesCursoGsaUseCase>();
+
+            //Notas
+            services.TryAddScoped<ICarregarAtividadesParaSincronizarNotasUseCase, CarregarAtividadesParaSincronizarNotasUseCase>();
+            services.TryAddScoped<ITratarImportacaoDeNotasDaAtividadeUseCase, TratarImportacaoDeNotasDaAtividadeUseCase>();
+            services.TryAddScoped<IExecutarImportacaoDeNotasDaAtividadeUseCase, ExecutarImportacaoDeNotasDaAtividadeUseCase>();
+            services.TryAddScoped<IImportarNotasGsaProcessarErroUseCase, ImportarNotasGsaProcessarErroUseCase>();
+            services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
+
         }
     }
 }

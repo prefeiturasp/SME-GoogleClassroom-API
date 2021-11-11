@@ -20,7 +20,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var usuarioErro = JsonConvert.DeserializeObject<UsuarioErro>(mensagemRabbit.Mensagem.ToString());
+            var filtro = JsonConvert.DeserializeObject<FiltroAlunoErroDto>(mensagemRabbit.Mensagem.ToString());
+            var usuarioErro = filtro.UsuarioErro;
             if (usuarioErro is null) return true;
 
             try
@@ -30,7 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     SentrySdk.CaptureMessage($"Não foi possível realizar o tratamento de erro do usuário {usuarioErro.UsuarioId}. O usuário informado não é um aluno.");
                     return false;
                 }
-                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                var parametrosCargaInicialDto = filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
+                    await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
                 var alunoEol = await mediator.Send(new ObterAlunoParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault(), parametrosCargaInicialDto));
                 if (alunoEol is null)
                 {
@@ -39,7 +41,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     return false;
                 }
 
-                var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, alunoEol));
+                var filtroAluno = new FiltroAlunoDto(alunoEol, filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas);
+                var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
                 if (!publicarFuncionario)
                 {
                     var mensagem = $"Não foi possível inserir o aluno RA{usuarioErro.UsuarioId} na fila de inclusão.";

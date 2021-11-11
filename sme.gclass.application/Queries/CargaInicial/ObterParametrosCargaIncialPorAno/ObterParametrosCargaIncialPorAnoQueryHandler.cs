@@ -22,9 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var parametros = new ParametrosCargaInicialDto();
             foreach(var cargaInicial in cargas)
             {
-                if (cargaInicial.PossuiTiposUeCursos())
-                    parametros.AdicionaTiposUeCursos(cargaInicial.TiposUeCursos);
-
+ 
                 if (cargaInicial.PossuiTiposUe())
                     parametros.AdicionaTiposUe(cargaInicial.TiposUe);
 
@@ -33,6 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (cargaInicial.PossuiTurmas())
                     parametros.AdicionaTurmas(cargaInicial.Turmas);
+
+                parametros.AnoLetivo = cargaInicial.Ano;
             }
 
             return parametros;

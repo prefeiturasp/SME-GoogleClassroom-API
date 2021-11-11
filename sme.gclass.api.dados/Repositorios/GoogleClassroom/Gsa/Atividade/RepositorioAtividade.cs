@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -14,8 +15,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-
-        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorData(Paginacao paginacao,
+        public async Task<PaginacaoResultadoDto<AtividadeGsa>> ObterAtividadesPorDataCurso(Paginacao paginacao,
             DateTime dataReferencia, long? cursoId)
         {
             var queryCompleta = new StringBuilder();
@@ -36,11 +36,12 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
             retorno.Items = multi.Read<AtividadeGsa>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = retorno.TotalRegistros > 0 ? (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 0;
+            retorno.TotalPaginas = retorno.TotalRegistros > 0
+                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
+                : 0;
 
             return retorno;
         }
-
 
         private string MontaQueryObterAvisosPorData(bool ehParaPaginacao, Paginacao paginacao, long? cursoId)
         {
@@ -56,7 +57,9 @@ namespace SME.GoogleClassroom.Dados
                                             A.usuario_id AS UsuarioId,
                                             A.curso_id AS CursoId,
                                             A.data_inclusao AS DataInclusao, 
-                                            A.data_alteracao AS DataAlteracao ");
+                                            A.data_alteracao AS DataAlteracao,
+                                            A.data_entrega as DataEntrega,
+                                            A.nota_maxima as NotaMaxima");
             }
 
             queryCompleta.AppendLine("FROM atividades A ");
@@ -73,9 +76,7 @@ namespace SME.GoogleClassroom.Dados
 
             return queryCompleta.ToString();
         }
-        
-        
-        
+
         public async Task<long> AlterarAtividade(AtividadeGsa atividadeGsa)
         {
             const string updateQuery = @"update public.atividades
@@ -105,9 +106,9 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> InserirAtividade(AtividadeGsa avisoGsa)
         {
             const string insertQuery = @"insert into public.atividades
-                                        (id, titulo, descricao, usuario_id, curso_id, data_inclusao, data_alteracao)
+                                        (id, titulo, descricao, usuario_id, curso_id, data_inclusao, data_alteracao, data_entrega, nota_maxima)
                                         values
-                                        (@id, @titulo, @descricao, @usuarioId, @cursoId, @dataInclusao, @dataAlteracao)";
+                                        (@id, @titulo, @descricao, @usuarioId, @cursoId, @dataInclusao, @dataAlteracao, @dataEntrega, @notaMaxima)";
 
             var parametros = new
             {
@@ -118,6 +119,8 @@ namespace SME.GoogleClassroom.Dados
                 cursoId = avisoGsa.CursoId,
                 dataInclusao = avisoGsa.DataInclusao,
                 dataAlteracao = avisoGsa.DataAlteracao,
+                dataEntrega = avisoGsa.DataEntrega,
+                notaMaxima = avisoGsa.NotaMaxima
             };
 
             using var conn = ObterConexao();
@@ -128,6 +131,82 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<bool>("select 1 from atividades where id = @id", new { id });
+        }
+
+        public async Task<IEnumerable<long>> ObterComponentesIdsAtividadesPorAnoLetivo(int anoLetivo)
+        {
+            const string query = @"select distinct(c.componente_curricular_id) as componente_curricular_id
+                                     from atividades a 
+                                    inner join cursos c on a.curso_id = c.id
+                                    where EXTRACT(YEAR FROM a.data_inclusao) = @anoLetivo
+                                    order by c.componente_curricular_id ";
+
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query, new { anoLetivo });
+        }
+
+        public async Task<(int? totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
+            DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
+        {
+            var totalPaginas = (int?)null;
+
+            using (var conn = ObterConexao())
+            {
+                var parametros = new
+                {
+                    dataInicio,
+                    dataFim,
+                    cursoId,
+                    pagina = cursoId.HasValue ? (int?)null : pagina,
+                    quantidadeRegistrosPagina = cursoId.HasValue ? (int?)null : quantidadeRegistrosPagina
+                };
+
+                if (pagina == 1 && !cursoId.HasValue)
+                {
+                    var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
+
+                    var totalRegistros = (long)(await conn.ExecuteScalarAsync(query, parametros));
+                    totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
+                }
+
+                return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+            }
+        }
+
+        private async Task<string> ObterQueryAtividadePorPeriodo(long? cursoId, bool contagem = false)
+        {
+            var colunas = contagem ? " count(0) " :
+                @" a.id AS Id, 
+                   a.titulo AS Titulo, 
+                   a.descricao AS Descricao,  
+                   a.usuario_id AS UsuarioId,
+                   c.turma_id AS TurmaId,
+                   c.componente_curricular_id as ComponenteCurricularId,
+                   a.curso_id AS CursoId,
+                   a.data_inclusao AS DataInclusao, 
+                   a.data_alteracao AS DataAlteracao,
+                   a.data_entrega as DataEntrega,
+                   a.nota_maxima as NotaMaxima ";
+
+            var sqlQuery = new StringBuilder();
+
+            sqlQuery.AppendLine($"select {colunas}");
+            sqlQuery.AppendLine("    from atividades a");
+            sqlQuery.AppendLine("       inner join cursos c");
+            sqlQuery.AppendLine("          on a.curso_id = c.id");
+            sqlQuery.AppendLine("where (a.data_inclusao between @dataInicio and @dataFim or a.data_entrega = CURRENT_DATE)");
+
+            if (cursoId.HasValue)
+                sqlQuery.AppendLine("and c.id = @cursoId");
+
+            if (!contagem)
+            {
+                sqlQuery.AppendLine("order by a.id");
+                sqlQuery.AppendLine("limit @quantidadeRegistrosPagina offset(@pagina - 1) * @quantidadeRegistrosPagina");
+            }
+
+            return await Task.FromResult(sqlQuery.ToString());
         }
     }
 }

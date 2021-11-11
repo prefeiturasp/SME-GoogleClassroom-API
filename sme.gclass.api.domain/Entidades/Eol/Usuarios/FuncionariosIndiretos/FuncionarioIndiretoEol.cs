@@ -1,6 +1,4 @@
-﻿using SME.GoogleClassroom.Infra;
-
-namespace SME.GoogleClassroom.Dominio
+﻿namespace SME.GoogleClassroom.Dominio
 {
     public class FuncionarioIndiretoEol : UsuarioEol
     {

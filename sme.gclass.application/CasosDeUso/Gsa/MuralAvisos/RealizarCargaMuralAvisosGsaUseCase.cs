@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,29 +21,61 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
+            var ultimaExecucao = await mediator
+                .Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
+
             var anoAtual = DateTime.Now.Year;
-            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
 
-            var cursos = await mediator.Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual, filtro.CursoId));
-            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.MuralAvisosCarregar));
+            var filtro = mensagem
+                .ObterObjetoMensagem<FiltroCargaMuralAvisosCursoDto>();
 
-            foreach (var curso in cursos.GroupBy(a => a.CursoId))
+            if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
+                return true;
+
+            filtro.Pagina = filtro.Pagina ?? 1;
+
+            var retorno = await mediator
+                .Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual, filtro.CursoId, filtro.CursoId.HasValue ? null : filtro.Pagina, 100));
+
+            var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
+
+            Console.WriteLine($">>> Carga Mural Avisos - Página: {filtro.Pagina}/{totalPaginas}");
+
+            try
             {
-                try
-                {
-                    var cursoResponsavel = new CursoResponsavelDto(curso.Key, curso.Select(a => a.UsuarioId));
+                var cursosAgrupados = retorno.cursos
+                    .GroupBy(c => c.CursoId);
 
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursoResponsavel, ultimaExecucao)));
-                }
-                catch (Exception ex)
-                {
-                    SentrySdk.CaptureException(ex);
-                    continue;
-                }
+                var cursosResponsaveis = from cr in cursosAgrupados
+                                         select new CursoResponsavelDto(cr.Key, cr.Select(c => c.UsuarioId));
+
+                await PublicarMensagemTratar(ultimaExecucao, cursosResponsaveis);
+
+                if (filtro.Pagina > totalPaginas)
+                    await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
+                else
+                    await PulicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
             return true;
+        }
+
+        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoResponsavelDto> cursosResponsaveis)
+        {
+            await mediator
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursosResponsaveis, ultimaExecucao)));
+        }
+
+        private async Task PulicarMensagemProximaPagina(int proximaPagina, int totalPaginas)
+        {
+            var filtro = new FiltroCargaMuralAvisosCursoDto(pagina: proximaPagina, totalPaginas: totalPaginas);
+
+            await mediator
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtro));
         }
     }
 }

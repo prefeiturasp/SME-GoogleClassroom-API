@@ -83,7 +83,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where email = @email and usuario_tipo = @usuarioTipo and id <> @id limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo }));
+            return await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo, id });
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
@@ -738,6 +738,24 @@ namespace SME.GoogleClassroom.Dados
             {
                 throw ex;
             }
+        }
+
+        public async Task<UsuarioGoogleDto> ObterUsuarioPorEmail(string email)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where u.email = @email";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { email });
         }
     }
 }

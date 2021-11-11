@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<PaginacaoResultadoDto<AtividadeGsa>> Handle(AtividadesQuery request,
             CancellationToken cancellationToken)
-            => await _repositorioAtividade.ObterAtividadesPorData(
+            => await _repositorioAtividade.ObterAtividadesPorDataCurso(
                 request.Paginacao,
                 request.DataReferencia,
                 request.CursoId);

@@ -272,6 +272,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaGoogleSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaGoogleSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaGoogleSync);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCargaInicial, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCargaInicial, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCargaInicial);
 
             RegistrarFilasDeCargasGsa(canalRabbit, consumoDeFilasOptions);
             RegistrarFilasDeProcessamentoGsa(canalRabbit, consumoDeFilasOptions);
@@ -296,6 +299,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
             {
+                // Atividades
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAtividadesCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaAtividadesCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaAtividadesCarregar);
 
@@ -307,6 +311,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAtividadesIncluirErro, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaAtividadesIncluirErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaAtividadesIncluirErro);
+
+                // Notas
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaNotasAtividadesCarregar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaNotasAtividadesCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaNotasAtividadesCarregar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaNotasAtividadesSync, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaNotasAtividadesSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaNotasAtividadesSync);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaNotasAtividadesTratar, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaNotasAtividadesTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaNotasAtividadesTratar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaNotasAtividadesSyncErro, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaNotasAtividadesSyncErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaNotasAtividadesSyncErro);
             }
 
             if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
@@ -325,7 +342,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioCarregar);
-            }
+            } 
+            
         }
 
         private static void RegistrarFilasDeProcessamentoGsa(IModel canalRabbit, ConsumoDeFilasOptions consumoDeFilasOptions)

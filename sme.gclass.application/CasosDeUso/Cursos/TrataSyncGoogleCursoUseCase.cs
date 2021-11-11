@@ -22,15 +22,24 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de cursos. A mensagem enviada é inválida.");
-
             var filtro = ObterFiltro(mensagemRabbit);
+            var ultimaExecucaoCursosIncluir = default(DateTime?);
+            var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo): 
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+
             var aplicarFiltro = filtro?.Valido ?? false;
-
-            var ultimaExecucaoCursosIncluir = !aplicarFiltro
-                ? await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar))
-                : default(DateTime?);
-
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            if (filtro != null && filtro.AnoLetivo.HasValue)
+            {
+                ultimaExecucaoCursosIncluir = new DateTime(filtro.AnoLetivo.Value, 1, 1);
+            }
+            else
+            {
+                if (!aplicarFiltro)
+                {
+                    ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+                }
+            }
+                
             var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
 
             if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
@@ -39,6 +48,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
+                        var rf = Convert.ToInt64(cursoParaAdicionar.Email.Substring(cursoParaAdicionar.Email.IndexOf('@') - 7, 7));
+                        var professores = await mediator.Send(new ObterProfessoresPorRfsQuery(rf));
+                        cursoParaAdicionar.Email = professores != null && professores.Any() && !professores.First().Email.Equals(cursoParaAdicionar.Email) ? professores.First().Email : cursoParaAdicionar.Email;
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
                     }
                     catch (Exception ex)
@@ -49,7 +61,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            if(!aplicarFiltro)
+            if (!aplicarFiltro)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
 
             return true;

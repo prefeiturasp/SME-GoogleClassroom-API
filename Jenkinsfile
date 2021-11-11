@@ -29,7 +29,7 @@ pipeline {
       }        
 
         stage('AnaliseCodigo') {
-	      when { branch 'homolog' }
+	      when { branch 'development' }
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'echo "[ INFO ] Iniciando analise Sonar..." && dotnet-sonarscanner begin /k:"SME-GoogleClassroom-API"'
@@ -62,28 +62,13 @@ pipeline {
                     if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
                         sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
                         timeout(time: 24, unit: "HOURS") {
-                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, bruno_alevato, rafael_losi, marcos_costa'
-                        }
-                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
-                            sh('cp $config '+"$home"+'/.kube/config')
-                            sh 'kubectl rollout restart deployment/gca-api -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-curso-gsa -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-sync -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-usuario-curso-gsa -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-usuario-gsa -n sme-googleclass'
-                            sh('rm -f '+"$home"+'/.kube/config')
+                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'robson_silva, marlon_goncalves, bruno_alevato, rafael_losi, marcos_costa'
                         }
                     }
-                    else{
-                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
-                            sh('cp $config '+"$home"+'/.kube/config')
-                            sh 'kubectl rollout restart deployment/gca-api -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-curso-gsa -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-sync -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-usuario-curso-gsa -n sme-googleclass'
-			    sh 'kubectl rollout restart deployment/gca-usuario-gsa -n sme-googleclass'
-                            sh('rm -f '+"$home"+'/.kube/config')
-                        }
+                    withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                        sh('cp $config '+"$home"+'/.kube/config')
+                        sh 'kubectl -n sme-googleclass rollout restart deploy'
+                        sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }
             }           

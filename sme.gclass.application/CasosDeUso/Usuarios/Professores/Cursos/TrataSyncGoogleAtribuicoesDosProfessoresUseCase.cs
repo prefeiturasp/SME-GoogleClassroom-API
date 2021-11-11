@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -19,15 +18,17 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            var filtro = mensagemRabbit.Mensagem.ToString() != null ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, DateTime.Today.Year) :
+                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
             var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao, parametrosCargaInicialDto));
 
             foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
             {
-                var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId);
+                var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId, atribuicaoDeCursoDoProfessor.Modalidade);
 
                 try
                 {

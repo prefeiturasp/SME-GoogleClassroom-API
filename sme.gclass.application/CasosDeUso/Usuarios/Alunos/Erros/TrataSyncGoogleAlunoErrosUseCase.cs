@@ -24,12 +24,14 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
+                var filtro = ObterFiltro(mensagemRabbit);
                 var usuarioErros = await mediator.Send(new ObtemUsuariosErrosPorTipoQuery(UsuarioTipo.Aluno));
                 if (!usuarioErros?.Any() ?? true) return true;
 
                 foreach (var usuarioErro in usuarioErros)
                 {
-                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, usuarioErro));
+                    var filtroAluno = new FiltroAlunoErroDto(usuarioErro, filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas);
+                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, filtroAluno));
                     if (!publicarFuncionario)
                     {
                         SentrySdk.CaptureMessage($"Não foi possível inserir o tratamento de erro do aluno RA{usuarioErro.UsuarioId} na fila.");
@@ -55,6 +57,15 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 SentrySdk.CaptureMessage($"Não foi possível excluir o erro Id {usuarioErro.Id} do aluno RA{usuarioErro.UsuarioId}.");
             }
+        }
+
+        private FiltroCargaInicialDto ObterFiltro(MensagemRabbit mensagem)
+        {
+            try
+            {
+                return mensagem.ObterObjetoMensagem<FiltroCargaInicialDto>();
+            }
+            catch { return null; }
         }
     }
 }

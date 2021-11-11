@@ -135,19 +135,29 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, new ComandoRabbit("Tratar os professores, funcionários e funcionários indiretos que devem ser inativados", typeof(ITratarProfessoresEFuncionariosParaInativarUseCase)));
             comandos.Add(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, new ComandoRabbit("Sincroniza a inativação de professores, funcionários e funcionários indiretos", typeof(ISyncProfessoresEFuncionariosInativarUseCase)));
             comandos.Add(RotasRabbit.FilaInativarProfessorErroTratar, new ComandoRabbit("Tratar erros na fila de erro na inativação de professores, funcionários e funcionários indiretos", typeof(IIniciarSyncProfessoresInativadosComErrosUseCase)));
+
+            //Notas
+            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesCarregar, new ComandoRabbit("Carrega atividades para importacao de notas", typeof(ICarregarAtividadesParaSincronizarNotasUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesTratar, new ComandoRabbit("Tratar carga de notas das atividades para importacao", typeof(ITratarImportacaoDeNotasDaAtividadeUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSync, new ComandoRabbit("Executar importação de notas da atividade", typeof(IExecutarImportacaoDeNotasDaAtividadeUseCase)));
+
+           comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSyncErro, new ComandoRabbit("Gravar erros na importação das notas", typeof(IImportarNotasGsaProcessarErroUseCase)));
+
+            //Carga Inicial
+            comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
         {
             var mensagem = Encoding.UTF8.GetString(ea.Body.Span);
             var rota = ea.RoutingKey;
+            Console.WriteLine(string.Concat(rota, " - ", DateTime.Now.ToString("G")));
             if (comandos.ContainsKey(rota))
             {
                 using (SentrySdk.Init(sentryDSN))
                 {
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                     //SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
-                    Console.WriteLine($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
                     var tempoExecucao = Stopwatch.StartNew();
                     try
@@ -180,9 +190,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     {
                         canalRabbit.BasicReject(ea.DeliveryTag, false);
                         metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
-                        SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
+                        SentrySdk.AddBreadcrumb($"Erros: {ex}");
                         RegistrarSentry(ea, mensagemRabbit, ex);
-                        Console.Write($"Erros: {ex.Message}");
+                        Console.Write($"Erros: {ex}");
                     }
                     finally
                     {
@@ -365,9 +375,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
             {
+                // Atividades
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaAtividadesTratar, false, consumer);
+
+                // Notas
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSyncErro, false, consumer);
+            }
+            
+            if (consumoDeFilasOptions.Gsa.CargaInicial)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCargaInicial, false, consumer);
             }
         }
     }
