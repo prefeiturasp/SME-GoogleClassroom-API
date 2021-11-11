@@ -453,7 +453,9 @@ namespace SME.GoogleClassroom.Dados
             sqlQuery.AppendLine("select c.id as CursoId,");
             sqlQuery.AppendLine("       u.google_classroom_id as UsuarioId,");
             sqlQuery.AppendLine("       dense_rank() over (order by c.id) pagina");
-            sqlQuery.AppendLine("from cursos c");
+            sqlQuery.AppendLine("from cursos_gsa cg");
+            sqlQuery.AppendLine("   inner join cursos c");
+            sqlQuery.AppendLine("      on c.id = cast(cg.id as bigint)");
             sqlQuery.AppendLine("   inner join cursos_usuarios cu");
             sqlQuery.AppendLine("      on cu.curso_id = c.id");
             sqlQuery.AppendLine("   inner join usuarios u");
