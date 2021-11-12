@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursoGsaManualmentePorAnoQueryHandler : IRequestHandler<ObterCursoGsaManualmentePorAnoQuery, IEnumerable<CursoGsaManualmenteDto>>
+    public class ObterCursoGsaPorAnoQueryHandler : IRequestHandler<ObterCursoGsaPorAnoQuery, IEnumerable<CursoGsaId>>
     {
         IRepositorioCursoGsa repositorioCursoGsa;
-        public ObterCursoGsaManualmentePorAnoQueryHandler(IRepositorioCursoGsa repositorioCursoGsa)
+        public ObterCursoGsaPorAnoQueryHandler(IRepositorioCursoGsa repositorioCursoGsa)
         {
             this.repositorioCursoGsa = repositorioCursoGsa ?? throw new ArgumentNullException(nameof(repositorioCursoGsa));
         }
-        public Task<IEnumerable<CursoGsaManualmenteDto>> Handle(ObterCursoGsaManualmentePorAnoQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<CursoGsaId>> Handle(ObterCursoGsaPorAnoQuery request, CancellationToken cancellationToken)
             => repositorioCursoGsa.ObterCursosGsaPorAno(request.AnoLetivo, request.CursoId, request.Pagina, request.QuantidadeRegistrosPagina);
     }
 }

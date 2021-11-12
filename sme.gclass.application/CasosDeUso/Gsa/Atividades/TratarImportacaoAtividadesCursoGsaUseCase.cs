@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task EnviarParaTratamento(FiltroTratarAtividadesCursoDto filtro, CursoGsaManualmenteDto curso)
+        private async Task EnviarParaTratamento(FiltroTratarAtividadesCursoDto filtro, CursoGsaId curso)
         {
             var paginaAtividades = await mediator.Send(new ObterAtividadesDoCursoGoogleQuery(curso, filtro.TokenProximaPagina));
 
@@ -39,7 +39,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, Convert.ToInt64(curso.CursoId), filtro.UltimaExecucao));
 
             filtro.TokenProximaPagina = paginaAtividades.TokenProximaPagina;
-            filtro.Cursos = new CursoGsaManualmenteDto[] { curso };
+            filtro.Cursos = new CursoGsaId[] { curso };
 
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
                 await PublicaProximaPaginaAsync(filtro);

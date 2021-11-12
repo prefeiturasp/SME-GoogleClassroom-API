@@ -5,13 +5,13 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterAtividadesDoCursoGoogleQuery : IRequest<PaginaConsultaAtividadesGsaDto>
     {
-        public ObterAtividadesDoCursoGoogleQuery(CursoGsaManualmenteDto curso, string tokenProximaPagina = "")
+        public ObterAtividadesDoCursoGoogleQuery(CursoGsaId curso, string tokenProximaPagina = "")
         {
             Curso = curso;
             TokenProximaPagina = tokenProximaPagina;
         }
 
-        public CursoGsaManualmenteDto Curso { get; }
+        public CursoGsaId Curso { get; }
         public string TokenProximaPagina { get; }
     }
 }
