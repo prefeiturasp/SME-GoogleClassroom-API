@@ -30,9 +30,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 try
                 {
                     await GravarAvisoGsa(avisoGsa, usuario.Indice);
-                    if (!await EnviarParaSgp(avisoGsa, usuario))
-                        throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
-
+                    if (!avisoGsa.CursoCriadoManualmente)
+                    {
+                        if (!await EnviarParaSgp(avisoGsa, usuario))
+                            throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
+                    }
                 }
                 catch (Exception ex)
                 {

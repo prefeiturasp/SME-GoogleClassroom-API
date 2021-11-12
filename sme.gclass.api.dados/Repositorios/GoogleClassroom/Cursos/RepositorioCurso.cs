@@ -184,8 +184,8 @@ namespace SME.GoogleClassroom.Dados
                                  c.data_inclusao AS DataInclusao,
                                  c.data_atualizacao AS DataAtualizacao,
                                  c.Email       
-                            from public.cursos c 
-                           where id = @id";
+                            from public.cursos c
+                            where c.id = @id";
 
             var parametros = new
             {

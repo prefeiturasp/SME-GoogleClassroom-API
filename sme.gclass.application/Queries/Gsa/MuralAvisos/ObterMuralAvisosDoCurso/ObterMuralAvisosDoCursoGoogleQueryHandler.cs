@@ -42,8 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             foreach (var announcement in avisosGsa.Announcements)
             {
-                if (curso.Responsaveis.Any(a => a == announcement.CreatorUserId))
-                    retorno.Avisos.Add(new AvisoMuralGsaDto(announcement.Id, announcement.CourseId, announcement.CreatorUserId, announcement.Text, announcement.CreationTime, announcement.UpdateTime));
+                retorno.Avisos.Add(new AvisoMuralGsaDto(announcement.Id, announcement.CourseId, announcement.CreatorUserId, announcement.Text, announcement.CreationTime, announcement.UpdateTime, curso.CriadoManualmente));
             }
             retorno.TokenProximaPagina = avisosGsa.NextPageToken;
 
@@ -63,7 +62,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 throw;
-            }        
+            }
         }
     }
 }
