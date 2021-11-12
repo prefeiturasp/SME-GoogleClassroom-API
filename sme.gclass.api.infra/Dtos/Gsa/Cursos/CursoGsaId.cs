@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public class CursoGsaManualmenteDto
+    public class CursoGsaId
     {
-        public long CursoId { get; set; }
+        public string CursoId { get; set; }
         public bool CriadoManualmente { get; set; }
     }
 }

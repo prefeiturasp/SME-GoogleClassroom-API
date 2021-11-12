@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var retorno = new PaginaConsultaMuralAvisosGsaDto();
             var curso = request.Curso;
 
-            var avisosGsa = await ObterAvisosDaPagina(servicoClassroom, curso.CursoId, request.TokenProximaPagina);
+            var avisosGsa = await ObterAvisosDaPagina(servicoClassroom, Convert.ToInt64(curso.CursoId), request.TokenProximaPagina);
             if (avisosGsa == null || avisosGsa.Announcements == null)
                 return retorno;
 

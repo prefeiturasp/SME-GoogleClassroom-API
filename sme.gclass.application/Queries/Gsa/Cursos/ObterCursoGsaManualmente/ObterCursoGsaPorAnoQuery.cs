@@ -7,9 +7,9 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursoGsaManualmentePorAnoQuery : IRequest<IEnumerable<CursoGsaManualmenteDto>>
+    public class ObterCursoGsaPorAnoQuery : IRequest<IEnumerable<CursoGsaId>>
     {
-        public ObterCursoGsaManualmentePorAnoQuery(int anoLetivo, long? cursoId = null, int pagina = 0, int quantidadeRegistrosPagina = 100)
+        public ObterCursoGsaPorAnoQuery(int anoLetivo, long? cursoId = null, int pagina = 0, int quantidadeRegistrosPagina = 100)
         {
             AnoLetivo = anoLetivo;
             CursoId = cursoId;
@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public int QuantidadeRegistrosPagina { get; set; }
     }
 
-    public class ObterCursoGsaManualmenteQueryValidator : AbstractValidator<ObterCursoGsaManualmentePorAnoQuery>
+    public class ObterCursoGsaManualmenteQueryValidator : AbstractValidator<ObterCursoGsaPorAnoQuery>
     {
         public ObterCursoGsaManualmenteQueryValidator()
         {

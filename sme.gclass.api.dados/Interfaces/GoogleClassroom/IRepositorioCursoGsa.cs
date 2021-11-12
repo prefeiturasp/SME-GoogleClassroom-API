@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<int> ValidarCursosExistentesCursosComparativosAsync();
 
-        Task<IEnumerable<CursoGsaManualmenteDto>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100);
+        Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100);
 
         Task LimparAsync();
     }

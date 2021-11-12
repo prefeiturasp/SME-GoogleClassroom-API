@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
             int valorPagina = filtro.Pagina.HasValue ? filtro.Pagina.Value : 0;
 
             var retorno = await mediator
-                .Send(new ObterCursoGsaManualmentePorAnoQuery(anoAtual, filtro.CursoId, filtro.CursoId.HasValue ? 0 : valorPagina, 100));
+                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, filtro.CursoId.HasValue ? 0 : valorPagina, 100));
 
             var totalPaginas = filtro.TotalPaginas;
 
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoGsaManualmenteDto> cursosGsa)
+        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoGsaId> cursosGsa)
         {
             await mediator
                 .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursosGsa, ultimaExecucao)));

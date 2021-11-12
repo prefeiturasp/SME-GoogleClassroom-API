@@ -140,7 +140,7 @@ namespace SME.GoogleClassroom.Dados
             await conn.ExecuteAsync(query);
         }
 
-        public async Task<IEnumerable<CursoGsaManualmenteDto>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
+        public async Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
         {
             string idCurso = cursoId.HasValue ? cursoId.ToString() : "";
             int qtdeRegistrosIgnorados = quantidadeRegistrosPagina * (pagina - 1);
@@ -160,7 +160,7 @@ namespace SME.GoogleClassroom.Dados
 
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<CursoGsaManualmenteDto>(sqlQuery.ToString(), new
+                return await conn.QueryAsync<CursoGsaId>(sqlQuery.ToString(), new
                 {
                     anoLetivo,
                     idCurso,
