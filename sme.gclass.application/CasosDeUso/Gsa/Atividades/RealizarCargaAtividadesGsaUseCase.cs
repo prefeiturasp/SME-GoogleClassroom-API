@@ -32,10 +32,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
             filtro.Pagina = filtro.Pagina ?? 1;
 
-            var retorno = await mediator
-                .Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId, filtro.Pagina, 100));
+            int pagina = filtro.Pagina.HasValue ? filtro.Pagina.Value : 0;
 
-            var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
+            var retorno = await mediator
+                .Send(new ObterCursoGsaManualmentePorAnoQuery(anoAtual, filtro.CursoId, pagina, 100));
+
+            var totalPaginas = filtro.TotalPaginas;
 
             Console.WriteLine($">>> Carga Atividades - Página: {filtro.Pagina}/{totalPaginas}");
 
@@ -59,10 +61,10 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, (IEnumerable<CursoDto> cursos, int? totalPaginas) retorno)
+        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoGsaManualmenteDto> cursosGsa)
         {
             await mediator
-                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(retorno.cursos, ultimaExecucao)));
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(cursosGsa, ultimaExecucao)));
         }
 
         private async Task PublicarMensagemProximaPagina(int proximaPagina, int totalPaginas)

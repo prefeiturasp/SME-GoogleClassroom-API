@@ -35,6 +35,7 @@ namespace SME.GoogleClassroom.Aplicacao
                         atividadeGsa.Descricao;
 
                     await GravarAtividadeGsa(atividadeGsa, usuario.Indice);
+                    if(!atividadeGsa.CursoCriadoManualmente)
                     if (!await EnviarParaSgp(atividadeGsa, usuario))
                         throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");                    
                 }
