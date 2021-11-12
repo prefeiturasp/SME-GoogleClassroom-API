@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Infra
 {
     public class FiltroTratarMuralAvisosCursoDto
     {
-        public FiltroTratarMuralAvisosCursoDto(IEnumerable<CursoResponsavelDto> cursos, DateTime ultimaExecucao, string tokenProximaPagina = "")
+        public FiltroTratarMuralAvisosCursoDto(IEnumerable<CursoGsaManualmenteDto> cursos, DateTime ultimaExecucao, string tokenProximaPagina = "")
         {
             Cursos = cursos;
             UltimaExecucao = ultimaExecucao;
@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Infra
         }
 
         public string TokenProximaPagina { get; set; }
-        public IEnumerable<CursoResponsavelDto> Cursos { get; set; }
+        public IEnumerable<CursoGsaManualmenteDto> Cursos { get; set; }
         public DateTime UltimaExecucao { get; set; }
     }
 }

@@ -176,17 +176,16 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<CursoGoogle> ObterCursoPorId(long id)
         {
-            var query = @"select cg.id, 
-                                 cg.nome,
-                                 cg.secao,
+            var query = @"select c.id, 
+                                 c.nome,
+                                 c.secao,
                                  c.turma_id AS TurmaId,
                                  c.componente_curricular_id AS ComponenteCurricularId,
-                                 cg.data_inclusao AS DataInclusao,
+                                 c.data_inclusao AS DataInclusao,
                                  c.data_atualizacao AS DataAtualizacao,
                                  c.Email       
-                            from public.cursos_gsa cg
-                            inner join public.cursos c on c.id = cast(cg.id as bigint)
-                           where cg.id = @id";
+                            from public.cursos c
+                            where c.id = @id";
 
             var parametros = new
             {
@@ -270,13 +269,6 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
             return await conn.QueryAsync<long>(@"select id from cursos where turma_id = @turmaId ", new { turmaId });
-        }
-
-        public async Task<bool> VerificaSeFoiCriadoManualmente(long cursoId)
-        {
-            string curso = cursoId.ToString();
-            using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<bool>(@"select inserido_manualmente_google from cursos_gsa where id = @cursoId ", new { curso });
         }
     }
 }

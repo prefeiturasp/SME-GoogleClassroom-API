@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -137,6 +138,36 @@ namespace SME.GoogleClassroom.Dados
             const string query = @"DELETE FROM cursos_gsa";
             using var conn = ObterConexao();
             await conn.ExecuteAsync(query);
+        }
+
+        public async Task<IEnumerable<CursoGsaManualmenteDto>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
+        {
+            string idCurso = cursoId.HasValue ? cursoId.ToString() : "";
+            int qtdeRegistrosIgnorados = quantidadeRegistrosPagina * (pagina - 1);
+            int qtdeRegistros = quantidadeRegistrosPagina;
+
+            var sqlQuery = new StringBuilder();
+            sqlQuery.AppendLine("select c.id as CursoId,");
+            sqlQuery.AppendLine("       c.inserido_manualmente_google as CriadoManualmente");
+            sqlQuery.AppendLine("from cursos_gsa c");
+            sqlQuery.AppendLine("where extract(year from c.data_inclusao) = @anoLetivo");
+
+
+            if (string.IsNullOrEmpty(idCurso))
+                sqlQuery.AppendLine("and c.id = @idCurso");
+
+            sqlQuery.AppendLine("offset @qtdeRegistrosIgnorados rows fetch next @qtdeRegistros rows only;");
+
+            using (var conn = ObterConexao())
+            {
+                return await conn.QueryAsync<CursoGsaManualmenteDto>(sqlQuery.ToString(), new
+                {
+                    anoLetivo,
+                    idCurso,
+                    qtdeRegistrosIgnorados,
+                    qtdeRegistros
+                }, commandTimeout: 120);
+            }
         }
     }
 }
