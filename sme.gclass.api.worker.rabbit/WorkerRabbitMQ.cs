@@ -22,12 +22,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 {
     public class WorkerRabbitMQ : IHostedService
     {
-        private readonly IModel canalRabbit;
+        private IModel canalRabbit;
         private readonly string sentryDSN;
-        private readonly IConnection conexaoRabbit;
-        private readonly IServiceScopeFactory serviceScopeFactory;
+        private IConnection conexaoRabbit;
+        private IServiceScopeFactory serviceScopeFactory;
         private readonly IMetricReporter metricReporter;
         private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
+        private readonly ConfiguracaoRabbitOptions configuracaoRabbitOptions;
 
         /// <summary>
         /// configuração da lista de tipos para a fila do rabbit instanciar, seguindo a ordem de propriedades:
@@ -35,19 +36,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// </summary>
         private readonly Dictionary<string, ComandoRabbit> comandos;
 
-        public WorkerRabbitMQ(IConnection conexaoRabbit, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter, ConsumoDeFilasOptions consumoDeFilasOptions)
+        public WorkerRabbitMQ(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter, ConsumoDeFilasOptions consumoDeFilasOptions, ConfiguracaoRabbitOptions configuracaoRabbitOptions)
         {
             sentryDSN = configuration.GetValue<string>("Sentry:DSN");
-            this.conexaoRabbit = conexaoRabbit ?? throw new ArgumentNullException(nameof(conexaoRabbit));
+            
             this.serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
             this.metricReporter = metricReporter;
             this.consumoDeFilasOptions = consumoDeFilasOptions;
-            canalRabbit = conexaoRabbit.CreateModel();
-            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
-
-            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
-            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
-
+            this.configuracaoRabbitOptions = configuracaoRabbitOptions ?? throw new ArgumentNullException(nameof(configuracaoRabbitOptions));
+           
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
         }
@@ -154,7 +151,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 {
                     var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                     //SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
-                    Console.WriteLine($"Dados: {mensagemRabbit.Mensagem}");
+                    //Console.WriteLine($"Dados: {mensagemRabbit.Mensagem}");
                     var comandoRabbit = comandos[rota];
                     var tempoExecucao = Stopwatch.StartNew();
                     try
@@ -232,31 +229,111 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             return Task.CompletedTask;
         }
 
-        public Task StartAsync(CancellationToken stoppingToken)
+        public async Task StartAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var consumer = new EventingBasicConsumer(canalRabbit);
-            consumer.Received += async (ch, ea) =>
-            {
-                try
-                {
-                    await TratarMensagem(ea);
-                }
-                catch (Exception)
-                {
-                    //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
-                }
-            };
+            await InicializaConsumers(stoppingToken);
 
-            ConfigurarConsumoDeFilasRabbit(consumer);
-            return Task.CompletedTask;
+            //var consumer = new EventingBasicConsumer(canalRabbit);
+            //consumer.Received += async (ch, ea) =>
+            //{
+            //    try
+            //    {
+            //        await TratarMensagem(ea);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
+            //    }
+            //};
+
+            //ConfigurarConsumoDeFilasRabbit(consumer);
+            //return Task.CompletedTask;
         }
 
         private void ConfigurarConsumoDeFilasRabbit(EventingBasicConsumer consumer)
         {
             ConfigurarConsumoDeFilasSync(consumer);
             ConfigurarConsumoDeFilasGsa(consumer);
+        }
+
+        private void ConexaoRabbit_CallbackException(object sender, CallbackExceptionEventArgs e)
+        {
+            FecharConexoesRabbit();
+
+            _ = Task.FromResult(InicializaConsumers(new CancellationToken())).Result;
+        }
+
+        private void FecharConexoesRabbit()
+        {
+            if (canalRabbit.IsOpen)
+            {
+                canalRabbit.Close();
+                canalRabbit.Dispose();
+            }
+
+            if (conexaoRabbit.IsOpen)
+            {
+                conexaoRabbit.Close();
+                conexaoRabbit.Dispose();
+            }
+        }
+        private void ConexaoRabbit_ConnectionShutdown(object sender, ShutdownEventArgs e)
+        {
+            if (canalRabbit.IsOpen)
+                canalRabbit.Close();
+            if (conexaoRabbit.IsOpen)
+                conexaoRabbit.Close();
+            _ = Task.FromResult(InicializaConsumers(new CancellationToken())).Result;
+        }
+        private Task InicializaConsumers(CancellationToken stoppingToken)
+        {
+            stoppingToken.ThrowIfCancellationRequested();
+
+            var factory = new ConnectionFactory
+            {
+                HostName = configuracaoRabbitOptions.HostName,
+                UserName = configuracaoRabbitOptions.UserName,
+                Password = configuracaoRabbitOptions.Password,
+                VirtualHost = configuracaoRabbitOptions.Virtualhost,
+                RequestedHeartbeat = TimeSpan.FromSeconds(30),
+            };
+
+            conexaoRabbit = factory.CreateConnection();
+            conexaoRabbit.CallbackException += ConexaoRabbit_CallbackException;
+            conexaoRabbit.ConnectionShutdown += ConexaoRabbit_ConnectionShutdown;
+
+
+            canalRabbit = conexaoRabbit.CreateModel();
+
+            canalRabbit.BasicQos(0, 10, false);
+
+            canalRabbit = conexaoRabbit.CreateModel();
+            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
+
+            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
+            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
+
+            var consumer = new EventingBasicConsumer(canalRabbit);
+
+            consumer.Received += async (ch, ea) =>
+            {
+                try
+                {
+                    await TratarMensagem(ea);
+                }
+                catch (Exception ex)
+                {
+                    SentrySdk.AddBreadcrumb($"Erro ao tratar mensagem {ea.DeliveryTag}", "erro", null, null, BreadcrumbLevel.Error);
+                    SentrySdk.CaptureException(ex);
+                    canalRabbit.BasicReject(ea.DeliveryTag, false);
+                }
+            };
+
+            ConfigurarConsumoDeFilasRabbit(consumer);
+
+            return Task.CompletedTask;
         }
 
         private void ConfigurarConsumoDeFilasSync(EventingBasicConsumer consumer)

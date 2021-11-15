@@ -7,17 +7,17 @@ namespace SME.GoogleClassroom.IoC
 {
     public static class RegistrarRabbit
     {
-        public static void AddRabbit(this IServiceCollection services)
+        public static void AddRabbit(this IServiceCollection services, ConfiguracaoRabbitOptions configuracaoRabbitOptions)
         {
           
             var factory = new ConnectionFactory
             {
-                HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
-                UserName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__UserName"),
-                Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password"),
-                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost"),
+                HostName = configuracaoRabbitOptions.HostName,
+                UserName = configuracaoRabbitOptions.UserName,
+                Password = configuracaoRabbitOptions.Password,
+                VirtualHost = configuracaoRabbitOptions.Virtualhost,
                 AutomaticRecoveryEnabled = true,
-                RequestedHeartbeat = TimeSpan.FromSeconds(60)
+                RequestedHeartbeat = TimeSpan.FromSeconds(30)
             };
 
             var conexaoRabbit = factory.CreateConnection();
