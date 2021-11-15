@@ -36,8 +36,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
                     await GravarAtividadeGsa(atividadeGsa, usuario.Indice);
                     if(!atividadeGsa.CursoCriadoManualmente)
-                    if (!await EnviarParaSgp(atividadeGsa, usuario))
-                        throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");                    
+                        if (!await EnviarParaSgp(atividadeGsa, usuario))
+                            throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");                    
                 }
                 catch (Exception ex)
                 {
@@ -79,6 +79,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 Descricao = atividadeGsa.Descricao,
                 DataCriacao = atividadeGsa.CriadoEm,
                 DataAlteracao = atividadeGsa.AlteradoEm,
+                Email = usuario.Email
             };
 
             return await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaAtividadesSync, avisoDto, usuario.Id.ToString(), usuario.Nome));
