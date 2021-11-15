@@ -233,23 +233,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            await InicializaConsumers(stoppingToken);
-
-            //var consumer = new EventingBasicConsumer(canalRabbit);
-            //consumer.Received += async (ch, ea) =>
-            //{
-            //    try
-            //    {
-            //        await TratarMensagem(ea);
-            //    }
-            //    catch (Exception)
-            //    {
-            //        //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
-            //    }
-            //};
-
-            //ConfigurarConsumoDeFilasRabbit(consumer);
-            //return Task.CompletedTask;
+            await InicializaConsumers(stoppingToken);         
         }
 
         private void ConfigurarConsumoDeFilasRabbit(EventingBasicConsumer consumer)
