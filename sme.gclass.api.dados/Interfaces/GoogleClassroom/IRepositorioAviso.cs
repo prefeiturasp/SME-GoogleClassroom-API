@@ -8,7 +8,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
 {
     public interface IRepositorioAviso
     {
-        Task<IEnumerable<AvisoGsa>> ObterAvisosAsync(long usuarioId);
         Task<IEnumerable<AvisoGsa>> ObterAvisosPorCursoId(long cursoId);
         Task<int> InserirAviso(AvisoGsa avisoGsa);
         Task<int> AlterarAviso(AvisoGsa avisoGsa);

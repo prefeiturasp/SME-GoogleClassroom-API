@@ -7,8 +7,8 @@ namespace SME.GoogleClassroom.Dominio
         public long Id { get; set; }
         public string Titulo { get; set; }
         public string Descricao { get; set; }
-        public long UsuarioId { get; set; }
-        public long CursoId { get; set; }
+        public string UsuarioGsaId { get; set; }
+        public long CursoGsaId { get; set; }
         public DateTime DataInclusao { get; set; }
         public DateTime DataAlteracao { get; set; }
 
@@ -24,14 +24,14 @@ namespace SME.GoogleClassroom.Dominio
         {
         }
 
-        public AtividadeGsa(long id, string titulo, string descricao, long usuarioId, long cursoId,
+        public AtividadeGsa(long id, string titulo, string descricao, string usuarioId, long cursoId,
             DateTime dataInclusao, DateTime dataAlteracao, DateTime? dataEntrega, double? notaMaxima)
         {
             Id = id;
             Titulo = titulo;
             Descricao = descricao;
-            UsuarioId = usuarioId;
-            CursoId = cursoId;
+            UsuarioGsaId = usuarioId;
+            CursoGsaId = cursoId;
             DataInclusao = dataInclusao;
             DataAlteracao = dataAlteracao;
             DataEntrega = dataEntrega;
