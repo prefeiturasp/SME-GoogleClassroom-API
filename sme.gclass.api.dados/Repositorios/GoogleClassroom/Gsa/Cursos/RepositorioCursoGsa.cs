@@ -153,7 +153,7 @@ namespace SME.GoogleClassroom.Dados
             sqlQuery.AppendLine("where extract(year from c.data_inclusao) = @anoLetivo");
 
 
-            if (string.IsNullOrEmpty(idCurso))
+            if (!string.IsNullOrEmpty(idCurso))
                 sqlQuery.AppendLine("and c.id = @idCurso");
 
             sqlQuery.AppendLine("offset @qtdeRegistrosIgnorados rows fetch next @qtdeRegistros rows only;");
