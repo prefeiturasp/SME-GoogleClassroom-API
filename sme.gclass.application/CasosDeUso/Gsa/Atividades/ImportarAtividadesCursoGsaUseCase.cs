@@ -26,7 +26,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
             foreach (var atividadeGsa in atividadesGsa)
             {
-                var usuario = await ObterUsuario(atividadeGsa.UsuarioClassroomId);
                 try
                 {
                     // Atividades sem descrição devem ser importadadas com o Título
@@ -34,10 +33,13 @@ namespace SME.GoogleClassroom.Aplicacao
                         atividadeGsa.Titulo :
                         atividadeGsa.Descricao;
 
-                    await GravarAtividadeGsa(atividadeGsa, usuario.Indice);
+                    await GravarAtividadeGsa(atividadeGsa);
                     if(!atividadeGsa.CursoCriadoManualmente)
+                    {
+                        var usuario = await ObterUsuario(atividadeGsa.UsuarioClassroomId);
                         if (!await EnviarParaSgp(atividadeGsa, usuario))
-                            throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");                    
+                            throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -85,9 +87,9 @@ namespace SME.GoogleClassroom.Aplicacao
             return await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaAtividadesSync, avisoDto, usuario.Id.ToString(), usuario.Nome));
         }
 
-        private async Task GravarAtividadeGsa(AtividadeGsaDto atividadeGsa, long usuarioIndice)
+        private async Task GravarAtividadeGsa(AtividadeGsaDto atividadeGsa)
         {
-            await mediator.Send(new GravarAtividadeGsaCommand(atividadeGsa, usuarioIndice));
+            await mediator.Send(new GravarAtividadeGsaCommand(atividadeGsa));
         }
     }
 }
