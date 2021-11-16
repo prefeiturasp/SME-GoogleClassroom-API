@@ -6,24 +6,18 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class GravarAtividadeGsaCommand : IRequest
     {
-        public GravarAtividadeGsaCommand(AtividadeGsaDto atividadeDto, long usuarioIndice)
+        public GravarAtividadeGsaCommand(AtividadeGsaDto atividadeDto)
         {
             AtividadeDto = atividadeDto;
-            UsuarioIndice = usuarioIndice;
         }
 
         public AtividadeGsaDto AtividadeDto { get; }
-        public long UsuarioIndice { get; }
     }
 
     public class GravarAtividadeGsaCommandValidator : AbstractValidator<GravarAtividadeGsaCommand>
     {
         public GravarAtividadeGsaCommandValidator()
         {
-            RuleFor(a => a.UsuarioIndice)
-                .NotEmpty()
-                .WithMessage("O indice do usuário deve ser informado para geração da atividade avaliativa");
-
             RuleFor(a => a.AtividadeDto)
                 .NotNull()
                 .WithMessage("O dto de atividade avaliativa deve ser informado");

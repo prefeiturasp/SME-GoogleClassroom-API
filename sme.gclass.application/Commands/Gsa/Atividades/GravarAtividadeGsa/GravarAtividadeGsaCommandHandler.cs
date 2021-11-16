@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var avisoGsa = MapearEntidade(
                 request.AtividadeDto.Id,
                 request.AtividadeDto.CursoId,
-                request.UsuarioIndice,
+                request.AtividadeDto.UsuarioClassroomId,
                 request.AtividadeDto.Titulo,
                 request.AtividadeDto.Descricao,
                 request.AtividadeDto.CriadoEm,
@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 await repositorioAtividade.InserirAtividade(avisoGsa);
         }
 
-        private AtividadeGsa MapearEntidade(long id, long cursoId, long usuarioId, string titulo, string descricao, DateTime criadoEm, DateTime alteradoEm, DateTime? dataEntrega, double notaMaxima)
+        private AtividadeGsa MapearEntidade(long id, long cursoId, string usuarioId, string titulo, string descricao, DateTime criadoEm, DateTime alteradoEm, DateTime? dataEntrega, double notaMaxima)
             => new Dominio.AtividadeGsa(id,
                                     titulo,
                                     descricao,
