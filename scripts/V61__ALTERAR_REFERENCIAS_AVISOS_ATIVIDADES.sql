@@ -37,7 +37,7 @@ then
 	ADD COLUMN usuario_gsa_id varchar(100);
 
 	update avisos a 
-		set a.usuario_gsa_id = u.google_classroom_id
+		set usuario_gsa_id = u.google_classroom_id
 	from usuarios u
 	where u.indice = a.usuario_id;
 
@@ -74,7 +74,7 @@ then
 	ADD COLUMN usuario_gsa_id varchar(100);
 
 	update atividades a 
-		set a.usuario_gsa_id = u.google_classroom_id
+		set usuario_gsa_id = u.google_classroom_id
 	from usuarios u
 	where u.indice = a.usuario_id;
 
