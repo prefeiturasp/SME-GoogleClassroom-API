@@ -34,8 +34,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
 
-            Console.WriteLine($">>> Carga Notas - Página: {filtro.Pagina}/{totalPaginas}");
-
             try
             {
                 await PublicarMensagemTratar(retorno);

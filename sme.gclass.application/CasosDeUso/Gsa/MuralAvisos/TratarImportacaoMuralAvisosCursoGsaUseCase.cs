@@ -31,15 +31,15 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task EnviarParaTratamento(FiltroTratarMuralAvisosCursoDto filtro, CursoResponsavelDto curso)
+        private async Task EnviarParaTratamento(FiltroTratarMuralAvisosCursoDto filtro, CursoGsaId curso)
         {
             var paginaMural = await mediator.Send(new ObterMuralAvisosDoCursoGoogleQuery(curso, filtro.TokenProximaPagina));
 
             if (paginaMural.Avisos.Any())
-                await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, curso.CursoId, filtro.UltimaExecucao));
+                await mediator.Send(new TratarImportacaoAvisosCommand(paginaMural.Avisos, Convert.ToInt64(curso.CursoId), filtro.UltimaExecucao));
 
             filtro.TokenProximaPagina = paginaMural.TokenProximaPagina;
-            filtro.Cursos = new CursoResponsavelDto[] { curso };
+            filtro.Cursos = new CursoGsaId[] { curso };
 
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
                 await PublicaProximaPaginaAsync(filtro);

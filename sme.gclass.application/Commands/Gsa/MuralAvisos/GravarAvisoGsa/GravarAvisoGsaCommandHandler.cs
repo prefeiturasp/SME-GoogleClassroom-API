@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(GravarAvisoGsaCommand request, CancellationToken cancellationToken)
         {
-            var avisoGsa = MapearEntidade(request.AvisoDto.Id, request.AvisoDto.Mensagem, request.UsuarioIndice, request.AvisoDto.CursoId, request.AvisoDto.CriadoEm, request.AvisoDto.AlteradoEm);
+            var avisoGsa = MapearEntidade(request.AvisoDto.Id, request.AvisoDto.Mensagem, request.AvisoDto.UsuarioClassroomId, request.AvisoDto.CursoId, request.AvisoDto.CriadoEm, request.AvisoDto.AlteradoEm);
 
             if (await RegistroExistente(request.AvisoDto.Id))
                 await repositorioAviso.AlterarAviso(avisoGsa);
@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 await repositorioAviso.InserirAviso(avisoGsa);
         }
 
-        private AvisoGsa MapearEntidade(long id, string mensagem, long usuarioId, long cursoId, DateTime criadoEm, DateTime alteradoEm)
+        private AvisoGsa MapearEntidade(long id, string mensagem, string usuarioId, long cursoId, DateTime criadoEm, DateTime alteradoEm)
             => new Dominio.AvisoGsa(id,
                                     mensagem,
                                     usuarioId,

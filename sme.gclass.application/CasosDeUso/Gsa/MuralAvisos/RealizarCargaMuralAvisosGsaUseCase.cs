@@ -34,22 +34,18 @@ namespace SME.GoogleClassroom.Aplicacao
 
             filtro.Pagina = filtro.Pagina ?? 1;
 
-            var retorno = await mediator
-                .Send(new ObterCursosComResponsaveisPorAnoQuery(anoAtual, filtro.CursoId, filtro.CursoId.HasValue ? null : filtro.Pagina, 100));
+            int valorPagina = filtro.Pagina.HasValue ? filtro.Pagina.Value : 0;
 
-            var totalPaginas = retorno.totalPaginas ?? filtro.TotalPaginas;
+            var retorno = await mediator
+                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, filtro.CursoId.HasValue ? 0 : valorPagina, 100));
+
+            var totalPaginas = filtro.TotalPaginas;
 
             Console.WriteLine($">>> Carga Mural Avisos - Página: {filtro.Pagina}/{totalPaginas}");
 
             try
             {
-                var cursosAgrupados = retorno.cursos
-                    .GroupBy(c => c.CursoId);
-
-                var cursosResponsaveis = from cr in cursosAgrupados
-                                         select new CursoResponsavelDto(cr.Key, cr.Select(c => c.UsuarioId));
-
-                await PublicarMensagemTratar(ultimaExecucao, cursosResponsaveis);
+                await PublicarMensagemTratar(ultimaExecucao, retorno);
 
                 if (filtro.Pagina > totalPaginas)
                     await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.MuralAvisosCarregar));
@@ -64,10 +60,10 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoResponsavelDto> cursosResponsaveis)
+        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoGsaId> cursosGsa)
         {
             await mediator
-                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursosResponsaveis, ultimaExecucao)));
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosTratar, new FiltroTratarMuralAvisosCursoDto(cursosGsa, ultimaExecucao)));
         }
 
         private async Task PulicarMensagemProximaPagina(int proximaPagina, int totalPaginas)

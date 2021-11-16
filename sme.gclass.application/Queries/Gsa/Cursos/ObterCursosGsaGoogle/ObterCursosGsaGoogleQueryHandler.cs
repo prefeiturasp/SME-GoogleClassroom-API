@@ -56,7 +56,7 @@ namespace SME.GoogleClassroom.Aplicacao
             paginaConsulta.Cursos.AddRange(resultadoPagina.Courses
                 .Select(curso => new CursoGsaDto
                 {
-                    Id = curso.Id,
+                    Id = Convert.ToInt64(curso.Id),
                     CriadorId = curso.OwnerId,
                     Descricao = curso.Description,
                     Nome = curso.Name,

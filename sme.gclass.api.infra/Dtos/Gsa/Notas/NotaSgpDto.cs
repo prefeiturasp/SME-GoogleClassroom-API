@@ -16,11 +16,14 @@ namespace SME.GoogleClassroom.Infra
         public string CodigoAluno { get; set; }
         public string Titulo { get; set; }
 
-        public NotaSgpDto(long turmaId, long componenteCurricularId, long atividadeGoogleClassroomId,
+        public NotaSgpDto(long? turmaId, long? componenteCurricularId, long atividadeGoogleClassroomId,
             StatusGSA statusGsa, double? nota, DateTime dataInclusao, DateTime? dataEntregaAvaliacao, string codigoAluno, string titulo)
         {
-            TurmaId = turmaId;
-            ComponenteCurricularId = componenteCurricularId;
+            if (!turmaId.HasValue)
+                throw new NegocioException("Deve existir turma para envio da nota ao SGP");
+
+            TurmaId = turmaId.Value;
+            ComponenteCurricularId = componenteCurricularId.Value;
             AtividadeGoogleClassroomId = atividadeGoogleClassroomId;
             StatusGsa = statusGsa;
             Nota = nota;
