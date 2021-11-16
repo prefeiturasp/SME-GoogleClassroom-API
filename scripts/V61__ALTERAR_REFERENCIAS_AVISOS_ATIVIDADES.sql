@@ -43,10 +43,10 @@ then
 
 	ALTER TABLE public.avisos 
 	DROP COLUMN usuario_id;
-end if;
 
--- AVISOS INDEXES
-CREATE INDEX avisos_usuario_gsa_id_idx ON public.avisos (usuario_gsa_id);
+	-- AVISOS INDEXES
+	CREATE INDEX avisos_usuario_gsa_id_idx ON public.avisos (usuario_gsa_id);
+end if;
 
 
 -- ATIVIDADES - CURSO
@@ -80,9 +80,9 @@ then
 
 	ALTER TABLE public.atividades 
 	DROP COLUMN usuario_id;
-end if;
 
--- ATIVIDADES INDEXES
-CREATE INDEX atividades_usuario_gsa_id_idx ON public.atividades (usuario_gsa_id);
+	-- ATIVIDADES INDEXES
+	CREATE INDEX atividades_usuario_gsa_id_idx ON public.atividades (usuario_gsa_id);
+end if;
        
 end $$
