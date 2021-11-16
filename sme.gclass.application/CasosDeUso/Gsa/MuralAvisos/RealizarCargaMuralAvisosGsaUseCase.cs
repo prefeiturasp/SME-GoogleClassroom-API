@@ -32,12 +32,10 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
                 return true;
 
-            filtro.Pagina = filtro.Pagina ?? 1;
-
-            int valorPagina = filtro.Pagina.HasValue ? filtro.Pagina.Value : 0;
+            int valorPagina = filtro.Pagina ?? 1;
 
             var retorno = await mediator
-                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, filtro.CursoId.HasValue ? 0 : valorPagina, 100));
+                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, valorPagina, 100));
 
             var totalPaginas = filtro.TotalPaginas;
 

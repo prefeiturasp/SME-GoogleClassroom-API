@@ -39,8 +39,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var totalPaginas = filtro.TotalPaginas;
 
-            Console.WriteLine($">>> Carga Atividades - Página: {filtro.Pagina}/{totalPaginas}");
-
             try
             {
                 await PublicarMensagemTratar(ultimaExecucao, retorno);
