@@ -1,6 +1,9 @@
 DO $$
 BEGIN
 
+DELETE FROM AVISOS;
+DELETE FROM ATIVIDADES;
+
 IF EXISTS (
 SELECT 1
 FROM information_schema.table_constraints
