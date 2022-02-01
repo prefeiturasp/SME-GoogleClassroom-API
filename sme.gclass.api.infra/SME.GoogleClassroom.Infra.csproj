@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.13.0" />
     <PackageReference Include="FluentValidation" Version="9.5.0" />
     <PackageReference Include="Google.Apis.Core" Version="1.50.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
