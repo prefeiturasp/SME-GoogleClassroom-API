@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,8 +11,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly bool _deveExecutarIntegracao;
         private const int TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento = 10000;
 
-        protected EnvioDeDadosIntegracaoGoogleClassroomHandler(VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
-            :base(metricReporter)
+        protected EnvioDeDadosIntegracaoGoogleClassroomHandler(VariaveisGlobaisOptions variaveisGlobaisOptions)
+            :base()
         {
             _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
         }

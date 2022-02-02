@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Elastic.Apm.AspNetCore;
+using Elastic.Apm.DiagnosticSource;
+using Elastic.Apm.SqlClient;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +12,7 @@ using Microsoft.OpenApi.Models;
 using Polly;
 using Polly.Extensions.Http;
 using Prometheus;
-using Sentry;
+using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
@@ -46,8 +50,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddPolicies();
             services.AddHostedService<WorkerRabbitMQ>();
 
-            // Teste para injeção do client de telemetria em classe estática
-            SentrySdk.Init(Configuration.GetValue<string>("Sentry:DSN"));
+            ConfiguraRabbitParaLogs(services);
+
+            var telemetriaOptions = ConfiguraTelemetria(services);
+            var servicoTelemetria = new ServicoTelemetria(telemetriaOptions);
+
+            DapperExtensionMethods.Init(servicoTelemetria);
+            services.AddSingleton(servicoTelemetria);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -68,10 +77,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 c.IncludeXmlComments(xmlPath);
             });
 
+            var serviceProvider = services.BuildServiceProvider();
+            var mediator = serviceProvider.GetService<IMediator>();
+            services.AddSingleton(mediator);
+
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = true;
-                options.Filters.Add(new FiltroExcecoesAttribute(Configuration));
+                options.Filters.Add(new FiltroExcecoesAttribute(mediator));
             });
 
             services.UseMetricReporter();
@@ -113,6 +126,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseElasticApm(Configuration,
+                new SqlClientDiagnosticSubscriber(),
+                new HttpDiagnosticsSubscriber());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -152,6 +169,24 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 await context.Response.WriteAsync("GoogleClassroom Worker!");
             });
+        }
+
+        private TelemetriaOptions ConfiguraTelemetria(IServiceCollection services)
+        {
+            var telemetriaOptions = new TelemetriaOptions();
+            Configuration.GetSection(TelemetriaOptions.Secao).Bind(telemetriaOptions, c => c.BindNonPublicProperties = true);
+
+            services.AddSingleton(telemetriaOptions);
+
+            return telemetriaOptions;
+        }
+
+        private void ConfiguraRabbitParaLogs(IServiceCollection services)
+        {
+            var configuracaoRabbitLogOptions = new ConfiguracaoRabbitLogOptions();
+            Configuration.GetSection("ConfiguracaoRabbitLog").Bind(configuracaoRabbitLogOptions, c => c.BindNonPublicProperties = true);
+
+            services.AddSingleton(configuracaoRabbitLogOptions);
         }
     }
 }

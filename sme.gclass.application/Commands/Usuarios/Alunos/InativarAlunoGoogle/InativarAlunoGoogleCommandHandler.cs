@@ -19,8 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public InativarAlunoGoogleCommandHandler(IMediator mediator, 
                                                  IReadOnlyPolicyRegistry<string> registry, 
-                                                 VariaveisGlobaisOptions variaveisGlobais, 
-                                                 IMetricReporter metricReporter) : base(variaveisGlobais, metricReporter)
+                                                 VariaveisGlobaisOptions variaveisGlobais) : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);

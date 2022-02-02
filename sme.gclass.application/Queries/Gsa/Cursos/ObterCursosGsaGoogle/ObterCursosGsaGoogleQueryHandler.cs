@@ -4,7 +4,6 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Linq;
@@ -20,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
-            :base(metricReporter)
+        public ObterCursosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions)
+            :base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.gsaSyncOptions = gsaSyncOptions;

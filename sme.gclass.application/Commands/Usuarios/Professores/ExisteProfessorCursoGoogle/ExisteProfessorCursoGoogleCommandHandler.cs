@@ -18,8 +18,8 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Usuarios.Professores.ExisteProf
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public ExisteProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
-            : base(variaveisGlobaisOptions, metricReporter)
+        public ExisteProfessorCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
+            : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
