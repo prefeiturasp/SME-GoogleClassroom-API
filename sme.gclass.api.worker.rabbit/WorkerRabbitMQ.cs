@@ -41,10 +41,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         public WorkerRabbitMQ(IConnection conexaoRabbit,
                               IServiceScopeFactory serviceScopeFactory,
-                              IConfiguration configuration,
                               IMetricReporter metricReporter,
                               ServicoTelemetria servicoTelemetria, 
                               ConsumoDeFilasOptions consumoDeFilasOptions,
+                              ConfiguracaoRabbitOptions configuracaoRabbitOptions,
                               TelemetriaOptions telemetriaOptions,
                               IMediator mediator)
         {
@@ -54,7 +54,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.metricReporter = metricReporter;
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
-            this.consumoDeFilasOptions = consumoDeFilasOptions;
+            this.consumoDeFilasOptions = consumoDeFilasOptions ?? throw new ArgumentNullException(nameof(consumoDeFilasOptions));
             this.configuracaoRabbitOptions = configuracaoRabbitOptions ?? throw new ArgumentNullException(nameof(configuracaoRabbitOptions));
            
             comandos = new Dictionary<string, ComandoRabbit>();
