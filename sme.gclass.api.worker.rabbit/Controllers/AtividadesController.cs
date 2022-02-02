@@ -71,10 +71,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [HttpPost("sincronizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, long? cursoId = null)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, long? cursoId = null, int? pagina = null, int? totalPaginas = null)
         {
-            await useCase.Executar(cursoId);
-
+            await useCase.Executar(cursoId, pagina, totalPaginas);
             return Ok();
         }
     }

@@ -19,8 +19,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
-            :base(metricReporter)
+        public ObterUsuariosGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions)
+            :base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.gsaSyncOptions = gsaSyncOptions;

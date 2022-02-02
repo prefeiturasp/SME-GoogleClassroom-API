@@ -8,25 +8,23 @@ namespace SME.GoogleClassroom.Infra
     {
         public ParametrosCargaInicialDto()
         {
-            TiposUesCursos = new List<int>();
             TiposUes = new List<int>();
             Ues = new List<long>();
             Turmas = new List<long>();
         }
 
-        public IList<int> TiposUesCursos { get; set; }
+        public ParametrosCargaInicialDto(IList<int> tiposUes, IList<long> ues, IList<long> turmas, int? anoLetivo)
+        {
+            TiposUes = tiposUes;
+            Ues = ues;
+            Turmas = turmas;
+            AnoLetivo = anoLetivo;
+        }
+
         public IList<int> TiposUes { get; set; }
         public IList<long> Ues { get; set; }
         public IList<long> Turmas { get; set; }
-
-        public void AdicionaTiposUeCursos(string tiposUeCursos)
-        {
-            tiposUeCursos
-                .Split(',')
-                .Select(int.Parse)
-                .ToList()
-                .ForEach(tipo => TiposUesCursos.Add(tipo));
-        }
+        public int? AnoLetivo { get; set; }
 
         public void AdicionaTiposUe(string tiposUe)
         {

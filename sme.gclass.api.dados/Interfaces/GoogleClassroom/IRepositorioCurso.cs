@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Dados
         Task<int> ExcluirCursoAsync(long cursoId);
         Task<CursoGoogle> ObterCursoPorTurmaComponenteCurricular(long turmaId, long componenteCurricularId);
         Task<IEnumerable<long>> ObterIdsCursosPorTurma(long turmaId);
-        Task<IEnumerable<CursoDto>> ObterCursosPorAno(int anoLetivo, long? cursoId = null);
+        Task<(IEnumerable<CursoDto> cursos, int? totalPaginas)> ObterCursosPorAno(int anoLetivo, long? cursoId = null, int? pagina = null, int? quantidadeRegistrosPagina = null);
         Task<CursoGoogle> ObterCursoPorId(long id);
         Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao);
         Task<IEnumerable<CursoGoogleDtoParaIntegracao>> ObterCursosPorIdsParaIntegracaoAsync(IEnumerable<long> ids);

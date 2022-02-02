@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
     public class RepositorioCurso : RepositorioGoogle, IRepositorioCurso
     {
         public RepositorioCurso(ConnectionStrings connectionStrings)
-            :base(connectionStrings)
+            : base(connectionStrings)
         {
         }
 
@@ -71,7 +71,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao,
                 turmaId,
                 componenteCurricularId,
-                cursoId                
+                cursoId
             };
 
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
@@ -184,8 +184,8 @@ namespace SME.GoogleClassroom.Dados
                                  c.data_inclusao AS DataInclusao,
                                  c.data_atualizacao AS DataAtualizacao,
                                  c.Email       
-                            from public.cursos c 
-                           where id = @id";
+                            from public.cursos c
+                            where c.id = @id";
 
             var parametros = new
             {
@@ -227,27 +227,64 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(query, parametros);
         }
 
-        public async Task<IEnumerable<CursoDto>> ObterCursosPorAno(int anoLetivo, long? cursoId = null)
+        public async Task<(IEnumerable<CursoDto> cursos, int? totalPaginas)> ObterCursosPorAno(int anoLetivo, long? cursoId = null, int? pagina = null, int? quantidadeRegistrosPagina = null)
         {
-            var query = @"select id as CursoId
-                            , nome
-                            , secao
-                            , turma_id as TurmaId
-                            , componente_curricular_id as ComponenteCurricularId
-                        from cursos c 
-                        where extract(year from c.data_inclusao) = @anoLetivo ";
+            var sqlQuery = new StringBuilder();
+            var paginacaoComQuantidade = !cursoId.HasValue && pagina.HasValue && pagina.Value.Equals(1);
+
+            if (paginacaoComQuantidade)
+            {
+                sqlQuery.AppendLine("drop table if exists tmp_cursos;");
+                sqlQuery.AppendLine("create temporary table tmp_cursos as");
+            }
+
+            sqlQuery.AppendLine("select distinct id as CursoId");
+            sqlQuery.AppendLine("    		   , nome");
+            sqlQuery.AppendLine("    		   , secao");
+            sqlQuery.AppendLine("    		   , turma_id as TurmaId");
+            sqlQuery.AppendLine("    		   , componente_curricular_id as ComponenteCurricularId");
+            sqlQuery.AppendLine("from cursos c");
+            sqlQuery.AppendLine($"where extract(year from c.data_inclusao) = @anoLetivo{(cursoId.HasValue || (pagina.HasValue && pagina.Value > 1) ? string.Empty : ";")}");
 
             if (cursoId.HasValue)
-                query += " and c.id = @cursoId";
+                sqlQuery.AppendLine("and c.id = @cursoId;");
 
-            using var conn = ObterConexao();
-            return await conn.QueryAsync<CursoDto>(query, new { anoLetivo, cursoId });
+            if (paginacaoComQuantidade)
+            {
+                sqlQuery.AppendLine("select *");
+                sqlQuery.AppendLine("	from tmp_cursos");
+            }
+
+            if (!cursoId.HasValue && pagina.HasValue && quantidadeRegistrosPagina.HasValue)
+                sqlQuery.AppendLine("limit @quantidadeRegistrosPagina offset(@pagina - 1) * @quantidadeRegistrosPagina;");
+
+            if (paginacaoComQuantidade)
+            {
+                sqlQuery.AppendLine("select case when count(0) / @quantidadeRegistrosPagina = 0 then 1 else count(0) / @quantidadeRegistrosPagina end");
+                sqlQuery.AppendLine("	from tmp_cursos;");
+            }
+
+            using (var conn = ObterConexao())
+            {
+                var retorno = await conn.QueryMultipleAsync(sqlQuery.ToString(), new
+                {
+                    anoLetivo,
+                    cursoId,
+                    pagina,
+                    quantidadeRegistrosPagina
+                });
+
+                var lista = retorno.Read<CursoDto>();
+                var totalPaginas = paginacaoComQuantidade ? retorno.ReadFirst<int>() : (int?)null;
+
+                return (lista, totalPaginas);
+            }
         }
 
         public async Task<IEnumerable<long>> ObterIdsCursosPorTurma(long turmaId)
         {
             using var conn = ObterConexao();
-                return await conn.QueryAsync<long>(@"select id from cursos where turma_id = @turmaId ", new { turmaId });
+            return await conn.QueryAsync<long>(@"select id from cursos where turma_id = @turmaId ", new { turmaId });
         }
     }
 }

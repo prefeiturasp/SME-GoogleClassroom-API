@@ -5,13 +5,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Elastic.Apm;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Sentry;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -23,12 +24,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
     public class WorkerRabbitMQ : IHostedService
     {
         private IModel canalRabbit;
-        private readonly string sentryDSN;
         private IConnection conexaoRabbit;
-        private IServiceScopeFactory serviceScopeFactory;
+        private readonly IServiceScopeFactory serviceScopeFactory;
         private readonly IMetricReporter metricReporter;
+        private readonly IServicoTelemetria servicoTelemetria;
         private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
         private readonly ConfiguracaoRabbitOptions configuracaoRabbitOptions;
+        private readonly TelemetriaOptions telemetriaOptions;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// configuração da lista de tipos para a fila do rabbit instanciar, seguindo a ordem de propriedades:
@@ -36,12 +39,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// </summary>
         private readonly Dictionary<string, ComandoRabbit> comandos;
 
-        public WorkerRabbitMQ(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration, IMetricReporter metricReporter, ConsumoDeFilasOptions consumoDeFilasOptions, ConfiguracaoRabbitOptions configuracaoRabbitOptions)
+        public WorkerRabbitMQ(IConnection conexaoRabbit,
+                              IServiceScopeFactory serviceScopeFactory,
+                              IConfiguration configuration,
+                              IMetricReporter metricReporter,
+                              ServicoTelemetria servicoTelemetria, 
+                              ConsumoDeFilasOptions consumoDeFilasOptions,
+                              TelemetriaOptions telemetriaOptions,
+                              IMediator mediator)
         {
-            sentryDSN = configuration.GetValue<string>("Sentry:DSN");
-            
+            this.conexaoRabbit = conexaoRabbit ?? throw new ArgumentNullException(nameof(conexaoRabbit));
             this.serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
+            this.telemetriaOptions = telemetriaOptions ?? throw new ArgumentNullException(nameof(telemetriaOptions));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.metricReporter = metricReporter;
+            this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
             this.consumoDeFilasOptions = consumoDeFilasOptions;
             this.configuracaoRabbitOptions = configuracaoRabbitOptions ?? throw new ArgumentNullException(nameof(configuracaoRabbitOptions));
            
@@ -139,70 +151,71 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSync, new ComandoRabbit("Executar importação de notas da atividade", typeof(IExecutarImportacaoDeNotasDaAtividadeUseCase)));
 
            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSyncErro, new ComandoRabbit("Gravar erros na importação das notas", typeof(IImportarNotasGsaProcessarErroUseCase)));
+
+            //Carga Inicial
+            comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
         {
             var mensagem = Encoding.UTF8.GetString(ea.Body.Span);
             var rota = ea.RoutingKey;
+            Console.WriteLine(string.Concat(rota, " - ", DateTime.Now.ToString("G")));
             if (comandos.ContainsKey(rota))
             {
-                using (SentrySdk.Init(sentryDSN))
+                var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
+                var comandoRabbit = comandos[rota];
+                var tempoExecucao = Stopwatch.StartNew();
+                try
                 {
-                    var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
-                    //SentrySdk.AddBreadcrumb($"Dados: {mensagemRabbit.Mensagem}");
-                    //Console.WriteLine($"Dados: {mensagemRabbit.Mensagem}");
-                    var comandoRabbit = comandos[rota];
-                    var tempoExecucao = Stopwatch.StartNew();
-                    try
-                    {
-                        using var scope = serviceScopeFactory.CreateScope();
-                        var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
+                    if (telemetriaOptions.Apm)
+                        Agent.Tracer.StartTransaction("TratarMensagem", "WorkerRabbitGCA");
 
-                        metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
-                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit });
+                    using var scope = serviceScopeFactory.CreateScope();
+                    var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
-                        canalRabbit.BasicAck(ea.DeliveryTag, false);
-                    }
-                    catch (NegocioException nex)
-                    {
-                        canalRabbit.BasicReject(ea.DeliveryTag, false);
-                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
-                        SentrySdk.AddBreadcrumb($"Erros: {nex.Message}");
-                        RegistrarSentry(ea, mensagemRabbit, nex);
-                        Console.Write($"Erros de Negocio: {nex.Message}");
-                    }
-                    catch (ValidacaoException vex)
-                    {
-                        canalRabbit.BasicReject(ea.DeliveryTag, false);
-                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
-                        SentrySdk.AddBreadcrumb($"Erros: {JsonConvert.SerializeObject(vex.Mensagens())}");
-                        RegistrarSentry(ea, mensagemRabbit, vex);
-                        Console.Write($"Erros de Validação: {vex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        canalRabbit.BasicReject(ea.DeliveryTag, false);
-                        metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
-                        SentrySdk.AddBreadcrumb($"Erros: {ex.Message}");
-                        RegistrarSentry(ea, mensagemRabbit, ex);
-                        Console.Write($"Erros: {ex.Message}");
-                    }
-                    finally
-                    {
-                        tempoExecucao.Stop();
-                        metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
-                    }
+                    metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
+                    await servicoTelemetria.RegistrarAsync(async () =>
+                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit }),
+                        "WorkerRabbitGCA",
+                        "TratarMensagem",
+                        rota);
+
+                    canalRabbit.BasicAck(ea.DeliveryTag, false);
+                }
+                catch (NegocioException nex)
+                {
+                    canalRabbit.BasicReject(ea.DeliveryTag, false);
+                    metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
+                    RegistrarErro(ea, mensagemRabbit, nex, LogNivel.Negocio);
+                }
+                catch (ValidacaoException vex)
+                {
+                    canalRabbit.BasicReject(ea.DeliveryTag, false);
+                    metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
+                    RegistrarErro(ea, mensagemRabbit, vex, LogNivel.Negocio);
+                }
+                catch (Exception ex)
+                {
+                    canalRabbit.BasicReject(ea.DeliveryTag, false);
+                    metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
+                    RegistrarErro(ea, mensagemRabbit, ex, LogNivel.Critico);
+                }
+                finally
+                {
+                    tempoExecucao.Stop();
+                    metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                 }
             }
             else
                 canalRabbit.BasicReject(ea.DeliveryTag, false);
         }
 
-        private void RegistrarSentry(BasicDeliverEventArgs ea, MensagemRabbit mensagemRabbit, Exception ex)
+        private async void RegistrarErro(BasicDeliverEventArgs ea, MensagemRabbit mensagemRabbit, Exception ex, LogNivel nivel)
         {
-            SentrySdk.CaptureMessage($"ERRO - {ea.RoutingKey} - {mensagemRabbit?.Mensagem}", SentryLevel.Error);
-            SentrySdk.CaptureException(ex);
+            var mensagem = $"ERRO - {ea.RoutingKey} - {ex.Message}";
+
+            await mediator.Send(new SalvarLogViaRabbitCommand(mensagem, nivel, LogContexto.WorkerRabbit, $"{mensagemRabbit?.Mensagem}", rastreamento: ex.StackTrace));
         }
 
         private MethodInfo ObterMetodo(Type objType, string method)
@@ -309,8 +322,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
                 catch (Exception ex)
                 {
-                    SentrySdk.AddBreadcrumb($"Erro ao tratar mensagem {ea.DeliveryTag}", "erro", null, null, BreadcrumbLevel.Error);
-                    SentrySdk.CaptureException(ex);
+                    await RegistrarErro($"Erro ao tratar mensagem - {ea.RoutingKey} - {ex.Message}", ex);
                     canalRabbit.BasicReject(ea.DeliveryTag, false);
                 }
             };
@@ -319,6 +331,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             return Task.CompletedTask;
         }
+
+        private Task RegistrarErro(string erro, Exception ex)
+            => mediator.Send(new SalvarLogViaRabbitCommand(erro, LogNivel.Critico, LogContexto.WorkerRabbit, rastreamento: ex.StackTrace));
 
         private void ConfigurarConsumoDeFilasSync(EventingBasicConsumer consumer)
         {
@@ -443,6 +458,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSyncErro, false, consumer);
+            }
+            
+            if (consumoDeFilasOptions.Gsa.CargaInicial)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCargaInicial, false, consumer);
             }
         }
     }

@@ -26,13 +26,15 @@ namespace SME.GoogleClassroom.Aplicacao
 
             foreach (var avisoGsa in avisosGsa)
             {
-                var usuario = await ObterUsuario(avisoGsa.UsuarioClassroomId);
                 try
                 {
-                    await GravarAvisoGsa(avisoGsa, usuario.Indice);
-                    if (!await EnviarParaSgp(avisoGsa, usuario))
-                        throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
-
+                    await GravarAvisoGsa(avisoGsa);
+                    if (!avisoGsa.CursoCriadoManualmente)
+                    {
+                        var usuario = await ObterUsuario(avisoGsa.UsuarioClassroomId);
+                        if (!await EnviarParaSgp(avisoGsa, usuario))
+                            throw new NegocioException("Erro ao publicar aviso do mural para sincronização no SGP");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -79,9 +81,9 @@ namespace SME.GoogleClassroom.Aplicacao
             return await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaMuralAvisosSync, avisoDto, usuario.Id.ToString(), usuario.Nome));
         }
 
-        private async Task GravarAvisoGsa(AvisoMuralGsaDto avisoGsa, long usuarioIndice)
+        private async Task GravarAvisoGsa(AvisoMuralGsaDto avisoGsa)
         {
-            await mediator.Send(new GravarAvisoGsaCommand(avisoGsa, usuarioIndice));
+            await mediator.Send(new GravarAvisoGsaCommand(avisoGsa));
         }
 
     }

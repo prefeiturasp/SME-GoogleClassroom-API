@@ -6,6 +6,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
+using System;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -20,6 +21,12 @@ namespace SME.GoogleClassroom.IoC
 
             RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
+            RegistrarServicos(services);
+        }
+
+        private static void RegistrarServicos(IServiceCollection services)
+        {
+            services.TryAddTransient<IServicoTelemetria, ServicoTelemetria>();
         }
 
         private static void RegistrarRepositorios(IServiceCollection services)
@@ -197,13 +204,16 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterFuncionariosQueSeraoInativadosUseCase, ObterFuncionariosQueSeraoInativadosUseCase>();
             services.TryAddScoped<IObterFuncionariosIndiretosQueSeraoInativadosUseCase, ObterFuncionariosIndiretosQueSeraoInativadosUseCase>();
             
-
+            //Carga inicial
+            services.TryAddScoped<ITrataSyncManualGoogleGeralUseCase, TrataSyncManualGoogleGeralUseCase>();
 
             // Arquivamento de cursos por ano e semestre
             services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
             services.TryAddScoped<IObterCursosParaArquivarPaginadoUseCase, ObterCursosParaArquivarPaginadoUseCase>();
 
             services.TryAddScoped<IObterNotasAtividadesAvaliativasUseCase, ObterNotasAtividadesAvaliativasUseCase>();
+            services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
+
 
 
 

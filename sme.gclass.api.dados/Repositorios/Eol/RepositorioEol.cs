@@ -1,4 +1,5 @@
-﻿using SME.GoogleClassroom.Infra;
+﻿using Npgsql;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -17,6 +18,13 @@ namespace SME.GoogleClassroom.Dados
         protected IDbConnection ObterConexao()
         {
             var conexao = new SqlConnection(ConnectionStrings.ConnectionStringEol);
+            conexao.Open();
+            return conexao;
+        }
+
+        protected IDbConnection ObterConexaoApiEOL()
+        {
+            var conexao = new NpgsqlConnection(ConnectionStrings.ConnectionStringApiEol);
             conexao.Open();
             return conexao;
         }

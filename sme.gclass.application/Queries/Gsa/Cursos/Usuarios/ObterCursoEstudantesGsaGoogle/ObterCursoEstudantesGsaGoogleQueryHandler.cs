@@ -20,8 +20,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly GsaSyncOptions gsaSyncOptions;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursoEstudantesGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions, IMetricReporter metricReporter)
-            :base(metricReporter)
+        public ObterCursoEstudantesGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, GsaSyncOptions gsaSyncOptions)
+            :base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.gsaSyncOptions = gsaSyncOptions;
@@ -43,7 +43,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return resultado;
         }
 
-        private async Task ObterCursoEstudantesGsaGoogleTotalDePaginasPorExecucaoAsync(ClassroomService servicoClassroom, PaginaConsultaCursoUsuariosGsaDto paginaConsulta, string cursoId, int contadorDePagina)
+        private async Task ObterCursoEstudantesGsaGoogleTotalDePaginasPorExecucaoAsync(ClassroomService servicoClassroom, PaginaConsultaCursoUsuariosGsaDto paginaConsulta, long cursoId, int contadorDePagina)
         {
             var resultadoPagina = await policy.ExecuteAsync(() => ObterCursoEstudantesGsaGoogleAsync(servicoClassroom, cursoId, paginaConsulta.TokenProximaPagina));
             if (!resultadoPagina.Students?.Any() ?? true) return;
@@ -64,9 +64,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 await ObterCursoEstudantesGsaGoogleTotalDePaginasPorExecucaoAsync(servicoClassroom, paginaConsulta, cursoId, contadorDePagina);
         }
 
-        private async Task<ListStudentsResponse> ObterCursoEstudantesGsaGoogleAsync(ClassroomService servicoClassroom, string cursoId, string tokenPagina)
+        private async Task<ListStudentsResponse> ObterCursoEstudantesGsaGoogleAsync(ClassroomService servicoClassroom, long cursoId, string tokenPagina)
         {
-            var requestList = servicoClassroom.Courses.Students.List(cursoId);
+            var requestList = servicoClassroom.Courses.Students.List(cursoId.ToString());
             requestList.PageToken = tokenPagina;
 
             RegistraRequisicaoGoogleClassroom();

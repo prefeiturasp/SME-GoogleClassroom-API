@@ -4,5 +4,6 @@
     {
         public static string GoogleSync => "googleclass.exchange";
         public static string Sgp => "sme.sgp.workers";
+        public static string Logs => "EnterpriseApplicationLog";
     }
 }

@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -22,27 +23,48 @@ namespace SME.GoogleClassroom.Aplicacao
             var filtro = mensage.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
 
             var anoAtual = DateTime.Now.Year;
-            var cursos = await mediator.Send(new ObterCursosPorAnoQuery(anoAtual, filtro.CursoId));
-            var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
+
+            var ultimaExecucao = await mediator
+                .Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtividadesCarregar));
 
             if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
                 return true;
 
-            foreach (var curso in cursos)
+            filtro.Pagina = filtro.Pagina ?? 1;
+
+            int pagina = filtro.Pagina.HasValue ? filtro.Pagina.Value : 0;
+
+            var retorno = await mediator
+                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, pagina, 100));
+
+            var totalPaginas = filtro.TotalPaginas;
+
+            foreach(var curso in retorno)
+                await PublicarMensagemTratar(ultimaExecucao, curso);
+
+            if (!filtro.CursoId.HasValue)
             {
-                try
-                {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(curso, ultimaExecucao)));
-                }
-                catch (Exception ex)
-                {
-                    SentrySdk.CaptureException(ex);
-                    continue;
-                }
+                if (filtro.Pagina > totalPaginas)
+                    await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
+                else
+                    await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
             }
 
-            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
             return true;
+        }
+
+        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, CursoGsaId cursosGsa)
+        {
+            await mediator
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(cursosGsa, ultimaExecucao)));
+        }
+
+        private async Task PublicarMensagemProximaPagina(int proximaPagina, int totalPaginas)
+        {
+            var filtro = new FiltroCargaAtividadesCursoDto(pagina: proximaPagina, totalPaginas: totalPaginas);
+
+            await mediator
+                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtro));
         }
     }
 }

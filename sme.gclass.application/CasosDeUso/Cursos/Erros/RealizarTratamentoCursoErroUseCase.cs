@@ -19,12 +19,15 @@ namespace SME.GoogleClassroom.Aplicacao
         
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var cursoParaIncluir = JsonConvert.DeserializeObject<CursoErro>(mensagemRabbit.Mensagem.ToString());
+            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCursoErroDto>();
+            var cursoParaIncluir = filtro.CursoErro;
+            var filtroCargaInicial = filtro.FiltroCargaInicial;
             if (cursoParaIncluir is null) return true;
 
             try
             {
-                var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+                var parametrosCargaInicialDto = filtroCargaInicial != null ? new ParametrosCargaInicialDto(filtroCargaInicial.TiposUes, filtroCargaInicial.Ues, filtroCargaInicial.Turmas, filtroCargaInicial.AnoLetivo)
+                    : await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
                 var cursoEol = await mediator.Send(new ObterCursoIncluirGooglePorIdQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, DateTime.Now.Year, parametrosCargaInicialDto));
                 if (cursoEol is null)
                 {

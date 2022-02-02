@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
-        public ObterNotasGooglePorAtividadeQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IMetricReporter metricReporter) : base(metricReporter)
+        public ObterNotasGooglePorAtividadeQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry) : base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);

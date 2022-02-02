@@ -25,16 +25,22 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var filtro = mensagem.ObterObjetoMensagem<FiltroTratarAtividadesCursoDto>();
 
-            var paginaAtividades = await mediator.Send(new ObterAtividadesDoCursoGoogleQuery(filtro.Curso, filtro.TokenProximaPagina));
-
-            if (paginaAtividades.Atividades.Any())
-                await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, filtro.Curso.CursoId, filtro.UltimaExecucao));
-
-            filtro.TokenProximaPagina = paginaAtividades.TokenProximaPagina;
-            if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
-                await PublicaProximaPaginaAsync(filtro);
+            await EnviarParaTratamento(filtro, filtro.Curso);
 
             return true;
+        }
+
+        private async Task EnviarParaTratamento(FiltroTratarAtividadesCursoDto filtro, CursoGsaId curso)
+        {
+            var paginaAtividades = await mediator.Send(new ObterAtividadesDoCursoGoogleQuery(curso, filtro.TokenProximaPagina));
+
+            if (paginaAtividades.Atividades.Any())
+                await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, Convert.ToInt64(curso.CursoId), filtro.UltimaExecucao));
+
+            filtro.TokenProximaPagina = paginaAtividades.TokenProximaPagina;
+
+            if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
+                await PublicaProximaPaginaAsync(filtro);
         }
 
         private async Task PublicaProximaPaginaAsync(FiltroTratarAtividadesCursoDto filtro)
@@ -43,12 +49,17 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var syncAtividades = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, filtro));
                 if (!syncAtividades)
-                    SentrySdk.CaptureMessage("Não foi possível sincronizar os atividades avaliativas GSA.");
+                    throw new Exception("Não foi possível sincronizar os atividades avaliativas GSA.");
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await LogarErro(ex);
             }
+        }
+
+        private Task LogarErro(Exception ex)
+        {
+            return mediator.Send(new SalvarLogViaRabbitCommand($"Erro ao publicar consulta de proxima pagina to tratamento de Atividades", LogNivel.Critico, LogContexto.Atividades, ex.Message, rastreamento: ex.StackTrace));
         }
     }
 }

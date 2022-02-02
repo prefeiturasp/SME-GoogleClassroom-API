@@ -755,5 +755,23 @@ namespace SME.GoogleClassroom.Dados
                 throw ex;
             }
         }
+
+        public async Task<UsuarioGoogleDto> ObterUsuarioPorEmail(string email)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where u.email = @email";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { email });
+        }
     }
 }

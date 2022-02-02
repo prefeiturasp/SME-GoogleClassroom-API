@@ -22,8 +22,8 @@ namespace SME.GoogleClassroom.Dados
         {
             var queryCompleta = new StringBuilder();
 
-            queryCompleta.AppendLine(MontaQueryObterAvisosPorData(false, paginacao, cursoId));
-            queryCompleta.AppendLine(MontaQueryObterAvisosPorData(true, paginacao, cursoId));
+            queryCompleta.AppendLine(MontaQueryObterAtividadesPorData(false, paginacao, cursoId));
+            queryCompleta.AppendLine(MontaQueryObterAtividadesPorData(true, paginacao, cursoId));
 
             var retorno = new PaginacaoResultadoDto<AtividadeGsa>();
 
@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        private string MontaQueryObterAvisosPorData(bool ehParaPaginacao, Paginacao paginacao, long? cursoId)
+        private string MontaQueryObterAtividadesPorData(bool ehParaPaginacao, Paginacao paginacao, long? cursoId)
         {
             var queryCompleta = new StringBuilder("SELECT ");
 
@@ -56,8 +56,8 @@ namespace SME.GoogleClassroom.Dados
                 queryCompleta.AppendLine(@" A.id AS Id, 
                                             A.titulo AS Titulo, 
                                             A.descricao AS Descricao,  
-                                            A.usuario_id AS UsuarioId,
-                                            A.curso_id AS CursoId,
+                                            A.usuario_gsa_id AS UsuarioGsaId,
+                                            A.curso_gsa_id AS CursoGsaId,
                                             A.data_inclusao AS DataInclusao, 
                                             A.data_alteracao AS DataAlteracao,
                                             A.data_entrega as DataEntrega,
@@ -65,7 +65,6 @@ namespace SME.GoogleClassroom.Dados
             }
 
             queryCompleta.AppendLine("FROM atividades A ");
-            queryCompleta.AppendLine("INNER JOIN CURSOS U ON U.Id = A.CURSO_ID ");
             queryCompleta.AppendLine("WHERE A.DATA_INCLUSAO = @dataReferencia ");
 
 
@@ -82,8 +81,8 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> AlterarAtividade(AtividadeGsa atividadeGsa)
         {
             const string updateQuery = @"update public.atividades
-                                            set curso_id = @cursoId
-                                              , usuario_id = @usuarioId
+                                            set curso_gsa_id = @cursoId
+                                              , usuario_gsa_id = @usuarioId
                                               , titulo = @titulo
                                               , descricao = @descricao
                                               , data_inclusao = @dataInclusao
@@ -93,8 +92,8 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 id = atividadeGsa.Id,
-                usuarioId = atividadeGsa.UsuarioId,
-                cursoId = atividadeGsa.CursoId,
+                usuarioId = atividadeGsa.UsuarioGsaId,
+                cursoId = atividadeGsa.CursoGsaId,
                 titulo = atividadeGsa.Titulo,
                 descricao = atividadeGsa.Descricao,
                 dataInclusao = atividadeGsa.DataInclusao,
@@ -108,7 +107,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<long> InserirAtividade(AtividadeGsa avisoGsa)
         {
             const string insertQuery = @"insert into public.atividades
-                                        (id, titulo, descricao, usuario_id, curso_id, data_inclusao, data_alteracao, data_entrega, nota_maxima)
+                                        (id, titulo, descricao, usuario_gsa_id, curso_gsa_id, data_inclusao, data_alteracao, data_entrega, nota_maxima)
                                         values
                                         (@id, @titulo, @descricao, @usuarioId, @cursoId, @dataInclusao, @dataAlteracao, @dataEntrega, @notaMaxima)";
 
@@ -117,8 +116,8 @@ namespace SME.GoogleClassroom.Dados
                 id = avisoGsa.Id,
                 titulo = avisoGsa.Titulo,
                 descricao = avisoGsa.Descricao,
-                usuarioId = avisoGsa.UsuarioId,
-                cursoId = avisoGsa.CursoId,
+                usuarioId = avisoGsa.UsuarioGsaId,
+                cursoId = avisoGsa.CursoGsaId,
                 dataInclusao = avisoGsa.DataInclusao,
                 dataAlteracao = avisoGsa.DataAlteracao,
                 dataEntrega = avisoGsa.DataEntrega,
@@ -139,7 +138,7 @@ namespace SME.GoogleClassroom.Dados
         {
             const string query = @"select distinct(c.componente_curricular_id) as componente_curricular_id
                                      from atividades a 
-                                    inner join cursos c on a.curso_id = c.id
+                                    inner join cursos c on a.curso_gsa_id = c.id
                                     where EXTRACT(YEAR FROM a.data_inclusao) = @anoLetivo
                                     order by c.componente_curricular_id ";
 
@@ -148,17 +147,32 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryAsync<long>(query, new { anoLetivo });
         }
 
-        public async Task<(long totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
+        public async Task<(int? totalPaginas, IEnumerable<DadosAvaliacaoDto>)> ObterAtividadesPorPeriodo(DateTime dataInicio,
             DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
         {
-            var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
-            var parametros = new { dataInicio, dataFim, cursoId, pagina, quantidadeRegistrosPagina };
-            using var conn = ObterConexao();
+            var totalPaginas = (int?)null;
 
-            var totalRegistros = (long)(await conn.ExecuteScalarAsync(query, parametros));
-            var totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
+            using (var conn = ObterConexao())
+            {
+                var parametros = new
+                {
+                    dataInicio,
+                    dataFim,
+                    cursoId,
+                    pagina = cursoId.HasValue ? (int?)null : pagina,
+                    quantidadeRegistrosPagina = cursoId.HasValue ? (int?)null : quantidadeRegistrosPagina
+                };
 
-            return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+                if (pagina == 1 && !cursoId.HasValue)
+                {
+                    var query = await ObterQueryAtividadePorPeriodo(cursoId, true);
+
+                    var totalRegistros = (long)(await conn.ExecuteScalarAsync(query, parametros));
+                    totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
+                }
+
+                return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+            }
         }
 
         private async Task<string> ObterQueryAtividadePorPeriodo(long? cursoId, bool contagem = false)
@@ -167,10 +181,10 @@ namespace SME.GoogleClassroom.Dados
                 @" a.id AS Id, 
                    a.titulo AS Titulo, 
                    a.descricao AS Descricao,  
-                   a.usuario_id AS UsuarioId,
+                   a.usuario_gsa_id AS UsuarioId,
                    c.turma_id AS TurmaId,
                    c.componente_curricular_id as ComponenteCurricularId,
-                   a.curso_id AS CursoId,
+                   a.curso_gsa_id AS CursoId,
                    a.data_inclusao AS DataInclusao, 
                    a.data_alteracao AS DataAlteracao,
                    a.data_entrega as DataEntrega,
@@ -180,8 +194,8 @@ namespace SME.GoogleClassroom.Dados
 
             sqlQuery.AppendLine($"select {colunas}");
             sqlQuery.AppendLine("    from atividades a");
-            sqlQuery.AppendLine("       inner join cursos c");
-            sqlQuery.AppendLine("          on a.curso_id = c.id");
+            sqlQuery.AppendLine("    left join cursos c");
+            sqlQuery.AppendLine("      on a.curso_gsa_id = c.id");
             sqlQuery.AppendLine("where (a.data_inclusao between @dataInicio and @dataFim or a.data_entrega = CURRENT_DATE)");
 
             if (cursoId.HasValue)
@@ -248,8 +262,8 @@ namespace SME.GoogleClassroom.Dados
                     writer.Write(atividade.Id, NpgsqlDbType.Bigint);
                     writer.Write(atividade.Titulo);
                     writer.Write(atividade.Descricao);
-                    writer.Write(atividade.UsuarioId, NpgsqlDbType.Bigint);
-                    writer.Write(atividade.CursoId, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.UsuarioGsaId, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.CursoGsaId, NpgsqlDbType.Bigint);
                     writer.Write(atividade.DataInclusao, NpgsqlDbType.Timestamp);
                     writer.Write(atividade.DataAlteracao, NpgsqlDbType.Timestamp);
                     if (atividade.DataEntrega.HasValue)

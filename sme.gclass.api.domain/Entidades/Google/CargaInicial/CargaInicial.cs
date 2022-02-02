@@ -7,12 +7,10 @@ namespace SME.GoogleClassroom.Dominio
         public long Id { get; set; }
         public int Ano { get; set; }
         public string TiposUe { get; set; }
-        public string TiposUeCursos { get; set; }
         public string Ues { get; set; }
         public string Turmas { get; set; }
         public DateTime CriadoEm { get; set; }
-
-        public bool PossuiTiposUeCursos() => !string.IsNullOrEmpty(TiposUeCursos?.Trim());
+        
         public bool PossuiTiposUe() => !string.IsNullOrEmpty(TiposUe?.Trim());
         public bool PossuiUes() => !string.IsNullOrEmpty(Ues?.Trim());
         public bool PossuiTurmas() => !string.IsNullOrEmpty(Turmas?.Trim());

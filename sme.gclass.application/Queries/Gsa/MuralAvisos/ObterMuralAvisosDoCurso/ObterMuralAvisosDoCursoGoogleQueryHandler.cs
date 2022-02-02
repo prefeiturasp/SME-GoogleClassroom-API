@@ -18,8 +18,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public ObterMuralAvisosDoCursoGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IMetricReporter metricReporter)
-            : base(metricReporter)
+        public ObterMuralAvisosDoCursoGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+            : base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);
@@ -36,14 +36,13 @@ namespace SME.GoogleClassroom.Aplicacao
             var retorno = new PaginaConsultaMuralAvisosGsaDto();
             var curso = request.Curso;
 
-            var avisosGsa = await ObterAvisosDaPagina(servicoClassroom, curso.CursoId, request.TokenProximaPagina);
+            var avisosGsa = await ObterAvisosDaPagina(servicoClassroom, Convert.ToInt64(curso.CursoId), request.TokenProximaPagina);
             if (avisosGsa == null || avisosGsa.Announcements == null)
                 return retorno;
 
             foreach (var announcement in avisosGsa.Announcements)
             {
-                if (curso.Responsaveis.Any(a => a == announcement.CreatorUserId))
-                    retorno.Avisos.Add(new AvisoMuralGsaDto(announcement.Id, announcement.CourseId, announcement.CreatorUserId, announcement.Text, announcement.CreationTime, announcement.UpdateTime));
+                retorno.Avisos.Add(new AvisoMuralGsaDto(announcement.Id, announcement.CourseId, announcement.CreatorUserId, announcement.Text, announcement.CreationTime, announcement.UpdateTime, curso.CriadoManualmente));
             }
             retorno.TokenProximaPagina = avisosGsa.NextPageToken;
 
@@ -63,7 +62,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 throw;
-            }        
+            }
         }
     }
 }

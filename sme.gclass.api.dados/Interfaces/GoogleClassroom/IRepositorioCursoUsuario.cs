@@ -18,9 +18,10 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<AlunoCursosCadastradosDto>> ObterAlunosCursosAsync(Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId);
 
         Task<bool> ExisteFuncionarioCurso(long usuarioId, long cursoId);
-        
+
         Task<PaginacaoResultadoDto<FuncionarioCursosCadastradosDto>> ObterFuncionariosCursosAsync(Paginacao paginacao, long? rf, long? TurmaId, long? ComponenteCurricularId);
-        Task<IEnumerable<CursoUsuarioDto>> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId);
+        Task<(IEnumerable<CursoUsuarioDto>, int? totalPaginas)> ObterCursosComResponsaveisPorAno(int anoLetivo, long? cursoId, int? pagina = null, int? quantidadeRegistrosPagina = null);
+
         Task<int> RemoverAsync(long id);
 
         Task<CursoUsuario> ObterPorUsuarioIdCursoIdAsync(long usuarioId, long cursoId);

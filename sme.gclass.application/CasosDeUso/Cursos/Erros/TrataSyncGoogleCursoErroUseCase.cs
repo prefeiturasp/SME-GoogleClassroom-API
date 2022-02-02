@@ -23,14 +23,16 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
+                var filtroCargaInicialDto = UtilsDto.ObterFiltroParametrosIniciais(mensagemRabbit);
                 var cursosErroParaTratar = await mediator.Send(new ObterCursosComErroQuery());
                 if (cursosErroParaTratar != null && cursosErroParaTratar.Any())
                 {
                     foreach (var cursoErroParaTratar in cursosErroParaTratar)
                     {
                         try
-                        {  
-                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroTratar, RotasRabbit.FilaCursoErroTratar, cursoErroParaTratar));
+                        {
+                            var filtroCursoErro = new FiltroCursoErroDto(cursoErroParaTratar, filtroCargaInicialDto);
+                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroTratar, RotasRabbit.FilaCursoErroTratar, filtroCursoErro));
 
                             await ExcluirCursoErroAsync(cursoErroParaTratar);                            
                         }

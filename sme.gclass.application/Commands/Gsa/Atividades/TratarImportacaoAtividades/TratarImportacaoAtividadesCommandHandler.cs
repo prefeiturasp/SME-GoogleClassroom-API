@@ -91,7 +91,7 @@ namespace SME.GoogleClassroom.Aplicacao
           => new Dominio.AtividadeGsa(atividadeGsaDto.Id,
                                   atividadeGsaDto.Titulo,
                                   string.IsNullOrEmpty(atividadeGsaDto.Descricao?.Trim()) ? atividadeGsaDto.Titulo : atividadeGsaDto.Descricao ,
-                                  usuariosGoogle.FirstOrDefault(a => a.GoogleClassroomId == atividadeGsaDto.UsuarioClassroomId).Indice,
+                                  usuariosGoogle.FirstOrDefault(a => a.GoogleClassroomId == atividadeGsaDto.UsuarioClassroomId).Indice.ToString(),
                                   atividadeGsaDto.CursoId,
                                   atividadeGsaDto.CriadoEm,
                                   atividadeGsaDto.AlteradoEm,

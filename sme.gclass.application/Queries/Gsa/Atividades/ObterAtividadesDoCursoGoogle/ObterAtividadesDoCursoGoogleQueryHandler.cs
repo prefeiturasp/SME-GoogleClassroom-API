@@ -4,7 +4,6 @@ using MediatR;
 using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
@@ -17,8 +16,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public ObterAtividadesDoCursoGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IMetricReporter metricReporter)
-            : base(metricReporter)
+        public ObterAtividadesDoCursoGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+            : base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyCargaGsa);
@@ -35,14 +34,14 @@ namespace SME.GoogleClassroom.Aplicacao
             var retorno = new PaginaConsultaAtividadesGsaDto();
             var curso = request.Curso;
 
-            var atividadesGsa = await ObterAtividadesDaPagina(servicoClassroom, curso.CursoId, request.TokenProximaPagina);
+            var atividadesGsa = await ObterAtividadesDaPagina(servicoClassroom, Convert.ToInt64(curso.CursoId), request.TokenProximaPagina);
             if (atividadesGsa.CourseWork != null)
             {
                 foreach (var work in atividadesGsa.CourseWork)
                 {
                     var dueDate = work.DueDate;
                     var dataEntrega = dueDate != null ? new DateTime(dueDate.Year.Value, dueDate.Month.Value, dueDate.Day.Value) : DateTime.MinValue;
-                    retorno.Atividades.Add(new AtividadeGsaDto(work.Id, work.CourseId, work.Title, work.Description, work.CreatorUserId, work.CreationTime, work.UpdateTime, dataEntrega, work.MaxPoints));
+                    retorno.Atividades.Add(new AtividadeGsaDto(work.Id, work.CourseId, work.Title, work.Description, work.CreatorUserId, work.CreationTime, work.UpdateTime, curso.CriadoManualmente, dataEntrega, work.MaxPoints));
                 }
             }
             retorno.TokenProximaPagina = atividadesGsa.NextPageToken;
