@@ -59,6 +59,7 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional);
         Task<FuncionarioCurso> ObterFuncionarioECursoPorUsuarioRFECursoId(long usuarioRF, long cursoId);
         Task<IEnumerable<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretosPorCpfs(string[] Cpfs);
+        Task<IEnumerable<UsuarioGoogleDto>> ObteUsuariosPorClassroomIdsAsync(IEnumerable<string> classroomIds);
 
     }
 }

@@ -49,7 +49,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var syncAtividades = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtro));
+                var syncAtividades = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, filtro));
                 if (!syncAtividades)
                     SentrySdk.CaptureMessage("Não foi possível sincronizar os atividades avaliativas GSA.");
             }

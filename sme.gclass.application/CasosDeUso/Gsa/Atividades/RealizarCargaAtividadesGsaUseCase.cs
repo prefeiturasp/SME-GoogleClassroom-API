@@ -18,9 +18,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<bool> Executar(MensagemRabbit mensagem)
+        public async Task<bool> Executar(MensagemRabbit mensage)
         {
-            var filtro = mensagem.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
+            var filtro = mensage.ObterObjetoMensagem<FiltroCargaAtividadesCursoDto>();
 
             var anoAtual = DateTime.Now.Year;
 

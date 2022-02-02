@@ -29,6 +29,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private readonly IMetricReporter metricReporter;
         private readonly IServicoTelemetria servicoTelemetria;
         private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
+        private readonly ConfiguracaoRabbitOptions configuracaoRabbitOptions;
         private readonly TelemetriaOptions telemetriaOptions;
         private readonly IMediator mediator;
 
@@ -54,12 +55,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             this.metricReporter = metricReporter;
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
             this.consumoDeFilasOptions = consumoDeFilasOptions;
-            canalRabbit = conexaoRabbit.CreateModel();
-            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
-
-            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
-            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
-
+            this.configuracaoRabbitOptions = configuracaoRabbitOptions ?? throw new ArgumentNullException(nameof(configuracaoRabbitOptions));
+           
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
         }
@@ -245,31 +242,95 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             return Task.CompletedTask;
         }
 
-        public Task StartAsync(CancellationToken stoppingToken)
+        public async Task StartAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var consumer = new EventingBasicConsumer(canalRabbit);
-            consumer.Received += async (ch, ea) =>
-            {
-                try
-                {
-                    await TratarMensagem(ea);
-                }
-                catch (Exception)
-                {
-                    //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
-                }
-            };
-
-            ConfigurarConsumoDeFilasRabbit(consumer);
-            return Task.CompletedTask;
+            await InicializaConsumers(stoppingToken);         
         }
 
         private void ConfigurarConsumoDeFilasRabbit(EventingBasicConsumer consumer)
         {
             ConfigurarConsumoDeFilasSync(consumer);
             ConfigurarConsumoDeFilasGsa(consumer);
+        }
+
+        private void ConexaoRabbit_CallbackException(object sender, CallbackExceptionEventArgs e)
+        {
+            FecharConexoesRabbit();
+
+            _ = Task.FromResult(InicializaConsumers(new CancellationToken())).Result;
+        }
+
+        private void FecharConexoesRabbit()
+        {
+            if (canalRabbit.IsOpen)
+            {
+                canalRabbit.Close();
+                canalRabbit.Dispose();
+            }
+
+            if (conexaoRabbit.IsOpen)
+            {
+                conexaoRabbit.Close();
+                conexaoRabbit.Dispose();
+            }
+        }
+        private void ConexaoRabbit_ConnectionShutdown(object sender, ShutdownEventArgs e)
+        {
+            if (canalRabbit.IsOpen)
+                canalRabbit.Close();
+            if (conexaoRabbit.IsOpen)
+                conexaoRabbit.Close();
+            _ = Task.FromResult(InicializaConsumers(new CancellationToken())).Result;
+        }
+        private Task InicializaConsumers(CancellationToken stoppingToken)
+        {
+            stoppingToken.ThrowIfCancellationRequested();
+
+            var factory = new ConnectionFactory
+            {
+                HostName = configuracaoRabbitOptions.HostName,
+                UserName = configuracaoRabbitOptions.UserName,
+                Password = configuracaoRabbitOptions.Password,
+                VirtualHost = configuracaoRabbitOptions.Virtualhost,
+                RequestedHeartbeat = TimeSpan.FromSeconds(30),
+            };
+
+            conexaoRabbit = factory.CreateConnection();
+            conexaoRabbit.CallbackException += ConexaoRabbit_CallbackException;
+            conexaoRabbit.ConnectionShutdown += ConexaoRabbit_ConnectionShutdown;
+
+
+            canalRabbit = conexaoRabbit.CreateModel();
+
+            canalRabbit.BasicQos(0, 10, false);
+
+            canalRabbit = conexaoRabbit.CreateModel();
+            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
+
+            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
+            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
+
+            var consumer = new EventingBasicConsumer(canalRabbit);
+
+            consumer.Received += async (ch, ea) =>
+            {
+                try
+                {
+                    await TratarMensagem(ea);
+                }
+                catch (Exception ex)
+                {
+                    SentrySdk.AddBreadcrumb($"Erro ao tratar mensagem {ea.DeliveryTag}", "erro", null, null, BreadcrumbLevel.Error);
+                    SentrySdk.CaptureException(ex);
+                    canalRabbit.BasicReject(ea.DeliveryTag, false);
+                }
+            };
+
+            ConfigurarConsumoDeFilasRabbit(consumer);
+
+            return Task.CompletedTask;
         }
 
         private void ConfigurarConsumoDeFilasSync(EventingBasicConsumer consumer)

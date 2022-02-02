@@ -35,6 +35,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
 
         public IConfiguration Configuration { get; }
+        public ConfiguracaoRabbitOptions RabbitOptions { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -46,7 +47,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             RegistrarHttpClients(services, Configuration);
 
-            services.AddRabbit();
+            services.AddRabbit(RabbitOptions);
             services.AddPolicies();
             services.AddHostedService<WorkerRabbitMQ>();
 
@@ -64,12 +65,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 //c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
                 //TODO: Remover rota fixa
 
-                c.SwaggerDoc("v1", 
-                    new OpenApiInfo 
-                    { 
-                        Title = "SME.GoogleClassroom.Worker.Rabbit", 
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "SME.GoogleClassroom.Worker.Rabbit",
                         Description = "Serviço de integração EOL com o Google Classroom",
-                        Version = "v1" });
+                        Version = "v1"
+                    });
                 c.OperationFilter<AdicionaCabecalhoHttp>();
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -101,9 +103,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var gsaSyncOptions = new GsaSyncOptions();
             Configuration.GetSection(nameof(GsaSyncOptions)).Bind(gsaSyncOptions, c => c.BindNonPublicProperties = true);
 
+            RabbitOptions = new ConfiguracaoRabbitOptions();
+            Configuration.GetSection(ConfiguracaoRabbitOptions.Secao).Bind(RabbitOptions, c => c.BindNonPublicProperties = true);
+
             services.AddSingleton(variaveisGlobais);
             services.AddSingleton(consumoDeFilasOptions);
             services.AddSingleton(gsaSyncOptions);
+            services.AddSingleton(RabbitOptions);
         }
 
         private static void RegistrarHttpClients(IServiceCollection services, IConfiguration configuration)

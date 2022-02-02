@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 request.AtividadeDto.CriadoEm,
                 request.AtividadeDto.AlteradoEm,
                 request.AtividadeDto.DataEntrega,
-                request.AtividadeDto.NotaMaxima.Value) ;
+                request.AtividadeDto.NotaMaxima.Value);
 
             if (await RegistroExistente(request.AtividadeDto.Id))
                 await repositorioAtividade.AlterarAtividade(avisoGsa);
