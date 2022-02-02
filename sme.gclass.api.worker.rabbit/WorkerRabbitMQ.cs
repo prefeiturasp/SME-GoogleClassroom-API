@@ -23,8 +23,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 {
     public class WorkerRabbitMQ : IHostedService
     {
-        private readonly IModel canalRabbit;
-        private readonly IConnection conexaoRabbit;
+        private IModel canalRabbit;
+        private IConnection conexaoRabbit;
         private readonly IServiceScopeFactory serviceScopeFactory;
         private readonly IMetricReporter metricReporter;
         private readonly IServicoTelemetria servicoTelemetria;
@@ -322,8 +322,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
                 catch (Exception ex)
                 {
-                    SentrySdk.AddBreadcrumb($"Erro ao tratar mensagem {ea.DeliveryTag}", "erro", null, null, BreadcrumbLevel.Error);
-                    SentrySdk.CaptureException(ex);
+                    await RegistrarErro($"Erro ao tratar mensagem - {ea.RoutingKey} - {ex.Message}", ex);
                     canalRabbit.BasicReject(ea.DeliveryTag, false);
                 }
             };
@@ -332,6 +331,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             return Task.CompletedTask;
         }
+
+        private Task RegistrarErro(string erro, Exception ex)
+            => mediator.Send(new SalvarLogViaRabbitCommand(erro, LogNivel.Critico, LogContexto.WorkerRabbit, rastreamento: ex.StackTrace));
 
         private void ConfigurarConsumoDeFilasSync(EventingBasicConsumer consumer)
         {

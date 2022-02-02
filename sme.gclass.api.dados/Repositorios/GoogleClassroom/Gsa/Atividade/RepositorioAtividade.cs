@@ -262,8 +262,8 @@ namespace SME.GoogleClassroom.Dados
                     writer.Write(atividade.Id, NpgsqlDbType.Bigint);
                     writer.Write(atividade.Titulo);
                     writer.Write(atividade.Descricao);
-                    writer.Write(atividade.UsuarioId, NpgsqlDbType.Bigint);
-                    writer.Write(atividade.CursoId, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.UsuarioGsaId, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.CursoGsaId, NpgsqlDbType.Bigint);
                     writer.Write(atividade.DataInclusao, NpgsqlDbType.Timestamp);
                     writer.Write(atividade.DataAlteracao, NpgsqlDbType.Timestamp);
                     if (atividade.DataEntrega.HasValue)

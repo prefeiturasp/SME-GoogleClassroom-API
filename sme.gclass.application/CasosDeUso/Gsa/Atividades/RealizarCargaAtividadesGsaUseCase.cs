@@ -39,27 +39,21 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var totalPaginas = filtro.TotalPaginas;
 
-            try
-            {
-                await PublicarMensagemTratar(ultimaExecucao, retorno);
+            foreach(var curso in retorno)
+                await PublicarMensagemTratar(ultimaExecucao, curso);
 
-                if (!filtro.CursoId.HasValue)
-                {
-                    if (filtro.Pagina > totalPaginas)
-                        await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
-                    else
-                        await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
-                }
-            }
-            catch (Exception ex)
+            if (!filtro.CursoId.HasValue)
             {
-                SentrySdk.CaptureException(ex);
+                if (filtro.Pagina > totalPaginas)
+                    await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
+                else
+                    await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
             }
 
             return true;
         }
 
-        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, IEnumerable<CursoGsaId> cursosGsa)
+        private async Task PublicarMensagemTratar(DateTime ultimaExecucao, CursoGsaId cursosGsa)
         {
             await mediator
                 .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, new FiltroTratarAtividadesCursoDto(cursosGsa, ultimaExecucao)));

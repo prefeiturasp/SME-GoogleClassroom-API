@@ -25,8 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var filtro = mensagem.ObterObjetoMensagem<FiltroTratarAtividadesCursoDto>();
 
-            foreach (var curso in filtro.Cursos)
-                await EnviarParaTratamento(filtro, curso);
+            await EnviarParaTratamento(filtro, filtro.Curso);
 
             return true;
         }
@@ -39,7 +38,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new TratarImportacaoAtividadesCommand(paginaAtividades.Atividades, Convert.ToInt64(curso.CursoId), filtro.UltimaExecucao));
 
             filtro.TokenProximaPagina = paginaAtividades.TokenProximaPagina;
-            filtro.Cursos = new CursoGsaId[] { curso };
 
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
                 await PublicaProximaPaginaAsync(filtro);
@@ -51,12 +49,17 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var syncAtividades = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesTratar, filtro));
                 if (!syncAtividades)
-                    SentrySdk.CaptureMessage("Não foi possível sincronizar os atividades avaliativas GSA.");
+                    throw new Exception("Não foi possível sincronizar os atividades avaliativas GSA.");
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await LogarErro(ex);
             }
+        }
+
+        private Task LogarErro(Exception ex)
+        {
+            return mediator.Send(new SalvarLogViaRabbitCommand($"Erro ao publicar consulta de proxima pagina to tratamento de Atividades", LogNivel.Critico, LogContexto.Atividades, ex.Message, rastreamento: ex.StackTrace));
         }
     }
 }
