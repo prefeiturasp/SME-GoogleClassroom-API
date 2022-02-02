@@ -20,8 +20,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IConfiguration configuration;
         private readonly IAsyncPolicy policy;
 
-        public InserirFuncionarioIndiretoGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
-            : base(variaveisGlobaisOptions, metricReporter)
+        public InserirFuncionarioIndiretoGoogleCommandHandler(IMediator mediator, IConfiguration configuration, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
+            : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

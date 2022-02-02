@@ -18,8 +18,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public InserirAlunoCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions, IMetricReporter metricReporter)
-            : base(variaveisGlobaisOptions, metricReporter)
+        public InserirAlunoCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobaisOptions)
+            : base(variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);

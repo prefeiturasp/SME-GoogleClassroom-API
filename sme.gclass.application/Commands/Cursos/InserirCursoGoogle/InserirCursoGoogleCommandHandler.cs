@@ -3,10 +3,8 @@ using Google.Apis.Classroom.v1.Data;
 using MediatR;
 using Polly;
 using Polly.Registry;
-using Polly.Retry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
@@ -19,8 +17,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais, IMetricReporter metricReporter) 
-            : base(variaveisGlobais, metricReporter)
+        public InserirCursoGoogleCommandHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, VariaveisGlobaisOptions variaveisGlobais)
+            : base(variaveisGlobais)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);

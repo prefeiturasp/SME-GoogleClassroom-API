@@ -1,13 +1,13 @@
 ﻿using Dapper;
+using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
-using SME.GoogleClassroom.Dados.Help;
-using System.Linq;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -18,12 +18,20 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+		private async Task<IEnumerable<int>> ObterTiposItinerarioMedio()
+        {
+			using (var conn = ObterConexaoApiEOL())
+				return await conn.QueryAsync<int>("select Id from turma_tipo_itinerario");
+		}
+
+		public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
             dataReferencia = dataReferencia?.Add(new TimeSpan(0, 0, 0));
 
-            var paginar = paginacao.QuantidadeRegistros > 0;
-            var query = MontaQueryCursosParaInclusao(parametrosCargaInicialDto, dataReferencia, paginar, componenteCurricularId, turmaId);
+			var tiposItinerarioMedio = await ObterTiposItinerarioMedio();
+
+			var paginar = paginacao.QuantidadeRegistros > 0;
+            var query = MontaQueryCursosParaInclusao(parametrosCargaInicialDto, dataReferencia, paginar, componenteCurricularId, turmaId, tiposItinerarioMedio);
 
             using var conn = ObterConexao();
 
@@ -55,7 +63,8 @@ namespace SME.GoogleClassroom.Dados
         public async Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             var paginar = false;
-            var query = MontaQueryCursosParaInclusao(parametrosCargaInicialDto, null, paginar, componenteCurricularId, turmaId);
+			var tiposItinerarioMedio = await ObterTiposItinerarioMedio();
+			var query = MontaQueryCursosParaInclusao(parametrosCargaInicialDto, null, paginar, componenteCurricularId, turmaId, tiposItinerarioMedio);
 
             using var conn = ObterConexao();
 
@@ -1022,7 +1031,7 @@ namespace SME.GoogleClassroom.Dados
 			return queryBuilder.ToString();
         }
 		
-		private static string MontaQueryCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, bool ehParaPaginar, long? componenteCurricularId, long? turmaId)
+		private static string MontaQueryCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, bool ehParaPaginar, long? componenteCurricularId, long? turmaId, IEnumerable<int> tiposItinerarioMedio)
 		{
 			var query = new StringBuilder();
 			query.AppendLine(@$"-- 2) Busca os cursos regulares
@@ -1046,8 +1055,8 @@ namespace SME.GoogleClassroom.Dados
 									THEN
 									--fundamental
 									'EF'
-										WHEN etapa_ensino.cd_etapa_ensino IN
-											( 6, 7, 8, 9, 17, 14 ) THEN
+										WHEN te.cd_tipo_turma in ({string.Join(',', tiposItinerarioMedio)})
+											or etapa_ensino.cd_etapa_ensino IN ( 6, 7, 8, 9, 17, 14 ) THEN
 									--médio
 									'EM'
 									WHEN etapa_ensino.cd_etapa_ensino IN ( 1 )
@@ -1087,10 +1096,11 @@ namespace SME.GoogleClassroom.Dados
 								ON serie_turma_escola.cd_turma_escola = te.cd_turma_escola
 							INNER JOIN
 								serie_turma_grade (NOLOCK)
-								ON serie_turma_grade.cd_turma_escola = serie_turma_escola.cd_turma_escola AND serie_turma_grade.dt_fim IS NULL
+								ON serie_turma_grade.cd_turma_escola = serie_turma_escola.cd_turma_escola 
+								AND serie_turma_grade.dt_fim IS NULL
 							INNER JOIN
 								escola_grade (NOLOCK)
-								ON serie_turma_grade.cd_escola_grade = escola_grade.cd_escola_grade
+								ON serie_turma_grade.cd_escola_grade = escola_grade.cd_escola_grade 
 							INNER JOIN
 								grade (NOLOCK)
 								ON escola_grade.cd_grade = grade.cd_grade
@@ -1120,7 +1130,7 @@ namespace SME.GoogleClassroom.Dados
 							WHERE
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
-								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}								
+								{(dataReferencia != null ? "AND   te.dt_inicio_turma >= @dataReferencia" : "")}								
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
@@ -1185,7 +1195,12 @@ namespace SME.GoogleClassroom.Dados
 							SELECT
 								DISTINCT
 								pcc.dc_componente_curricular Nome,
-								CONCAT('P - ',  te.dc_turma_escola, ' - ',
+								CONCAT(
+									CASE
+										WHEN te.cd_tipo_turma in ({string.Join(',', tiposItinerarioMedio)}) 
+										THEN 'EM - ' --médio
+										ELSE 'P - '
+									END,  te.dc_turma_escola, ' - ',
 									te.cd_turma_escola, ' - ', ue.cd_unidade_educacao, ' - ', LTRIM(RTRIM(tpe.sg_tp_escola)), ' ', ue.nm_unidade_educacao) Secao,
 								pcc.cd_componente_curricular AS ComponenteCurricularId,
 								te.cd_turma_escola TurmaId,
@@ -1228,7 +1243,7 @@ namespace SME.GoogleClassroom.Dados
 							WHERE
 								      te.an_letivo = @anoLetivo
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
-								{(dataReferencia != null ? "AND   te.dt_inicio >= @dataReferencia" : "")}
+								{(dataReferencia != null ? "AND   te.dt_inicio_turma >= @dataReferencia" : "")}
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));

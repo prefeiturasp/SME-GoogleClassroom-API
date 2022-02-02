@@ -4,7 +4,6 @@ using Polly;
 using Polly.Registry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Interfaces.Metricas;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
@@ -17,8 +16,8 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IMediator mediator;
         private readonly IAsyncPolicy policy;
 
-        public ObterCursoGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry, IMetricReporter metricReporter)
-            : base(metricReporter)
+        public ObterCursoGsaGoogleQueryHandler(IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+            : base()
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.policy = registry.Get<IAsyncPolicy>(PoliticaPolly.PolicyGoogleSync);
