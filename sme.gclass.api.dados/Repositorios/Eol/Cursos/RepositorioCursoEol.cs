@@ -84,8 +84,7 @@ namespace SME.GoogleClassroom.Dados
         public async Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
 			var query = new StringBuilder(@"-- 1. Busca os cursos regulares do Professor
-								IF OBJECT_ID('tempdb..#tempProfessoresDeTurmasComponentesRegulares') IS NOT NULL
-									DROP TABLE #tempProfessoresDeTurmasComponentesRegulares
+								with tempProfessoresDeTurmasComponentesRegulares as (
 								SELECT
 									DISTINCT
 									serv.cd_registro_funcional AS Rf,
@@ -95,7 +94,6 @@ namespace SME.GoogleClassroom.Dados
 									ELSE
 										cc.cd_componente_curricular
 									END ComponenteCurricularId
-								INTO #tempProfessoresDeTurmasComponentesRegulares
 								FROM
 									turma_escola te (NOLOCK)
 								INNER JOIN
@@ -164,15 +162,13 @@ namespace SME.GoogleClassroom.Dados
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 
-			query.AppendLine(@";--2. Busca os cursos de programa do Professor
-								IF OBJECT_ID('tempdb..#tempProfessoresDeTurmasComponentesPrograma') IS NOT NULL
-									DROP TABLE #tempProfessoresDeTurmasComponentesPrograma
+			query.AppendLine(@"--2. Busca os cursos de programa do Professor
+								), tempProfessoresDeTurmasComponentesPrograma as (
 								SELECT
 									DISTINCT
 									serv.cd_registro_funcional AS Rf,
 									pcc.cd_componente_curricular AS ComponenteCurricularId,
 									te.cd_turma_escola TurmaId
-								INTO #tempProfessoresDeTurmasComponentesPrograma
 								FROM
 									turma_escola te (NOLOCK)
 								INNER JOIN
@@ -229,13 +225,13 @@ namespace SME.GoogleClassroom.Dados
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 
-			query.AppendLine(@";
+			query.AppendLine(@")
 								SELECT
 									*
 								FROM
-									(SELECT * FROM #tempProfessoresDeTurmasComponentesRegulares) AS Regulares
+									(SELECT * FROM tempProfessoresDeTurmasComponentesRegulares) AS Regulares
 								UNION
-									(SELECT * FROM #tempProfessoresDeTurmasComponentesPrograma);");
+									(SELECT * FROM tempProfessoresDeTurmasComponentesPrograma);");
 
             using var conn = ObterConexao();
             return await conn.QueryAsync<ProfessorCursoEol>(query.ToString()
@@ -349,16 +345,25 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
 
-            const string queryBuscafuncionarioPorCargoFixo = @"
+			var variaveis = @"DECLARE @cargoCP AS INT = 3379;
+				DECLARE @cargoAD AS INT = 3085;
+				DECLARE @cargoDiretor AS INT = 3360;
+				DECLARE @tipoFuncaoPAP AS INT = 30;
+				DECLARE @tipoFuncaoPAEE AS INT = 6;
+				DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
+				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
+				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
+				DECLARE @cdUe AS VARCHAR(20) = (SELECT cd_escola FROM turma_escola (NOLOCK) WHERE cd_turma_escola = @turmaId); ";
+
+
+			const string queryBuscafuncionarioPorCargoFixo = @"
 				-- 1. Busca os funcionários por cargo fixo
-				IF OBJECT_ID('tempdb..#tempServidorCargosBase') IS NOT NULL
-					DROP TABLE #tempServidorCargosBase;
+				with tempServidorCargosBase as(
 				SELECT
 					serv.cd_registro_funcional AS Rf,
 					esc.cd_escola AS CdUe,
 					cbc.cd_cargo AS CdCagoFuncao,
 					cbc.cd_cargo_base_servidor
-				INTO #tempServidorCargosBase
 				FROM
 					v_servidor_cotic serv (NOLOCK)
 				INNER JOIN
@@ -376,16 +381,14 @@ namespace SME.GoogleClassroom.Dados
 
             const string queryBuscafuncionarioPorCargoSobreposto = @"
 				-- 2. Busca os funcionários por cargo sobreposto fixo
-				IF OBJECT_ID('tempdb..#tempServidorCargosSobrepostos') IS NOT NULL
-					DROP TABLE #tempServidorCargosSobrepostos;
+				tempServidorCargosSobrepostos as (
 				SELECT
 					serv.cd_registro_funcional AS Rf,
 					css.cd_unidade_local_servico AS CdUe,
 					css.cd_cargo AS CdCagoFuncao,
 					cbc.cd_cargo_base_servidor
-				INTO #tempServidorCargosSobrepostos
 				FROM
-					#tempServidorCargosBase temp
+					tempServidorCargosBase temp
 				INNER JOIN
 					v_cargo_base_cotic cbc (NOLOCK)
 					ON temp.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
@@ -403,16 +406,14 @@ namespace SME.GoogleClassroom.Dados
 
             const string queryBuscafuncionarioPorFuncao = @"
 				-- 3. Busca os funcionários por função
-				IF OBJECT_ID('tempdb..#tempServidorFuncao') IS NOT NULL
-					DROP TABLE #tempServidorFuncao;
+				tempServidorFuncao as (
 				SELECT
 					serv.cd_registro_funcional AS Rf,
 					esc.cd_escola AS CdUe,
 					facs.cd_tipo_funcao AS CdCagoFuncao,
 					cbc.cd_cargo_base_servidor
-				INTO #tempServidorFuncao
 				FROM
-					#tempServidorCargosBase temp
+					tempServidorCargosBase temp
 				INNER JOIN
 					v_cargo_base_cotic cbc (NOLOCK)
 					ON temp.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
@@ -437,23 +438,22 @@ namespace SME.GoogleClassroom.Dados
             queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
             queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
             queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-            queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.Append("), ");
             
             queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
             queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
             queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-            queryBuscafuncionarioPorCargoFixoStringBuilder.Append(";");
+			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.Append("), ");
             
             queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
             queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
             queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-            queryBuscafuncionarioPorFuncaoStringBuilder.Append(";");
+            queryBuscafuncionarioPorFuncaoStringBuilder.Append("), ");
             
             var query = $@" {queryBuscafuncionarioPorCargoFixoStringBuilder} 
 						    {queryBuscafuncionarioPorCargoSobrepostoStringBuilder}
 						   {queryBuscafuncionarioPorFuncaoStringBuilder}
-				IF OBJECT_ID('tempdb..#tempServidorCargos') IS NOT NULL
-					DROP TABLE #tempServidorCargos;
+				tempServidorCargos as (
 				SELECT
 					base.Rf,
 					CASE
@@ -466,32 +466,23 @@ namespace SME.GoogleClassroom.Dados
 						WHEN NOT funcao.CdUe IS NULL THEN funcao.CdUe
 						ELSE base.CdUe
 					END AS CdUe
-				INTO #tempServidorCargos
 				FROM
-					#tempServidorCargosBase base
+					tempServidorCargosBase base
 				LEFT JOIN
-					#tempServidorCargosSobrepostos sobreposto
+					tempServidorCargosSobrepostos sobreposto
 					ON base.cd_cargo_base_servidor = sobreposto.cd_cargo_base_servidor
 				LEFT JOIN
-					#tempServidorFuncao funcao
-					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor;
+					tempServidorFuncao funcao
+					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
+				)
 
-				DECLARE @cargoCP AS INT = 3379;
-				DECLARE @cargoAD AS INT = 3085;
-				DECLARE @cargoDiretor AS INT = 3360;
-				DECLARE @tipoFuncaoPAP AS INT = 30;
-				DECLARE @tipoFuncaoPAEE AS INT = 6;
-				DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
-				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
-				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
-				DECLARE @cdUe AS VARCHAR(20) = (SELECT cd_escola FROM turma_escola (NOLOCK) WHERE cd_turma_escola = @turmaId);
 				SELECT
 					temp.Rf,
 					@turmaId AS TurmaId,
 					@componenteCurricularId AS ComponenteCurricularId,
 					temp.CdUe AS UeCodigo
 				FROM
-					#tempServidorCargos temp
+					tempServidorCargos temp
 				WHERE
 					temp.CdCagoFuncao IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
 					AND temp.CdUe = @cdUe;";
@@ -648,8 +639,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = new StringBuilder();
             query.AppendLine(@"-- 2) Busca os cursos regulares
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
-								DROP TABLE #tempTurmasComponentesRegulares
+							with tempTurmasComponentesRegulares as
 							SELECT
 								DISTINCT
 								CASE
@@ -689,7 +679,6 @@ namespace SME.GoogleClassroom.Dados
 								serie_turma_grade.cd_serie_grade,
 								ue.cd_unidade_educacao,
 								serie_turma_grade.dt_inicio AS DataInicioGrade
-							INTO #tempTurmasComponentesRegulares
 							FROM
 								turma_escola te (NOLOCK)
 							INNER JOIN
@@ -765,15 +754,13 @@ namespace SME.GoogleClassroom.Dados
             }
 
             query.AppendLine(@"--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL 
-								DROP TABLE #tempTurmasComponentesRegularesProfessores
+							), tempTurmasComponentesRegularesProfessores as (
 							SELECT
 								temp.TurmaId,
 								temp.ComponenteCurricularId,
 								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email
-							INTO #tempTurmasComponentesRegularesProfessores
 							FROM
-								#tempTurmasComponentesRegulares temp
+								tempTurmasComponentesRegulares temp
 							INNER JOIN
 								atribuicao_aula atr (NOLOCK)
 								ON atr.cd_grade = temp.cd_grade AND atr.cd_serie_grade = temp.cd_serie_grade AND atr.cd_componente_curricular = temp.ComponenteCurricularId
@@ -786,25 +773,22 @@ namespace SME.GoogleClassroom.Dados
 							WHERE	
 								atr.an_atribuicao = @anoLetivo
 								AND atr.dt_cancelamento IS NULL
-								AND atr.dt_disponibilizacao_aulas IS NULL;
+								AND atr.dt_disponibilizacao_aulas IS NULL
 
 							--- 2.2) Define a tabela final de cursos regulares com responsáveis
-							IF OBJECT_ID('tempdb..#tempCursosRegulares') IS NOT NULL 
-								DROP TABLE #tempCursosRegulares
+							), tempCursosRegulares as (
 							SELECT
 								t1.*,
 								t2.Email
-							INTO #tempCursosRegulares
 							FROM
-								#tempTurmasComponentesRegulares t1
+								tempTurmasComponentesRegulares t1
 							OUTER APPLY
 								(
 									SELECT TOP 1 Email FROM #tempTurmasComponentesRegularesProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
-								) AS t2;
+								) AS t2
 
 							-- 3) Busca os cursos de Programa
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL 
-								DROP TABLE #tempTurmasComponentesPrograma
+							), tempTurmasComponentesPrograma as (
 							SELECT
 								DISTINCT
 								pcc.dc_componente_curricular Nome,
@@ -816,7 +800,6 @@ namespace SME.GoogleClassroom.Dados
 								tegp.cd_turma_escola_grade_programa,
 								ue.cd_unidade_educacao,
 								tegp.dt_inicio AS DataInicioGrade
-							INTO #tempTurmasComponentesPrograma
 							FROM
 								turma_escola te (NOLOCK)
 							INNER JOIN
@@ -873,15 +856,13 @@ namespace SME.GoogleClassroom.Dados
             }
 
             query.AppendLine(@"--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramaProfessores') IS NOT NULL 
-								DROP TABLE #tempTurmasComponentesProgramaProfessores
+							), tempTurmasComponentesProgramaProfessores as (
 							SELECT
 								temp.TurmaId,
 								temp.ComponenteCurricularId,
 								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email
-							INTO #tempTurmasComponentesProgramaProfessores
 							FROM
-								#tempTurmasComponentesPrograma temp
+								tempTurmasComponentesPrograma temp
 							LEFT JOIN
 								atribuicao_aula atr (NOLOCK)
 								ON atr.cd_grade = temp.cd_grade AND atr.cd_turma_escola_grade_programa = temp.cd_turma_escola_grade_programa AND atr.cd_componente_curricular = temp.ComponenteCurricularId
@@ -894,41 +875,34 @@ namespace SME.GoogleClassroom.Dados
 							WHERE	
 								atr.an_atribuicao = @anoLetivo
 								AND atr.dt_cancelamento IS NULL
-								AND atr.dt_disponibilizacao_aulas IS NULL;
+								AND atr.dt_disponibilizacao_aulas IS NULL
 
 							--- 3.2) Define a tabela final de cursos de programa com responsáveis
-							IF OBJECT_ID('tempdb..#tempCursosPrograma') IS NOT NULL 
-								DROP TABLE #tempCursosPrograma
+							), tempCursosPrograma as (
 							SELECT
 								t1.*,
 								t2.Email
-							INTO #tempCursosPrograma
 							FROM
-								#tempTurmasComponentesPrograma t1
+								tempTurmasComponentesPrograma t1
 							OUTER APPLY
 								(
 									SELECT TOP 1 Email FROM #tempTurmasComponentesProgramaProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
-								) AS t2;
+								) AS t2
 
 
 							-- 4) Junta cursos regulares e turmas de programa
-							IF OBJECT_ID('tempdb..#tempCursosDre') IS NOT NULL 
-								DROP TABLE #tempCursosDre
+							), tempCursosDre as (
 							SELECT
 								*
-							INTO #tempCursosDre
 							FROM
 								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosRegulares temp) AS Regulares
 							UNION
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosPrograma temp);
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosPrograma temp)
 
 							-- 4.1) Paginacao
-							IF OBJECT_ID('tempdb..#tempCursosDrePaginado') IS NOT NULL 
-								DROP TABLE #tempCursosDrePaginado
-							SELECT
-								*
-							INTO #tempCursosDrePaginado
-									from #tempCursosDre
+							), tempCursosDrePaginado as (
+							SELECT *
+							 from tempCursosDre
 							ORDER by 1 ");
 
             if (aplicarPaginacao)
@@ -938,18 +912,16 @@ namespace SME.GoogleClassroom.Dados
 
             query.AppendLine(
                 @"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
-							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicao') IS NOT NULL 
-								DROP TABLE #tempUEsSemAtribuicao
+							), tempUEsSemAtribuicao as (
 							SELECT
 								DISTINCT
 								temp.cd_unidade_educacao
-							INTO #tempUEsSemAtribuicao
 							FROM
-								#tempCursosDrePaginado temp
+								tempCursosDrePaginado temp
 							WHERE
-								Email IS NULL;
+								Email IS NULL )
 
-							IF EXISTS (SELECT TOP 1 1 FROM #tempUEsSemAtribuicao)
+							IF EXISTS (SELECT TOP 1 1 FROM tempUEsSemAtribuicao)
 							BEGIN
 								IF OBJECT_ID('tempdb..#ResponsaveisUe') IS NOT NULL 
 									DROP TABLE #ResponsaveisUe;
@@ -962,14 +934,14 @@ namespace SME.GoogleClassroom.Dados
 								INSERT INTO #responsaveisUe
 								SELECT DISTINCT temp.cd_unidade_educacao, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf) AS Email
 								FROM 
-									#tempUEsSemAtribuicao temp
+									tempUEsSemAtribuicao temp
 								CROSS APPLY 
 									[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub;
 
 								UPDATE t1
 									SET t1.Email = t2.Email
 								FROM
-									#tempCursosDrePaginado t1
+									tempCursosDrePaginado t1
 								INNER JOIN
 									#responsaveisUe t2
 									ON t1.cd_unidade_educacao = t2.CodigoUe
@@ -986,7 +958,7 @@ namespace SME.GoogleClassroom.Dados
 								temp.DataInicioGrade,
 								temp.Email
 							FROM
-								#tempCursosDrePaginado temp;
+								tempCursosDrePaginado temp;
 
 					-- Totalizacao
 						SELECT
@@ -1035,8 +1007,7 @@ namespace SME.GoogleClassroom.Dados
 		{
 			var query = new StringBuilder();
 			query.AppendLine(@$"-- 2) Busca os cursos regulares
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegulares') IS NOT NULL 
-								DROP TABLE #tempTurmasComponentesRegulares
+							with tempTurmasComponentesRegulares as (
 							SELECT
 								DISTINCT
 								CASE
@@ -1076,7 +1047,6 @@ namespace SME.GoogleClassroom.Dados
 								serie_turma_grade.cd_serie_grade,
 								ue.cd_unidade_educacao,
 								te.cd_tipo_turma TurmaTipo
-							INTO #tempTurmasComponentesRegulares
 							FROM
 								turma_escola te (NOLOCK)
 							INNER JOIN
@@ -1152,15 +1122,13 @@ namespace SME.GoogleClassroom.Dados
 			}
 
 			query.AppendLine(@$"--- 2.1) Busca as atribuições de aula para os professores de cada curso regular
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesRegularesProfessores') IS NOT NULL
-								DROP TABLE #tempTurmasComponentesRegularesProfessores
+							), tempTurmasComponentesRegularesProfessores as (
 							SELECT
 								temp.TurmaId,
 								temp.ComponenteCurricularId,
 								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email
-							INTO #tempTurmasComponentesRegularesProfessores
 							FROM
-								#tempTurmasComponentesRegulares temp
+								tempTurmasComponentesRegulares temp
 							INNER JOIN
 								atribuicao_aula atr (NOLOCK)
 								ON atr.cd_grade = temp.cd_grade AND atr.cd_serie_grade = temp.cd_serie_grade AND atr.cd_componente_curricular = temp.ComponenteCurricularId
@@ -1176,22 +1144,20 @@ namespace SME.GoogleClassroom.Dados
 								AND atr.dt_disponibilizacao_aulas IS NULL;
 
 							--- 2.2) Define a tabela final de cursos regulares com responsáveis
-							IF OBJECT_ID('tempdb..#tempCursosRegulares') IS NOT NULL
-								DROP TABLE #tempCursosRegulares
+							), tempCursosRegulares as (
 							SELECT
 								t1.*,
 								t2.Email
-							INTO #tempCursosRegulares
 							FROM
-								#tempTurmasComponentesRegulares t1
+								tempTurmasComponentesRegulares t1
 							OUTER APPLY
 								(
-									SELECT TOP 1 Email FROM #tempTurmasComponentesRegularesProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
+									SELECT TOP 1 Email FROM tempTurmasComponentesRegularesProfessores temp 
+									WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
 								) AS t2;
 
 							-- 3) Busca os cursos de Programa
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesPrograma') IS NOT NULL
-								DROP TABLE #tempTurmasComponentesPrograma
+							), tempTurmasComponentesPrograma as (
 							SELECT
 								DISTINCT
 								pcc.dc_componente_curricular Nome,
@@ -1208,7 +1174,6 @@ namespace SME.GoogleClassroom.Dados
 								tegp.cd_turma_escola_grade_programa,
 								ue.cd_unidade_educacao,
 								te.cd_tipo_turma TurmaTipo
-							INTO #tempTurmasComponentesPrograma
 							FROM
 								turma_escola te (NOLOCK)
 							INNER JOIN
@@ -1265,16 +1230,14 @@ namespace SME.GoogleClassroom.Dados
 			}
 
 			query.AppendLine(@$"--- 3.1) Busca as atribuições de aula para os professores de cada curso de programa
-							IF OBJECT_ID('tempdb..#tempTurmasComponentesProgramaProfessores') IS NOT NULL
-								DROP TABLE #tempTurmasComponentesProgramaProfessores
+							), tempTurmasComponentesProgramaProfessores as (
 							SELECT
 								temp.TurmaId,
 								temp.ComponenteCurricularId,
 								[dbo].[proc_gerar_email_funcionario](serv.nm_pessoa, serv.cd_registro_funcional) AS Email,
 								temp.TurmaTipo
-							INTO #tempTurmasComponentesProgramaProfessores
 							FROM
-								#tempTurmasComponentesPrograma temp
+								tempTurmasComponentesPrograma temp
 							LEFT JOIN
 								atribuicao_aula atr (NOLOCK)
 								ON atr.cd_grade = temp.cd_grade AND atr.cd_turma_escola_grade_programa = temp.cd_turma_escola_grade_programa AND atr.cd_componente_curricular = temp.ComponenteCurricularId
@@ -1287,40 +1250,36 @@ namespace SME.GoogleClassroom.Dados
 							WHERE
 							        atr.an_atribuicao = @anoLetivo
 								AND atr.dt_cancelamento IS NULL
-								AND atr.dt_disponibilizacao_aulas IS NULL;							
+								AND atr.dt_disponibilizacao_aulas IS NULL
 
 							-- - 3.2) Define a tabela final de cursos de programa com responsáveis
-							IF OBJECT_ID('tempdb..#tempCursosPrograma') IS NOT NULL
-								DROP TABLE #tempCursosPrograma
+							), tempCursosPrograma as (
 							SELECT
 								t1.*,
 								t2.Email
-							INTO #tempCursosPrograma
 							FROM
-								#tempTurmasComponentesPrograma t1
+								tempTurmasComponentesPrograma t1
 							OUTER APPLY
 								(
 									SELECT TOP 1 Email FROM #tempTurmasComponentesProgramaProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
 								) AS t2;
 
 							-- 4) Junta cursos regulares e turmas de programa
-							IF OBJECT_ID('tempdb..#tempCursosDre') IS NOT NULL
-								DROP TABLE #tempCursosDre
+							), tempCursosDre as (
 							SELECT
 								*
-							INTO #tempCursosDre
 							FROM
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo  FROM #tempCursosRegulares temp) AS Regulares
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo  
+								FROM tempCursosRegulares temp) AS Regulares
 							UNION
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo FROM #tempCursosPrograma temp);
+								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.Email, temp.TurmaTipo 
+								FROM tempCursosPrograma temp)
 
 								-- 4.1) Paginacao
-								IF OBJECT_ID('tempdb..#tempCursosDrePaginado') IS NOT NULL
-									DROP TABLE #tempCursosDrePaginado
+								), tempCursosDrePaginado as (
 								SELECT
 									*
-								INTO #tempCursosDrePaginado
-									from #tempCursosDre
+									from tempCursosDre
 							order by 1 ");
 
 			if (ehParaPaginar)
@@ -1330,18 +1289,16 @@ namespace SME.GoogleClassroom.Dados
 
 			query.AppendLine(
 				@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
-							IF OBJECT_ID('tempdb..#tempUEsSemAtribuicao') IS NOT NULL
-								DROP TABLE #tempUEsSemAtribuicao
+							), tempUEsSemAtribuicao as (
 							SELECT
 								DISTINCT
 								temp.cd_unidade_educacao
-							INTO #tempUEsSemAtribuicao
 							FROM
-								#tempCursosDrePaginado temp
+								tempCursosDrePaginado temp
 							WHERE
-								Email IS NULL;
+								Email IS NULL )
 
-							IF EXISTS (SELECT TOP 1 1 FROM #tempUEsSemAtribuicao)
+							IF EXISTS (SELECT TOP 1 1 FROM tempUEsSemAtribuicao)
 							BEGIN
 								IF OBJECT_ID('tempdb..#ResponsaveisUe') IS NOT NULL
 									DROP TABLE #ResponsaveisUe;
@@ -1354,14 +1311,14 @@ namespace SME.GoogleClassroom.Dados
 								INSERT INTO #responsaveisUe
 								SELECT DISTINCT temp.cd_unidade_educacao, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf) AS Email
 								FROM
-									#tempUEsSemAtribuicao temp
+									tempUEsSemAtribuicao temp
 								CROSS APPLY
 									[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub;
 
 								UPDATE t1
 									SET t1.Email = t2.Email
 								FROM
-									#tempCursosDrePaginado t1
+									tempCursosDrePaginado t1
 								INNER JOIN
 									#responsaveisUe t2
 									ON t1.cd_unidade_educacao = t2.CodigoUe
@@ -1382,7 +1339,7 @@ namespace SME.GoogleClassroom.Dados
 								temp.TurmaTipo
 						    INTO #tempResultadoFinalAgrupado
 							FROM
-								#tempCursosDrePaginado temp
+								tempCursosDrePaginado temp
 							group by Nome, Secao, TurmaId, cd_unidade_educacao, Email, TurmaTipo;
 			END;
 			         
