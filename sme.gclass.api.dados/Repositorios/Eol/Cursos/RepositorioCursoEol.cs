@@ -450,9 +450,10 @@ namespace SME.GoogleClassroom.Dados
             queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
             queryBuscafuncionarioPorFuncaoStringBuilder.Append("), ");
             
-            var query = $@" {queryBuscafuncionarioPorCargoFixoStringBuilder} 
+            var query = $@" {variaveis}
+							{queryBuscafuncionarioPorCargoFixoStringBuilder} 
 						    {queryBuscafuncionarioPorCargoSobrepostoStringBuilder}
-						   {queryBuscafuncionarioPorFuncaoStringBuilder}
+						    {queryBuscafuncionarioPorFuncaoStringBuilder}
 				tempServidorCargos as (
 				SELECT
 					base.Rf,
