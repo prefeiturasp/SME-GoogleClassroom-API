@@ -1,7 +1,5 @@
 ﻿using Google;
 using MediatR;
-using Newtonsoft.Json;
-using SME.GoogleClassroom.Aplicacao.Commands.Usuarios.ConsultarUsuarioGoogleClassroom;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -13,12 +11,10 @@ namespace SME.GoogleClassroom.Aplicacao
     public class IncluirAlunoUseCase : IIncluirAlunoUseCase
     {
         private readonly IMediator mediator;
-        private readonly bool _deveExecutarIntegracao;
 
         public IncluirAlunoUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
