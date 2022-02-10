@@ -18,7 +18,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(ArquivarTurmasExtintasCommand request, CancellationToken cancellationToken)
         {
-            var ano = DateTime.Today.Year;
+            var dataReferencia = request.DataReferencia ?? DateTime.Today;
+            var ano = dataReferencia.Year;
             var parametroSistema = await ObterParametroDeSistema(ano);
 
             var dataInicio = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ArquivarCursosTurmasExtintas));
