@@ -1,0 +1,1 @@
+UPDATE carga_inicial SET ano = 2022
