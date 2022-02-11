@@ -982,7 +982,7 @@ namespace SME.GoogleClassroom.Dados
 
 			queryBuilder.Append(@"from turma_escola te (NOLOCK)
 				 inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
-					  where st_turma_escola = 'E' 											
+					  where st_turma_escola in ('E', 'C')
 						and an_letivo = @anoLetivo 
 						and dt_fim between @dataInicio and @dataFim ");
 
