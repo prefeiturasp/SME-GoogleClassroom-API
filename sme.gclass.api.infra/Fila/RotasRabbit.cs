@@ -111,6 +111,11 @@
 
         #endregion 
 
+        #region Formação Cidade
+        public static string FilaGsaFormacaoCidadeTurmasTratar => "googleclass.gsa.formacao.cidade.turmas.tratar";        
+        public static string FilaGsaFormacaoCidadeTurmasErroTratar => "googleclass.gsa.formacao.cidade.turmas.erro.tratar";        
+        #endregion
+
         #region Usuários Remover
 
         public static string FilaGsaCursoUsuarioRemovidoTurmasCarregar      => "googleclass.gsa.curso.usuario.removido.turmas.carregar";

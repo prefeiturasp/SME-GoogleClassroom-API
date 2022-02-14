@@ -215,7 +215,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
 
 
-
+            services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
 
             RegistrarCasosDeUsoGsa(services);
         }
