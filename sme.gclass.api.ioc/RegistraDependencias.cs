@@ -72,7 +72,7 @@ namespace SME.GoogleClassroom.IoC
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
 
-            
+            services.TryAddScoped<IRepositorioDreEol, RepositorioDreEol>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -215,7 +215,22 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
 
 
+            #region Formação Cidade
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
+            
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaDreUseCase, SincronizacaoGsaFormacaoCidadeTurmaDreUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase>();
+
+            //services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase>();
+            //services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteComErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteComErroUseCase>();
+
+            //services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoUseCase>();
+            //services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaDreComErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoComErroUseCase>();
+
+            //services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase>();
+            //services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoDreComErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoComErroUseCase>();
+            #endregion
 
             RegistrarCasosDeUsoGsa(services);
         }

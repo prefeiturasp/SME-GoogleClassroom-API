@@ -157,6 +157,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             //Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
+
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por DRE", typeof(ISincronizacaoGsaFormacaoCidadeTurmaDreUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por DRE com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -329,8 +332,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
 
-
-
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -345,6 +348,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoRemover, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, false, consumer);
             }
         }
 

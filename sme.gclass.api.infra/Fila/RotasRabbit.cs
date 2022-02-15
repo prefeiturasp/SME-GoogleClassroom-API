@@ -112,8 +112,14 @@
         #endregion 
 
         #region Formação Cidade
-        public static string FilaGsaFormacaoCidadeTurmasTratar => "googleclass.gsa.formacao.cidade.turmas.tratar";        
-        public static string FilaGsaFormacaoCidadeTurmasErroTratar => "googleclass.gsa.formacao.cidade.turmas.erro.tratar";        
+        public static string FilaGsaFormacaoCidadeTurmasTratarDre => "googleclass.gsa.formacao.cidade.turmas.tratar.dre";        
+        public static string FilaGsaFormacaoCidadeTurmasTratarDreErro => "googleclass.gsa.formacao.cidade.turmas.tratar.dre.erro";
+        public static string FilaGsaFormacaoCidadeTurmasTratarComponente => "googleclass.gsa.formacao.cidade.turmas.tratar.componente";
+        public static string FilaGsaFormacaoCidadeTurmasTratarComponenteErro => "googleclass.gsa.formacao.cidade.turmas.tratar.componente.erro";
+        public static string FilaGsaFormacaoCidadeTurmasTratarCurso => "googleclass.gsa.formacao.cidade.turmas.tratar.curso";
+        public static string FilaGsaFormacaoCidadeTurmasTratarCursoErro => "googleclass.gsa.formacao.cidade.turmas.tratar.curso.erro";
+        public static string FilaGsaFormacaoCidadeTurmasTratarAluno => "googleclass.gsa.formacao.cidade.turmas.tratar.aluno";
+        public static string FilaGsaFormacaoCidadeTurmasTratarAlunoErro => "googleclass.gsa.formacao.cidade.turmas.tratar.aluno.erro";
         #endregion
 
         #region Usuários Remover

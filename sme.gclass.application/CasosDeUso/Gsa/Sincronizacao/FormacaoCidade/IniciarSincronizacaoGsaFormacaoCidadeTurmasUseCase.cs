@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(string codigoDre, int? componenteCurricularId)
         {
             var dto = new FiltroFormacaoCidadeTurmasDto(codigoDre, componenteCurricularId);
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratar, dto));
+            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, dto));
         }
     }
 }
