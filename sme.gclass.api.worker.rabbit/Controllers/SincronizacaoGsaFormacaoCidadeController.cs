@@ -47,5 +47,53 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await usecase.Executar();
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de turmas/componente que insere turmas e atribui professores para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("turmas/componente/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErrosDeSincronizacaoGsaFormacaoCidadeTurmasComponente([FromServices] ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase usecase)
+        {
+            var retorno = await usecase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de turmas/curso que insere turmas e atribui professores para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("turmas/curso/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErrosDeSincronizacaoGsaFormacaoCidadeTurmasCurso([FromServices] ISincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase usecase)
+        {
+            var retorno = await usecase.Executar();
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de turmas/aluno que insere turmas e atribui professores para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("turmas/aluno/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErrosDeSincronizacaoGsaFormacaoCidadeTurmasAluno([FromServices] ISincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase usecase)
+        {
+            var retorno = await usecase.Executar();
+            return Ok(retorno);
+        }
     }
 }

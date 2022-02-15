@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

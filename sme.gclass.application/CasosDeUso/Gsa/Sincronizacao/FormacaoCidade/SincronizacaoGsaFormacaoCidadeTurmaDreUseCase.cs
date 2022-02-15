@@ -26,14 +26,11 @@ namespace SME.GoogleClassroom.Aplicacao
                     : await mediator.Send(new ObterDreQuery(filtroFormacaoCidadeDreComponente.CodigoDre));
 
                 foreach (var dre in dres)
-                {
-                    //var dto = new FiltroFormacaoCidadeTurmasDto(codigoDre, componenteCurricularId);
-                    //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, dto));
-                }
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, filtroFormacaoCidadeDreComponente));
             }
             catch (Exception)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro, filtroFormacaoCidadeDreComponente));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, filtroFormacaoCidadeDreComponente));
             }
 
             return true;
