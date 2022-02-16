@@ -17,9 +17,11 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<DreDto>> ObterDres(string codigoDre)
         {
-            using var conn = ObterConexao();
+			try
+			{
+				using var conn = ObterConexao();
 
-			var query = $@" SELECT v_cadastro_unidade_educacao.cd_unidade_educacao Codigo, 
+				var query = $@" SELECT v_cadastro_unidade_educacao.cd_unidade_educacao Codigo, 
 									v_cadastro_unidade_educacao.nm_unidade_educacao Nome,
 									v_cadastro_unidade_educacao.nm_exibicao_unidade Sigla
 							FROM v_cadastro_unidade_educacao 
@@ -27,7 +29,12 @@ namespace SME.GoogleClassroom.Dados
 							WHERE tp_unidade_administrativa = 24 {IncluirCodigoDre(codigoDre)}
 							ORDER BY nm_unidade_educacao";
 
-			return await conn.QueryAsync<DreDto>(query, new { codigoDre});
+				return await conn.QueryAsync<DreDto>(query, new { codigoDre });
+			}
+			catch(Exception ex)
+            {
+				throw ex;
+            }
         }
 
         private string IncluirCodigoDre(string codigoDre)

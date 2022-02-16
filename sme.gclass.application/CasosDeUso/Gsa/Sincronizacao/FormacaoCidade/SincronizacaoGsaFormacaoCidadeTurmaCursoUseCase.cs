@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Enumeradores;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -17,19 +19,28 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var filtro = JsonConvert.DeserializeObject<SalaComponenteModalidadeDto>(mensagemRabbit.Mensagem.ToString());
+            var filtro = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaCursoDto>(mensagemRabbit.Mensagem.ToString());
 
             try
             {
-                //Buscar os professores
+                var funcionarios = Enumerable.Empty<string>();
+
+                funcionarios = (TipoConsultaFormacaoCidade)filtro.TipoConsultaProfessor switch
+                {
+                    TipoConsultaFormacaoCidade.ComponenteCurricular => await mediator.Send(new ObterProfessoresPorDreComponenteCurricularModalidadeQuery(filtro.CodigoDre, filtro.ComponentesCurricularesIds, filtro.ModalidadesIds, filtro.TipoEscola, filtro.AnoLetivo, filtro.AnoTurma)),
+                    TipoConsultaFormacaoCidade.CP => await mediator.Send(new ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, filtro.AnoLetivo)),
+                    TipoConsultaFormacaoCidade.PAP => await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsultaFormacaoCidade.PAP)),
+                    TipoConsultaFormacaoCidade.PAEE => await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsultaFormacaoCidade.PAEE)),
+                    _ => throw new Exception("Tipo de consulta formação cidade inválida."),
+                };
+                if (!string.IsNullOrEmpty(filtro.ComponentesCurricularesIds))
+                 
                 //Criar turma no google
+                //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, filtro.SalaVirtual));
 
-                //var salasComponentesModalidade = await mediator.Send(new ObterComponenteCurricularQuery());
-
-                //foreach (var salaComponenteModalidade in salasComponentesModalidade)
-                //   await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, salaComponenteModalidade));
-
-                //chamar fila para associar aluno
+                //Atribuir professores como alunos na turma criada acima
+                foreach (var funcionario in funcionarios)
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, funcionario));
             }
             catch (Exception)
             {

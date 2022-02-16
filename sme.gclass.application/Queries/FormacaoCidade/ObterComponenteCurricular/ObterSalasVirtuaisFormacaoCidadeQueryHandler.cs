@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterComponenteCurricularQueryHandler : IRequestHandler<ObterComponenteCurricularQuery, IEnumerable<SalaComponenteModalidadeDto>>
+    public class ObterSalasVirtuaisFormacaoCidadeQueryHandler : IRequestHandler<ObterSalasVirtuaisFormacaoCidadeQuery, IEnumerable<SalaComponenteModalidadeDto>>
     {
         private readonly IRepositorioComponenteCurricularFormacaoCidade repositorioComponenteCurricularFormacaoCidade;
 
-        public ObterComponenteCurricularQueryHandler(IRepositorioComponenteCurricularFormacaoCidade repositorioComponenteCurricular)
+        public ObterSalasVirtuaisFormacaoCidadeQueryHandler(IRepositorioComponenteCurricularFormacaoCidade repositorioComponenteCurricular)
         {
             this.repositorioComponenteCurricularFormacaoCidade = repositorioComponenteCurricular;
         }
 
-        public async Task<IEnumerable<SalaComponenteModalidadeDto>> Handle(ObterComponenteCurricularQuery request, CancellationToken cancellationToken) 
+        public async Task<IEnumerable<SalaComponenteModalidadeDto>> Handle(ObterSalasVirtuaisFormacaoCidadeQuery request, CancellationToken cancellationToken) 
             => repositorioComponenteCurricularFormacaoCidade.ObterComponenteCurricular();
     }
 }

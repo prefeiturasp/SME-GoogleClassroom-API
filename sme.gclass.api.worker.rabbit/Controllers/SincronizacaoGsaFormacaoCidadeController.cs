@@ -25,10 +25,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarSincronizacaoGsaFormacaoCidadeTurmas([FromQuery] string codigoDre, [FromQuery] int? componenteCurricularId,
-                                                                                     [FromServices] IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase useCase)
+        public async Task<IActionResult> IniciarSincronizacaoGsaFormacaoCidadeTurmas([FromServices] IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase useCase, 
+                                                                                     [FromQuery] string codigoDre, [FromQuery] int? componenteCurricularId = null, [FromQuery] int? anoLetivo = null)
         {
-            var retorno = await useCase.Executar(codigoDre, componenteCurricularId);
+            var retorno = await useCase.Executar(codigoDre, componenteCurricularId, anoLetivo);
             return Ok(retorno);
         }
 

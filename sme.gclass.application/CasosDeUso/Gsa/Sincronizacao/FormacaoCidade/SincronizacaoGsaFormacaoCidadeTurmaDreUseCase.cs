@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Constantes;
 using System;
 using System.Threading.Tasks;
 
@@ -17,20 +18,24 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var filtroFormacaoCidadeDreComponente = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmasDto>(mensagemRabbit.Mensagem.ToString());
+            var filtro = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaDto>(mensagemRabbit.Mensagem.ToString());
 
             try
             {
-                var dres = filtroFormacaoCidadeDreComponente is null 
+                var dres = filtro is null 
                     ? await mediator.Send(new ObterDreQuery(string.Empty)) 
-                    : await mediator.Send(new ObterDreQuery(filtroFormacaoCidadeDreComponente.CodigoDre));
+                    : await mediator.Send(new ObterDreQuery(filtro.CodigoDre));
 
                 foreach (var dre in dres)
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, filtroFormacaoCidadeDreComponente));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, 
+                        new FiltroFormacaoCidadeTurmaComponenteDto ($"{ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL} - {dre.Nome}",
+                                                              dre.Codigo,
+                                                              filtro.AnoLetivo,
+                                                              filtro.ComponenteCurricularId)));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, filtroFormacaoCidadeDreComponente));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, filtro));
             }
 
             return true;

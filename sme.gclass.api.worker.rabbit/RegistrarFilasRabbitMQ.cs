@@ -39,8 +39,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre);
 
-            //canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, true, false, false);
-            //canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasErroTratarDre, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasErroTratarDre);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno);
 
         }
 

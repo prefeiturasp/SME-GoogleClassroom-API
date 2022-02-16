@@ -17,18 +17,29 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var filtroFormacaoCidadeDreComponente = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmasDto>(mensagemRabbit.Mensagem.ToString());
+            var filtro = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaComponenteDto>(mensagemRabbit.Mensagem.ToString());
 
             try
             {
-                var salasComponentesModalidade = await mediator.Send(new ObterComponenteCurricularQuery());
+                var salasVirtuais = await mediator.Send(new ObterSalasVirtuaisFormacaoCidadeQuery());
 
-                foreach (var salaComponenteModalidade in salasComponentesModalidade)
-                   await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, salaComponenteModalidade));
+                foreach (var salaVirtual in salasVirtuais)
+                {
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso,
+                    new FiltroFormacaoCidadeTurmaCursoDto($"{filtro.SalaVirtual} - {salaVirtual.SalaVirtual}",
+                                                          filtro.CodigoDre,
+                                                          filtro.AnoLetivo,
+                                                          salaVirtual.ComponentesCurricularIds,
+                                                          salaVirtual.ModalidadesIds,
+                                                          salaVirtual.TipoEscola,
+                                                          salaVirtual.TipoConsultaProfessor,
+                                                          salaVirtual.AnoTurma)));
+                }
+                   
             }
             catch (Exception)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, filtroFormacaoCidadeDreComponente));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, filtro));
             }
 
             return true;
