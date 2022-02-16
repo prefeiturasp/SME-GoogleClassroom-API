@@ -38,6 +38,15 @@ namespace SME.GoogleClassroom.Dominio
             ExisteGoogle = true;
         }
 
+        public CursoGoogle(string nome, string secao, string email)
+        {
+            Nome = nome;
+            Secao = secao;
+            Email = email;
+            DataInclusao = DateTime.Now;
+            ExisteGoogle = true;
+        }
+
         protected CursoGoogle()
         {
         }

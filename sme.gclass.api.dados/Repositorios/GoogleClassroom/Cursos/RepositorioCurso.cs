@@ -270,5 +270,14 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryAsync<long>(@"select id from cursos where turma_id = @turmaId ", new { turmaId });
         }
+
+        public async Task<long> ExisteCursoPorNome(string nome)
+        {
+            var query = @"select id from public.cursos where upper(name)  = upper(@nome)";
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<long>(query, new { name = nome });
+        }
     }
 }

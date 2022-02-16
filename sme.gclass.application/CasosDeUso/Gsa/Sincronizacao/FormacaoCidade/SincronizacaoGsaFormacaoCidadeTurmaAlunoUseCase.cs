@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using Google;
+using MediatR;
 using Newtonsoft.Json;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -17,15 +20,18 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            //TODO: será SalaId criada no google e Alunos para serem associados
-            var filtro = JsonConvert.DeserializeObject<SalaComponenteModalidadeDto>(mensagemRabbit.Mensagem.ToString());
+            var filtro = JsonConvert.DeserializeObject<AlunoCursoEol>(mensagemRabbit.Mensagem.ToString());
 
             try
             {
-                //Associar aluno
+                var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(filtro.CodigoAluno));
+                if (aluno is null || !aluno.Any()) return false;
 
-                //foreach (var salaComponenteModalidade in salasComponentesModalidade)
-                //   await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, salaComponenteModalidade));
+                var alunoFirst = aluno.FirstOrDefault();
+                var alunoCursoGoogle = new AlunoCursoGoogle(alunoFirst.Indice, filtro.CursoId);
+
+                //TODO: Precisa validar se tem professor 'ExisteAlunoCursoGoogleQuery' como em 'InserirAlunoCursoGoogleUseCase' ?
+                await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, alunoFirst.Email);
             }
             catch (Exception)
             {
@@ -33,6 +39,30 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             return true;
+        }
+
+        private async Task InserirAlunoCursoGoogleAsync(AlunoCursoGoogle alunoCursoGoogle, string email)
+        {
+            try
+            {
+                var professorCursoSincronizado = await mediator.Send(new InserirAlunoCursoGoogleCommand(alunoCursoGoogle, email));
+                if (professorCursoSincronizado)
+                {
+                    await InserirAlunoCursoAsync(alunoCursoGoogle);
+                }
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.EhErroDeDuplicidade())
+                    await InserirAlunoCursoAsync(alunoCursoGoogle);
+                else
+                    throw;
+            }
+        }
+
+        private async Task InserirAlunoCursoAsync(AlunoCursoGoogle alunoCursoGoogle)
+        {
+            alunoCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(alunoCursoGoogle.UsuarioId, alunoCursoGoogle.CursoId));
         }
     }
 }

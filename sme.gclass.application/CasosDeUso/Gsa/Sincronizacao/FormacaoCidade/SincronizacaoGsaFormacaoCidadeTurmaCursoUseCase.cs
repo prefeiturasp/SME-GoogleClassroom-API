@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Constantes;
 using SME.GoogleClassroom.Infra.Enumeradores;
 using System;
 using System.Linq;
@@ -33,14 +35,21 @@ namespace SME.GoogleClassroom.Aplicacao
                     TipoConsultaFormacaoCidade.PAEE => await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsultaFormacaoCidade.PAEE)),
                     _ => throw new Exception("Tipo de consulta formação cidade inválida."),
                 };
-                if (!string.IsNullOrEmpty(filtro.ComponentesCurricularesIds))
-                 
-                //Criar turma no google
-                //await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, filtro.SalaVirtual));
+                                
+                var cursoGsa = await mediator.Send(new ObterCursoGsaPorNomeQuery(filtro.SalaVirtual));
+                if (cursoGsa == null)
+                {
+                    var inserirCursoGsa = new CursoGsa(long.Parse(filtro.CodigoDre), filtro.SalaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.CRIADOR, ConstanteFormacaoCidade.DESCRICAO, true, DateTime.Now);
+                    var retorno = await mediator.Send(new InserirCursoGsaCommand(inserirCursoGsa));
+                }
 
-                //Atribuir professores como alunos na turma criada acima
+                var cursoGoogle = new CursoGoogle(filtro.SalaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.EMAIL_DONO_CURSO);
+                var cursoId = await mediator.Send(new ExisteCursoPorNomeQuery(cursoGoogle.Nome));
+                if (cursoId == 0)
+                    await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
+
                 foreach (var funcionario in funcionarios)
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, funcionario));
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, new AlunoCursoEol(long.Parse(funcionario),cursoId)));
             }
             catch (Exception)
             {
