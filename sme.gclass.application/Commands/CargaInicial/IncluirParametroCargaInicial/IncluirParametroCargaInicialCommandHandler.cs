@@ -23,6 +23,10 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Handle(IncluirParametroCargaInicialCommand request, CancellationToken cancellationToken)
         {
             var parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(request.Ano));
+            if (parametros.AnoLetivo == null)
+            {
+                parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(request.Ano - 1));
+            }
             var tiposUes = new List<int>();
             var ues = new List<long>();
             var turmas = new List<long>();
@@ -33,15 +37,27 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 tiposUes.AddRange(request.TiposUes.Where(tipoUe => !parametros.TiposUes.Contains(tipoUe)));
             }
+            else
+            {
+                tiposUes.AddRange(parametros.TiposUes);
+            }
 
             if (request.Ues != null && request.Ues.Count > 0)
             {
                 ues.AddRange(request.Ues.Where(ue => !parametros.Ues.Contains(ue)));
             }
+            else
+            {
+                ues.AddRange(parametros.Ues);
+            }
 
             if (request.Turmas != null && request.Turmas.Count > 0)
             {
                 turmas.AddRange(request.Turmas.Where(turma => !parametros.Turmas.Contains(turma)));
+            }
+            else
+            {
+                turmas.AddRange(parametros.Turmas);
             }
 
             #endregion

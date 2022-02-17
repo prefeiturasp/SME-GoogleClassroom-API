@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Aplicacao.Interfaces.RemoverTurma;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -26,7 +28,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoGsaDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterCursosGsa([FromQuery] FiltroObterCursosGsaDto filtro, [FromServices] IObterCursosGsaUseCase useCase)
+        public async Task<IActionResult> ObterCursosGsa([FromQuery] FiltroObterCursosGsaDto filtro,
+            [FromServices] IObterCursosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
@@ -58,7 +61,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarValidacaoCursosGsa([FromServices] IIniciarValidacaoCursosGsaUseCase useCase)
+        public async Task<IActionResult> IniciarValidacaoCursosGsa(
+            [FromServices] IIniciarValidacaoCursosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar();
             return Ok(retorno);
@@ -74,7 +78,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoGsaDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterUsuariosGsa([FromQuery] FiltroObterUsuariosGsaDto filtro, [FromServices] IObterUsuariosGsaUseCase useCase)
+        public async Task<IActionResult> ObterUsuariosGsa([FromQuery] FiltroObterUsuariosGsaDto filtro,
+            [FromServices] IObterUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
@@ -106,7 +111,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarValidacaoUsuariosGsa([FromServices] IIniciarValidacaoUsuariosGsaUseCase useCase)
+        public async Task<IActionResult> IniciarValidacaoUsuariosGsa(
+            [FromServices] IIniciarValidacaoUsuariosGsaUseCase useCase)
         {
             var retorno = await useCase.Executar();
             return Ok(retorno);
@@ -122,7 +128,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(ConsultaCursosDoUsuarioGsa), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterCursosDoUsuarioGsa(string usuarioId, [FromServices] IObterCursosDoUsuarioGsaUseCase useCase)
+        public async Task<IActionResult> ObterCursosDoUsuarioGsa(string usuarioId,
+            [FromServices] IObterCursosDoUsuarioGsaUseCase useCase)
         {
             var retorno = await useCase.Executar(usuarioId);
             return Ok(retorno);
@@ -138,7 +145,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, bool processarAlunos = true, bool processarProfessores = true, bool processarFuncionario = true)
+        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa(
+            [FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, bool processarAlunos = true,
+            bool processarProfessores = true, bool processarFuncionario = true)
         {
             var retorno = await useCase.Executar(null, processarAlunos, processarProfessores, processarFuncionario);
             return Ok(retorno);
@@ -155,7 +164,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoRemoverProfessoresCursosGsa([FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, long? turmaId = null, bool processarAlunos = true, bool processarProfessores = true)
+        public async Task<IActionResult> IniciarProcessoRemoverProfessoresCursosGsa(
+            [FromServices] IIniciarProcessoCursosUsuariosRemoverGsaUseCase useCase, long? turmaId = null,
+            bool processarAlunos = true, bool processarProfessores = true)
         {
             var retorno = await useCase.Executar(turmaId, processarAlunos, processarProfessores);
             return Ok(retorno);
@@ -172,7 +183,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa([FromServices] IIniciarProcessoInativacaoUsuariosGsaUseCase useCase, long? alunoId = null)
+        public async Task<IActionResult> IniciarProcessoInativacaoUsuariosCursosGsa(
+            [FromServices] IIniciarProcessoInativacaoUsuariosGsaUseCase useCase, long? alunoId = null)
         {
             var retorno = await useCase.Executar(alunoId);
             return Ok(retorno);
@@ -188,9 +200,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoInativacaoProfessoresFuncionarios([FromServices] IIniciarInativacaoProfessoresEFuncionariosUseCase useCase, string codigo, string cpf, bool processarProfessoresEFuncionarios = true, bool processarFuncionariosIndiretos = true)
+        public async Task<IActionResult> IniciarProcessoInativacaoProfessoresFuncionarios(
+            [FromServices] IIniciarInativacaoProfessoresEFuncionariosUseCase useCase, string codigo, string cpf,
+            bool processarProfessoresEFuncionarios = true, bool processarFuncionariosIndiretos = true)
         {
-            var retorno = await useCase.Executar(codigo, cpf, processarProfessoresEFuncionarios, processarFuncionariosIndiretos);
+            var retorno = await useCase.Executar(codigo, cpf, processarProfessoresEFuncionarios,
+                processarFuncionariosIndiretos);
             return Ok(retorno);
         }
 
@@ -204,11 +219,28 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciaCargaInicial([FromServices] ICargaInicialUseCase useCase, [FromQuery] FiltroCargaInicialDto filtro)
+        public async Task<IActionResult> IniciaCargaInicial([FromServices] ICargaInicialUseCase useCase,
+            [FromQuery] FiltroCargaInicialDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
             return retorno ? Ok(retorno) : StatusCode(500);
         }
 
+        /// <summary>
+        /// Remover turmas
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpDelete("remover/cursos")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> RemoverTurmas([FromServices] IRemoverTurmaUseCase useCase,
+            [FromQuery] FiltroRemoverTurmaDto filtro)
+        {
+            var retorno = await useCase.Executar(filtro);
+            return retorno ? Ok(retorno) : StatusCode(500);
+        }
     }
 }

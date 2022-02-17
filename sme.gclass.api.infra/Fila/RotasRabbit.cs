@@ -92,6 +92,12 @@
         public static string FilaGsaCargaInicial => "googleclass.gsa.carga.inicial.sync";
         #endregion
 
+        #region CursoRemover
+
+        public static string FilaCursoAhRemover => "googleclass.gsa.curso.remover.sync";
+
+        #endregion
+        
         #region Inativação de Usuários
         public static string FilaGsaInativarUsuarioIniciar => "googleclass.gsa.inativar.usuario.iniciar";
         public static string FilaGsaInativarUsuarioCarregar => "googleclass.gsa.inativar.usuario.carregar";
