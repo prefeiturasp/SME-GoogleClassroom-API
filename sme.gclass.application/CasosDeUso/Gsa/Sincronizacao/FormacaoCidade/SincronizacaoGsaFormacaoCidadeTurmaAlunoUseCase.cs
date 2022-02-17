@@ -25,12 +25,12 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(filtro.CodigoAluno));
-                if (aluno is null || !aluno.Any()) return false;
+                if (aluno is null || !aluno.Any())
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
 
                 var alunoFirst = aluno.FirstOrDefault();
                 var alunoCursoGoogle = new AlunoCursoGoogle(alunoFirst.Indice, filtro.CursoId);
 
-                //TODO: Precisa validar se tem professor 'ExisteAlunoCursoGoogleQuery' como em 'InserirAlunoCursoGoogleUseCase' ?
                 await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, alunoFirst.Email);
             }
             catch (Exception)

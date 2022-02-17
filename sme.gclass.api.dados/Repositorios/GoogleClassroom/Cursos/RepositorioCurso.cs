@@ -174,6 +174,31 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
         }
 
+        public async Task<CursoGoogle> ObterCursoPorEmailNome(string email, string nome)
+        {
+            var query = @"select c.id, 
+                                 c.nome,
+                                 c.secao,
+                                 c.turma_id AS TurmaId,
+                                 c.componente_curricular_id AS ComponenteCurricularId,
+                                 c.data_inclusao AS DataInclusao,
+                                 c.data_atualizacao AS DataAtualizacao,
+                                 c.Email       
+                            from public.cursos c 
+                           where upper(email) = upper(@email) 
+                             and upper(nome) = upper(@nome)";
+
+            var parametros = new
+            {
+                email,
+                nome
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
+        }
+
         public async Task<CursoGoogle> ObterCursoPorId(long id)
         {
             var query = @"select c.id, 

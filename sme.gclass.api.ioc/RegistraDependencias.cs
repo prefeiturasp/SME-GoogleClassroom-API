@@ -245,6 +245,8 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IAtribuirDonoCursoUseCase, AtribuirDonoCursoUseCase>();
 
+            services.TryAddScoped<IAtribuirDonoCursoFormacaoCidadeUseCase, AtribuirDonoCursoFormacaoCidadeUseCase>();
+
             RegistrarCasosDeUsoSincronizacaoGsa(services);
         }
 
