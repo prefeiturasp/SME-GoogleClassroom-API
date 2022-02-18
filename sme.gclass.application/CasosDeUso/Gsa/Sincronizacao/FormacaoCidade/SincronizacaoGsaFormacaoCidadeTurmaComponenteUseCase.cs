@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Enumeradores;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -21,9 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var salasVirtuais = await mediator.Send(new ObterSalasVirtuaisFormacaoCidadeQuery());
-
-                foreach (var salaVirtual in salasVirtuais)
+                foreach (var salaVirtual in filtro.SalasVirtuais)
                 {
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso,
                     new FiltroFormacaoCidadeTurmaCursoDto($"{filtro.SalaVirtual} - {salaVirtual.SalaVirtual}",
@@ -32,8 +32,9 @@ namespace SME.GoogleClassroom.Aplicacao
                                                           salaVirtual.ComponentesCurricularIds,
                                                           salaVirtual.ModalidadesIds,
                                                           salaVirtual.TipoEscola,
-                                                          salaVirtual.TipoConsultaProfessor,
-                                                          salaVirtual.AnoTurma)));
+                                                          salaVirtual.TipoConsulta,
+                                                          salaVirtual.AnoTurma,
+                                                          salaVirtual.IncluirAlunoCurso)));
                 }
                    
             }

@@ -26,22 +26,32 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var funcionarios = await ObterAlunos(filtro);
-
-                if (funcionarios.Count() > ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO)
+                if (filtro.IncluirAlunoCurso)
                 {
-                    int qtdePorPacote, qtdePorPacoteFinal;
-                    CalcularQuantidadePorPacote(funcionarios, out qtdePorPacote, out qtdePorPacoteFinal);
+                    var funcionarios = await ObterAlunos(filtro);
 
-                    for (int i = 0; i < qtdePorPacote; i++)
+                    if (funcionarios.Count() > ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO)
                     {
-                        var nomeSala = i == 0 ? filtro.SalaVirtual : $"{filtro.SalaVirtual}_{i}";
+                        int qtdePorPacote, qtdePorPacoteFinal;
+                        CalcularQuantidadePorPacote(funcionarios, out qtdePorPacote, out qtdePorPacoteFinal);
 
-                        await InserirCursoAssociarAluno(nomeSala, filtro.CodigoDre, funcionarios.Skip(i * qtdePorPacoteFinal).Take(qtdePorPacoteFinal).ToList());
+                        for (int i = 0; i < qtdePorPacote; i++)
+                        {
+                            var nomeSala = i == 0 ? filtro.SalaVirtual : $"{filtro.SalaVirtual}_{i}";
+
+                            await InserirCursoAssociarAluno(nomeSala, filtro.CodigoDre, funcionarios.Skip(i * qtdePorPacoteFinal).Take(qtdePorPacoteFinal).ToList());
+                        }
                     }
+                    else
+                        await InserirCursoAssociarAluno(filtro.SalaVirtual, filtro.CodigoDre, funcionarios);
                 }
                 else
-                    await InserirCursoAssociarAluno(filtro.SalaVirtual, filtro.CodigoDre, funcionarios);
+                {
+                    await InserirCursoGsa(filtro.SalaVirtual, string.Empty);
+
+                    await InserirCursoGoogle(filtro.SalaVirtual);
+                }
+
             }
             catch (Exception)
             {
@@ -55,19 +65,19 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var funcionarios = Enumerable.Empty<string>();
 
-            switch ((TipoConsultaFormacaoCidade)filtro.TipoConsultaProfessor)
+            switch ((TipoConsulta)filtro.TipoConsultaProfessor)
             {
-                case TipoConsultaFormacaoCidade.ComponenteCurricular:
+                case TipoConsulta.ComponenteCurricular:
                     funcionarios = await mediator.Send(new ObterProfessoresPorDreComponenteCurricularModalidadeQuery(filtro.CodigoDre, filtro.ComponentesCurricularesIds, filtro.ModalidadesIds, filtro.TipoEscola, filtro.AnoLetivo, filtro.AnoTurma));
                     break;
-                case TipoConsultaFormacaoCidade.CP:
+                case TipoConsulta.CP:
                     funcionarios = await mediator.Send(new ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, filtro.AnoLetivo));
                     break;
-                case TipoConsultaFormacaoCidade.PAP:
-                    funcionarios = await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsultaFormacaoCidade.PAP));
+                case TipoConsulta.PAP:
+                    funcionarios = await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsulta.PAP));
                     break;
-                case TipoConsultaFormacaoCidade.PAEE:
-                    funcionarios = await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsultaFormacaoCidade.PAEE));
+                case TipoConsulta.PAEE:
+                    funcionarios = await mediator.Send(new ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, (int)TipoConsulta.PAEE));
                     break;
                 default:
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, filtro));
@@ -79,20 +89,31 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirCursoAssociarAluno(string salaVirtual, string codigoDre, IEnumerable<string> funcionarios)
         {
+            await InserirCursoGsa(salaVirtual, codigoDre);
+
+            long cursoId = await InserirCursoGoogle(salaVirtual);
+
+            foreach (var funcionario in funcionarios)
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, new AlunoCursoEol(long.Parse(funcionario), cursoId)));
+        }
+
+        private async Task<long> InserirCursoGoogle(string salaVirtual)
+        {
+            var cursoGoogle = new CursoGoogle(salaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.EMAIL_DONO_CURSO);
+            var cursoId = await mediator.Send(new ExisteCursoPorNomeQuery(cursoGoogle.Nome));
+            if (cursoId == 0)
+                await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
+            return cursoId;
+        }
+
+        private async Task InserirCursoGsa(string salaVirtual, string codigoDre)
+        {
             var cursoGsa = await mediator.Send(new ObterCursoGsaPorNomeQuery(salaVirtual));
             if (cursoGsa == null)
             {
                 var inserirCursoGsa = new CursoGsa(long.Parse(codigoDre), salaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.CRIADOR, ConstanteFormacaoCidade.DESCRICAO, true, DateTime.Now);
                 var retorno = await mediator.Send(new InserirCursoGsaCommand(inserirCursoGsa));
             }
-
-            var cursoGoogle = new CursoGoogle(salaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.EMAIL_DONO_CURSO);
-            var cursoId = await mediator.Send(new ExisteCursoPorNomeQuery(cursoGoogle.Nome));
-            if (cursoId == 0)
-                await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
-
-            foreach (var funcionario in funcionarios)
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, new AlunoCursoEol(long.Parse(funcionario), cursoId)));
         }
 
         private static void CalcularQuantidadePorPacote(IEnumerable<string> funcionarios, out int qtdePorPacote, out int qtdePorPacoteFinal)

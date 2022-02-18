@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 anoLetivo = DateTime.Now.Year;
 
             var dto = new FiltroFormacaoCidadeTurmaDto(anoLetivo.Value, codigoDre, componenteCurricularId);
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, dto));
+            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, dto));
         }
     }
 }

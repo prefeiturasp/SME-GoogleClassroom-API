@@ -158,7 +158,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             //Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
 
-            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por DRE", typeof(ISincronizacaoGsaFormacaoCidadeTurmaDreUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por DRE", typeof(ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase)));
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por DRE com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase)));
 
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Componente", typeof(ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase)));
@@ -342,7 +342,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
 
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, false, consumer);
             }
 

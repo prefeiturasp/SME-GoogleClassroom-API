@@ -851,7 +851,7 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<IEnumerable<string>> ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int tipoEscola, int anoLetivo)
+        public async Task<IEnumerable<string>> ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int anoLetivo)
         {
             try
             {
@@ -891,7 +891,7 @@ namespace SME.GoogleClassroom.Dados
 			}
 		}
 
-		public async Task<IEnumerable<string>> ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(string codigoDre, int tipoEscola, int tipoConsulta)
+		public async Task<IEnumerable<string>> ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int tipoConsulta)
         {
             try
             {
@@ -908,13 +908,13 @@ namespace SME.GoogleClassroom.Dados
 							WHERE funcao.dt_fim_funcao_atividade IS NULL
 								  AND cargobase.dt_cancelamento IS NULL
 								  AND cargobase.dt_fim_nomeacao IS NULL
-								  AND escola.tp_escola = @tipoEscola
+								  AND escola.tp_escola in (@tipoEscola)
     							  AND dre.cd_unidade_administrativa_referencia = @codigoDre
 								  AND funcao.cd_tipo_funcao = @tipoConsulta";
 
 				using var conn = ObterConexao();
 
-				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, tipoEscola, tipoConsulta });
+				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, tipoEscola = string.Join(',',tipoConsulta), tipoConsulta });
 
 				return retorno;
 			}

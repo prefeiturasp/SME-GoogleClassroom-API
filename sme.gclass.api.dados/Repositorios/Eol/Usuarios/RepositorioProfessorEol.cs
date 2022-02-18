@@ -635,7 +635,7 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<long>(query.ToString(), parametros);
 		}
 
-        public async Task<IEnumerable<string>> ObterProfessoresPorDreComponenteCurricularModalidade(string codigoDre, string componentesCurricularIds, string modalidadesIds, int tipoEscola, int anoLetivo, string anoTurma)
+        public async Task<IEnumerable<string>> ObterProfessoresPorDreComponenteCurricularModalidade(string codigoDre, string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma)
         {
 			try
 			{
@@ -691,13 +691,14 @@ namespace SME.GoogleClassroom.Dados
 								AND componente_curricular.dt_cancelamento IS NULL 								
 								AND ( atribuicao_aula.dt_atribuicao_aula <= Getdate() ) 
 								AND ( Getdate() <= COALESCE(Datepart(year, atribuicao_aula.dt_disponibilizacao_aulas), Getdate()) ) 
-								and turma_escola.an_letivo = @anoLetivo and dre.cd_unidade_educacao = @codigoDre
+								and turma_escola.an_letivo = @anoLetivo 
+								{IncluirCondicaoDre(codigoDre)}								
 								and componente_curricular.cd_componente_curricular in (@componentesCurricularIds)
 								AND etapa_ensino.cd_etapa_ensino in (@modalidadesIds )
-								AND esc.tp_escola = @tipoEscola)  
+								AND esc.tp_escola in (@tipoEscola)  
 								{IncluirAnoTurma(anoTurma)}");
 
-				var parametros = new { anoLetivo, codigoDre, componentesCurricularIds, modalidadesIds, tipoEscola, anoTurma };
+				var parametros = new { anoLetivo, codigoDre, componentesCurricularIds, modalidadesIds, tipoEscola = string.Join(',',tipoEscola), anoTurma };
 
 				using var conn = ObterConexao();
 				var retorno = await conn.QueryAsync<string>(query.ToString(), parametros);
@@ -707,6 +708,12 @@ namespace SME.GoogleClassroom.Dados
             {
 				throw ex;
             }
+		}
+
+        private string IncluirCondicaoDre(string codigoDre)
+        {
+			return !string.IsNullOrEmpty(codigoDre) ? " and dre.cd_unidade_educacao = @codigoDre " : string.Empty;
+
 		}
 
         private string IncluirAnoTurma(string anoTurma)

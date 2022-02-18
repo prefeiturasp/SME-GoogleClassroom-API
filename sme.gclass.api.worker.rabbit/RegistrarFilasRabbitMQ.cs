@@ -36,8 +36,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static void RegistrarFilasFormacaoCidadeSync(IModel canalRabbit)
         {
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDre);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente);

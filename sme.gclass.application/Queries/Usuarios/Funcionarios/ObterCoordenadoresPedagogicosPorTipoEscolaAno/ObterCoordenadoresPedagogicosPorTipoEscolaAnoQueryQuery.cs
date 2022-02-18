@@ -7,10 +7,10 @@ namespace SME.GoogleClassroom.Aplicacao
     public class ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery : IRequest<IEnumerable<string>>
     {
         public string CodigoDre { get; set; }
-        public int TipoEscola { get; set; }
+        public int[] TipoEscola { get; set; }
         public int AnoLetivo { get; set; }
 
-        public ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int tipoEscola, int anoLetivo)
+        public ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int anoLetivo)
         {
             CodigoDre = codigoDre;
             TipoEscola = tipoEscola;

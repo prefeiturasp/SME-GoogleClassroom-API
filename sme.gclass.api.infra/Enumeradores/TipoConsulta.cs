@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Infra.Enumeradores
 {
-    public enum TipoConsultaFormacaoCidade
+    public enum TipoConsulta
     {
         ComponenteCurricular = 1,
         CP = 3379,
