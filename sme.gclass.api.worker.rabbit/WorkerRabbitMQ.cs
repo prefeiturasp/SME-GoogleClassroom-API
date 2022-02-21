@@ -391,6 +391,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoAhRemover, false, consumer);
 
 
 
