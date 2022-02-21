@@ -154,6 +154,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             //Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoAhRemover, new ComandoRabbit("Remover curso", typeof(ITrataSyncManualGoogleGeralUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
