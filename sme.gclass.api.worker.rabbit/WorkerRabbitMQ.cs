@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Elastic.Apm;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -154,6 +153,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             //Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoAhRemover, new ComandoRabbit("Remover curso", typeof(IRemoverCursoGoogleClassroomUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -391,6 +391,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoAhRemover, false, consumer);
 
 
 

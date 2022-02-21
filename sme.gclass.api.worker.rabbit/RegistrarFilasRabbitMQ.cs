@@ -163,6 +163,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoAhRemover, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoAhRemover, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoAhRemover);
         }
 
         private static void RegistrarFilasInativarAlunosSync(IModel canalRabbit)

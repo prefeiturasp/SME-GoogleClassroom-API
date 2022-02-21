@@ -3,10 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Aplicacao.Interfaces.RemoverTurma;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
-using System;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -65,9 +66,11 @@ namespace SME.GoogleClassroom.IoC
             //Curso Arquivado
             services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
             services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
+            services.TryAddScoped<IRepositorioTurmaEscolaEol, RepositorioTurmaEscolaEol>();
 
             //Notas
             services.TryAddScoped<IRepositorioNota, RepositorioNota>();
+            
             
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
@@ -206,6 +209,7 @@ namespace SME.GoogleClassroom.IoC
             
             //Carga inicial
             services.TryAddScoped<ITrataSyncManualGoogleGeralUseCase, TrataSyncManualGoogleGeralUseCase>();
+            services.TryAddScoped<IRemoverCursoGoogleClassroomUseCase, RemoverCursoGoogleClassroomUseCase>();
 
             // Arquivamento de cursos por ano e semestre
             services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
@@ -213,6 +217,7 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IObterNotasAtividadesAvaliativasUseCase, ObterNotasAtividadesAvaliativasUseCase>();
             services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
+            services.TryAddScoped<IRemoverTurmaUseCase, RemoverTurmaUseCase>();
 
 
 
