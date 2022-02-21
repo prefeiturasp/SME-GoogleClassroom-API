@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SME.GoogleClassroom.Infra;
 
-namespace SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Cursos
+namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IRemoverCursoGoogleClassroomUseCase
     {
