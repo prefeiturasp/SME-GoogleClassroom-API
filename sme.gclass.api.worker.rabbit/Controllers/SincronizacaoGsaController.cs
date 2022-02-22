@@ -237,7 +237,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> RemoverTurmas([FromServices] IRemoverTurmaUseCase useCase,
-            [FromQuery] FiltroRemoverTurmaDto filtro)
+            [FromBody] FiltroRemoverTurmaDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
             return retorno ? Ok(retorno) : StatusCode(500);
