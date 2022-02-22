@@ -4,14 +4,16 @@
     {
         Nenhum = 0,
         Fundamental = 1,
-        Medio = 3,
-        EducacaoEspecial = 4,
         InfantilEmei = 2,
+        Medio = 3,
+        EducacaoEspecial = 4,        
+        InfantilCeiDiret = 10,
+        Cieja = 13,
+        CentroEducacionalUnidicadoEMEF = 16,
         InfantilCeuEmei = 17,
+        InfantilCeuCei = 18,
         InfantilCemei = 28,
         InfantilCeci = 30,
-        InfantilCruCemei = 31,
-        InfantilCeiDiret = 10,
-        InfantilCeuCei = 18,
+        InfantilCruCemei = 31
     }
 }

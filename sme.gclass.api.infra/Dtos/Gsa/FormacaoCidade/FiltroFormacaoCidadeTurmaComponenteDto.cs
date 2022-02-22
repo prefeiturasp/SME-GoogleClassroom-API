@@ -9,6 +9,7 @@ namespace SME.GoogleClassroom.Infra
         public int? ComponenteCurricularId { get; set; }
         public int AnoLetivo { get; set; }
         public IEnumerable<SalaComponenteModalidadeDto> SalasVirtuais { get; set; }
+        public string MensagemErro { get; set; }
 
         public FiltroFormacaoCidadeTurmaComponenteDto(string salaVirtual, IEnumerable<SalaComponenteModalidadeDto> salasVirtuais, string codigoDre, int anoLetivo, int? componenteCurricularId = null)
         {

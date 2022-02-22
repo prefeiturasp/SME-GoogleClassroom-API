@@ -220,8 +220,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
             
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase>();

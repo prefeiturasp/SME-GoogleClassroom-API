@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     new FiltroFormacaoCidadeTurmaCursoDto($"{filtro.SalaVirtual} - {salaVirtual.SalaVirtual}",
                                                           filtro.CodigoDre,
                                                           filtro.AnoLetivo,
-                                                          salaVirtual.ComponentesCurricularIds,
+                                                          salaVirtual.ComponentesCurricularesIds,
                                                           salaVirtual.ModalidadesIds,
                                                           salaVirtual.TipoEscola,
                                                           salaVirtual.TipoConsulta,
@@ -38,8 +38,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
                    
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, filtro));
             }
 

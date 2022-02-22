@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -693,12 +694,13 @@ namespace SME.GoogleClassroom.Dados
 								AND ( Getdate() <= COALESCE(Datepart(year, atribuicao_aula.dt_disponibilizacao_aulas), Getdate()) ) 
 								and turma_escola.an_letivo = @anoLetivo 
 								{IncluirCondicaoDre(codigoDre)}								
-								and componente_curricular.cd_componente_curricular in (@componentesCurricularIds)
-								AND etapa_ensino.cd_etapa_ensino in (@modalidadesIds )
-								AND esc.tp_escola in (@tipoEscola)  
+								/*and componente_curricular.cd_componente_curricular in (@componenteCurricularIds)*/
+								and componente_curricular.cd_componente_curricular in ({componentesCurricularIds})
+								AND etapa_ensino.cd_etapa_ensino in ({modalidadesIds})
+								AND esc.tp_escola in ({string.Join(',', tipoEscola)})  
 								{IncluirAnoTurma(anoTurma)}");
 
-				var parametros = new { anoLetivo, codigoDre, componentesCurricularIds, modalidadesIds, tipoEscola = string.Join(',',tipoEscola), anoTurma };
+				var parametros = new { anoLetivo, codigoDre, anoTurma };
 
 				using var conn = ObterConexao();
 				var retorno = await conn.QueryAsync<string>(query.ToString(), parametros);
@@ -718,7 +720,7 @@ namespace SME.GoogleClassroom.Dados
 
         private string IncluirAnoTurma(string anoTurma)
         {
-			return !string.IsNullOrEmpty(anoTurma) ? " AND serie_ensino.sg_resumida_serie in (@alunoTurma) " : string.Empty;
+			return !string.IsNullOrEmpty(anoTurma) ? " AND serie_ensino.sg_resumida_serie in (@anoTurma) " : string.Empty;
 
 		}
     }

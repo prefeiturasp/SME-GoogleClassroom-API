@@ -8,9 +8,10 @@
         public string ModalidadesIds { get; set; }
         public int AnoLetivo { get; set; }
         public int[] TipoEscola { get; set; }
-        public int TipoConsultaProfessor { get; set; }
+        public int TipoConsulta { get; set; }
         public string AnoTurma { get; set; }
         public bool IncluirAlunoCurso { get; set; }
+        public string MensagemErro { get; set; }
 
         public FiltroFormacaoCidadeTurmaCursoDto(string salaVirtual, string codigoDre, int anoLetivo, string componentesCurricularesIds, string modalidadesIds, int[] tipoEscola, int tipoConsultaProfessor, string anoTurma, bool incluirAlunoCurso)
         {
@@ -20,7 +21,7 @@
             ModalidadesIds = modalidadesIds;
             AnoLetivo = anoLetivo;
             TipoEscola = tipoEscola;
-            TipoConsultaProfessor = tipoConsultaProfessor;
+            TipoConsulta = tipoConsultaProfessor;
             AnoTurma = anoTurma;
             IncluirAlunoCurso = incluirAlunoCurso;
         }

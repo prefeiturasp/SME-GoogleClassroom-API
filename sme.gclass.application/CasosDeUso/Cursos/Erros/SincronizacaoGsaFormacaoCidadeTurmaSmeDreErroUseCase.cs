@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase : ISincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase
+    public class SincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase : ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase
     {
         private readonly IMediator mediator;
 
-        public SincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase(IMediator mediator)
+        public SincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar()
         {
-            var publicarSyncCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, true));
+            var publicarSyncCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, true));
             if (!publicarSyncCursoErro)
             {
                 throw new NegocioException("Não foi possível iniciar a sincronização de formação cidade turmas DRE Erro.");

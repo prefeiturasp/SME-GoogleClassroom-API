@@ -47,14 +47,15 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
                 else
                 {
-                    await InserirCursoGsa(filtro.SalaVirtual, string.Empty);
+                    var cursoGoogleId = await InserirCursoGoogle(filtro.SalaVirtual);
 
-                    await InserirCursoGoogle(filtro.SalaVirtual);
+                    await InserirCursoGsa(filtro.SalaVirtual, cursoGoogleId);                    
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, filtro));
             }
 
@@ -65,7 +66,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var funcionarios = Enumerable.Empty<string>();
 
-            switch ((TipoConsulta)filtro.TipoConsultaProfessor)
+            switch ((TipoConsulta)filtro.TipoConsulta)
             {
                 case TipoConsulta.ComponenteCurricular:
                     funcionarios = await mediator.Send(new ObterProfessoresPorDreComponenteCurricularModalidadeQuery(filtro.CodigoDre, filtro.ComponentesCurricularesIds, filtro.ModalidadesIds, filtro.TipoEscola, filtro.AnoLetivo, filtro.AnoTurma));
@@ -89,12 +90,19 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirCursoAssociarAluno(string salaVirtual, string codigoDre, IEnumerable<string> funcionarios)
         {
-            await InserirCursoGsa(salaVirtual, codigoDre);
+            try
+            {
+                long cursoId = await InserirCursoGoogle(salaVirtual);
 
-            long cursoId = await InserirCursoGoogle(salaVirtual);
+                await InserirCursoGsa(salaVirtual, cursoId);
 
-            foreach (var funcionario in funcionarios)
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, new AlunoCursoEol(long.Parse(funcionario), cursoId)));
+                foreach (var funcionario in funcionarios)
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, new AlunoCursoEol(long.Parse(funcionario), cursoId)));
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private async Task<long> InserirCursoGoogle(string salaVirtual)
@@ -102,17 +110,20 @@ namespace SME.GoogleClassroom.Aplicacao
             var cursoGoogle = new CursoGoogle(salaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.EMAIL_DONO_CURSO);
             var cursoId = await mediator.Send(new ExisteCursoPorNomeQuery(cursoGoogle.Nome));
             if (cursoId == 0)
+            {
                 await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
+                return cursoGoogle.Id;
+            }                
             return cursoId;
         }
 
-        private async Task InserirCursoGsa(string salaVirtual, string codigoDre)
+        private async Task InserirCursoGsa(string salaVirtual, long cursoGoogleId)
         {
             var cursoGsa = await mediator.Send(new ObterCursoGsaPorNomeQuery(salaVirtual));
             if (cursoGsa == null)
             {
-                var inserirCursoGsa = new CursoGsa(long.Parse(codigoDre), salaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.CRIADOR, ConstanteFormacaoCidade.DESCRICAO, true, DateTime.Now);
-                var retorno = await mediator.Send(new InserirCursoGsaCommand(inserirCursoGsa));
+                var inserirCursoGsa = new CursoGsa(cursoGoogleId, salaVirtual, ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL, ConstanteFormacaoCidade.CRIADOR, ConstanteFormacaoCidade.DESCRICAO, true, DateTime.Now);
+                await mediator.Send(new InserirCursoGsaCommand(inserirCursoGsa));
             }
         }
 

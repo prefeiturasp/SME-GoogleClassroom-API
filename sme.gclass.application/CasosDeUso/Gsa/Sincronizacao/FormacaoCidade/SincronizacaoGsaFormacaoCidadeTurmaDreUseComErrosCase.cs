@@ -5,10 +5,10 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class SincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase : AbstractTratarFilaErrosUseCase<FiltroTurmaRemoverCursoUsuarioDto>, ISincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase
+    public class SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase : AbstractTratarFilaErrosUseCase<FiltroFormacaoCidadeTurmaDto>, ISincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase
     {
-        public SincronizacaoGsaFormacaoCidadeTurmaDreComErrosUseCase(IConfiguration configuration, IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
-            : base(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, configuration, mediator, registry)
+        public SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase(IConfiguration configuration, IMediator mediator, IReadOnlyPolicyRegistry<string> registry)
+            : base(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, configuration, mediator, registry)
         {
         }
     }

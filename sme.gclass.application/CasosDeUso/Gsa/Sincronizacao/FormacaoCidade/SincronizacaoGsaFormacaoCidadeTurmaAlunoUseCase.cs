@@ -24,17 +24,23 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(filtro.CodigoAluno));
+                var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoAluno));
                 if (aluno is null || !aluno.Any())
+                {
+                    filtro.MensagemErro = $"O aluno (usuario) '{filtro.CodigoAluno}' não foi localizado.";
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
+                }                    
+                else
+                {
+                    var alunoFirst = aluno.FirstOrDefault();
+                    var alunoCursoGoogle = new AlunoCursoGoogle(alunoFirst.Indice, filtro.CursoId);
 
-                var alunoFirst = aluno.FirstOrDefault();
-                var alunoCursoGoogle = new AlunoCursoGoogle(alunoFirst.Indice, filtro.CursoId);
-
-                await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, alunoFirst.Email);
+                    await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, alunoFirst.Email);
+                }                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
             }
 
@@ -43,26 +49,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirAlunoCursoGoogleAsync(AlunoCursoGoogle alunoCursoGoogle, string email)
         {
-            try
-            {
-                var professorCursoSincronizado = await mediator.Send(new InserirAlunoCursoGoogleCommand(alunoCursoGoogle, email));
-                if (professorCursoSincronizado)
-                {
-                    await InserirAlunoCursoAsync(alunoCursoGoogle);
-                }
-            }
-            catch (GoogleApiException gEx)
-            {
-                if (gEx.EhErroDeDuplicidade())
-                    await InserirAlunoCursoAsync(alunoCursoGoogle);
-                else
-                    throw;
-            }
-        }
-
-        private async Task InserirAlunoCursoAsync(AlunoCursoGoogle alunoCursoGoogle)
-        {
-            alunoCursoGoogle.Id = await mediator.Send(new IncluirCursoUsuarioCommand(alunoCursoGoogle.UsuarioId, alunoCursoGoogle.CursoId));
+            await mediator.Send(new InserirAlunoCursoGoogleCommand(alunoCursoGoogle, email));
         }
     }
 }

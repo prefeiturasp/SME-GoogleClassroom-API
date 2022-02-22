@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Constantes;
 using SME.GoogleClassroom.Infra.Enumeradores;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,8 +25,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var dres = filtro is null 
-                    ? await mediator.Send(new ObterDreQuery(string.Empty)) 
+                var dres = filtro is null
+                    ? await mediator.Send(new ObterDreQuery(string.Empty))
                     : await mediator.Send(new ObterDreQuery(filtro.CodigoDre));
 
                 var salasVirtuais = await mediator.Send(new ObterSalasVirtuaisFormacaoCidadeQuery());
@@ -44,18 +45,18 @@ namespace SME.GoogleClassroom.Aplicacao
                     new FiltroFormacaoCidadeTurmaCursoDto($"{ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL} - {sme.SalaVirtual}",
                                                           null,
                                                           filtro.AnoLetivo,
-                                                          sme.ComponentesCurricularIds,
+                                                          sme.ComponentesCurricularesIds,
                                                           sme.ModalidadesIds,
                                                           sme.TipoEscola,
                                                           sme.TipoConsulta,
                                                           sme.AnoTurma,
                                                           sme.IncluirAlunoCurso)));
 
-                //Fazer o tratamento para aqueles que são por SME
             }
             catch (Exception ex)
             {
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarDreErro, filtro));
+                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, filtro));
             }
 
             return true;

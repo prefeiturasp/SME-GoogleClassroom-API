@@ -28,11 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
     public class ObterProfessoresPorDreComponenteCurricularModalidadeQueryValidator : AbstractValidator<ObterProfessoresPorDreComponenteCurricularModalidadeQuery>
     {
         public ObterProfessoresPorDreComponenteCurricularModalidadeQueryValidator()
-        {
-            RuleFor(x => x.CodigoDre)
-                .NotEmpty()
-                .WithMessage("o código da DRE deve ser informada.");
-
+        {           
             RuleFor(x => x.ComponentesCurricularIds)
                 .NotEmpty()
                 .WithMessage("Componentes curriculares devem ser informados.");

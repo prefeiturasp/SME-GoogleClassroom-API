@@ -876,11 +876,13 @@ namespace SME.GoogleClassroom.Dados
 													   ON cargoSobreposto.cd_cargo_base_servidor = cargoServidor.cd_cargo_base_servidor
 														AND cargoSobreposto.cd_unidade_local_servico = dre.cd_unidade_educacao
 											WHERE lotacao_servidor.dt_fim IS NULL AND dre.cd_unidade_administrativa_referencia = @codigoDre
-										   		  and cargo.cd_cargo = 3379 and escola.tp_escola = @tipoEscola";
+										   		  and cargo.cd_cargo = 3379 and escola.tp_escola in ({string.Join(',', tipoEscola)})";
+
+
 
 				using var conn = ObterConexao();
 
-				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, dataReferencia, tipoEscola });
+				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, dataReferencia,  });
 
 				return retorno;
 

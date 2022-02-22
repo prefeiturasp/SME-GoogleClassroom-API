@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface ISincronizacaoGsaFormacaoCidadeTurmaDreErroUseCase
+    public interface ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase
     {
         Task<bool> Executar();
     }

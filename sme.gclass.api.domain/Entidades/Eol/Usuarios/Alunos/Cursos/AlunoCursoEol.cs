@@ -7,6 +7,7 @@
         public long ComponenteCurricularId { get; set; }
         public long CursoId { get; set; }
         public string UeCodigo { get; set; }
+        public string MensagemErro { get; set; }
 
         public AlunoCursoEol(long codigoAluno, long turmaId, long componenteCurricularId)
         {

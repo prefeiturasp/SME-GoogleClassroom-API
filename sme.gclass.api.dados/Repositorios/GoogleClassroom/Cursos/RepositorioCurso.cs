@@ -298,11 +298,21 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<long> ExisteCursoPorNome(string nome)
         {
-            var query = @"select id from public.cursos where upper(name)  = upper(@nome)";
+            try
+            {
+                var query = @"select id from public.cursos where upper(nome)  = upper('@nome')";
 
-            using var conn = ObterConexao();
+                using var conn = ObterConexao();
 
-            return await conn.QueryFirstOrDefaultAsync<long>(query, new { name = nome });
+                var retorno = await conn.QueryFirstOrDefaultAsync<long>(query, new { nome });
+
+                return retorno;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

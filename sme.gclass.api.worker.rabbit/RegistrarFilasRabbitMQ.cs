@@ -39,15 +39,26 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre);
 
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro);
+
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente);
+
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso);
 
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro);
+
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno);
 
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro);
         }
 
         private static void RegistrarFilasCursoSync(IModel canalRabbit)
