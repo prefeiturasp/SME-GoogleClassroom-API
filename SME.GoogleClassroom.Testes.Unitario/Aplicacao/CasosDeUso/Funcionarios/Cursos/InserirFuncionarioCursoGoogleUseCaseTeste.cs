@@ -65,7 +65,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             mediator.Setup(a => a.Send(It.IsAny<ObterFuncionariosGooglePorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FuncionarioGoogle> { funcionarioGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             var funcionarioCursoJson = JsonConvert.SerializeObject(funcionarioCurso);
@@ -89,7 +89,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             mediator.Setup(a => a.Send(It.IsAny<ObterFuncionariosGooglePorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FuncionarioGoogle> { funcionarioGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteFuncionarioCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -116,7 +116,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             mediator.Setup(a => a.Send(It.IsAny<ObterFuncionariosGooglePorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FuncionarioGoogle> { funcionarioGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteFuncionarioCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -151,7 +151,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             mediator.Setup(a => a.Send(It.IsAny<ObterFuncionariosGooglePorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FuncionarioGoogle> { funcionarioGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteFuncionarioCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -183,7 +183,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             mediator.Setup(a => a.Send(It.IsAny<ObterFuncionariosGooglePorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FuncionarioGoogle> { funcionarioGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteFuncionarioCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -215,7 +215,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             mediator.Setup(a => a.Send(It.IsAny<ObterFuncionariosGooglePorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FuncionarioGoogle> { funcionarioGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteFuncionarioCursoGoogleQuery>(), It.IsAny<CancellationToken>()))

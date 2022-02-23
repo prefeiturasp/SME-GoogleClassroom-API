@@ -12,5 +12,6 @@ namespace SME.GoogleClassroom.Infra
         public string OrganizationPath { get; set; }
         public DateTime? DataInclusao { get; set; }
         public bool UltimoItemDaFila { get; set; }
+        public long Indice { get; set; } //de 'usuario'
     }
 }

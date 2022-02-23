@@ -204,6 +204,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
 
         /// <summary>
+        /// Atribui dono do curso por email de um usuário cadastrado no GSA.
+        /// </summary>
+        /// <response code="200">O dono do curso foi atribuído com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante o comando.</response>
+        /// <response code="601">Houve uma falha de validação durante o comando.</response>
+        [HttpPost("gsa/formacao/cidade/atribuir-dono")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> AtribuirDonoCursoFormacaoCidade(string email, string salaVirtual, [FromServices] IAtribuirDonoCursoFormacaoCidadeUseCase useCase)
+        {
+            var retorno = await useCase.Executar(email, salaVirtual);
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Atualiza os alunos dos cursos cadastrados no GSA.
         /// </summary>
         /// <response code="200">Atualização realizada com sucesso.</response>

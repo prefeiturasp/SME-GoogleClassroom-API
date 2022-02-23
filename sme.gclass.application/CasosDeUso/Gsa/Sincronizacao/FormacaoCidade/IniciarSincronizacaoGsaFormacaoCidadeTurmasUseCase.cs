@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -13,10 +14,13 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(string codigoDre, int? componenteCurricularId)
+        public async Task<bool> Executar(string codigoDre, int? componenteCurricularId, int? anoLetivo)
         {
-            var dto = new FiltroFormacaoCidadeTurmasDto(codigoDre, componenteCurricularId);
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratar, dto));
+            if (!anoLetivo.HasValue)
+                anoLetivo = DateTime.Now.Year;
+
+            var dto = new FiltroFormacaoCidadeTurmaDto(anoLetivo.Value, codigoDre, componenteCurricularId);
+            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, dto));
         }
     }
 }
