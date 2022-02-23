@@ -688,6 +688,9 @@ namespace SME.GoogleClassroom.Dados
 											   ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino 
 									   INNER JOIN tipo_unidade_educacao tue ON dre.tp_unidade_educacao  = tue.tp_unidade_educacao
 									   INNER JOIN tipo_escola ON esc.tp_escola = tipo_escola.tp_escola
+									   INNER JOIN jornada_cargo_servidor jcs on cargoServidor.cd_cargo_base_servidor = jcs.cd_cargo_base_servidor 
+																				and jcs.cd_tipo_jornada_opcao = 6 /* JEIF */
+																				and jcs.an_referencia_opcao_jornada = @anoLetivo
 							WHERE   atribuicao_aula.dt_cancelamento IS NULL 
 								AND componente_curricular.dt_cancelamento IS NULL 								
 								AND ( atribuicao_aula.dt_atribuicao_aula <= Getdate() ) 
