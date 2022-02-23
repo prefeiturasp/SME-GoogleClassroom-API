@@ -850,5 +850,80 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
             return retorno;
         }
-    }
+
+        public async Task<IEnumerable<string>> ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int anoLetivo)
+        {
+            try
+            {
+				var dataReferencia = new DateTime(anoLetivo, DateTime.Now.Month, DateTime.Now.Day);
+
+				var query = @$"SELECT DISTINCT cd_registro_funcional as CodigoRF
+											FROM v_servidor_cotic servidor
+											JOIN v_cargo_base_cotic AS cargoServidor ON cargoServidor.CD_SERVIDOR = servidor.cd_servidor
+											JOIN cargo AS cargo ON cargoServidor.cd_cargo = cargo.cd_cargo
+											LEFT JOIN lotacao_servidor AS lotacao_servidor ON cargoServidor.cd_cargo_base_servidor = lotacao_servidor.cd_cargo_base_servidor
+											LEFT JOIN funcao_atividade_cargo_servidor funcao ON cargoServidor.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
+																							AND funcao.dt_fim_funcao_atividade IS NULL
+											JOIN v_cadastro_unidade_educacao dre ON lotacao_servidor.cd_unidade_educacao = dre.cd_unidade_educacao
+											JOIN escola ON dre.cd_unidade_educacao = escola.cd_escola
+											LEFT JOIN(
+												SELECT cargoSobreposto.cd_cargo, cargoSobreposto.dc_cargo, cargo_sobreposto_servidor.cd_cargo_base_servidor, cargo_sobreposto_servidor.cd_unidade_local_servico
+												FROM cargo_sobreposto_servidor AS cargo_sobreposto_servidor
+												JOIN cargo AS cargoSobreposto ON cargo_sobreposto_servidor.cd_cargo = cargoSobreposto.cd_cargo
+												JOIN lotacao_servidor AS lotacao_servidor_sobreposto ON cargo_sobreposto_servidor.cd_cargo_base_servidor = lotacao_servidor_sobreposto.cd_cargo_base_servidor
+												WHERE (cargo_sobreposto_servidor.dt_fim_cargo_sobreposto IS NULL
+													   OR cargo_sobreposto_servidor.dt_fim_cargo_sobreposto > @dataReferencia)) cargoSobreposto
+													   ON cargoSobreposto.cd_cargo_base_servidor = cargoServidor.cd_cargo_base_servidor
+														AND cargoSobreposto.cd_unidade_local_servico = dre.cd_unidade_educacao
+											WHERE lotacao_servidor.dt_fim IS NULL AND dre.cd_unidade_administrativa_referencia = @codigoDre
+										   		  and cargo.cd_cargo = 3379 and escola.tp_escola in ({string.Join(',', tipoEscola)})";
+
+
+
+				using var conn = ObterConexao();
+
+				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, dataReferencia,  });
+
+				return retorno;
+
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public async Task<IEnumerable<string>> ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int tipoConsulta)
+        {
+            try
+            {
+				var query = @$"SELECT DISTINCT servidor.cd_registro_funcional as Rf
+							FROM v_servidor_cotic servidor
+							JOIN v_cargo_base_cotic cargobase ON servidor.cd_servidor = cargobase.cd_servidor
+							JOIN funcao_atividade_cargo_servidor funcao ON cargobase.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
+							JOIN v_cadastro_unidade_educacao ue ON funcao.cd_unidade_local_servico = ue.cd_unidade_educacao
+							JOIN v_cadastro_unidade_educacao dre ON dre.cd_unidade_educacao = ue.cd_unidade_administrativa_referencia
+							JOIN escola ON ue.cd_unidade_educacao = escola.cd_escola
+							JOIN tipo_unidade_educacao tue ON ue.tp_unidade_educacao = tue.tp_unidade_educacao
+							JOIN tipo_escola ON escola.tp_escola = tipo_escola.tp_escola
+							JOIN unidade_administrativa ON ue.cd_unidade_administrativa_referencia = unidade_administrativa.cd_unidade_administrativa AND tp_unidade_administrativa = 24
+							WHERE funcao.dt_fim_funcao_atividade IS NULL
+								  AND cargobase.dt_cancelamento IS NULL
+								  AND cargobase.dt_fim_nomeacao IS NULL
+								  AND escola.tp_escola in (@tipoEscola)
+    							  AND dre.cd_unidade_administrativa_referencia = @codigoDre
+								  AND funcao.cd_tipo_funcao = @tipoConsulta";
+
+				using var conn = ObterConexao();
+
+				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, tipoEscola = string.Join(',',tipoConsulta), tipoConsulta });
+
+				return retorno;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+	}
 }
