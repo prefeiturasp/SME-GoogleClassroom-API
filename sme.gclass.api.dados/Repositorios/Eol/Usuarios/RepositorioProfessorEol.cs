@@ -706,7 +706,7 @@ namespace SME.GoogleClassroom.Dados
 				var parametros = new { anoLetivo, codigoDre, anoTurma };
 
 				using var conn = ObterConexao();
-				var retorno = await conn.QueryAsync<string>(query.ToString(), parametros);
+				var retorno = await conn.QueryAsync<string>(query.ToString(), parametros, commandTimeout: 180);
 				return retorno;
 			}
 			catch(Exception ex)
