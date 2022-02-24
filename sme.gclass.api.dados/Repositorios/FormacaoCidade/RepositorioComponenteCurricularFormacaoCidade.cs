@@ -365,18 +365,6 @@ namespace SME.GoogleClassroom.Dados
 
                 new SalaComponenteModalidadeDto()
                 {
-                    SalaVirtual = "EMEBS - LIBRAS",
-                    ComponentesCurricularesIds = "218",
-                    ModalidadesIds = "13",
-                    Modalidade = "Educação Especial",
-                    TipoEscola = new int[] {(int)TipoEscola.EducacaoEspecial},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.SME,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
                     SalaVirtual = "Linguagens e suas tecnologias",
                     ComponentesCurricularesIds = "138,139,9,6,537,1311,1346",
                     ModalidadesIds = "6,9",
