@@ -33,7 +33,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 foreach (var dre in dres)
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, 
-                        new FiltroFormacaoCidadeTurmaComponenteDto ($"{ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL} - {dre.Sigla}",
+                        new FiltroFormacaoCidadeTurmaComponenteDto ($"{ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL} - {dre.Sigla.Replace("-","")}",
                                                                     salasVirtuais.Where(w => w.TipoSala == (int)TipoSala.DRE),
                                                                     dre.Codigo,
                                                                     filtro.AnoLetivo,
