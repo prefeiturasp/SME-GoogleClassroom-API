@@ -5,6 +5,7 @@ using SME.GoogleClassroom.Infra.Constantes;
 using SME.GoogleClassroom.Infra.Enumeradores;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +23,10 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var filtro = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaDto>(mensagemRabbit.Mensagem.ToString());
+
+            var timer = new Stopwatch();
+
+            timer.Start();
 
             try
             {
@@ -52,10 +57,12 @@ namespace SME.GoogleClassroom.Aplicacao
                                                           sme.AnoTurma,
                                                           sme.IncluirAlunoCurso)));
 
+                timer.Stop();
             }
             catch (Exception ex)
             {
-                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
+                timer.Stop();
+                filtro.MensagemErro = $"Tempo: {timer.Elapsed.TotalSeconds} - {ex.Message} - Stack: {ex.StackTrace}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, filtro));
             }
 
