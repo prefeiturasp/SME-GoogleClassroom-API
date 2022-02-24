@@ -13,13 +13,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var codigoCuros = long.Parse(mensagemRabbit.Mensagem.ToString());
-            var excluido = await mediator.Send(new ExcluirCursoGoogleCommand(codigoCuros));
-            if (!excluido)
+            var codigoCurso = long.Parse(mensagemRabbit.Mensagem.ToString());
+            var excluido = await mediator.Send(new ExcluirCursoGoogleCommand(codigoCurso));
+            if (excluido)
             {
-                return false;
+                return await mediator.Send(new ExcluirCursoCommand(codigoCurso));    
             }
-            return await mediator.Send(new ExcluirCursoCommand(codigoCuros));
+            return false;
+            
         }
     }
 }
