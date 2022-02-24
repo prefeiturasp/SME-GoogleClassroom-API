@@ -643,52 +643,52 @@ namespace SME.GoogleClassroom.Dados
 				var query = new StringBuilder();
 				query.AppendLine($@" SELECT DISTINCT servidor.cd_registro_funcional as ProfessorRf  
 								FROM   turma_escola 
-									   INNER JOIN escola esc 
+									   INNER JOIN escola esc (NOLOCK)
 											   ON turma_escola.cd_escola = esc.cd_escola 
-									   INNER JOIN serie_turma_escola 
+									   INNER JOIN serie_turma_escola (NOLOCK)
 											   ON serie_turma_escola.cd_turma_escola = 
 												  turma_escola.cd_turma_escola 
-									   INNER JOIN serie_turma_grade 
+									   INNER JOIN serie_turma_grade (NOLOCK)
 											   ON serie_turma_grade.cd_turma_escola = 
 												  serie_turma_escola.cd_turma_escola 
-									   INNER JOIN escola_grade 
+									   INNER JOIN escola_grade (NOLOCK)
 											   ON serie_turma_grade.cd_escola_grade = 
 												  escola_grade.cd_escola_grade 
-									   INNER JOIN grade 
+									   INNER JOIN grade (NOLOCK)
 											   ON escola_grade.cd_grade = grade.cd_grade 
-									   INNER JOIN serie_ensino 
+									   INNER JOIN serie_ensino (NOLOCK)
 											   ON grade.cd_serie_ensino = serie_ensino.cd_serie_ensino 
-									   INNER JOIN atribuicao_aula 
+									   INNER JOIN atribuicao_aula (NOLOCK)
 											   ON grade.cd_grade = atribuicao_aula.cd_grade 
 												  AND an_atribuicao = turma_escola.an_letivo 
 												  AND cd_unidade_educacao = turma_escola.cd_escola 
 												  AND atribuicao_aula.cd_serie_grade = 
 													  serie_turma_grade.cd_serie_grade 
 												  AND atribuicao_aula.cd_grade = grade.cd_grade 
-									   INNER JOIN componente_curricular 
+									   INNER JOIN componente_curricular (NOLOCK)
 											   ON atribuicao_aula.cd_componente_curricular = 
 												  componente_curricular.cd_componente_curricular 
-									   INNER JOIN v_cargo_base_cotic cargoServidor 
+									   INNER JOIN v_cargo_base_cotic cargoServidor (NOLOCK)
 											   ON ( cargoServidor.cd_cargo_base_servidor = 
 												  atribuicao_aula.cd_cargo_base_servidor ) 
-									   INNER JOIN v_servidor_cotic servidor 
+									   INNER JOIN v_servidor_cotic servidor (NOLOCK)
 											   ON ( servidor.cd_servidor = cargoServidor.cd_servidor ) 
-									   INNER JOIN cargo 
+									   INNER JOIN cargo (NOLOCK)
 											   ON ( cargoServidor.cd_cargo = cargo.cd_cargo ) 
-									   INNER JOIN v_cadastro_unidade_educacao escola 
+									   INNER JOIN v_cadastro_unidade_educacao escola (NOLOCK)
 											   ON escola.cd_unidade_educacao = turma_escola.cd_escola 
-									   INNER JOIN v_cadastro_unidade_educacao dre 
+									   INNER JOIN v_cadastro_unidade_educacao dre (NOLOCK)
 											   ON dre.cd_unidade_educacao = 
 												  escola.cd_unidade_administrativa_referencia 
-									   INNER JOIN unidade_administrativa 
+									   INNER JOIN unidade_administrativa (NOLOCK)
 											   ON escola.cd_unidade_administrativa_referencia = 
 															 unidade_administrativa.cd_unidade_administrativa 
 												  AND tp_unidade_administrativa = 24 
-									   INNER JOIN etapa_ensino 
+									   INNER JOIN etapa_ensino (NOLOCK)
 											   ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino 
-									   INNER JOIN tipo_unidade_educacao tue ON dre.tp_unidade_educacao  = tue.tp_unidade_educacao
-									   INNER JOIN tipo_escola ON esc.tp_escola = tipo_escola.tp_escola
-									   INNER JOIN jornada_cargo_servidor jcs on cargoServidor.cd_cargo_base_servidor = jcs.cd_cargo_base_servidor 
+									   INNER JOIN tipo_unidade_educacao tue (NOLOCK) ON dre.tp_unidade_educacao  = tue.tp_unidade_educacao
+									   INNER JOIN tipo_escola (NOLOCK) ON esc.tp_escola = tipo_escola.tp_escola
+									   INNER JOIN jornada_cargo_servidor jcs (NOLOCK) on cargoServidor.cd_cargo_base_servidor = jcs.cd_cargo_base_servidor 
 																				and jcs.cd_tipo_jornada_opcao = 6 /* JEIF */
 																				and jcs.an_referencia_opcao_jornada = @anoLetivo
 							WHERE   atribuicao_aula.dt_cancelamento IS NULL 
