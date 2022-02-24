@@ -22,11 +22,12 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
             CancellationToken cancellationToken)
         {
             var tamanho = 0;
-            var quantidade = 100;
+            int quantidade;
             var ids = new List<long>();
-            var codigosTurma = request.CodigoTurma;
-            while (tamanho <= request.CodigoTurma.Count)
+            var codigosTurma = new List<long>(request.CodigoTurma);
+            while (tamanho < request.CodigoTurma.Count)
             {
+                quantidade = codigosTurma.Count > 0 && codigosTurma.Count <= 100 ? codigosTurma.Count : 100;
                 tamanho += quantidade;
                 var items = codigosTurma.Take(quantidade).ToList();
                 codigosTurma.RemoveRange(0, quantidade);
