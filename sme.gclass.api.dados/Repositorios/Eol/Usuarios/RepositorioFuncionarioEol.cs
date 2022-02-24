@@ -858,19 +858,19 @@ namespace SME.GoogleClassroom.Dados
 				var dataReferencia = new DateTime(anoLetivo, DateTime.Now.Month, DateTime.Now.Day);
 
 				var query = @$"SELECT DISTINCT cd_registro_funcional as CodigoRF
-											FROM v_servidor_cotic servidor
-											JOIN v_cargo_base_cotic AS cargoServidor ON cargoServidor.CD_SERVIDOR = servidor.cd_servidor
-											JOIN cargo AS cargo ON cargoServidor.cd_cargo = cargo.cd_cargo
-											LEFT JOIN lotacao_servidor AS lotacao_servidor ON cargoServidor.cd_cargo_base_servidor = lotacao_servidor.cd_cargo_base_servidor
-											LEFT JOIN funcao_atividade_cargo_servidor funcao ON cargoServidor.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
+											FROM v_servidor_cotic servidor (NOLOCK)
+											JOIN v_cargo_base_cotic AS cargoServidor (NOLOCK) ON cargoServidor.CD_SERVIDOR = servidor.cd_servidor
+											JOIN cargo AS cargo (NOLOCK) ON cargoServidor.cd_cargo = cargo.cd_cargo
+											LEFT JOIN lotacao_servidor AS lotacao_servidor (NOLOCK) ON cargoServidor.cd_cargo_base_servidor = lotacao_servidor.cd_cargo_base_servidor
+											LEFT JOIN funcao_atividade_cargo_servidor funcao (NOLOCK) ON cargoServidor.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
 																							AND funcao.dt_fim_funcao_atividade IS NULL
-											JOIN v_cadastro_unidade_educacao dre ON lotacao_servidor.cd_unidade_educacao = dre.cd_unidade_educacao
-											JOIN escola ON dre.cd_unidade_educacao = escola.cd_escola
+											JOIN v_cadastro_unidade_educacao dre (NOLOCK) ON lotacao_servidor.cd_unidade_educacao = dre.cd_unidade_educacao
+											JOIN escola (NOLOCK) ON dre.cd_unidade_educacao = escola.cd_escola
 											LEFT JOIN(
 												SELECT cargoSobreposto.cd_cargo, cargoSobreposto.dc_cargo, cargo_sobreposto_servidor.cd_cargo_base_servidor, cargo_sobreposto_servidor.cd_unidade_local_servico
-												FROM cargo_sobreposto_servidor AS cargo_sobreposto_servidor
-												JOIN cargo AS cargoSobreposto ON cargo_sobreposto_servidor.cd_cargo = cargoSobreposto.cd_cargo
-												JOIN lotacao_servidor AS lotacao_servidor_sobreposto ON cargo_sobreposto_servidor.cd_cargo_base_servidor = lotacao_servidor_sobreposto.cd_cargo_base_servidor
+												FROM cargo_sobreposto_servidor AS cargo_sobreposto_servidor (NOLOCK)
+												JOIN cargo AS cargoSobreposto (NOLOCK) ON cargo_sobreposto_servidor.cd_cargo = cargoSobreposto.cd_cargo
+												JOIN lotacao_servidor AS lotacao_servidor_sobreposto (NOLOCK) ON cargo_sobreposto_servidor.cd_cargo_base_servidor = lotacao_servidor_sobreposto.cd_cargo_base_servidor
 												WHERE (cargo_sobreposto_servidor.dt_fim_cargo_sobreposto IS NULL
 													   OR cargo_sobreposto_servidor.dt_fim_cargo_sobreposto > @dataReferencia)) cargoSobreposto
 													   ON cargoSobreposto.cd_cargo_base_servidor = cargoServidor.cd_cargo_base_servidor
@@ -882,7 +882,7 @@ namespace SME.GoogleClassroom.Dados
 
 				using var conn = ObterConexao();
 
-				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, dataReferencia,  });
+				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, dataReferencia}, commandTimeout: 180);
 
 				return retorno;
 

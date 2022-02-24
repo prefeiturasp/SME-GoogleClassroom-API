@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,12 +25,12 @@ namespace SME.GoogleClassroom.Dados
 				var query = $@" SELECT v_cadastro_unidade_educacao.cd_unidade_educacao Codigo, 
 									v_cadastro_unidade_educacao.nm_unidade_educacao Nome,
 									v_cadastro_unidade_educacao.nm_exibicao_unidade Sigla
-							FROM v_cadastro_unidade_educacao 
-							JOIN unidade_administrativa ON v_cadastro_unidade_educacao.cd_unidade_educacao = unidade_administrativa.cd_unidade_administrativa
+							FROM v_cadastro_unidade_educacao (NOLOCK)
+							JOIN unidade_administrativa (NOLOCK) ON v_cadastro_unidade_educacao.cd_unidade_educacao = unidade_administrativa.cd_unidade_administrativa
 							WHERE tp_unidade_administrativa = 24 {IncluirCodigoDre(codigoDre)}
 							ORDER BY nm_unidade_educacao";
 
-				return await conn.QueryAsync<DreDto>(query, new { codigoDre });
+				return await conn.QueryAsync<DreDto>(query, new { codigoDre }, commandTimeout: 180);
 			}
 			catch(Exception ex)
             {

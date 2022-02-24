@@ -704,10 +704,8 @@ namespace SME.GoogleClassroom.Dados
 								{IncluirAnoTurma(anoTurma)}");
 
 				var parametros = new { anoLetivo, codigoDre, anoTurma };
-
 				using var conn = ObterConexao();
-				var retorno = await conn.QueryAsync<string>(query.ToString(), parametros, commandTimeout: 180);
-				return retorno;
+				return await conn.QueryAsync<string>(query.ToString(), parametros, commandTimeout: 180);
 			}
 			catch(Exception ex)
             {
