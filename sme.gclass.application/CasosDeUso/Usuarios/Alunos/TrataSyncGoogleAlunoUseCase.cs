@@ -47,7 +47,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
-                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, filtro.AnoLetivo.Value, filtro.TiposUes, filtro.Ues, filtro.Turmas);
+                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, parametrosCargaInicialDto.AnoLetivo, parametrosCargaInicialDto.TiposUes.ToList(), parametrosCargaInicialDto.Ues.ToList(), parametrosCargaInicialDto.Turmas.ToList());
                         var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
                         if (!publicarAluno)
                             await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
