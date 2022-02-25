@@ -211,13 +211,13 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao,
                                  u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
-                           WHERE usuario_tipo = @tipo
+                           WHERE usuario_tipo = any(@tipos)
                              and id = any(@rfs)";
 
             var parametros = new
             {
                 rfs,
-                tipo = UsuarioTipo.Funcionario
+                tipos =  new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = ObterConexao();
@@ -421,13 +421,13 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao,
                                  u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
-                           WHERE usuario_tipo = @tipo
+                           WHERE usuario_tipo = any(@tipos)
                              and email = @email";
 
             var parametros = new
             {
                 email,
-                tipo = UsuarioTipo.Funcionario
+                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = ObterConexao();
