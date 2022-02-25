@@ -24,10 +24,6 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var filtro = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaDto>(mensagemRabbit.Mensagem.ToString());
 
-            var timer = new Stopwatch();
-
-            timer.Start();
-
             try
             {
                 var dres = filtro is null
@@ -57,12 +53,23 @@ namespace SME.GoogleClassroom.Aplicacao
                                                           sme.AnoTurma,
                                                           sme.IncluirAlunoCurso)));
 
-                timer.Stop();
+                foreach (var sme in salasVirtuais.Where(w => w.TipoSala == (int)TipoSala.AGRUPAR_DRES))
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso,
+                    new FiltroFormacaoCidadeTurmaCursoDto($"{ConstanteFormacaoCidade.PREFIXO_SALA_VIRTUAL} - {sme.SalaVirtual}",
+                                                          null,
+                                                          filtro.AnoLetivo,
+                                                          sme.ComponentesCurricularesIds,
+                                                          sme.ModalidadesIds,
+                                                          sme.TipoEscola,
+                                                          sme.TipoConsulta,
+                                                          sme.AnoTurma,
+                                                          sme.IncluirAlunoCurso,
+                                                          sme.AgruparPorDres)));
+
             }
             catch (Exception ex)
             {
-                timer.Stop();
-                filtro.MensagemErro = $"Tempo: {timer.Elapsed.TotalSeconds} - {ex.Message} - Stack: {ex.StackTrace}";
+                filtro.MensagemErro = $"{ex.Message}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, filtro));
             }
 

@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<string>> Handle(ObterProfessoresPorDreComponenteCurricularModalidadeQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioProfessorEol.ObterProfessoresPorDreComponenteCurricularModalidade(request.CodigoDre, request.ComponentesCurricularIds, request.ModalidadesIds, request.TipoEscola, request.AnoLetivo, request.AnoTurma);
+            return await repositorioProfessorEol.ObterProfessoresPorDreComponenteCurricularModalidade(request.ComponentesCurricularIds, request.ModalidadesIds, request.TipoEscola, request.AnoLetivo, request.AnoTurma, request.CodigosDre);
         }
     }
 }

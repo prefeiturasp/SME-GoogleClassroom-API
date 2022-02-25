@@ -18,24 +18,17 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<DreDto>> ObterDres(string codigoDre)
         {
-			try
-			{
-				using var conn = ObterConexao();
+			using var conn = ObterConexao();
 
-				var query = $@" SELECT v_cadastro_unidade_educacao.cd_unidade_educacao Codigo, 
-									v_cadastro_unidade_educacao.nm_unidade_educacao Nome,
-									v_cadastro_unidade_educacao.nm_exibicao_unidade Sigla
-							FROM v_cadastro_unidade_educacao (NOLOCK)
-							JOIN unidade_administrativa (NOLOCK) ON v_cadastro_unidade_educacao.cd_unidade_educacao = unidade_administrativa.cd_unidade_administrativa
-							WHERE tp_unidade_administrativa = 24 {IncluirCodigoDre(codigoDre)}
-							ORDER BY nm_unidade_educacao";
+			var query = $@" SELECT v_cadastro_unidade_educacao.cd_unidade_educacao Codigo, 
+								v_cadastro_unidade_educacao.nm_unidade_educacao Nome,
+								v_cadastro_unidade_educacao.nm_exibicao_unidade Sigla
+						FROM v_cadastro_unidade_educacao (NOLOCK)
+						JOIN unidade_administrativa (NOLOCK) ON v_cadastro_unidade_educacao.cd_unidade_educacao = unidade_administrativa.cd_unidade_administrativa
+						WHERE tp_unidade_administrativa = 24 {IncluirCodigoDre(codigoDre)}
+						ORDER BY nm_unidade_educacao";
 
-				return await conn.QueryAsync<DreDto>(query, new { codigoDre }, commandTimeout: 180);
-			}
-			catch(Exception ex)
-            {
-				throw ex;
-            }
+			return await conn.QueryAsync<DreDto>(query, new { codigoDre }, commandTimeout: 180);
         }
 
         private string IncluirCodigoDre(string codigoDre)

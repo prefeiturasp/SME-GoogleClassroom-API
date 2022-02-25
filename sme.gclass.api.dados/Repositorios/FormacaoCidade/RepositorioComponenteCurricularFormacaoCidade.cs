@@ -231,50 +231,145 @@ namespace SME.GoogleClassroom.Dados
 
                 new SalaComponenteModalidadeDto()
                 {
-                    SalaVirtual = "MATEMÁTICA E CIÊNCIAS",
+                    SalaVirtual = "MATEMÁTICA E CIÊNCIAS TURMA 1",
                     ComponentesCurricularesIds = "2,9",
                     ModalidadesIds = "2",
                     Modalidade = "CIEJA",
                     TipoEscola = new int[] {(int)TipoEscola.Cieja},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108100", "108200", "108300", "108400", "108600", "109100" },
                 },
 
                 new SalaComponenteModalidadeDto()
                 {
-                    SalaVirtual = "HISTÓRIA E GEOGRAFIA",
+                    SalaVirtual = "MATEMÁTICA E CIÊNCIAS TURMA 2",
+                    ComponentesCurricularesIds = "2,9",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja},
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108500", "109300", "108900", "109200" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "MATEMÁTICA E CIÊNCIAS TURMA 3",
+                    ComponentesCurricularesIds = "2,9",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja},
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "109000", "108800" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "HISTÓRIA E GEOGRAFIA TURMA 1",
                     ComponentesCurricularesIds = "7,8",
                     ModalidadesIds = "2",
                     Modalidade = "CIEJA",
                     TipoEscola = new int[] {(int)TipoEscola.Cieja},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108100", "108200", "108300", "108400", "108600", "109100" },
                 },
 
                 new SalaComponenteModalidadeDto()
                 {
-                    SalaVirtual = "LÍNGUA PORTUGUESA  E LÍNGUA INGLESA",
+                    SalaVirtual = "HISTÓRIA E GEOGRAFIA TURMA 2",
+                    ComponentesCurricularesIds = "7,8",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja},
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108500", "108700", "109300", "108900", "109200" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "HISTÓRIA E GEOGRAFIA TURMA 3",
+                    ComponentesCurricularesIds = "7,8",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja},
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "109000", "108800" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "LÍNGUA PORTUGUESA  E LÍNGUA INGLESA TURMA 1",
                     ComponentesCurricularesIds = "9,138",
                     ModalidadesIds = "2",
                     Modalidade = "CIEJA",
                     TipoEscola = new int[] {(int)TipoEscola.Cieja },
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108100", "108200","108300","108600","108700","108900","109100" },
                 },
 
                 new SalaComponenteModalidadeDto()
                 {
-                    SalaVirtual = "ARTE E EDUCAÇÃO FÍSICA",
+                    SalaVirtual = "LÍNGUA PORTUGUESA  E LÍNGUA INGLESA TURMA 2",
+                    ComponentesCurricularesIds = "9,138",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108800","109300","109200" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "LÍNGUA PORTUGUESA  E LÍNGUA INGLESA TURMA 3",
+                    ComponentesCurricularesIds = "9,138",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108400", "108500", "109000" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ARTE E EDUCAÇÃO FÍSICA TURMA 1",
                     ComponentesCurricularesIds = "139",
                     ModalidadesIds = "2",
                     Modalidade = "CIEJA",
                     TipoEscola = new int[] {(int)TipoEscola.Cieja },
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108100","108300","108200","108400","108600","109000","109100" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ARTE E EDUCAÇÃO FÍSICA TURMA 2",
+                    ComponentesCurricularesIds = "139",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108500","108700","108800","109300","108900","109200" },
                 },
 
                 new SalaComponenteModalidadeDto()
@@ -282,7 +377,7 @@ namespace SME.GoogleClassroom.Dados
                     SalaVirtual = "ALFABETIZAÇÃO",
                     ComponentesCurricularesIds = "1113,1114",
                     ModalidadesIds = "3",
-                    Modalidade = "CIEJA",
+                    Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
@@ -299,6 +394,71 @@ namespace SME.GoogleClassroom.Dados
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ALFABETIZAÇÃO TURMA 1",
+                    ComponentesCurricularesIds = "1247,1248",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108200" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ALFABETIZAÇÃO TURMA 2",
+                    ComponentesCurricularesIds = "1247,1248",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "109100","108300","108600" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ALFABETIZAÇÃO TURMA 3",
+                    ComponentesCurricularesIds = "1247,1248",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108500","108700","109300","109200" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ALFABETIZAÇÃO TURMA 4",
+                    ComponentesCurricularesIds = "1247,1248",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "108100","108900","108800" },
+                },
+
+                new SalaComponenteModalidadeDto()
+                {
+                    SalaVirtual = "ALFABETIZAÇÃO TURMA 5",
+                    ComponentesCurricularesIds = "1247,1248",
+                    ModalidadesIds = "2",
+                    Modalidade = "CIEJA",
+                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
+                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
+                    TipoSala = (int)TipoSala.AGRUPAR_DRES,
+                    IncluirAlunoCurso = true,
+                    AgruparPorDres = new string[] { "109000", "108400" },
                 },
 
                 new SalaComponenteModalidadeDto()
@@ -441,7 +601,7 @@ namespace SME.GoogleClassroom.Dados
                     ComponentesCurricularesIds = null,
                     ModalidadesIds = null,
                     Modalidade = "PAEE - Professores designados das salas de recursos multifuncionais e colaborativo por DRE - Educação Especial",
-                    TipoEscola = new int[] {(int)TipoEscola.EducacaoEspecial},
+                    TipoEscola = new int[] {(int)TipoEscola.Fundamental},
                     TipoConsulta = (int)TipoConsulta.PAEE,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true

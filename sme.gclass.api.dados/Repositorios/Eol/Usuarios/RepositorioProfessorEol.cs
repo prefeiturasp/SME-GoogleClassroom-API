@@ -636,7 +636,7 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<long>(query.ToString(), parametros);
 		}
 
-        public async Task<IEnumerable<string>> ObterProfessoresPorDreComponenteCurricularModalidade(string codigoDre, string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma)
+        public async Task<IEnumerable<string>> ObterProfessoresPorDreComponenteCurricularModalidade(string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma, string[] agruparPorDres)
         {
 			try
 			{
@@ -690,22 +690,20 @@ namespace SME.GoogleClassroom.Dados
 									   INNER JOIN tipo_escola (NOLOCK) ON esc.tp_escola = tipo_escola.tp_escola
 									   INNER JOIN jornada_cargo_servidor jcs (NOLOCK) on cargoServidor.cd_cargo_base_servidor = jcs.cd_cargo_base_servidor 
 																				and jcs.cd_tipo_jornada_opcao = 6 /* JEIF */
-																				and jcs.an_referencia_opcao_jornada = @anoLetivo
+																				and jcs.an_referencia_opcao_jornada = {anoLetivo}
 							WHERE   atribuicao_aula.dt_cancelamento IS NULL 
 								AND componente_curricular.dt_cancelamento IS NULL 								
 								AND ( atribuicao_aula.dt_atribuicao_aula <= Getdate() ) 
 								AND ( Getdate() <= COALESCE(Datepart(year, atribuicao_aula.dt_disponibilizacao_aulas), Getdate()) ) 
-								and turma_escola.an_letivo = @anoLetivo 
-								{IncluirCondicaoDre(codigoDre)}								
-								/*and componente_curricular.cd_componente_curricular in (@componenteCurricularIds)*/
+								and turma_escola.an_letivo = {anoLetivo} 
+								{IncluirCondicaoDre(agruparPorDres)}
 								and componente_curricular.cd_componente_curricular in ({componentesCurricularIds})
 								AND etapa_ensino.cd_etapa_ensino in ({modalidadesIds})
 								AND esc.tp_escola in ({string.Join(',', tipoEscola)})  
 								{IncluirAnoTurma(anoTurma)}");
 
-				var parametros = new { anoLetivo, codigoDre, anoTurma };
 				using var conn = ObterConexao();
-				return await conn.QueryAsync<string>(query.ToString(), parametros, commandTimeout: 180);
+				return await conn.QueryAsync<string>(query.ToString(), commandTimeout: 180);
 			}
 			catch(Exception ex)
             {
@@ -713,15 +711,15 @@ namespace SME.GoogleClassroom.Dados
             }
 		}
 
-        private string IncluirCondicaoDre(string codigoDre)
-        {
-			return !string.IsNullOrEmpty(codigoDre) ? " and dre.cd_unidade_educacao = @codigoDre " : string.Empty;
+		private string IncluirCondicaoDre(string[] agruparPorDres)
+		{
+			return agruparPorDres != null ? $" and dre.cd_unidade_educacao in ({string.Join(',', agruparPorDres)}) " : string.Empty;
 
 		}
 
-        private string IncluirAnoTurma(string anoTurma)
+		private string IncluirAnoTurma(string anoTurma)
         {
-			return !string.IsNullOrEmpty(anoTurma) ? " AND serie_ensino.sg_resumida_serie in (@anoTurma) " : string.Empty;
+			return !string.IsNullOrEmpty(anoTurma) ? $" AND serie_ensino.sg_resumida_serie in ({anoTurma}) " : string.Empty;
 
 		}
     }
