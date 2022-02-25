@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var alunoJaIncluido = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoParaIncluir.Codigo));
-                var googleClassroomId = alunoJaIncluido.First().GoogleClassroomId;
+                var googleClassroomId = alunoJaIncluido.Any() ? alunoJaIncluido.First().GoogleClassroomId : null;
                 if (alunoJaIncluido != null && alunoJaIncluido.Any() && googleClassroomId != null && !googleClassroomId.Equals(alunoParaIncluir.Codigo.ToString()))
                 {
                     await AtualizarAlunoGoogleSync(filtro, alunoJaIncluido.First());
