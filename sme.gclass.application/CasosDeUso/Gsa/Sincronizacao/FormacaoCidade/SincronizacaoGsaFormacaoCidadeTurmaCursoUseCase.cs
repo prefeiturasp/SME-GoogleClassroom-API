@@ -25,30 +25,27 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var filtro = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaCursoDto>(mensagemRabbit.Mensagem.ToString());
 
-            var timer = new Stopwatch();
-            
-            timer.Start();
-
             try
             {
                 if (filtro.IncluirAlunoCurso)
                 {
                     var funcionarios = await ObterAlunos(filtro);
 
+                    var filtroAgruparPorDres = filtro.AgruparPorDres != null ? string.Join(',', filtro.AgruparPorDres) : string.Empty;
+                    var filtroTipoEscola = filtro.TipoEscola != null ? string.Join(',', filtro.TipoEscola) : string.Empty;
+
+                    Console.WriteLine($"SincronizacaoGsaFormacaoCidadeTurmaCursoUseCase - SalaVirtual: {filtro.SalaVirtual} - TipoConsulta: {filtro.TipoConsulta} - Modalidades: {filtro.ModalidadesIds ?? string.Empty} - TipoEscola: {filtroTipoEscola} - ComponentesCurricularesIds: {filtro.ComponentesCurricularesIds?? string.Empty} - AnoTurma: {filtro.AnoTurma ?? string.Empty} - CodigoDre: {filtro.CodigoDre ?? string.Empty} - AgruparPorDres: {filtroAgruparPorDres} - Qtde: {funcionarios.Count()}");
+
                     if (funcionarios.Count() > ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO)
                     {
                         int qtdePorPacote, qtdePorPacoteFinal;
                         CalcularQuantidadePorPacote(funcionarios, out qtdePorPacote, out qtdePorPacoteFinal);
 
-                        for (int i = 0; i < qtdePorPacote; i++)
-                        {
-                            var nomeSala = i == 0 ? filtro.SalaVirtual : $"{filtro.SalaVirtual}_{i}";
-
-                            await InserirCursoAssociarAluno(nomeSala, filtro.CodigoDre, funcionarios.Skip(i * qtdePorPacoteFinal).Take(qtdePorPacoteFinal).ToList());
-                        }
+                        for (int i = 1; i <= qtdePorPacote; i++)
+                            await InserirCursoAssociarAluno($"{filtro.SalaVirtual} TURMA {i}", funcionarios.Skip(i * qtdePorPacoteFinal).Take(qtdePorPacoteFinal).ToList());
                     }
                     else
-                        await InserirCursoAssociarAluno(filtro.SalaVirtual, filtro.CodigoDre, funcionarios);
+                        await InserirCursoAssociarAluno(filtro.SalaVirtual, funcionarios);
                 }
                 else
                 {
@@ -56,12 +53,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
                     await InserirCursoGsa(filtro.SalaVirtual, cursoGoogleId);                    
                 }
-                timer.Stop();
             }
             catch (Exception ex)
             {
-                timer.Stop();
-                filtro.MensagemErro = $"Tempo: {timer.Elapsed.TotalSeconds} - {ex.Message} - Stack: {ex.StackTrace}";
+                filtro.MensagemErro = $"{ex.Message}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, filtro));
             }
             finally
@@ -79,7 +74,7 @@ namespace SME.GoogleClassroom.Aplicacao
             switch ((TipoConsulta)filtro.TipoConsulta)
             {
                 case TipoConsulta.ComponenteCurricular:
-                    funcionarios = await mediator.Send(new ObterProfessoresPorDreComponenteCurricularModalidadeQuery(filtro.CodigoDre, filtro.ComponentesCurricularesIds, filtro.ModalidadesIds, filtro.TipoEscola, filtro.AnoLetivo, filtro.AnoTurma));
+                    funcionarios = await mediator.Send(new ObterProfessoresPorDreComponenteCurricularModalidadeQuery(filtro.ComponentesCurricularesIds, filtro.ModalidadesIds, filtro.TipoEscola, filtro.AnoLetivo, filtro.AnoTurma, filtro.AgruparPorDres));
                     break;
                 case TipoConsulta.CP:
                     funcionarios = await mediator.Send(new ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(filtro.CodigoDre, filtro.TipoEscola, filtro.AnoLetivo));
@@ -98,7 +93,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return funcionarios;
         }
 
-        private async Task InserirCursoAssociarAluno(string salaVirtual, string codigoDre, IEnumerable<string> funcionarios)
+        private async Task InserirCursoAssociarAluno(string salaVirtual, IEnumerable<string> funcionarios)
         {
             try
             {

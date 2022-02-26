@@ -7,21 +7,21 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterProfessoresPorDreComponenteCurricularModalidadeQuery : IRequest<IEnumerable<string>>
     {
-        public string CodigoDre { get; set; }
         public string ComponentesCurricularIds { get; set; }
         public string ModalidadesIds { get; set; }
         public int[] TipoEscola { get; set; }
         public int AnoLetivo { get; set; }
         public string AnoTurma { get; set; }
+        public string[] CodigosDre { get; set; }
 
-        public ObterProfessoresPorDreComponenteCurricularModalidadeQuery(string codigoDre, string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma)
+        public ObterProfessoresPorDreComponenteCurricularModalidadeQuery(string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma, string[] codigosDre)
         {
-            CodigoDre = codigoDre;
             ComponentesCurricularIds = componentesCurricularIds;
             ModalidadesIds = modalidadesIds;
             TipoEscola = tipoEscola;
             AnoLetivo = anoLetivo;
             AnoTurma = anoTurma;
+            CodigosDre = codigosDre;
         }
     }
 
