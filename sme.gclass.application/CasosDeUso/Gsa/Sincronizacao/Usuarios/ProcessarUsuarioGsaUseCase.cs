@@ -24,19 +24,27 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
 
             var usuarioGsaDto = JsonConvert.DeserializeObject<UsuarioGsaDto>(mensagemRabbit.Mensagem.ToString());
-            if (usuarioGsaDto is null)
-                throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
-
-            var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
-            var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
-
-            var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
-            if (usuarioGsaDto.UltimoItemDaFila)
+            try
             {
-                await IniciarValidacaoAsync();
-            }
+                if (usuarioGsaDto is null)
+                throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
+            
+                var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
+                var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
 
-            return retorno;
+                var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+                if (usuarioGsaDto.UltimoItemDaFila)
+                    await IniciarValidacaoAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                usuarioGsaDto.MensagemErro = $"{ex.Message}";
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluirErro, usuarioGsaDto));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, mensagemRabbit.Mensagem.ToString()));
+                return false;
+            }           
         }
 
         private async Task IniciarValidacaoAsync()

@@ -97,5 +97,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await usecase.Executar();
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de usuarios_gsa.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("gsa/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErrosDeProcessarUsuarioGsa([FromServices] IProcessarUsuarioGsaComErrosUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
     }
 }
