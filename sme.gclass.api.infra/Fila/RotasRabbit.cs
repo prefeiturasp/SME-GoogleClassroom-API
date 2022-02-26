@@ -71,6 +71,7 @@
         public static string FilaGsaUsuarioCarregar => "googleclass.gsa.usuario.carregar";
         public static string FilaGsaUsuarioValidar => "googleclass.gsa.usuario.validar";
         public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
+        public static string FilaGsaUsuarioIncluirErro => "googleclass.gsa.usuario.incluir.erro";
         public static string FilaGsaCursoUsuarioCarregar => "googleclass.gsa.curso.usuario.carregar";
         public static string FilaGsaCursoUsuarioIncluir => "googleclass.gsa.curso.usuario.incluir";
         public static string FilaGsaMuralAvisosCarregar => "googleclass.gsa.mural.avisos.carregar";

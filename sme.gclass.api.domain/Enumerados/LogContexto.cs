@@ -6,5 +6,6 @@
         WorkerRabbit = 2,
         Atividades = 3,
         FormacaoCidade = 4,
+        UsuarioGsa = 5,
     }
 }
