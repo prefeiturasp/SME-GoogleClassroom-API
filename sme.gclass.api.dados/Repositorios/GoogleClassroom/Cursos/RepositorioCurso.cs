@@ -174,6 +174,31 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
         }
 
+        public async Task<CursoGoogle> ObterCursoPorEmailNome(string email, string nome)
+        {
+            var query = @"select c.id, 
+                                 c.nome,
+                                 c.secao,
+                                 c.turma_id AS TurmaId,
+                                 c.componente_curricular_id AS ComponenteCurricularId,
+                                 c.data_inclusao AS DataInclusao,
+                                 c.data_atualizacao AS DataAtualizacao,
+                                 c.Email       
+                            from public.cursos c 
+                           where upper(email) = upper(@email) 
+                             and upper(nome) = upper(@nome)";
+
+            var parametros = new
+            {
+                email,
+                nome
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
+        }
+
         public async Task<CursoGoogle> ObterCursoPorId(long id)
         {
             var query = @"select c.id, 
@@ -285,6 +310,25 @@ namespace SME.GoogleClassroom.Dados
         {
             using var conn = ObterConexao();
             return await conn.QueryAsync<long>(@"select id from cursos where turma_id = @turmaId ", new { turmaId });
+        }
+
+        public async Task<long> ExisteCursoPorNome(string nome)
+        {
+            try
+            {
+                var query = @"select id from public.cursos where upper(nome)  = upper('@nome')";
+
+                using var conn = ObterConexao();
+
+                var retorno = await conn.QueryFirstOrDefaultAsync<long>(query, new { nome });
+
+                return retorno;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

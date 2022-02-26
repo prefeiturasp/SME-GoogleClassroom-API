@@ -18,5 +18,7 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100);
 
         Task LimparAsync();
+
+        Task<CursoGsaDto> ObterCursoGsaPorNomeAsync(string nome);
     }
 }

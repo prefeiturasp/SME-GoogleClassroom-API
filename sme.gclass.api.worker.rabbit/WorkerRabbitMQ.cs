@@ -154,6 +154,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             //Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
             comandos.Add(RotasRabbit.FilaCursoAhRemover, new ComandoRabbit("Remover curso", typeof(IRemoverCursoGoogleClassroomUseCase)));
+
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por SME ou DRE", typeof(ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por SME ou DRE com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase)));
+
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Componente", typeof(ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Componente com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase)));
+
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA - criação do Curso", typeof(ISincronizacaoGsaFormacaoCidadeTurmaCursoUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Curso com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase)));
+
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA - atribuição de Aluno", typeof(ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Aluno com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase)));
+
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -393,8 +406,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoAhRemover, false, consumer);
 
-
-
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
@@ -409,6 +422,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaFuncionarioIndiretoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaUsuarioGoogleIdAtualizar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorCursoRemover, false, consumer);
+
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, false, consumer);
             }
         }
 

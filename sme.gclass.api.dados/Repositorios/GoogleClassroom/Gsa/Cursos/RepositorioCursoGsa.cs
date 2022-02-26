@@ -22,26 +22,53 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QuerySingleOrDefaultAsync<bool>(query, new { cursoId }));
         }
 
+        public async Task<CursoGsaDto> ObterCursoGsaPorNomeAsync(string nome)
+        {
+            try
+            {
+                var query = $@"SELECT id, nome, secao, criador_id, descricao, data_inclusao, inserido_manualmente_google 
+                               FROM public.cursos_gsa 
+                               WHERE upper(nome) = upper('{nome}')";
+
+                using var conn = ObterConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<CursoGsaDto>(query.ToString(), new { nome });
+            }
+            catch (Exception ex )
+            {
+                throw ex;
+            }
+        }
+
         public async Task<int> SalvarAsync(CursoGsa cursoGsa)
         {
-            const string insertQuery = @"insert into public.cursos_gsa
+            try
+            {
+
+
+                const string insertQuery = @"insert into public.cursos_gsa
                                         (id, nome, secao, criador_id, descricao, data_inclusao, inserido_manualmente_google)
                                         values
                                         (@id, @nome, @secao, @criadorId, @descricao, @dataInclusao, @inseridoManualmenteGoogle)";
 
-            var parametros = new
-            {
-                id = cursoGsa.Id,
-                nome = cursoGsa.Nome,
-                secao = cursoGsa.Secao,
-                criadorId = cursoGsa.CriadorId,
-                descricao = cursoGsa.Descricao,
-                inseridoManualmenteGoogle = cursoGsa.InseridoManualmenteGoogle,
-                dataInclusao = cursoGsa.DataInclusao
-            };
+                var parametros = new
+                {
+                    id = cursoGsa.Id,
+                    nome = cursoGsa.Nome,
+                    secao = cursoGsa.Secao,
+                    criadorId = cursoGsa.CriadorId,
+                    descricao = cursoGsa.Descricao,
+                    inseridoManualmenteGoogle = cursoGsa.InseridoManualmenteGoogle,
+                    dataInclusao = cursoGsa.DataInclusao
+                };
 
-            using var conn = ObterConexao();
-            return await conn.ExecuteAsync(insertQuery, parametros);
+                using var conn = ObterConexao();
+                return await conn.ExecuteAsync(insertQuery, parametros);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<PaginacaoResultadoDto<CursoGsaDto>> ObterCursosComparativosAsync(Paginacao paginacao, string secao, string nome, string descricao)

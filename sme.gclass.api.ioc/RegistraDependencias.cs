@@ -75,7 +75,8 @@ namespace SME.GoogleClassroom.IoC
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
 
-            
+            services.TryAddScoped<IRepositorioDreEol, RepositorioDreEol>();
+            services.TryAddScoped<IRepositorioComponenteCurricularFormacaoCidade, RepositorioComponenteCurricularFormacaoCidade>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -220,7 +221,25 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRemoverTurmaUseCase, RemoverTurmaUseCase>();
 
 
+            #region Formação Cidade
+            services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
+            
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase>();
 
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteComErrosUseCase>();
+
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoComErrosUseCase>();
+
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase>();
+            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase>();
+            #endregion
 
             RegistrarCasosDeUsoGsa(services);
         }
@@ -230,6 +249,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterCursoGsaGoogleUseCase, ObterCursoGsaGoogleUseCase>();
 
             services.TryAddScoped<IAtribuirDonoCursoUseCase, AtribuirDonoCursoUseCase>();
+
+            services.TryAddScoped<IAtribuirDonoCursoFormacaoCidadeUseCase, AtribuirDonoCursoFormacaoCidadeUseCase>();
 
             RegistrarCasosDeUsoSincronizacaoGsa(services);
         }

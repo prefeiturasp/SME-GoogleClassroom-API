@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -23,9 +21,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public int QuantidadeRegistrosPagina { get; set; }
     }
 
-    public class ObterCursoGsaManualmenteQueryValidator : AbstractValidator<ObterCursoGsaPorAnoQuery>
+    public class ObterCursoGsaPorAnoQueryValidator : AbstractValidator<ObterCursoGsaPorAnoQuery>
     {
-        public ObterCursoGsaManualmenteQueryValidator()
+        public ObterCursoGsaPorAnoQueryValidator()
         {
             RuleFor(a => a.AnoLetivo)
                 .NotEmpty()
