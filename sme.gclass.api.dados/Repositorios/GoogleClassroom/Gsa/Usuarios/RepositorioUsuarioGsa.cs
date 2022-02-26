@@ -1,10 +1,10 @@
 ﻿using Dapper;
-using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -143,6 +143,18 @@ namespace SME.GoogleClassroom.Dados
             const string query = @"DELETE FROM usuarios_gsa";
             using var conn = ObterConexao();
             await conn.ExecuteAsync(query);
+        }
+
+        public async Task<IEnumerable<UsuarioGsaDto>> ObterUsuariosPorCodigos(long[] usuariosCodigo)
+        {
+            var query = @"select u.indice, uc.*
+                          from usuarios u
+                          join usuarios_gsa uc on u.google_classroom_id = uc.id
+                          where u.id = any(@usuariosCodigo)"; 
+
+            using var conn = ObterConexao();
+            
+            return (await conn.QueryAsync<UsuarioGsaDto>(query, new { usuariosCodigo }));
         }
     }
 }

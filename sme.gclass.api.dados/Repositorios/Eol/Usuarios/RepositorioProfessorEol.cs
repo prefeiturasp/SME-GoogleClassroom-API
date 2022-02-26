@@ -1,13 +1,12 @@
 ﻿using Dapper;
+using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using SME.GoogleClassroom.Dados.Help;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -635,6 +634,93 @@ namespace SME.GoogleClassroom.Dados
 
 			using var conn = ObterConexao();
 			return await conn.QueryAsync<long>(query.ToString(), parametros);
+		}
+
+        public async Task<IEnumerable<string>> ObterProfessoresPorDreComponenteCurricularModalidade(string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma, string[] agruparPorDres)
+        {
+			try
+			{
+				var query = new StringBuilder();
+				query.AppendLine($@" SELECT DISTINCT servidor.cd_registro_funcional as ProfessorRf  
+								FROM   turma_escola 
+									   INNER JOIN escola esc (NOLOCK)
+											   ON turma_escola.cd_escola = esc.cd_escola 
+									   INNER JOIN serie_turma_escola (NOLOCK)
+											   ON serie_turma_escola.cd_turma_escola = 
+												  turma_escola.cd_turma_escola 
+									   INNER JOIN serie_turma_grade (NOLOCK)
+											   ON serie_turma_grade.cd_turma_escola = 
+												  serie_turma_escola.cd_turma_escola 
+									   INNER JOIN escola_grade (NOLOCK)
+											   ON serie_turma_grade.cd_escola_grade = 
+												  escola_grade.cd_escola_grade 
+									   INNER JOIN grade (NOLOCK)
+											   ON escola_grade.cd_grade = grade.cd_grade 
+									   INNER JOIN serie_ensino (NOLOCK)
+											   ON grade.cd_serie_ensino = serie_ensino.cd_serie_ensino 
+									   INNER JOIN atribuicao_aula (NOLOCK)
+											   ON grade.cd_grade = atribuicao_aula.cd_grade 
+												  AND an_atribuicao = turma_escola.an_letivo 
+												  AND cd_unidade_educacao = turma_escola.cd_escola 
+												  AND atribuicao_aula.cd_serie_grade = 
+													  serie_turma_grade.cd_serie_grade 
+												  AND atribuicao_aula.cd_grade = grade.cd_grade 
+									   INNER JOIN componente_curricular (NOLOCK)
+											   ON atribuicao_aula.cd_componente_curricular = 
+												  componente_curricular.cd_componente_curricular 
+									   INNER JOIN v_cargo_base_cotic cargoServidor (NOLOCK)
+											   ON ( cargoServidor.cd_cargo_base_servidor = 
+												  atribuicao_aula.cd_cargo_base_servidor ) 
+									   INNER JOIN v_servidor_cotic servidor (NOLOCK)
+											   ON ( servidor.cd_servidor = cargoServidor.cd_servidor ) 
+									   INNER JOIN cargo (NOLOCK)
+											   ON ( cargoServidor.cd_cargo = cargo.cd_cargo ) 
+									   INNER JOIN v_cadastro_unidade_educacao escola (NOLOCK)
+											   ON escola.cd_unidade_educacao = turma_escola.cd_escola 
+									   INNER JOIN v_cadastro_unidade_educacao dre (NOLOCK)
+											   ON dre.cd_unidade_educacao = 
+												  escola.cd_unidade_administrativa_referencia 
+									   INNER JOIN unidade_administrativa (NOLOCK)
+											   ON escola.cd_unidade_administrativa_referencia = 
+															 unidade_administrativa.cd_unidade_administrativa 
+												  AND tp_unidade_administrativa = 24 
+									   INNER JOIN etapa_ensino (NOLOCK)
+											   ON serie_ensino.cd_etapa_ensino = etapa_ensino.cd_etapa_ensino 
+									   INNER JOIN tipo_unidade_educacao tue (NOLOCK) ON dre.tp_unidade_educacao  = tue.tp_unidade_educacao
+									   INNER JOIN tipo_escola (NOLOCK) ON esc.tp_escola = tipo_escola.tp_escola
+									   INNER JOIN jornada_cargo_servidor jcs (NOLOCK) on cargoServidor.cd_cargo_base_servidor = jcs.cd_cargo_base_servidor 
+																				and jcs.cd_tipo_jornada_opcao = 6 /* JEIF */
+																				and jcs.an_referencia_opcao_jornada = {anoLetivo}
+							WHERE   atribuicao_aula.dt_cancelamento IS NULL 
+								AND componente_curricular.dt_cancelamento IS NULL 								
+								AND ( atribuicao_aula.dt_atribuicao_aula <= Getdate() ) 
+								AND ( Getdate() <= COALESCE(Datepart(year, atribuicao_aula.dt_disponibilizacao_aulas), Getdate()) ) 
+								and turma_escola.an_letivo = {anoLetivo} 
+								{IncluirCondicaoDre(agruparPorDres)}
+								and componente_curricular.cd_componente_curricular in ({componentesCurricularIds})
+								AND etapa_ensino.cd_etapa_ensino in ({modalidadesIds})
+								AND esc.tp_escola in ({string.Join(',', tipoEscola)})  
+								{IncluirAnoTurma(anoTurma)}");
+
+				using var conn = ObterConexao();
+				return await conn.QueryAsync<string>(query.ToString(), commandTimeout: 180);
+			}
+			catch(Exception ex)
+            {
+				throw ex;
+            }
+		}
+
+		private string IncluirCondicaoDre(string[] agruparPorDres)
+		{
+			return agruparPorDres != null ? $" and dre.cd_unidade_educacao in ({string.Join(',', agruparPorDres)}) " : string.Empty;
+
+		}
+
+		private string IncluirAnoTurma(string anoTurma)
+        {
+			return !string.IsNullOrEmpty(anoTurma) ? $" AND serie_ensino.sg_resumida_serie in ({anoTurma}) " : string.Empty;
+
 		}
     }
 }
