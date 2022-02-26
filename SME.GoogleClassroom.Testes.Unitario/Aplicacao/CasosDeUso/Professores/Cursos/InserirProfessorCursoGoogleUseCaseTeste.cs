@@ -67,7 +67,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
@@ -91,7 +91,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -118,7 +118,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -153,7 +153,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -185,7 +185,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -217,7 +217,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))

@@ -13,6 +13,7 @@
         public int TipoConsulta { get; set; }
         public int TipoSala { get; set; }
         public bool IncluirAlunoCurso { get; set; }
+        public string[] AgruparPorDres { get; set; }
 
         public SalaComponenteModalidadeDto(string salaVirtual, string componentesCurricularIds, string modalidadesIds, string modalidade, int[] tipoEscola, int tipoConsulta, int tipoSala, string anoTurma = null, bool incluirAlunoCurso = true)
         {

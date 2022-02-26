@@ -27,20 +27,21 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso,
                     new FiltroFormacaoCidadeTurmaCursoDto($"{filtro.SalaVirtual} - {salaVirtual.SalaVirtual}",
-                                                          filtro.CodigoDre,
+                                                          filtro.CodigoDre,                                                          
                                                           filtro.AnoLetivo,
                                                           salaVirtual.ComponentesCurricularesIds,
                                                           salaVirtual.ModalidadesIds,
                                                           salaVirtual.TipoEscola,
                                                           salaVirtual.TipoConsulta,
                                                           salaVirtual.AnoTurma,
-                                                          salaVirtual.IncluirAlunoCurso)));
+                                                          salaVirtual.IncluirAlunoCurso,
+                                                          salaVirtual.AgruparPorDres ?? (new string[] { filtro.CodigoDre }))));
                 }
                    
             }
             catch (Exception ex)
             {
-                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
+                filtro.MensagemErro = $"{ex.Message}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, filtro));
             }
 

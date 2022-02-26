@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                filtro.MensagemErro = $"{ex.Message} - Stack: {ex.StackTrace}";
+                filtro.MensagemErro = $"{ex.Message}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
             }
 
