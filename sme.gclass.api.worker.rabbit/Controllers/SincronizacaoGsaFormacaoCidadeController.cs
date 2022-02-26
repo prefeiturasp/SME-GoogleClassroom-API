@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     public class SincronizacaoGsaFormacaoCidadeController : Controller
     {
         /// <summary>
-        /// Inicia a sincronização para cadastrar turmas formaçaõ cidade.
+        /// Inicia a sincronização para cadastrar turmas formação cidade.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
