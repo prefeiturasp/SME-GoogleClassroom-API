@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarSyncCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, true));
             if (!publicarSyncCursoErro)
             {
-                throw new NegocioException("Não foi possível iniciar a sincronização de formação cidade turmas curso Erro.");
+                throw new NegocioException("Não foi possível iniciar a sincronização de formação cidade turmas curso Erro."); 
             }
 
             return publicarSyncCursoErro;
