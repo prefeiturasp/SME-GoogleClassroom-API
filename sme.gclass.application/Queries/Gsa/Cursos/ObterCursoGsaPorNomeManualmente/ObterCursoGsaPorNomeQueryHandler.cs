@@ -2,21 +2,22 @@
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursoGsaPorAnoQueryHandler : IRequestHandler<ObterCursoGsaPorAnoQuery, IEnumerable<CursoGsaId>>
+    public class ObterCursoGsaPorNomeQueryHandler : IRequestHandler<ObterCursoGsaPorNomeQuery, CursoGsaDto>
     {
         IRepositorioCursoGsa repositorioCursoGsa;
-        public ObterCursoGsaPorAnoQueryHandler(IRepositorioCursoGsa repositorioCursoGsa)
+        public ObterCursoGsaPorNomeQueryHandler(IRepositorioCursoGsa repositorioCursoGsa)
         {
             this.repositorioCursoGsa = repositorioCursoGsa ?? throw new ArgumentNullException(nameof(repositorioCursoGsa));
         }
-        public Task<IEnumerable<CursoGsaId>> Handle(ObterCursoGsaPorAnoQuery request, CancellationToken cancellationToken)
-            => repositorioCursoGsa.ObterCursosGsaPorAno(request.AnoLetivo, request.CursoId, request.Pagina, request.QuantidadeRegistrosPagina);
+
+        public Task<CursoGsaDto> Handle(ObterCursoGsaPorNomeQuery request, CancellationToken cancellationToken)
+        {
+            return repositorioCursoGsa.ObterCursoGsaPorNomeAsync(request.Nome);
+        }
     }
 }
