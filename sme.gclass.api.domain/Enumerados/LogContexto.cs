@@ -4,5 +4,6 @@
     {
         Api = 1,
         WorkerRabbit = 2,
+        FormacaoCidade = 3,
     }
 }

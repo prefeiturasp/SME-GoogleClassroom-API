@@ -53,6 +53,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 filtro.MensagemErro = $"{ex.Message}";
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, filtro));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso} - {ex.Message}", LogNivel.Critico, LogContexto.FormacaoCidade, mensagemRabbit.Mensagem.ToString()));
             }
             finally
             {
