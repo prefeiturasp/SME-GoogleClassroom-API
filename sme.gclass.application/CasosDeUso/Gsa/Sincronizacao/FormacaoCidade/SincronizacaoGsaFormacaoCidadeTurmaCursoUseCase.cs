@@ -31,11 +31,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     var funcionarios = await ObterAlunos(filtro);
 
-                    var filtroAgruparPorDres = filtro.AgruparPorDres != null ? string.Join(',', filtro.AgruparPorDres) : string.Empty;
-                    var filtroTipoEscola = filtro.TipoEscola != null ? string.Join(',', filtro.TipoEscola) : string.Empty;
-
-                    Console.WriteLine($"SincronizacaoGsaFormacaoCidadeTurmaCursoUseCase - SalaVirtual: {filtro.SalaVirtual} - TipoConsulta: {filtro.TipoConsulta} - Modalidades: {filtro.ModalidadesIds ?? string.Empty} - TipoEscola: {filtroTipoEscola} - ComponentesCurricularesIds: {filtro.ComponentesCurricularesIds?? string.Empty} - AnoTurma: {filtro.AnoTurma ?? string.Empty} - CodigoDre: {filtro.CodigoDre ?? string.Empty} - AgruparPorDres: {filtroAgruparPorDres} - Qtde: {funcionarios.Count()}");
-
                     if (funcionarios.Count() > ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO)
                     {
                         int qtdePorPacote, qtdePorPacoteFinal;
