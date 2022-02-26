@@ -53,11 +53,11 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioValidar, RotasRabbit.FilaGsaUsuarioValidar, true));
                 if (!iniciarFilaDeValidacao)
-                    SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de usuários.");
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - Não foi possível iniciar a fila de validação de usuários.", LogNivel.Critico, LogContexto.UsuarioGsa, string.Empty));
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, string.Empty));
             }
         }
     }
