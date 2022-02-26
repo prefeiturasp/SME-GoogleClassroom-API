@@ -29,6 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     filtro.MensagemErro = $"O aluno (usuario) '{filtro.CodigoAluno}' não foi localizado.";
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno} - {filtro.MensagemErro}", LogNivel.Critico, LogContexto.FormacaoCidade, mensagemRabbit.Mensagem.ToString()));
                 }                    
                 else
                 {
