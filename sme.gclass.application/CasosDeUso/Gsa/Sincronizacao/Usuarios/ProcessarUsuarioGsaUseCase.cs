@@ -28,13 +28,23 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 if (usuarioGsaDto is null)
                 throw new NegocioException("Não foi possível processaor o usuário GSA. A mensagem enviada é inválida.");
-            
-                var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
-                var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
 
-                var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
-                if (usuarioGsaDto.UltimoItemDaFila)
-                    await IniciarValidacaoAsync();
+                var existeUsuarioGsa = await mediator.Send(new ExisteUsuarioGsaPorIdQuery(usuarioGsaDto.Id));
+                if (existeUsuarioGsa)
+                {
+                    usuarioGsaDto.MensagemErro = $"O usuario '{usuarioGsaDto.Id}' já existe na usuario_gsa.";
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluirErro, usuarioGsaDto));
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {usuarioGsaDto.MensagemErro}", LogNivel.Critico, LogContexto.FormacaoCidade, mensagemRabbit.Mensagem.ToString()));
+                }
+                else
+                {
+                    var usuarioExiste = await mediator.Send(new ExisteUsuarioPorGoogleClassroomIdQuery(usuarioGsaDto.Id));
+                    var usuarioGsa = new UsuarioGsa(usuarioGsaDto.Id, usuarioGsaDto.Email, usuarioGsaDto.Nome, usuarioGsaDto.DataUltimoLogin, usuarioGsaDto.EhAdmin, usuarioGsaDto.OrganizationPath, !usuarioExiste, usuarioGsaDto.DataInclusao);
+
+                    var retorno = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+                    if (usuarioGsaDto.UltimoItemDaFila)
+                        await IniciarValidacaoAsync();
+                }                    
 
                 return true;
             }
