@@ -38,6 +38,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                     catch (Exception ex)
                     {
+                        filtro.MensagemErro = $"{ex.Message}";
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluirErro, filtro));
                         await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, mensagemRabbit.Mensagem.ToString()));
                         continue;
                     }
@@ -51,6 +53,8 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch(Exception ex)
             {
+                filtro.MensagemErro = $"{ex.Message}";
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregarErro, filtro));
                 await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioCarregar} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, mensagemRabbit.Mensagem.ToString()));
                 return false;
             }
