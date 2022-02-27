@@ -113,5 +113,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             await useCase.Executar();
             return Ok();
         }
+
+        /// <summary>
+        /// Inicia o tratamento de erros da realização da carga principal (looping) de usuarios_gsa - looping em alunos.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("realizar/carga/gsa/erros/tratamentos")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ProcessarErrosDeRealizarCargaUsuariosGsa([FromServices] IRealizarCargaUsuariosGsaComErrosUseCase useCase)
+        {
+            await useCase.Executar();
+            return Ok();
+        }
     }
 }

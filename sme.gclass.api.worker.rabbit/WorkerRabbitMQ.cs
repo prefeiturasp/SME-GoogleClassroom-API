@@ -100,6 +100,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaCursoIncluir, new ComandoRabbit("Processar curso GSA e adiciona na base", typeof(IProcessarCursoGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoValidar, new ComandoRabbit("Realiza validação de cursos GSA", typeof(IValidarCursosGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioCarregar, new ComandoRabbit("Sincroniza os usuários GSA a serem adicionados na base", typeof(IRealizarCargaUsuariosGsaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaUsuarioCarregarErro, new ComandoRabbit("Sincroniza os usuários GSA Erro a serem adicionados na base", typeof(IRealizarCargaUsuariosGsaErroUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioIncluir, new ComandoRabbit("Processar usuário GSA e adiciona na base", typeof(IProcessarUsuarioGsaUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioIncluirErro, new ComandoRabbit("Processar usuário GSA Erro e adiciona na base", typeof(IProcessarUsuarioGsaErroUseCase)));
             comandos.Add(RotasRabbit.FilaGsaUsuarioValidar, new ComandoRabbit("Realiza validação de usuários GSA", typeof(IValidarUsuariosGsaUseCase)));
@@ -437,7 +438,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCarregar, false, consumer);
 
             if (consumoDeFilasOptions.Gsa.CargaUsuarioGsa)
+            {
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaUsuarioCarregarErro, false, consumer);
+            }                
 
             if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioCarregar, false, consumer);

@@ -366,6 +366,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioCarregar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCarregarErro, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCarregarErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioCarregarErro);
             }
 
             if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)

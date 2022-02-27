@@ -69,6 +69,7 @@
         public static string FilaGsaCursoIncluir => "googleclass.gsa.curso.incluir";
         public static string FilaGsaCursoValidar => "googleclass.gsa.curso.validar";
         public static string FilaGsaUsuarioCarregar => "googleclass.gsa.usuario.carregar";
+        public static string FilaGsaUsuarioCarregarErro => "googleclass.gsa.usuario.carregar.erro";
         public static string FilaGsaUsuarioValidar => "googleclass.gsa.usuario.validar";
         public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
         public static string FilaGsaUsuarioIncluirErro => "googleclass.gsa.usuario.incluir.erro";
