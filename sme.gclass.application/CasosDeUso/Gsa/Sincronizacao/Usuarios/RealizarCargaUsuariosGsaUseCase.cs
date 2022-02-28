@@ -38,9 +38,9 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                     catch (Exception ex)
                     {
-                        filtro.MensagemErro = $"{ex.Message}";
-                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluirErro, filtro));
-                        await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, mensagemRabbit.Mensagem.ToString()));
+                        usuario.MensagemErro = $"{ex.Message}";
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluirErro, usuario));
+                        await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, usuario.ToString()));
                         continue;
                     }
                 }

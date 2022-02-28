@@ -225,19 +225,15 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
             
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase>();
             #endregion
 
@@ -266,11 +262,9 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IIniciarCargaUsuariosGsaUseCase, IniciarCargaUsuariosGsaUseCase>();
             services.TryAddScoped<IRealizarCargaUsuariosGsaUseCase, RealizarCargaUsuariosGsaUseCase>();
-            services.TryAddScoped<IRealizarCargaUsuariosGsaErroUseCase, RealizarCargaUsuariosGsaErroUseCase>();
             services.TryAddScoped<IRealizarCargaUsuariosGsaComErrosUseCase, RealizarCargaUsuariosGsaComErrosUseCase>();
             
             services.TryAddScoped<IProcessarUsuarioGsaUseCase, ProcessarUsuarioGsaUseCase>();
-            services.TryAddScoped<IProcessarUsuarioGsaErroUseCase, ProcessarUsuarioGsaErroUseCase>();
             services.TryAddScoped<IProcessarUsuarioGsaComErrosUseCase, ProcessarUsuarioGsaComErrosUseCase>();
 
             services.TryAddScoped<IValidarUsuariosGsaUseCase, ValidarUsuariosGsaUseCase>();
