@@ -223,6 +223,7 @@ namespace SME.GoogleClassroom.IoC
 
             #region Formação Cidade
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
+            services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase>();
             
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase>();

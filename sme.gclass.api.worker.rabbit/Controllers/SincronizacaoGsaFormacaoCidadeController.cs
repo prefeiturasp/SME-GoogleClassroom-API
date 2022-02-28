@@ -95,5 +95,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             await useCase.Executar();
             return Ok();
         }
+
+        /// <summary>
+        /// Inicia o tratamento de erros de turmas/excluir para o Google Classroom.
+        /// </summary>
+        /// <remarks>
+        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
+        /// não sendo possível assim acompanhar em tempo real sua evolução.
+        /// </remarks>
+        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        [HttpPost("turmas/excluir")]
+        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ProcessarExclusaoCursosGoogle([FromQuery] long[] cursosIds, [FromServices] IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase useCase)
+        {
+            await useCase.Executar(cursosIds);
+            return Ok();
+        }
     }
 }

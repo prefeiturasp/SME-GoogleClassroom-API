@@ -1,26 +1,22 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Infra;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase : IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase
+    public class IniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase : IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase
     {
         private readonly IMediator mediator;
 
-        public IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase(IMediator mediator)
+        public IniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(string codigoDre, int? componenteCurricularId, int? anoLetivo)
+        public async Task<bool> Executar(long[] cursosIds)
         {
-            if (!anoLetivo.HasValue)
-                anoLetivo = DateTime.Now.Year;
-
-            var dto = new FiltroFormacaoCidadeTurmaDto(anoLetivo.Value, codigoDre, componenteCurricularId);
-            return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, dto));
+            foreach (var cursoId in cursosIds)
+                await mediator.Send(new ExcluirCursoGoogleCommand(cursoId));
+            return true;
         }
     }
 }
