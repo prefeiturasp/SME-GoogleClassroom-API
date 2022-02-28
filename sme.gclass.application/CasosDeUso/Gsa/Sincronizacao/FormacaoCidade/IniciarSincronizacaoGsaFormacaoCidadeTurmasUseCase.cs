@@ -23,4 +23,4 @@ namespace SME.GoogleClassroom.Aplicacao
             return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, dto));
         }
     }
-} 
+}
