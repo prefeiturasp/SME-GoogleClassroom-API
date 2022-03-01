@@ -27,10 +27,16 @@ namespace SME.GoogleClassroom.Aplicacao
                 var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoAluno));
                 if (aluno is null || !aluno.Any())
                 {
-                    filtro.MensagemErro = $"O aluno (usuario) '{filtro.CodigoAluno}' não foi localizado.";
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
-                    await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno} - {filtro.MensagemErro}", LogNivel.Critico, LogContexto.FormacaoCidade, mensagemRabbit.Mensagem.ToString()));
-                }                    
+                    var usuarioGoogle = await mediator.Send(new ObterUsuariosGooglePorCodigosQuery(filtro.CodigoAluno));
+                    var alunoGoogle = new AlunoGoogle(int.Parse(usuarioGoogle.Id), usuarioGoogle.Nome, usuarioGoogle.Email, usuarioGoogle.OrganizationPath);
+
+                    var incluiuAlunoGoogle = await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
+                    if (!incluiuAlunoGoogle)
+                    {
+                        alunoGoogle.MensagemErro = $"O aluno (usuario) '{filtro.CodigoAluno}' não foi possível incluir o aluno no Google Classroom.";
+                        await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno} - {alunoGoogle.MensagemErro}", LogNivel.Critico, LogContexto.FormacaoCidade, JsonConvert.SerializeObject(alunoGoogle)));
+                    }                    
+                }
                 else
                 {
                     var alunoFirst = aluno.FirstOrDefault();

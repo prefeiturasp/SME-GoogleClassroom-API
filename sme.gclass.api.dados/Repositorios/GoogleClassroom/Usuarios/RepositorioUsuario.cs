@@ -773,5 +773,25 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { email });
         }
+
+        public async Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.nome,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where id = any(@Codigos)";
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstAsync<UsuarioGoogleDto>(query, new { Codigos = usuarioCodigo });
+        }
     }
 }
