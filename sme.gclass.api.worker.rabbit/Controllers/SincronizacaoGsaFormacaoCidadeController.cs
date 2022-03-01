@@ -102,7 +102,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <remarks>
         /// </remarks>
         /// <response code="200">Exclusão realizada com sucesso.</response>
-        [HttpPost("turmas/excluir")]
+        [HttpDelete("turmas/excluir")]
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
