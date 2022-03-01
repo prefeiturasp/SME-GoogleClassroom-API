@@ -106,7 +106,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ProcessarExclusaoCursosGoogle([FromQuery] long[] cursosIds, [FromServices] IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase useCase)
+        public async Task<IActionResult> ProcessarExclusaoCursosGoogle([FromQuery] string cursosIds, [FromServices] IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase useCase)
         {
             await useCase.Executar(cursosIds);
             return Ok();

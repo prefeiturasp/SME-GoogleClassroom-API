@@ -4,6 +4,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase
     {
-        Task<bool> Executar(long[] cursosIds);
+        Task<bool> Executar(string cursosIds);
     }
 }
