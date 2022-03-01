@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Dominio;
 using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery : IRequest<IEnumerable<string>>
+    public class ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery : IRequest<IEnumerable<AlunoCursoEol>>
     {
         public string CodigoDre { get; set; }
         public int[] TipoEscola { get; set; }

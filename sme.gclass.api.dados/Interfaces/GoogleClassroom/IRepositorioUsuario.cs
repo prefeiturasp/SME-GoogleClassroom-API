@@ -21,6 +21,7 @@ namespace SME.GoogleClassroom.Dados
         Task<int> AtualizarAsync(long id, string nome, string organizationPath);
         Task<UsuarioGoogleDto> ObterUsuarioPorEmail(string email);
         Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId);
+        Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo);
         Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId);
         Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId);
 
