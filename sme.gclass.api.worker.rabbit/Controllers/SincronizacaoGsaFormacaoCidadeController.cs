@@ -100,8 +100,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// Inicia a exclusão de turmas (cursos) no Google Classroom.
         /// </summary>
         /// <remarks>
-        /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
-        /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
         [HttpPost("turmas/excluir")]
