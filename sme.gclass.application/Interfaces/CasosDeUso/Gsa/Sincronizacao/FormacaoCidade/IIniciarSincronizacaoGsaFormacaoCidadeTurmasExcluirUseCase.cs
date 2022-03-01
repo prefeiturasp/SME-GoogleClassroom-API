@@ -4,6 +4,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase
     {
-        Task<bool> Executar(string jsonCursos);
+        Task<bool> Executar(long[] cursosIds);
     }
 }

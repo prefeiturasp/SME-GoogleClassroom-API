@@ -1,7 +1,4 @@
 ﻿using MediatR;
-using Newtonsoft.Json;
-using SME.GoogleClassroom.Infra;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -15,12 +12,10 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<bool> Executar(string jsonCursos)
+        public async Task<bool> Executar(long[] cursosIds)
         {
-            var jsonResult = JsonConvert.DeserializeObject<FiltroFormacaoCidadeTurmaCursoExcluirDto>(jsonCursos);
-
-            foreach (var curso in jsonResult.courses)
-                await mediator.Send(new ExcluirCursoGoogleCommand(curso.id));
+            foreach (var curso in cursosIds)
+                await mediator.Send(new ExcluirCursoGoogleCommand(curso));
             return true;
         }
     }
