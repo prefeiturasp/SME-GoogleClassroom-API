@@ -42,7 +42,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
                             alunoCursoGoogle = new AlunoCursoGoogle(indiceInserido, filtro.CursoId);
                             await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, professorEol.Email);
-                        }                        
+                        } 
+                        else
+                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
                 }
                 else
                 {
@@ -59,11 +61,6 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             return true;
-        }
-
-        private string ObterNomeSocial(AlunoCursoEol filtro)
-        {
-            return !string.IsNullOrEmpty(filtro.NomeSocial) ? string.Empty : filtro.NomeSocial;
         }
 
         private async Task<long> InserirProfessorGoogleAsync(ProfessorGoogle professorGoogle)
