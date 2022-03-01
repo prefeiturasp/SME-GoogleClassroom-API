@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using SME.GoogleClassroom.Dominio;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -14,8 +16,15 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(string cursosIds)
         {
-            foreach (var curso in cursosIds.Split(","))
-                await mediator.Send(new ExcluirCursoGoogleCommand(long.Parse(curso)));
+            try
+            {
+                foreach (var curso in cursosIds.Split(","))
+                    await mediator.Send(new ExcluirCursoGoogleCommand(long.Parse(curso)));
+            }
+            catch (Exception ex)
+            {
+                await mediator.Send(new SalvarLogViaRabbitCommand($"turmas/excluir - {ex.Message}", LogNivel.Critico, LogContexto.FormacaoCidade, cursosIds));
+            }
             return true;
         }
     }
