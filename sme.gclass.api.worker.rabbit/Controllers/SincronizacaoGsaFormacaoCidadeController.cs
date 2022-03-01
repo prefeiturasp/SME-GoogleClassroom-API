@@ -97,7 +97,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
 
         /// <summary>
-        /// Inicia o tratamento de erros de turmas/excluir para o Google Classroom.
+        /// Inicia a exclusão de turmas (cursos) no Google Classroom.
         /// </summary>
         /// <remarks>
         /// **Importante:** Visando a melhoria de performance, o tratamento de erros acontece de forma assíncrona e descentralizada,
