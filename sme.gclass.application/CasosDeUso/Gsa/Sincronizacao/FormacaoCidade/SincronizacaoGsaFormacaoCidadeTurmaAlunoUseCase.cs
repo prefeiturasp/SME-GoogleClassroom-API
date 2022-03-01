@@ -24,24 +24,30 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
+                var alunoCursoGoogle = new AlunoCursoGoogle();
+
                 var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoAluno));
                 if (aluno is null || !aluno.Any())
                 {
-                    var usuarioGoogle = await mediator.Send(new ObterUsuariosGooglePorCodigosQuery(filtro.CodigoAluno));
-                    var alunoGoogle = new AlunoGoogle(int.Parse(usuarioGoogle.Id), usuarioGoogle.Nome, usuarioGoogle.Email, usuarioGoogle.OrganizationPath);
+                    
+                        var professorEol = new ProfessorEol(filtro.CodigoRF, filtro.NomePessoa, filtro.NomeSocial?? string.Empty, filtro.OrganizationPath);
 
-                    var incluiuAlunoGoogle = await mediator.Send(new InserirAlunoGoogleCommand(alunoGoogle));
-                    if (!incluiuAlunoGoogle)
-                    {
-                        alunoGoogle.MensagemErro = $"O aluno (usuario) '{filtro.CodigoAluno}' não foi possível incluir o aluno no Google Classroom.";
-                        await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno} - {alunoGoogle.MensagemErro}", LogNivel.Critico, LogContexto.FormacaoCidade, JsonConvert.SerializeObject(alunoGoogle)));
-                    }                    
+                        var professorGoogle = new ProfessorGoogle(filtro.CodigoRF, filtro.NomePessoa, professorEol.Email, filtro.OrganizationPath);
+                        var indiceInserido = await InserirProfessorGoogleAsync(professorGoogle);
+
+                        if (indiceInserido > 0)
+                        {
+                            var usuarioGsa = new UsuarioGsa(filtro.CodigoRF.ToString(), professorEol.Email, filtro.NomePessoa, null, false, filtro.OrganizationPath, false, DateTime.Now);
+                            var usuarioGsaInserido = await mediator.Send(new IncluirUsuarioGsaCommand(usuarioGsa));
+
+                            alunoCursoGoogle = new AlunoCursoGoogle(indiceInserido, filtro.CursoId);
+                            await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, professorEol.Email);
+                        }                        
                 }
                 else
                 {
                     var alunoFirst = aluno.FirstOrDefault();
-                    var alunoCursoGoogle = new AlunoCursoGoogle(alunoFirst.Indice, filtro.CursoId);
-
+                    alunoCursoGoogle = new AlunoCursoGoogle(alunoFirst.Indice, filtro.CursoId);
                     await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, alunoFirst.Email);
                 }                
             }
@@ -53,6 +59,35 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             return true;
+        }
+
+        private string ObterNomeSocial(AlunoCursoEol filtro)
+        {
+            return !string.IsNullOrEmpty(filtro.NomeSocial) ? string.Empty : filtro.NomeSocial;
+        }
+
+        private async Task<long> InserirProfessorGoogleAsync(ProfessorGoogle professorGoogle)
+        {
+            try
+            {
+                var professorSincronizado = await mediator.Send(new InserirProfessorGoogleCommand(professorGoogle));
+                if (!professorSincronizado)
+                {
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno} - {$"Não foi possível incluir o professor no Google Classroom. {professorGoogle}"}", LogNivel.Critico, LogContexto.FormacaoCidade, JsonConvert.SerializeObject(professorGoogle)));
+                    return 0;
+                }
+
+                return await InserirProfessorAsync(professorGoogle);
+            }
+            catch (GoogleApiException gEx)
+            {
+                await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno} - {$"Não foi possível incluir o professor no Google Classroom. {gEx.Message}"}", LogNivel.Critico, LogContexto.FormacaoCidade, JsonConvert.SerializeObject(professorGoogle)));
+                return 0;
+            }
+        }
+        private async Task<long> InserirProfessorAsync(ProfessorGoogle professorGoogle)
+        {
+            return await mediator.Send(new IncluirUsuarioCommand(professorGoogle));
         }
 
         private async Task InserirAlunoCursoGoogleAsync(AlunoCursoGoogle alunoCursoGoogle, string email)

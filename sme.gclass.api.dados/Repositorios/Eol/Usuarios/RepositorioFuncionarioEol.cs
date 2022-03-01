@@ -851,11 +851,11 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<IEnumerable<string>> ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int anoLetivo)
+        public async Task<IEnumerable<AlunoCursoEol>> ObterCoordenadoresPedagogicosPorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int anoLetivo)
         {
 			var dataReferencia = new DateTime(anoLetivo, DateTime.Now.Month, DateTime.Now.Day);
 
-			var query = @$"SELECT DISTINCT cd_registro_funcional as CodigoRF
+			var query = @$"SELECT DISTINCT cd_registro_funcional as CodigoRF, nm_pessoa AS NomePessoa, nm_social AS NomeSocial,'/Professores' AS OrganizationPath  
 										FROM v_servidor_cotic servidor (NOLOCK)
 										JOIN v_cargo_base_cotic AS cargoServidor (NOLOCK) ON cargoServidor.CD_SERVIDOR = servidor.cd_servidor
 										JOIN cargo AS cargo (NOLOCK) ON cargoServidor.cd_cargo = cargo.cd_cargo
@@ -880,16 +880,16 @@ namespace SME.GoogleClassroom.Dados
 
 			using var conn = ObterConexao();
 
-			var retorno = await conn.QueryAsync<string>(query, new { codigoDre, dataReferencia}, commandTimeout: 180);
+			var retorno = await conn.QueryAsync<AlunoCursoEol>(query, new { codigoDre, dataReferencia}, commandTimeout: 180);
 
 			return retorno;
 		}
 
-		public async Task<IEnumerable<string>> ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int tipoConsulta)
+		public async Task<IEnumerable<AlunoCursoEol>> ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int tipoConsulta)
         {
             try
             {
-				var query = @$"SELECT DISTINCT servidor.cd_registro_funcional as Rf
+				var query = @$"SELECT DISTINCT servidor.cd_registro_funcional as CodigoRf, servidor.nm_pessoa AS NomePessoa, servidor.nm_social AS NomeSocial,'/Professores' AS OrganizationPath 
 							FROM v_servidor_cotic servidor
 							JOIN v_cargo_base_cotic cargobase ON servidor.cd_servidor = cargobase.cd_servidor
 							JOIN funcao_atividade_cargo_servidor funcao ON cargobase.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
@@ -908,7 +908,7 @@ namespace SME.GoogleClassroom.Dados
 
 				using var conn = ObterConexao();
 
-				var retorno = await conn.QueryAsync<string>(query, new { codigoDre, tipoEscola = string.Join(',',tipoEscola), tipoConsulta });
+				var retorno = await conn.QueryAsync<AlunoCursoEol>(query, new { codigoDre, tipoEscola = string.Join(',',tipoEscola), tipoConsulta });
 
 				return retorno;
 			}
