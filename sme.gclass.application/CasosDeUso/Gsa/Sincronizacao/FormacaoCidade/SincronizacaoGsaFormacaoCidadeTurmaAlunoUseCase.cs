@@ -42,9 +42,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
                             alunoCursoGoogle = new AlunoCursoGoogle(indiceInserido, filtro.CursoId);
                             await InserirAlunoCursoGoogleAsync(alunoCursoGoogle, professorEol.Email);
-                        } 
+                        }
                         else
+                        {
+                            filtro.MensagemErro += $" Inserido: {indiceInserido}";
                             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, filtro));
+                        }                        
                 }
                 else
                 {
