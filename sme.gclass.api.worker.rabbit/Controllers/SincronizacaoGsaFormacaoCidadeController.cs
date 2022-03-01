@@ -101,7 +101,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// </summary>
         /// <remarks>
         /// </remarks>
-        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="200">Exclusão realizada com sucesso.</response>
         [HttpPost("turmas/excluir")]
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
