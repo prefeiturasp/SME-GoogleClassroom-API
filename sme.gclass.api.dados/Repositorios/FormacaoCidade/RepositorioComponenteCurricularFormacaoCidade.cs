@@ -17,19 +17,19 @@ namespace SME.GoogleClassroom.Dados
                 {
                     SalaVirtual = "GEOGRAFIA",
                     ComponentesCurricularesIds = "8",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true
-                },
+                },                
 
                 new SalaComponenteModalidadeDto()
                 {
                     SalaVirtual = "HISTÓRIA",
                     ComponentesCurricularesIds = "7",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
@@ -41,43 +41,43 @@ namespace SME.GoogleClassroom.Dados
                 {
                     SalaVirtual = "LÍNGUA INGLESA",
                     ComponentesCurricularesIds = "9",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true
                 },
-
+                
                 new SalaComponenteModalidadeDto()
                 {
                     SalaVirtual = "ARTE",
                     ComponentesCurricularesIds = "139",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true
                 },
-
+                                
                 new SalaComponenteModalidadeDto()
                 {
                     SalaVirtual = "CIÊNCIAS NATURAIS",
                     ComponentesCurricularesIds = "89",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true
-                },
+                },                               
 
                 new SalaComponenteModalidadeDto()
                 {
                     SalaVirtual = "LÍNGUA PORTUGUESA",
                     ComponentesCurricularesIds = "138",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
@@ -89,7 +89,7 @@ namespace SME.GoogleClassroom.Dados
                 {
                     SalaVirtual = "MATEMÁTICA",
                     ComponentesCurricularesIds = "2",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
@@ -101,7 +101,7 @@ namespace SME.GoogleClassroom.Dados
                 {
                     SalaVirtual = "TPA (Informática)",
                     ComponentesCurricularesIds = "1060",
-                    ModalidadesIds = "5",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
@@ -113,115 +113,7 @@ namespace SME.GoogleClassroom.Dados
                 {
                     SalaVirtual = "SALA DE LEITURA",
                     ComponentesCurricularesIds = "1061",
-                    ModalidadesIds = "5",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "GEOGRAFIA",
-                    ComponentesCurricularesIds = "8",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "HISTÓRIA",
-                    ComponentesCurricularesIds = "7",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "LÍNGUA INGLESA",
-                    ComponentesCurricularesIds = "9",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "ARTE",
-                    ComponentesCurricularesIds = "139",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "CIÊNCIAS NATURAIS",
-                    ComponentesCurricularesIds = "89",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "LÍNGUA PORTUGUESA",
-                    ComponentesCurricularesIds = "138",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "MATEMÁTICA",
-                    ComponentesCurricularesIds = "2",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "TPA (Informática)",
-                    ComponentesCurricularesIds = "1060",
-                    ModalidadesIds = "3",
-                    Modalidade = "EJA Regular",
-                    TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "SALA DE LEITURA",
-                    ComponentesCurricularesIds = "1061",
-                    ModalidadesIds = "3",
+                    ModalidadesIds = "3,5",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
@@ -375,26 +267,14 @@ namespace SME.GoogleClassroom.Dados
                 new SalaComponenteModalidadeDto()
                 {
                     SalaVirtual = "ALFABETIZAÇÃO",
-                    ComponentesCurricularesIds = "1113,1114",
-                    ModalidadesIds = "3",
+                    ComponentesCurricularesIds = "1113,1114,1247,1248",
+                    ModalidadesIds = "2,3",
                     Modalidade = "EJA Regular",
                     TipoEscola = new int[] {(int)TipoEscola.Fundamental, (int)TipoEscola.Medio, (int)TipoEscola.EducacaoEspecial, (int)TipoEscola.CentroEducacionalUnidicadoEMEF},
                     TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
                     TipoSala = (int)TipoSala.DRE,
                     IncluirAlunoCurso = true
-                },
-
-                new SalaComponenteModalidadeDto()
-                {
-                    SalaVirtual = "ALFABETIZAÇÃO",
-                    ComponentesCurricularesIds = "1247,1248",
-                    ModalidadesIds = "2",
-                    Modalidade = "CIEJA",
-                    TipoEscola = new int[] {(int)TipoEscola.Cieja },
-                    TipoConsulta = (int)TipoConsulta.ComponenteCurricular,
-                    TipoSala = (int)TipoSala.DRE,
-                    IncluirAlunoCurso = true
-                },
+                },                
 
                 new SalaComponenteModalidadeDto()
                 {
