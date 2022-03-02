@@ -26,13 +26,13 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var alunoCursoGoogle = new AlunoCursoGoogle();
 
-                var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoAluno));
+                var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoRF));
                 if (aluno is null || !aluno.Any())
                 {
                     
                         var professorEol = new ProfessorEol(filtro.CodigoRF, filtro.NomePessoa, filtro.NomeSocial?? string.Empty, filtro.OrganizationPath);
 
-                        var professorGoogle = new ProfessorGoogle(filtro.CodigoRF, filtro.NomePessoa, professorEol.Email, filtro.OrganizationPath);
+                        var professorGoogle = new ProfessorGoogle(filtro.CodigoRF, professorEol.Nome, professorEol.Email, filtro.OrganizationPath);
                         var indiceInserido = await InserirProfessorGoogleAsync(professorGoogle);
 
                         if (indiceInserido > 0)
