@@ -16,6 +16,6 @@ namespace SME.GoogleClassroom.Dados
         Task<bool> SalvarAsync(UsuarioGsa usuarioComparativo);
 
         Task LimparAsync();
-        Task<IEnumerable<UsuarioGsaDto>> ObterUsuariosPorCodigos(long[] usuariosCodigo);
+        Task<IEnumerable<UsuarioGsaDto>> ObterUsuariosPorCodigos(long[] usuariosCodigo, int usuarioTipo);
     }
 }

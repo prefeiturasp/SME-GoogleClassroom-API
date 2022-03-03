@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Collections.Generic;
 
@@ -7,9 +8,10 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class ObterUsuariosPorCodigosQuery : IRequest<IEnumerable<UsuarioGsaDto>>
     {
-        public ObterUsuariosPorCodigosQuery(long usuarioCodigo)
+        public ObterUsuariosPorCodigosQuery(long usuarioCodigo, int usuarioTipo)
         {
             UsuarioCodigo = new long[] { usuarioCodigo };
+            UsuarioTipo = usuarioTipo;
         }
         public ObterUsuariosPorCodigosQuery(long[] usuarioCodigo)
         {
@@ -17,6 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
         }
 
         public long[] UsuarioCodigo { get; set; }
+        public int UsuarioTipo { get; set; }
     }
 
     public class ObterUsuariosPorCodigosQueryValidator : AbstractValidator<ObterUsuariosPorCodigosQuery>
@@ -26,6 +29,10 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(c => c.UsuarioCodigo)
                .NotEmpty()
                .WithMessage("Ao menos um codigo de usuário deve ser informado. ");
+
+            RuleFor(c => c.UsuarioTipo)
+               .NotEmpty()
+               .WithMessage("Tipo usuário deve ser informado. ");
         }
     }
 }
