@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<UsuarioGsaDto>> Handle(ObterUsuariosPorCodigosQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioUsuarioGsa.ObterUsuariosPorCodigos(request.UsuarioCodigo);
+            return await repositorioUsuarioGsa.ObterUsuariosPorCodigos(request.UsuarioCodigo, request.UsuarioTipo);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var alunoCursoGoogle = new AlunoCursoGoogle();
 
-                var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoRF));
+                var aluno = await mediator.Send(new ObterUsuariosPorCodigosQuery(filtro.CodigoRF, (int)UsuarioTipo.Professor));
                 if (aluno is null || !aluno.Any())
                 {
                     
