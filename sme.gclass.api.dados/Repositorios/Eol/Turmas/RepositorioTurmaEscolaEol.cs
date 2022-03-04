@@ -11,18 +11,17 @@ namespace SME.GoogleClassroom.Dados.Turmas
         {
         }
         
-        public async Task<IEnumerable<long>> ObterTurmasPorCodigoETipo(List<long> codigos, int tipo = 4)
+        public async Task<IEnumerable<long>> ObterTurmasPorCodigoETipo4e8(List<long> codigos)
         {
 
             var query = @"select te.cd_turma_escola from turma_escola te 
                           where
-                                te.cd_tipo_turma = @tipoTurma and
+                                te.cd_tipo_turma in (4,8) and
                                 te.cd_turma_escola in @CodigoTurmas;";
             
             using var conn = ObterConexao();
             return await conn.QueryAsync<long>(query, new
-            {
-                TipoTurma = tipo,
+            {   
                 CodigoTurmas = codigos
             });
         }
