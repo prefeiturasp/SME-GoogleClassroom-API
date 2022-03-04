@@ -5,6 +5,6 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioTurmaEscolaEol
     {
-        Task<IEnumerable<long>> ObterTurmasPorCodigoETipo(List<long> codigos, int tipo = 4);
+        Task<IEnumerable<long>> ObterTurmasPorCodigoETipo4e8(List<long> codigos);
     }
 }

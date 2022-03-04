@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                 tamanho += quantidade;
                 var items = codigosTurma.Take(quantidade).ToList();
                 codigosTurma.RemoveRange(0, quantidade);
-                ids.AddRange(await repositorio.ObterTurmasPorCodigoETipo(items));
+                ids.AddRange(await repositorio.ObterTurmasPorCodigoETipo4e8(items));
             }
 
             return ids.Select(x => x);

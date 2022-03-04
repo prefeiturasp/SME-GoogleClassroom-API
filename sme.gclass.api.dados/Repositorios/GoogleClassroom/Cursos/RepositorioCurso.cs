@@ -241,7 +241,8 @@ namespace SME.GoogleClassroom.Dados
         public async Task<int> ExcluirCursoAsync(long cursoId)
         {
             const string query = @"delete from cursos_usuarios where curso_id  = @cursoId;
-                                   delete from cursos where id  = @cursoId; ";
+                                   delete from cursos_arquivado where curso_id  = @cursoId; 
+                                   delete from cursos where id  = @cursoId;";
 
             var parametros = new
             {

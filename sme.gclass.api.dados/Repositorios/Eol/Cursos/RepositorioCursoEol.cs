@@ -1103,7 +1103,7 @@ namespace SME.GoogleClassroom.Dados
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								{(dataReferencia != null ? "AND   te.dt_inicio_turma >= @dataReferencia" : "")}								
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())
-                                AND te.cd_tipo_turma <> 4");
+                                AND te.cd_tipo_turma not in (4,8)");
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
@@ -1212,7 +1212,7 @@ namespace SME.GoogleClassroom.Dados
 								AND	  te.st_turma_escola in ('O', 'A', 'C')
 								{(dataReferencia != null ? "AND   te.dt_inicio_turma >= @dataReferencia" : "")}
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())
-                                AND te.cd_tipo_turma <> 4");
+                                AND te.cd_tipo_turma not in (4,8)");
 
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
 			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));

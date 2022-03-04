@@ -7,13 +7,13 @@ namespace SME.GoogleClassroom.Infra
     {
         [Required(ErrorMessage = "O codigo da turma tem que ser informado")]
         public List<long> CodigoTurma { get; set; }
-        public int TipoTurma { get; set; }
+        public List<int> TipoTurma { get; set; }
 
         public FiltroRemoverTurmaDto()
         {
         }
 
-        public FiltroRemoverTurmaDto(List<long> codigoTurma, int tipoTurma)
+        public FiltroRemoverTurmaDto(List<long> codigoTurma, List<int> tipoTurma)
         {
             CodigoTurma = codigoTurma;
             TipoTurma = tipoTurma;

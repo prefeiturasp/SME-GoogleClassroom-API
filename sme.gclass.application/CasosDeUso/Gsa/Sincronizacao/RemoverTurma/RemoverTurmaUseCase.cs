@@ -20,29 +20,22 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(FiltroRemoverTurmaDto filtro)
         {
-            try
+            var cursosParaRemover = new List<string>();
+            var turmasId =
+                await mediator.Send(new ObterTurmasPorTipoECodigosQuery(filtro.CodigoTurma));
+            foreach (var turmaId in turmasId)
             {
-                var cursosParaRemover = new List<string>();
-                var turmasId =
-                    await mediator.Send(new ObterTurmasPorTipoECodigosQuery(filtro.TipoTurma, filtro.CodigoTurma));
-                foreach (var turmaId in turmasId)
-                {
-                    var cursos = await mediator.Send(new ObterIdsCursosPorTurmaQuery(turmaId));
-                    cursosParaRemover.AddRange(cursos.Select(id => id.ToString()));
-                }
-
-                foreach (var cursoId in cursosParaRemover)
-                {
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoAhRemover,
-                        mensagem: cursoId));
-                }
-
-                return true;
+                var cursos = await mediator.Send(new ObterIdsCursosPorTurmaQuery(turmaId));
+                cursosParaRemover.AddRange(cursos.Select(id => id.ToString()));
             }
-            catch (Exception exception)
+
+            foreach (var cursoId in cursosParaRemover)
             {
-                return false;
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoAhRemover,
+                    mensagem: cursoId));
             }
+
+            return true;
         }
     }
 }
