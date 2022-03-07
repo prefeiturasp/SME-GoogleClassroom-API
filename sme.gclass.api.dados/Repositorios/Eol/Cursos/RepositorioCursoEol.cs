@@ -6,6 +6,7 @@ using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,12 +49,12 @@ namespace SME.GoogleClassroom.Dados
 				parametrosCargaInicialDto.Turmas,
 			};
 
-            using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 600);
+            var cursos = await conn.QueryAsync<CursoEol>(query, parametros, commandTimeout: 600);
 
             var retorno = new PaginacaoResultadoDto<CursoEol>();
 
-            retorno.Items = multi.Read<CursoEol>();
-            retorno.TotalRegistros = multi.ReadFirst<int>();
+            retorno.Items = cursos;
+            retorno.TotalRegistros = cursos.Count();
             retorno.TotalPaginas =
                 paginar ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
 
@@ -1143,7 +1144,7 @@ namespace SME.GoogleClassroom.Dados
 							WHERE
 								    atr.an_atribuicao = @anoLetivo						
 								AND atr.dt_cancelamento IS NULL
-								AND atr.dt_disponibilizacao_aulas IS NULL;
+								AND atr.dt_disponibilizacao_aulas IS NULL
 
 							--- 2.2) Define a tabela final de cursos regulares com responsáveis
 							), tempCursosRegulares as (
@@ -1156,7 +1157,7 @@ namespace SME.GoogleClassroom.Dados
 								(
 									SELECT TOP 1 Email FROM tempTurmasComponentesRegularesProfessores temp 
 									WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
-								) AS t2;
+								) AS t2
 
 							-- 3) Busca os cursos de Programa
 							), tempTurmasComponentesPrograma as (
@@ -1264,8 +1265,8 @@ namespace SME.GoogleClassroom.Dados
 								tempTurmasComponentesPrograma t1
 							OUTER APPLY
 								(
-									SELECT TOP 1 Email FROM #tempTurmasComponentesProgramaProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
-								) AS t2;
+									SELECT TOP 1 Email FROM tempTurmasComponentesProgramaProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
+								) AS t2
 
 							-- 4) Junta cursos regulares e turmas de programa
 							), tempCursosDre as (
@@ -1281,57 +1282,17 @@ namespace SME.GoogleClassroom.Dados
 								-- 4.1) Paginacao
 								), tempCursosDrePaginado as (
 								SELECT
-									*
-									from tempCursosDre
-							order by 1 ");
-
-			if (ehParaPaginar)
-				query.AppendLine(
-					"OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-			else query.AppendLine(";");
+									temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.TurmaTipo
+									, coalesce(temp.email, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf)) AS Email
+									from tempCursosDre temp
+									CROSS APPLY
+									[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub");
+			
 
 			query.AppendLine(
 				@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
-							), tempUEsSemAtribuicao as (
-							SELECT
-								DISTINCT
-								temp.cd_unidade_educacao
-							FROM
-								tempCursosDrePaginado temp
-							WHERE
-								Email IS NULL )
-
-							IF EXISTS (SELECT TOP 1 1 FROM tempUEsSemAtribuicao)
-							BEGIN
-								IF OBJECT_ID('tempdb..#ResponsaveisUe') IS NOT NULL
-									DROP TABLE #ResponsaveisUe;
-								CREATE TABLE #responsaveisUe
-								(
-									CodigoUe varchar(10) NOT NULL,
-									Email varchar(MAX) NULL
-								);
-
-								INSERT INTO #responsaveisUe
-								SELECT DISTINCT temp.cd_unidade_educacao, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf) AS Email
-								FROM
-									tempUEsSemAtribuicao temp
-								CROSS APPLY
-									[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub;
-
-								UPDATE t1
-									SET t1.Email = t2.Email
-								FROM
-									tempCursosDrePaginado t1
-								INNER JOIN
-									#responsaveisUe t2
-									ON t1.cd_unidade_educacao = t2.CodigoUe
-								WHERE
-									t1.Email IS NULL;
-							END;
-
-			BEGIN
-							IF OBJECT_ID('tempdb..#tempResultadoFinalAgrupado') IS NOT NULL
-								DROP TABLE #tempResultadoFinalAgrupado
+							), tempResultadoFinalAgrupado as (
+							
 							SELECT
 								temp.Nome,
 								temp.Secao,
@@ -1340,20 +1301,14 @@ namespace SME.GoogleClassroom.Dados
 								temp.cd_unidade_educacao as UeCodigo,
 								temp.Email,
 								temp.TurmaTipo
-						    INTO #tempResultadoFinalAgrupado
+						    
 							FROM
 								tempCursosDrePaginado temp
-							group by Nome, Secao, TurmaId, cd_unidade_educacao, Email, TurmaTipo;
-			END;
+							group by Nome, Secao, TurmaId, cd_unidade_educacao, Email, TurmaTipo
+			)
 			         
 					 
-					 select * from #tempResultadoFinalAgrupado;
-
-					-- Totalizacao
-						SELECT
-							COUNT(*)
-						FROM
-							#tempResultadoFinalAgrupado ;");
+					 select * from tempResultadoFinalAgrupado;");
 
 			return query.ToString();
 		}
