@@ -49,7 +49,7 @@ namespace SME.GoogleClassroom.Dados
             };
 
             using var conn = ObterConexao();
-            return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
+            return await conn.ExecuteScalarAsync<bool>(query, parametros);
         }
 
         public async Task<long> SalvarAsync(CursoUsuario cursoUsuario)

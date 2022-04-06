@@ -55,22 +55,29 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task IncluirAlunoNoGoogle(AlunoGoogle alunoGoogle, DirectoryService diretorioClassroom)
         {
-            var usuarioParaIncluirNoGoogle = new User
+            try
             {
-                Name = new UserName { FamilyName = alunoGoogle.Sobrenome, GivenName = alunoGoogle.PrimeiroNome, FullName = alunoGoogle.Nome },
-                PrimaryEmail = alunoGoogle.Email,
-                OrgUnitPath = alunoGoogle.OrganizationPath,
-                Password = configuration["GoogleClassroomConfig:PasswordPadraoParaUsuarioNovo"],
-                ChangePasswordAtNextLogin = true
-            };
+                var usuarioParaIncluirNoGoogle = new User
+                {
+                    Name = new UserName { FamilyName = alunoGoogle.Sobrenome, GivenName = alunoGoogle.PrimeiroNome, FullName = alunoGoogle.Nome },
+                    PrimaryEmail = alunoGoogle.Email,
+                    OrgUnitPath = alunoGoogle.OrganizationPath,
+                    Password = configuration["GoogleClassroomConfig:PasswordPadraoParaUsuarioNovo"],
+                    ChangePasswordAtNextLogin = true
+                };
 
-            var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
-            var usuarioIncluido = await requestCreate.ExecuteAsync();
+                var requestCreate = diretorioClassroom.Users.Insert(usuarioParaIncluirNoGoogle);
+                var usuarioIncluido = await requestCreate.ExecuteAsync();
 
-            if (usuarioIncluido is null)
-                throw new NegocioException("Não foi possível obter o aluno incluído no Google Classroom.");
+                if (usuarioIncluido is null)
+                    throw new NegocioException("Não foi possível obter o aluno incluído no Google Classroom.");
 
-            alunoGoogle.GoogleClassroomId = usuarioIncluido.Id;
+                alunoGoogle.GoogleClassroomId = usuarioIncluido.Id;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

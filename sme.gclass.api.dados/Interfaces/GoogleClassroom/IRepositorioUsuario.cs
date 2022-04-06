@@ -10,7 +10,7 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email);
 
-        Task<bool> ExisteAlunoPorRf(long rf);
+        Task<bool> ExisteAlunoPorCodigo(long codigo);
 
         Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo, long id);
 
