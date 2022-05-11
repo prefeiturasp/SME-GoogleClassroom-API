@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IServicoTelemetria servicoTelemetria;
         private readonly ConfiguracaoRabbitLogOptions configuracaoRabbitOptions;
 
-        public SalvarLogViaRabbitCommandHandler(ConfiguracaoRabbitLogOptions configuracaoRabbitOptions, ServicoTelemetria servicoTelemetria)
+        public SalvarLogViaRabbitCommandHandler(ConfiguracaoRabbitLogOptions configuracaoRabbitOptions, IServicoTelemetria servicoTelemetria)
         {
             this.configuracaoRabbitOptions = configuracaoRabbitOptions ?? throw new System.ArgumentNullException(nameof(configuracaoRabbitOptions));
             this.servicoTelemetria = servicoTelemetria ?? throw new System.ArgumentNullException(nameof(servicoTelemetria));

@@ -1,21 +1,34 @@
 ﻿using Elastic.Apm;
+using Microsoft.ApplicationInsights;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Infra
 {
     public class ServicoTelemetria : IServicoTelemetria
     {
+        private readonly TelemetryClient insightsClient;
         private readonly TelemetriaOptions telemetriaOptions;
 
-        public ServicoTelemetria(TelemetriaOptions telemetriaOptions)
+        public ServicoTelemetria(TelemetryClient insightsClient, TelemetriaOptions telemetriaOptions)
         {
+            this.insightsClient = insightsClient;
             this.telemetriaOptions = telemetriaOptions ?? throw new ArgumentNullException(nameof(telemetriaOptions));
         }
 
-        public async Task<dynamic> RegistrarComRetornoAsync<T>(Func<Task<object>> acao, string acaoNome, string telemetriaNome, string telemetriaValor)
+        public async Task<dynamic> RegistrarComRetornoAsync<T>(Func<Task<object>> acao, string acaoNome, string telemetriaNome, string telemetriaValor, string parametros = "")
         {
+            DateTime inicioOperacao = default;
+            Stopwatch temporizador = default;
+
             dynamic result = default;
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                inicioOperacao = DateTime.UtcNow;
+                temporizador = Stopwatch.StartNew();
+            }
 
             if (telemetriaOptions.Apm)
             {
@@ -24,20 +37,37 @@ namespace SME.GoogleClassroom.Infra
                 await transactionElk.CaptureSpan(telemetriaNome, acaoNome, async (span) =>
                 {
                     span.SetLabel(telemetriaNome, telemetriaValor);
-                    result = (await acao()) as dynamic;
+                    span.SetLabel("Parametros", parametros);
+                    result = await acao();
                 });
             }
             else
             {
-                result = await acao() as dynamic;
+                result = await acao();
+            }
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                temporizador.Stop();
+
+                insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
             }
 
             return result;
         }
 
-        public dynamic RegistrarComRetorno<T>(Func<object> acao, string acaoNome, string telemetriaNome, string telemetriaValor)
+        public dynamic RegistrarComRetorno<T>(Func<object> acao, string acaoNome, string telemetriaNome, string telemetriaValor, string parametros = "")
         {
+            DateTime inicioOperacao = default;
+            Stopwatch temporizador = default;
+
             dynamic result = default;
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                inicioOperacao = DateTime.UtcNow;
+                temporizador = Stopwatch.StartNew();
+            }
 
             if (telemetriaOptions.Apm)
             {
@@ -46,6 +76,7 @@ namespace SME.GoogleClassroom.Infra
                 transactionElk.CaptureSpan(telemetriaNome, acaoNome, (span) =>
                 {
                     span.SetLabel(telemetriaNome, telemetriaValor);
+                    span.SetLabel("Parametros", parametros);
                     result = acao();
                 });
             }
@@ -54,11 +85,27 @@ namespace SME.GoogleClassroom.Infra
                 result = acao();
             }
 
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                temporizador.Stop();
+
+                insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
+            }
+
             return result;
         }
 
         public void Registrar(Action acao, string acaoNome, string telemetriaNome, string telemetriaValor)
         {
+            DateTime inicioOperacao = default;
+            Stopwatch temporizador = default;
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                inicioOperacao = DateTime.UtcNow;
+                temporizador = Stopwatch.StartNew();
+            }
+
             if (telemetriaOptions.Apm)
             {
                 var transactionElk = Agent.Tracer.CurrentTransaction;
@@ -73,10 +120,25 @@ namespace SME.GoogleClassroom.Infra
             {
                 acao();
             }
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                temporizador.Stop();
+                insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
+            }
         }
 
-        public async Task RegistrarAsync(Func<Task> acao, string acaoNome, string telemetriaNome, string telemetriaValor)
+        public async Task RegistrarAsync(Func<Task> acao, string acaoNome, string telemetriaNome, string telemetriaValor, string parametros = "")
         {
+            DateTime inicioOperacao = default;
+            Stopwatch temporizador = default;
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                inicioOperacao = DateTime.UtcNow;
+                temporizador = Stopwatch.StartNew();
+            }
+
             if (telemetriaOptions.Apm)
             {
                 var transactionElk = Agent.Tracer.CurrentTransaction;
@@ -84,6 +146,7 @@ namespace SME.GoogleClassroom.Infra
                 await transactionElk.CaptureSpan(telemetriaNome, acaoNome, async (span) =>
                 {
                     span.SetLabel(telemetriaNome, telemetriaValor);
+                    span.SetLabel("Parametros", parametros);
                     await acao();
                 });
             }
@@ -91,7 +154,12 @@ namespace SME.GoogleClassroom.Infra
             {
                 await acao();
             }
-        }
 
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                temporizador.Stop();
+                insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
+            }
+        }
     }
 }
