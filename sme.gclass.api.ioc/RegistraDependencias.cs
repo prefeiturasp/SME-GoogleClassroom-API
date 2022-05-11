@@ -6,7 +6,6 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
-using System;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -21,12 +20,6 @@ namespace SME.GoogleClassroom.IoC
 
             RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
-            RegistrarServicos(services);
-        }
-
-        private static void RegistrarServicos(IServiceCollection services)
-        {
-            services.TryAddTransient<IServicoTelemetria, ServicoTelemetria>();
         }
 
         private static void RegistrarRepositorios(IServiceCollection services)
@@ -215,7 +208,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterNotasAtividadesAvaliativasUseCase, ObterNotasAtividadesAvaliativasUseCase>();
             services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
 
-
             #region Formação Cidade
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
             
@@ -298,7 +290,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IExecutarImportacaoDeNotasDaAtividadeUseCase, ExecutarImportacaoDeNotasDaAtividadeUseCase>();
             services.TryAddScoped<IImportarNotasGsaProcessarErroUseCase, ImportarNotasGsaProcessarErroUseCase>();
             services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
-
         }
     }
 }

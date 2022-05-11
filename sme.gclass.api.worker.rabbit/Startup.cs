@@ -2,6 +2,7 @@
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
 using MediatR;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -42,28 +43,25 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddHttpContextAccessor();
             ConfiguraVariaveisAmbiente(services);
 
+            services.AddApplicationInsightsTelemetry(Configuration);
+
             RegistraDependencias.Registrar(services, Configuration);
 
             RegistrarHttpClients(services, Configuration);
 
             services.AddRabbit();
             services.AddPolicies();
+
             services.AddHostedService<WorkerRabbitMQ>();
 
             ConfiguraRabbitParaLogs(services);
-
-            var telemetriaOptions = ConfiguraTelemetria(services);
-            var servicoTelemetria = new ServicoTelemetria(telemetriaOptions);
-
-            DapperExtensionMethods.Init(servicoTelemetria);
-            services.AddSingleton(servicoTelemetria);
+            ConfiguraTelemetria(services);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 //c.AddServer(new OpenApiServer() { Description = "Dev", Url = "https://dev-gcasync.sme.prefeitura.sp.gov.br" });
                 //TODO: Remover rota fixa
-
                 c.SwaggerDoc("v1", 
                     new OpenApiInfo 
                     { 
@@ -120,8 +118,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(3,
-                                                                            retryAttempt)));
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(3, retryAttempt)));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -171,14 +168,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             });
         }
 
-        private TelemetriaOptions ConfiguraTelemetria(IServiceCollection services)
+        private void ConfiguraTelemetria(IServiceCollection services)
         {
+            var serviceProvider = services.BuildServiceProvider();
+            var clientTelemetry = serviceProvider.GetService<TelemetryClient>();
+
             var telemetriaOptions = new TelemetriaOptions();
             Configuration.GetSection(TelemetriaOptions.Secao).Bind(telemetriaOptions, c => c.BindNonPublicProperties = true);
 
-            services.AddSingleton(telemetriaOptions);
+            var servicoTelemetria = new ServicoTelemetria(clientTelemetry, telemetriaOptions);
+            DapperExtensionMethods.Init(servicoTelemetria);
 
-            return telemetriaOptions;
+            services.AddSingleton(telemetriaOptions);
+            services.AddSingleton<IServicoTelemetria, ServicoTelemetria>();
         }
 
         private void ConfiguraRabbitParaLogs(IServiceCollection services)
