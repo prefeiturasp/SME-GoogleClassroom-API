@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Alunos
     /// </summary>
     [ApiController]
-    [ChaveIntegracaoGoogleClassroomApi]
+    // todo: [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/alunos")]
     public class AlunoController : Controller
     {
