@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
@@ -22,27 +22,80 @@ namespace SME.GoogleClassroom.Aplicacao
 
         protected override async Task Handle(TratarImportacaoAtividadesCommand request, CancellationToken cancellationToken)
         {
-            var atividadesImportar = ObterAtividadesInclusasOuAlteradas(request.Atividades, request.UltimaExecucao).ToList();
 
-            if (atividadesImportar.Any())
+            if (request.Atividades.Any())
             {
-                for (int bloco = 0; bloco < atividadesImportar.TotalBlocos(quantidadeRegistrosBloco); bloco++)
-                {
-                    var atividadesBloco = atividadesImportar
-                        .ObterBloco(bloco, quantidadeRegistrosBloco)
-                        .ToArray();
+                //var atividadesImportar = ObterAtividadesInclusasOuAlteradas(request.Atividades, request.UltimaExecucao);
+                var atividadesImportar = request.Atividades;
 
-                    if (atividadesBloco.Any())
-                    {
-                        await mediator
-                            .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesIncluir, atividadesBloco));
-                    }
-                }
+
+                var atividadesIdsImportar = atividadesImportar.Select(a => a.Id).ToList();
+
+
+                //--> Usuários
+                var usuariosIds = atividadesImportar.Select(a => a.UsuarioClassroomId).Distinct().ToList();
+                var usuariosParaIntegracao = await mediator.Send(new ObterUsuariosPorClassroomIdsQuery(usuariosIds));
+
+                //Excluir todas as atividades;
+                await mediator.Send(new ExcluirAtividadesPorIdsCommand(atividadesIdsImportar));
+
+                var atividadesParaPersistir = atividadesImportar.Where( at => usuariosParaIntegracao.Select(us => us.GoogleClassroomId).Contains(at.UsuarioClassroomId)).Select(a => MapearEntidade(a, usuariosParaIntegracao)).ToList();
+
+                //Incluir Todas
+                await mediator.Send(new IncluirAtividadesBulkCommand(atividadesParaPersistir));
+
+
+                //----> Enviar para o SGP
+
+                //--> Cursos
+                var cursosIds = atividadesImportar.Select(a => a.CursoId).Distinct().ToList();
+                var cursosParaIntegracao = await mediator.Send(new ObterCursosPorIdsParaIntegracaoQuery(cursosIds));
+
+
+
+                await EnviarParaSgp(request.Atividades, usuariosParaIntegracao, cursosParaIntegracao);
             }
         }
+        private async Task EnviarParaSgp(IEnumerable<AtividadeGsaDto> atividadesGsa, IEnumerable<UsuarioGoogleDto> usuariosParaIntegracao, IEnumerable<CursoGoogleDtoParaIntegracao> cursosParaIntegracao)
+        {
+            foreach (var atividadeGsa in atividadesGsa)
+            {
 
+                var cursoParaIntegracao = cursosParaIntegracao.FirstOrDefault(a => a.CursoId == atividadeGsa.CursoId);
+                if (cursoParaIntegracao == null) continue;
+
+                var usuarioParaIntegracao = usuariosParaIntegracao.FirstOrDefault(a => a.GoogleClassroomId == atividadeGsa.UsuarioClassroomId);
+                if (usuarioParaIntegracao == null) continue;
+
+                var avisoDto = new AtividadeIntegracaoSgpDto()
+                {
+                    AtividadeClassroomId = atividadeGsa.Id,
+                    TurmaId = cursoParaIntegracao.TurmaId.ToString(),
+                    ComponenteCurricularId = cursoParaIntegracao.ComponenteCurricularId,
+                    UsuarioRf = usuarioParaIntegracao.Id.ToString(),
+                    Titulo = atividadeGsa.Titulo,
+                    Descricao = string.IsNullOrEmpty(atividadeGsa.Descricao?.Trim()) ? atividadeGsa.Titulo : atividadeGsa.Descricao,
+                    DataCriacao = atividadeGsa.CriadoEm,
+                    DataAlteracao = atividadeGsa.AlteradoEm,
+                };
+
+                await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaAtividadesSync, avisoDto, usuarioParaIntegracao.Id.ToString(), usuarioParaIntegracao.Nome));
+            }
+
+        }
         private IEnumerable<AtividadeGsaDto> ObterAtividadesInclusasOuAlteradas(ICollection<AtividadeGsaDto> atividades, DateTime ultimaExecucao)
             => atividades.Where(a => a.CriadoEm > ultimaExecucao
                                   || a.AlteradoEm > ultimaExecucao);
+
+        private AtividadeGsa MapearEntidade(AtividadeGsaDto atividadeGsaDto, IEnumerable<UsuarioGoogleDto> usuariosGoogle)
+          => new Dominio.AtividadeGsa(atividadeGsaDto.Id,
+                                  atividadeGsaDto.Titulo,
+                                  string.IsNullOrEmpty(atividadeGsaDto.Descricao?.Trim()) ? atividadeGsaDto.Titulo : atividadeGsaDto.Descricao ,
+                                  usuariosGoogle.FirstOrDefault(a => a.GoogleClassroomId == atividadeGsaDto.UsuarioClassroomId).Indice.ToString(),
+                                  atividadeGsaDto.CursoId,
+                                  atividadeGsaDto.CriadoEm,
+                                  atividadeGsaDto.AlteradoEm,
+                                  atividadeGsaDto.DataEntrega,
+                                  atividadeGsaDto.NotaMaxima);
     }
 }

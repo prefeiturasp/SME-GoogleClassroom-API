@@ -10,6 +10,7 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class TrataSyncGoogleAlunoUseCase : ITrataSyncGoogleAlunoUseCase
     {
+        private const int QUANTIDADE_ITENS_POR_PAGINA = 10000;
         private readonly IMediator mediator;
 
         public TrataSyncGoogleAlunoUseCase(IMediator mediator)
@@ -24,31 +25,44 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var filtro = ObterFiltro(mensagemRabbit);
             var codigoAlunoFiltro = filtro.CodigoAluno;
-
             var ultimaAtualizacao = default(DateTime?);
 
             if (codigoAlunoFiltro is null && !filtro.AnoLetivo.HasValue)
-            {
                 ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
-            }
-            else if (filtro.AnoLetivo.HasValue) ultimaAtualizacao = new DateTime(filtro.AnoLetivo.Value, 1, 1);
+            else if (filtro.AnoLetivo.HasValue)
+                ultimaAtualizacao = new DateTime(filtro.AnoLetivo.Value, 1, 1);
 
-            var paginacao = new Paginacao(0, 0);
+            if (filtro.Paginacao is null)
+                filtro.Paginacao = codigoAlunoFiltro is null ? new Paginacao(1, QUANTIDADE_ITENS_POR_PAGINA) : new Paginacao(0, 0);
 
-            var parametrosCargaInicialDto = filtro.AnoLetivo != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
+            var totalPaginas = 1;
+            var parametrosCargaInicialDto = filtro.AnoLetivo != null ?
+                new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
-            var alunosParaIncluirGoogle = await mediator.Send(new ObterAlunosNovosQuery(paginacao, ultimaAtualizacao, codigoAlunoFiltro, parametrosCargaInicialDto));
+            var alunosEol = await mediator
+                .Send(new ObterAlunosNovosQuery(filtro.Paginacao, ultimaAtualizacao, codigoAlunoFiltro, parametrosCargaInicialDto));
 
-            alunosParaIncluirGoogle.Items
+            totalPaginas = alunosEol.TotalPaginas;
+
+            var codigosAlunosEol = alunosEol.Items.Select(a => (long)a.Codigo).ToArray();
+            var alunosCadastrados = await mediator.Send(new ObterAlunosPorCodigosQuery(codigosAlunosEol));
+            var alunosParaInclusao = from aeol in alunosEol.Items
+                                     where !alunosCadastrados.Select(ac => ac.Codigo).Contains(aeol.Codigo)
+                                     select aeol;
+
+            alunosParaInclusao
                 .AsParallel()
                 .WithDegreeOfParallelism(10)
                 .ForAll(async alunoParaIncluirGoogleEol =>
                 {
                     try
                     {
-                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, filtro.AnoLetivo.Value, filtro.TiposUes, filtro.Ues, filtro.Turmas);
-                        var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
+                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, parametrosCargaInicialDto.AnoLetivo, parametrosCargaInicialDto.TiposUes.ToList(), parametrosCargaInicialDto.Ues.ToList(), parametrosCargaInicialDto.Turmas.ToList());
+
+                        var publicarAluno = await mediator
+                            .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
+
                         if (!publicarAluno)
                             await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
                     }
@@ -58,7 +72,18 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 });
 
-            if (codigoAlunoFiltro is null)
+            if (codigoAlunoFiltro is null && filtro.Paginacao.Pagina <= totalPaginas)
+            {
+                var dtoProximaPagina = new IniciarSyncGoogleAlunoDto(filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas, null);
+                dtoProximaPagina.Paginacao = new Paginacao(filtro.Paginacao.Pagina + 1, QUANTIDADE_ITENS_POR_PAGINA);
+
+                var publicarSyncAluno = await mediator
+                    .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoSync, RotasRabbit.FilaAlunoSync, dtoProximaPagina));
+
+                if (!publicarSyncAluno)
+                    throw new NegocioException($"Não foi possível iniciar a sincronização de alunos. Página: {dtoProximaPagina.Paginacao.Pagina}.");
+            }
+            else if (codigoAlunoFiltro is null)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoAdicionar, DateTime.Today));
 
             return true;

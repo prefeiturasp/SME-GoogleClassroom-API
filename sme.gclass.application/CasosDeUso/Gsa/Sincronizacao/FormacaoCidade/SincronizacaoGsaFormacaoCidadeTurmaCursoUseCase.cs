@@ -34,7 +34,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     if (funcionarios.Count() > ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO)
                     {
                         int qtdePorPacote, qtdePorPacoteFinal;
-                        CalcularQuantidadePorPacote(funcionarios, out qtdePorPacote, out qtdePorPacoteFinal);
+                        CalcularQuantidadePorPacote(funcionarios.Select(f => f.CodigoRF), out qtdePorPacote, out qtdePorPacoteFinal);
 
                         for (int i = 1; i <= qtdePorPacote; i++)
                             await InserirCursoAssociarAluno($"{filtro.SalaVirtual} TURMA {i}", funcionarios.Skip(i * qtdePorPacoteFinal).Take(qtdePorPacoteFinal).ToList());
@@ -63,9 +63,9 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task<IEnumerable<string>> ObterAlunos(FiltroFormacaoCidadeTurmaCursoDto filtro)
+        private async Task<IEnumerable<AlunoCursoEol>> ObterAlunos(FiltroFormacaoCidadeTurmaCursoDto filtro)
         {
-            var funcionarios = Enumerable.Empty<string>();
+            var funcionarios = Enumerable.Empty<AlunoCursoEol>();
 
             switch ((TipoConsulta)filtro.TipoConsulta)
             {
@@ -89,7 +89,7 @@ namespace SME.GoogleClassroom.Aplicacao
             return funcionarios;
         }
 
-        private async Task InserirCursoAssociarAluno(string salaVirtual, IEnumerable<string> funcionarios)
+        private async Task InserirCursoAssociarAluno(string salaVirtual, IEnumerable<AlunoCursoEol> funcionarios)
         {
             try
             {
@@ -97,8 +97,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 await InserirCursoGsa(salaVirtual, cursoId);
 
-                foreach (var funcionario in funcionarios)
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, new AlunoCursoEol(long.Parse(funcionario), cursoId)));
+                foreach (var funcionario in funcionarios)                
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, 
+                        new AlunoCursoEol(funcionario.CodigoRF, cursoId, funcionario.NomePessoa, funcionario.NomeSocial,funcionario.OrganizationPath)));
             }
             catch(Exception ex)
             {
@@ -128,7 +129,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private static void CalcularQuantidadePorPacote(IEnumerable<string> funcionarios, out int qtdePorPacote, out int qtdePorPacoteFinal)
+        private static void CalcularQuantidadePorPacote(IEnumerable<long> funcionarios, out int qtdePorPacote, out int qtdePorPacoteFinal)
         {
             int qtdePorPacoteGlobal = funcionarios.Count() / ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO;
             int qtdeExtraGlobal = funcionarios.Count() % ConstanteFormacaoCidade.QTDE_MAXIMA_ALUNOS_POR_CURSO;

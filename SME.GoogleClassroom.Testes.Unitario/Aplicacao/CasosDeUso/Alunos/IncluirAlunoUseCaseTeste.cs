@@ -45,7 +45,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorRfQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             var alunoJson = JsonConvert.SerializeObject(aluno);
@@ -68,7 +68,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorRfQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             var googleDuplicidadeException = new GoogleApiException(string.Empty, GoogleApiExceptionMensagens.Erro409EntityAlreadyExists);
@@ -108,7 +108,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorRfQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             var googleDuplicidadeException = new GoogleApiException(string.Empty, "Erro no Google Classroom.");
@@ -133,7 +133,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorRfQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             var excecao = new NullReferenceException("Erro ao se comunicar Google Classroom.");
@@ -158,7 +158,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorRfQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))

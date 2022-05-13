@@ -636,12 +636,12 @@ namespace SME.GoogleClassroom.Dados
 			return await conn.QueryAsync<long>(query.ToString(), parametros);
 		}
 
-        public async Task<IEnumerable<string>> ObterProfessoresPorDreComponenteCurricularModalidade(string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma, string[] agruparPorDres)
+        public async Task<IEnumerable<AlunoCursoEol>> ObterProfessoresPorDreComponenteCurricularModalidade(string componentesCurricularIds, string modalidadesIds, int[] tipoEscola, int anoLetivo, string anoTurma, string[] agruparPorDres)
         {
 			try
 			{
 				var query = new StringBuilder();
-				query.AppendLine($@" SELECT DISTINCT servidor.cd_registro_funcional as ProfessorRf  
+				query.AppendLine($@" SELECT DISTINCT servidor.cd_registro_funcional as CodigoRf, servidor.nm_pessoa AS NomePessoa, servidor.nm_social AS NomeSocial,'/Professores' AS OrganizationPath  
 								FROM   turma_escola 
 									   INNER JOIN escola esc (NOLOCK)
 											   ON turma_escola.cd_escola = esc.cd_escola 
@@ -703,7 +703,7 @@ namespace SME.GoogleClassroom.Dados
 								{IncluirAnoTurma(anoTurma)}");
 
 				using var conn = ObterConexao();
-				return await conn.QueryAsync<string>(query.ToString(), commandTimeout: 180);
+				return await conn.QueryAsync<AlunoCursoEol>(query.ToString(), commandTimeout: 180);
 			}
 			catch(Exception ex)
             {

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -11,9 +12,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public async Task Executar(long? turmaId)
+        public async Task Executar(long? turmaId, DateTime? dataReferencia)
         {
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarCarregar, new FiltroArquivamentoTurmasDto(turmaId)));
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarCarregar, new FiltroArquivamentoTurmasDto(turmaId, dataReferencia)));
         }
     }
 }

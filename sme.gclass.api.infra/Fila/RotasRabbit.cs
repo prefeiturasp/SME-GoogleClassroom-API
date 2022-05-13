@@ -69,8 +69,10 @@
         public static string FilaGsaCursoIncluir => "googleclass.gsa.curso.incluir";
         public static string FilaGsaCursoValidar => "googleclass.gsa.curso.validar";
         public static string FilaGsaUsuarioCarregar => "googleclass.gsa.usuario.carregar";
+        public static string FilaGsaUsuarioCarregarErro => "googleclass.gsa.usuario.carregar.erro";
         public static string FilaGsaUsuarioValidar => "googleclass.gsa.usuario.validar";
         public static string FilaGsaUsuarioIncluir => "googleclass.gsa.usuario.incluir";
+        public static string FilaGsaUsuarioIncluirErro => "googleclass.gsa.usuario.incluir.erro";
         public static string FilaGsaCursoUsuarioCarregar => "googleclass.gsa.curso.usuario.carregar";
         public static string FilaGsaCursoUsuarioIncluir => "googleclass.gsa.curso.usuario.incluir";
         public static string FilaGsaMuralAvisosCarregar => "googleclass.gsa.mural.avisos.carregar";
@@ -92,6 +94,12 @@
         public static string FilaGsaCargaInicial => "googleclass.gsa.carga.inicial.sync";
         #endregion
 
+        #region CursoRemover
+
+        public static string FilaCursoAhRemover => "googleclass.gsa.curso.remover.sync";
+
+        #endregion
+        
         #region Inativação de Usuários
         public static string FilaGsaInativarUsuarioIniciar => "googleclass.gsa.inativar.usuario.iniciar";
         public static string FilaGsaInativarUsuarioCarregar => "googleclass.gsa.inativar.usuario.carregar";

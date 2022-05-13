@@ -72,11 +72,11 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<bool> ExisteAlunoPorRf(long rf)
+        public async Task<bool> ExisteAlunoPorCodigo(long codigo)
         {
-            var query = @"SELECT exists(SELECT 1 from usuarios where id = @rf and usuario_tipo = @usuarioTipo limit 1)";
+            var query = @"SELECT exists(SELECT 1 from usuarios where id = @codigo and usuario_tipo = @usuarioTipo limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryAsync<bool>(query, new { rf, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
+            return (await conn.QueryAsync<bool>(query, new { codigo, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
         }
 
         public async Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo, long id)
@@ -211,13 +211,13 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao,
                                  u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
-                           WHERE usuario_tipo = @tipo
+                           WHERE usuario_tipo = any(@tipos)
                              and id = any(@rfs)";
 
             var parametros = new
             {
                 rfs,
-                tipo = UsuarioTipo.Funcionario
+                tipos =  new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = ObterConexao();
@@ -421,13 +421,13 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao,
                                  u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
-                           WHERE usuario_tipo = @tipo
+                           WHERE usuario_tipo = any(@tipos)
                              and email = @email";
 
             var parametros = new
             {
                 email,
-                tipo = UsuarioTipo.Funcionario
+                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
             };
 
             using var conn = ObterConexao();
@@ -641,7 +641,23 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { classroomId });
         }
+        public async Task<IEnumerable<UsuarioGoogleDto>> ObteUsuariosPorClassroomIdsAsync(IEnumerable<string> classroomIds)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where u.google_classroom_id = ANY(@classroomIds)";
 
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<UsuarioGoogleDto>(query, new { classroomIds });
+        }
         public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
             const string updateQuery = @"update public.usuarios
@@ -756,6 +772,26 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
             return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { email });
+        }
+
+        public async Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.nome,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where id = any(@Codigos)";
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstAsync<UsuarioGoogleDto>(query, new { Codigos = usuarioCodigo });
         }
     }
 }

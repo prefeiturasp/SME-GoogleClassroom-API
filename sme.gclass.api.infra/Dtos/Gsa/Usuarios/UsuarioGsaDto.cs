@@ -13,5 +13,6 @@ namespace SME.GoogleClassroom.Infra
         public DateTime? DataInclusao { get; set; }
         public bool UltimoItemDaFila { get; set; }
         public long Indice { get; set; } //de 'usuario'
+        public string MensagemErro { get; set; }
     }
 }

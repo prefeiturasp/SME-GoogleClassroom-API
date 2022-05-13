@@ -145,16 +145,17 @@ namespace SME.GoogleClassroom.Dados
             await conn.ExecuteAsync(query);
         }
 
-        public async Task<IEnumerable<UsuarioGsaDto>> ObterUsuariosPorCodigos(long[] usuariosCodigo)
+        public async Task<IEnumerable<UsuarioGsaDto>> ObterUsuariosPorCodigos(long[] usuariosCodigo, int usuarioTipo)
         {
             var query = @"select u.indice, uc.*
                           from usuarios u
                           join usuarios_gsa uc on u.google_classroom_id = uc.id
-                          where u.id = any(@usuariosCodigo)"; 
+                          where u.id = any(@usuariosCodigo)
+                          and u.usuario_tipo = @usuarioTipo"; 
 
             using var conn = ObterConexao();
             
-            return (await conn.QueryAsync<UsuarioGsaDto>(query, new { usuariosCodigo }));
+            return (await conn.QueryAsync<UsuarioGsaDto>(query, new { usuariosCodigo, usuarioTipo }));
         }
     }
 }

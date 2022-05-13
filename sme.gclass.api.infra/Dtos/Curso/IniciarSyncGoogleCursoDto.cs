@@ -10,11 +10,13 @@ namespace SME.GoogleClassroom.Infra
         public List<long> Turmas { get; set; }
         public long? TurmaId { get; set; }
         public long? ComponenteCurricularId { get; set; }
+        public int Pagina { get; set; }
 
-        public IniciarSyncGoogleCursoDto(long? turmaId, long? componenteCurricularId)
+        public IniciarSyncGoogleCursoDto(long? turmaId, long? componenteCurricularId, int pagina = 1)
         {
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
+            Pagina = pagina;
         }
 
         public bool Valido => TurmaId.HasValue || ComponenteCurricularId.HasValue;

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -23,26 +24,40 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível gerar a carga de dados para a atualização de usuários GSA.");
 
             var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCargaGsaDto>();
-            var paginaUsiariosGoogle = await mediator.Send(new ObterUsuariosGsaGoogleQuery(filtro.TokenProximaPagina));
-            foreach (var usuario in paginaUsiariosGoogle.Usuarios)
+
+            try
             {
-                try
+
+                var paginaUsiariosGoogle = await mediator.Send(new ObterUsuariosGsaGoogleQuery(filtro.TokenProximaPagina));
+                foreach (var usuario in paginaUsiariosGoogle.Usuarios)
                 {
-                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluir, RotasRabbit.FilaGsaUsuarioIncluir, usuario));
-                    if (!publicarCurso) continue;
+                    try
+                    {
+                        var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluir, RotasRabbit.FilaGsaUsuarioIncluir, usuario));
+                        if (!publicarCurso) continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        usuario.MensagemErro = $"{ex.Message}";
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioIncluirErro, usuario));
+                        await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioIncluir} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, usuario.ToString()));
+                        continue;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    SentrySdk.CaptureException(ex);
-                    continue;
-                }
+
+                filtro.TokenProximaPagina = paginaUsiariosGoogle.TokenProximaPagina;
+                if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
+                    await PublicaProximaPaginaAsync(filtro);
+
+                return true;
             }
-
-            filtro.TokenProximaPagina = paginaUsiariosGoogle.TokenProximaPagina;
-            if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))
-                await PublicaProximaPaginaAsync(filtro);
-
-            return true;
+            catch(Exception ex)
+            {
+                filtro.MensagemErro = $"{ex.Message}";
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregarErro, filtro));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioCarregar} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, mensagemRabbit.Mensagem.ToString()));
+                return false;
+            }
         }
 
         private async Task PublicaProximaPaginaAsync(FiltroCargaGsaDto filtro)
@@ -51,11 +66,11 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaUsuarioCarregar, RotasRabbit.FilaGsaUsuarioCarregar, filtro));
                 if (!syncCursoComparativo)
-                    SentrySdk.CaptureMessage("Não foi possível sincronizar os usuários GSA.");
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioCarregar} - Não foi possível sincronizar os usuários GSA.", LogNivel.Critico, LogContexto.UsuarioGsa, JsonConvert.SerializeObject(filtro)));
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"{RotasRabbit.FilaGsaUsuarioCarregar} - {ex.Message}", LogNivel.Critico, LogContexto.UsuarioGsa, JsonConvert.SerializeObject(filtro)));
             }
         }
     }

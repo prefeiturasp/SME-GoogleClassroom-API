@@ -1,11 +1,13 @@
 using Dapper;
-using System;
-using System.Text;
-using System.Threading.Tasks;
+using Npgsql;
+using NpgsqlTypes;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -207,5 +209,81 @@ namespace SME.GoogleClassroom.Dados
 
             return await Task.FromResult(sqlQuery.ToString());
         }
+
+        public async Task<IEnumerable<AtividadeCursoDto>> ObterAtividadesExistentesAsync(IEnumerable<long> idsParaImportar)
+        {
+            var query = @"select
+	                        a.id as atividadeId, c.componente_curricular_id as ComponenteCurricularId, c.turma_id as TurmaId
+                        from
+	                        atividades a
+                        inner join cursos c on
+	                        a.curso_id = c.id 
+	                        where a.id = ANY(@idsParaImportar) ";
+
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<AtividadeCursoDto>(query.ToString(), new { idsParaImportar });
+        }
+
+        public async Task RemoverPorIds(IEnumerable<long> idsParaExcluir)
+        {
+            var query = @"delete from atividades where id = ANY(@idsParaExcluir) ";
+
+            using var conn = ObterConexao();
+
+            await conn.ExecuteAsync(query.ToString(), new { idsParaExcluir });
+        }
+
+        public async Task<bool> InserirVarios(IEnumerable<AtividadeGsa> atividades)
+        {
+            var sql = @"copy atividades (                                         
+                                        id, 
+                                        titulo, 
+                                        descricao, 
+                                        usuario_id, 
+                                        curso_id,
+                                        data_inclusao,
+                                        data_alteracao,                                        
+                                        data_entrega, 
+                                        nota_maxima)
+                            from
+                            stdin (FORMAT binary)";
+
+            using var conn = ObterConexao();
+
+            conn.Open();
+
+            using (var writer = ((NpgsqlConnection)conn).BeginBinaryImport(sql))
+            {
+                foreach (var atividade in atividades)
+                {
+                    writer.StartRow();
+                    writer.Write(atividade.Id, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.Titulo);
+                    writer.Write(atividade.Descricao);
+                    writer.Write(atividade.UsuarioGsaId, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.CursoGsaId, NpgsqlDbType.Bigint);
+                    writer.Write(atividade.DataInclusao, NpgsqlDbType.Timestamp);
+                    writer.Write(atividade.DataAlteracao, NpgsqlDbType.Timestamp);
+                    if (atividade.DataEntrega.HasValue)
+                    {
+                        writer.Write(atividade.DataEntrega.Value.AddSeconds(1), NpgsqlDbType.Timestamp);
+                    }
+                    else
+                    {
+                        writer.WriteNull();
+                    }
+                    writer.Write(atividade.NotaMaxima, NpgsqlDbType.Numeric);
+
+                }
+                writer.Complete();
+            }
+
+            conn.Close();
+
+            return await Task.FromResult(true);
+        }
+
     }
 }

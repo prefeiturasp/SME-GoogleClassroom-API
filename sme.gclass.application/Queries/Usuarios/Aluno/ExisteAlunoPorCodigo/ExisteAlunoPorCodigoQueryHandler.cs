@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ExisteAlunoPorRfQueryHandler : IRequestHandler<ExisteAlunoPorRfQuery, bool>
+    public class ExisteAlunoPorCodigoQueryHandler : IRequestHandler<ExisteAlunoPorCodigoQuery, bool>
     {
         private readonly IRepositorioUsuario repositorioUsuario;
 
-        public ExisteAlunoPorRfQueryHandler(IRepositorioUsuario repositorioUsuario)
+        public ExisteAlunoPorCodigoQueryHandler(IRepositorioUsuario repositorioUsuario)
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
         }
-        public async Task<bool> Handle(ExisteAlunoPorRfQuery request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ExisteAlunoPorCodigoQuery request, CancellationToken cancellationToken)
         {
-            var existe = await repositorioUsuario.ExisteAlunoPorRf(request.Rf);
+            var existe = await repositorioUsuario.ExisteAlunoPorCodigo(request.Codigo);
             return existe;
         }
     }

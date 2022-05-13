@@ -4,6 +4,8 @@
     {
         Api = 1,
         WorkerRabbit = 2,
-        FormacaoCidade = 3,
+        Atividades = 3,
+        FormacaoCidade = 4,
+        UsuarioGsa = 5,
     }
 }
