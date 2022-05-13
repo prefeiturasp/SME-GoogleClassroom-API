@@ -191,6 +191,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro);
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoAhRemover, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoAhRemover, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoAhRemover);
         }
 
         private static void RegistrarFilasInativarAlunosSync(IModel canalRabbit)
@@ -364,6 +366,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCarregar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCarregar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioCarregar);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioCarregarErro, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioCarregarErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioCarregarErro);
             }
 
             if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)
@@ -389,6 +394,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             {
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioIncluir, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioIncluir);
+
+                canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioIncluirErro, true, false, false);
+                canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioIncluirErro, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioIncluirErro);
 
                 canalRabbit.QueueDeclare(RotasRabbit.FilaGsaUsuarioValidar, true, false, false);
                 canalRabbit.QueueBind(RotasRabbit.FilaGsaUsuarioValidar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaUsuarioValidar);

@@ -1,16 +1,18 @@
 ﻿using MediatR;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public class TrataSyncGoogleCursoUseCase : ITrataSyncGoogleCursoUseCase
     {
+        private const int QUANTIDADE_PADRAO_REGISTROS_POR_PAGINA = 10000;
         private readonly IMediator mediator;
 
         public TrataSyncGoogleCursoUseCase(IMediator mediator)
@@ -22,47 +24,41 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de cursos. A mensagem enviada é inválida.");
+
             var filtro = ObterFiltro(mensagemRabbit);
-            var ultimaExecucaoCursosIncluir = default(DateTime?);
-            var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo): 
+
+            var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
-            var aplicarFiltro = filtro?.Valido ?? false;
-            if (filtro != null && filtro.AnoLetivo.HasValue)
-            {
-                ultimaExecucaoCursosIncluir = new DateTime(filtro.AnoLetivo.Value, 1, 1);
-            }
-            else
-            {
-                if (!aplicarFiltro)
-                {
-                    ultimaExecucaoCursosIncluir = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
-                }
-            }
-                
-            var cursosParaAdicionar = await mediator.Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, ultimaExecucaoCursosIncluir, new Paginacao(0, 0), filtro?.ComponenteCurricularId, filtro?.TurmaId));
+            var dataReferencia = new DateTime(filtro.AnoLetivo.HasValue ? filtro.AnoLetivo.Value : DateTime.Today.Year, 1, 1);
+            var paginacao = new Paginacao(filtro.Pagina, QUANTIDADE_PADRAO_REGISTROS_POR_PAGINA);
+            var cursosResgatados = await mediator
+                .Send(new ObterCursosIncluirGoogleQuery(parametrosCargaInicialDto, dataReferencia, paginacao, filtro?.ComponenteCurricularId, filtro?.TurmaId));
 
-            if (cursosParaAdicionar != null && cursosParaAdicionar.Items.Any())
+            var cursosCadastrados = await mediator.Send(new ObterCursosPorAnoQuery(DateTime.Today.Year, null));
+            var cursosInclusao = from c in cursosResgatados.Items
+                                 where !cursosCadastrados.cursos.Any(cc => cc.TurmaId == c.TurmaId)
+                                 select c;
+
+            foreach (var cursoParaAdicionar in cursosInclusao)
             {
-                foreach (var cursoParaAdicionar in cursosParaAdicionar.Items)
+                try
                 {
-                    try
-                    {
-                        var rf = Convert.ToInt64(cursoParaAdicionar.Email.Substring(cursoParaAdicionar.Email.IndexOf('@') - 7, 7));
-                        var professores = await mediator.Send(new ObterProfessoresPorRfsQuery(rf));
-                        cursoParaAdicionar.Email = professores != null && professores.Any() && !professores.First().Email.Equals(cursoParaAdicionar.Email) ? professores.First().Email : cursoParaAdicionar.Email;
-                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
-                    }
-                    catch (Exception ex)
-                    {
-                        SentrySdk.CaptureException(ex);
-                        await mediator.Send(new InserirCursoErroCommand(cursoParaAdicionar.TurmaId, cursoParaAdicionar.ComponenteCurricularId, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
-                    }
+                    var rf = Convert.ToInt64(cursoParaAdicionar.Email.Substring(cursoParaAdicionar.Email.IndexOf('@') - 7, 7));
+                    var professores = await mediator.Send(new ObterProfessoresPorRfsQuery(rf));
+                    cursoParaAdicionar.Email = professores != null && professores.Any() && !professores.First().Email.Equals(cursoParaAdicionar.Email) ? professores.First().Email : cursoParaAdicionar.Email;
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoParaAdicionar));
+                }
+                catch (Exception ex)
+                {
+                    await mediator.Send(new InserirCursoErroCommand(cursoParaAdicionar.TurmaId, cursoParaAdicionar.ComponenteCurricularId, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
                 }
             }
 
-            if (!aplicarFiltro)
+            if (!filtro.TurmaId.HasValue && !cursosResgatados.Items.Any())
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursoAdicionar));
+            else if (!filtro.TurmaId.HasValue)
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, new IniciarSyncGoogleCursoDto(null, null, filtro.Pagina + 1)));
 
             return true;
         }
@@ -71,12 +67,10 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var filtro = JsonConvert.DeserializeObject<IniciarSyncGoogleCursoDto>(mensagemRabbit.Mensagem.ToString());
-                return filtro;
+                return JsonSerializer.Deserialize<IniciarSyncGoogleCursoDto>(mensagemRabbit.Mensagem.ToString());
             }
             catch
             {
-                SentrySdk.CaptureMessage("A mensagem enviada para sincronização de cursos é inválida. O filtro não será aplicado.");
                 return null;
             }
         }

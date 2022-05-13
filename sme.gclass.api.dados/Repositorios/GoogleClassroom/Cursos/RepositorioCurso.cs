@@ -221,11 +221,28 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, parametros);
         }
+        public async Task<IEnumerable<CursoGoogleDtoParaIntegracao>> ObterCursosPorIdsParaIntegracaoAsync(IEnumerable<long> ids)
+        {
+            var query = @"select c.id as CursoId, 
+                                 c.turma_id AS TurmaId,
+                                 c.componente_curricular_id AS ComponenteCurricularId                                 
+                            from public.cursos c 
+                           where id = ANY(@ids)";
 
+            var parametros = new
+            {
+                ids
+            };
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<CursoGoogleDtoParaIntegracao>(query, parametros);
+        }
         public async Task<int> ExcluirCursoAsync(long cursoId)
         {
             const string query = @"delete from cursos_usuarios where curso_id  = @cursoId;
-                                   delete from cursos where id  = @cursoId; ";
+                                   delete from cursos_arquivado where curso_id  = @cursoId; 
+                                   delete from cursos where id  = @cursoId;";
 
             var parametros = new
             {

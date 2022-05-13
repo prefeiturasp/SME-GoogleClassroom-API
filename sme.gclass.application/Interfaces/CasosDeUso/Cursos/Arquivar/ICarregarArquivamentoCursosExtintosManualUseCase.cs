@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface ICarregarArquivamentoCursosExtintosManualUseCase
     {
-        Task Executar(long? turmaId);
+        Task Executar(long? turmaId, DateTime? dataReferencia);
     }
 }

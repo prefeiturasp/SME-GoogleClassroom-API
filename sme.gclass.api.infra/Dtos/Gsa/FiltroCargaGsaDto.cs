@@ -13,5 +13,6 @@
         }
 
         public string TokenProximaPagina { get; set; }
+        public string MensagemErro { get; set; }
     }
 }

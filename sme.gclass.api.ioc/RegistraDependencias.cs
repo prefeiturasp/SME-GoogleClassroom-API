@@ -3,8 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Aplicacao.Interfaces.RemoverTurma;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.IoC
@@ -58,9 +60,11 @@ namespace SME.GoogleClassroom.IoC
             //Curso Arquivado
             services.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
             services.TryAddScoped<IRepositorioCursoArquivado, RepositorioCursoArquivado>();
+            services.TryAddScoped<IRepositorioTurmaEscolaEol, RepositorioTurmaEscolaEol>();
 
             //Notas
             services.TryAddScoped<IRepositorioNota, RepositorioNota>();
+            
             
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
@@ -200,6 +204,7 @@ namespace SME.GoogleClassroom.IoC
             
             //Carga inicial
             services.TryAddScoped<ITrataSyncManualGoogleGeralUseCase, TrataSyncManualGoogleGeralUseCase>();
+            services.TryAddScoped<IRemoverCursoGoogleClassroomUseCase, RemoverCursoGoogleClassroomUseCase>();
 
             // Arquivamento de cursos por ano e semestre
             services.TryAddScoped<IIniciarProcessoArquivarCursosPorAnoUseCase, IniciarProcessoArquivarCursosPorAnoUseCase>();
@@ -207,24 +212,22 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IObterNotasAtividadesAvaliativasUseCase, ObterNotasAtividadesAvaliativasUseCase>();
             services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
+            services.TryAddScoped<IRemoverTurmaUseCase, RemoverTurmaUseCase>();
 
             #region Formação Cidade
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
+            services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase>();
             
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaSmeDreComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaComponenteComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaComponenteComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaCursoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaCursoComErrosUseCase>();
 
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase>();
-            services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase>();
             #endregion
 
@@ -253,7 +256,11 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IIniciarCargaUsuariosGsaUseCase, IniciarCargaUsuariosGsaUseCase>();
             services.TryAddScoped<IRealizarCargaUsuariosGsaUseCase, RealizarCargaUsuariosGsaUseCase>();
+            services.TryAddScoped<IRealizarCargaUsuariosGsaComErrosUseCase, RealizarCargaUsuariosGsaComErrosUseCase>();
+            
             services.TryAddScoped<IProcessarUsuarioGsaUseCase, ProcessarUsuarioGsaUseCase>();
+            services.TryAddScoped<IProcessarUsuarioGsaComErrosUseCase, ProcessarUsuarioGsaComErrosUseCase>();
+
             services.TryAddScoped<IValidarUsuariosGsaUseCase, ValidarUsuariosGsaUseCase>();
             services.TryAddScoped<IObterUsuariosGsaUseCase, ObterUsuariosGsaUseCase>();
             services.TryAddScoped<IIniciarValidacaoUsuariosGsaUseCase, IniciarValidacaoUsuariosGsaUseCase > ();

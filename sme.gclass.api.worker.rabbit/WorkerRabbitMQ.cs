@@ -1,6 +1,5 @@
 ﻿using Elastic.Apm;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -23,12 +22,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 {
     public class WorkerRabbitMQ : IHostedService
     {
-        private readonly IModel canalRabbit;
-        private readonly IConnection conexaoRabbit;
+        private IModel canalRabbit;
+        private IConnection conexaoRabbit;
         private readonly IServiceScopeFactory serviceScopeFactory;
         private readonly IMetricReporter metricReporter;
         private readonly IServicoTelemetria servicoTelemetria;
         private readonly ConsumoDeFilasOptions consumoDeFilasOptions;
+        private readonly ConfiguracaoRabbitOptions configuracaoRabbitOptions;
         private readonly TelemetriaOptions telemetriaOptions;
         private readonly IMediator mediator;
 
@@ -40,10 +40,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         public WorkerRabbitMQ(IConnection conexaoRabbit,
                               IServiceScopeFactory serviceScopeFactory,
-                              IConfiguration configuration,
                               IMetricReporter metricReporter,
                               IServicoTelemetria servicoTelemetria, 
                               ConsumoDeFilasOptions consumoDeFilasOptions,
+                              ConfiguracaoRabbitOptions configuracaoRabbitOptions,
                               TelemetriaOptions telemetriaOptions,
                               IMediator mediator)
         {
@@ -53,17 +53,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.metricReporter = metricReporter;
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
-            this.consumoDeFilasOptions = consumoDeFilasOptions;
-
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
-
-            canalRabbit = conexaoRabbit.CreateModel();
-            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
-
-            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
-            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
-
+            this.consumoDeFilasOptions = consumoDeFilasOptions ?? throw new ArgumentNullException(nameof(consumoDeFilasOptions));
+            this.configuracaoRabbitOptions = configuracaoRabbitOptions ?? throw new ArgumentNullException(nameof(configuracaoRabbitOptions));
+           
             comandos = new Dictionary<string, ComandoRabbit>();
             RegistrarUseCases();
         }
@@ -161,19 +153,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             //Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoAhRemover, new ComandoRabbit("Remover curso", typeof(IRemoverCursoGoogleClassroomUseCase)));
 
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por SME ou DRE", typeof(ISincronizacaoGsaFormacaoCidadeTurmaSmeDreUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDreErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por SME ou DRE com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaSmeDreErroUseCase)));
-
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Componente", typeof(ISincronizacaoGsaFormacaoCidadeTurmaComponenteUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponenteErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Componente com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaComponenteErroUseCase)));
-
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA - criação do Curso", typeof(ISincronizacaoGsaFormacaoCidadeTurmaCursoUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCursoErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Curso com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaCursoErroUseCase)));
-
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA - atribuição de Aluno", typeof(ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAlunoErro, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA por Aluno com erros", typeof(ISincronizacaoGsaFormacaoCidadeTurmaAlunoErroUseCase)));
-
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -270,25 +255,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             return Task.CompletedTask;
         }
 
-        public Task StartAsync(CancellationToken stoppingToken)
+        public async Task StartAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var consumer = new EventingBasicConsumer(canalRabbit);
-            consumer.Received += async (ch, ea) =>
-            {
-                try
-                {
-                    await TratarMensagem(ea);
-                }
-                catch (Exception)
-                {
-                    //TODO: Tratar alguma exeção não tratada e continuar o consumer do rabbit
-                }
-            };
-
-            ConfigurarConsumoDeFilasRabbit(consumer);
-            return Task.CompletedTask;
+            await InicializaConsumers(stoppingToken);         
         }
 
         private void ConfigurarConsumoDeFilasRabbit(EventingBasicConsumer consumer)
@@ -296,6 +267,86 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             ConfigurarConsumoDeFilasSync(consumer);
             ConfigurarConsumoDeFilasGsa(consumer);
         }
+
+        private void ConexaoRabbit_CallbackException(object sender, CallbackExceptionEventArgs e)
+        {
+            FecharConexoesRabbit();
+
+            _ = Task.FromResult(InicializaConsumers(new CancellationToken())).Result;
+        }
+
+        private void FecharConexoesRabbit()
+        {
+            if (canalRabbit.IsOpen)
+            {
+                canalRabbit.Close();
+                canalRabbit.Dispose();
+            }
+
+            if (conexaoRabbit.IsOpen)
+            {
+                conexaoRabbit.Close();
+                conexaoRabbit.Dispose();
+            }
+        }
+        private void ConexaoRabbit_ConnectionShutdown(object sender, ShutdownEventArgs e)
+        {
+            if (canalRabbit.IsOpen)
+                canalRabbit.Close();
+            if (conexaoRabbit.IsOpen)
+                conexaoRabbit.Close();
+            _ = Task.FromResult(InicializaConsumers(new CancellationToken())).Result;
+        }
+        private Task InicializaConsumers(CancellationToken stoppingToken)
+        {
+            stoppingToken.ThrowIfCancellationRequested();
+
+            var factory = new ConnectionFactory
+            {
+                HostName = configuracaoRabbitOptions.HostName,
+                UserName = configuracaoRabbitOptions.UserName,
+                Password = configuracaoRabbitOptions.Password,
+                VirtualHost = configuracaoRabbitOptions.Virtualhost,
+                RequestedHeartbeat = TimeSpan.FromSeconds(30),
+            };
+
+            conexaoRabbit = factory.CreateConnection();
+            conexaoRabbit.CallbackException += ConexaoRabbit_CallbackException;
+            conexaoRabbit.ConnectionShutdown += ConexaoRabbit_ConnectionShutdown;
+
+
+            canalRabbit = conexaoRabbit.CreateModel();
+
+            canalRabbit.BasicQos(0, 10, false);
+
+            canalRabbit = conexaoRabbit.CreateModel();
+            canalRabbit.BasicQos(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false);
+
+            canalRabbit.ExchangeDeclare(ExchangeRabbit.GoogleSync, "topic", true, false);
+            RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
+
+            var consumer = new EventingBasicConsumer(canalRabbit);
+
+            consumer.Received += async (ch, ea) =>
+            {
+                try
+                {
+                    await TratarMensagem(ea);
+                }
+                catch (Exception ex)
+                {
+                    await RegistrarErro($"Erro ao tratar mensagem - {ea.RoutingKey} - {ex.Message}", ex);
+                    canalRabbit.BasicReject(ea.DeliveryTag, false);
+                }
+            };
+
+            ConfigurarConsumoDeFilasRabbit(consumer);
+
+            return Task.CompletedTask;
+        }
+
+        private Task RegistrarErro(string erro, Exception ex)
+            => mediator.Send(new SalvarLogViaRabbitCommand(erro, LogNivel.Critico, LogContexto.WorkerRabbit, rastreamento: ex.StackTrace));
 
         private void ConfigurarConsumoDeFilasSync(EventingBasicConsumer consumer)
         {
@@ -351,6 +402,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoAhRemover, false, consumer);
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, false, consumer);
