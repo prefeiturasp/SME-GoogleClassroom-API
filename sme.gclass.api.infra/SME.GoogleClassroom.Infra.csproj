@@ -5,9 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Contexto\**" />
+    <EmbeddedResource Remove="Contexto\**" />
+    <None Remove="Contexto\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.13.0" />
     <PackageReference Include="FluentValidation" Version="9.5.0" />
     <PackageReference Include="Google.Apis.Core" Version="1.50.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
@@ -17,10 +24,6 @@
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
     <PackageReference Include="Sentry" Version="3.0.5" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Contexto\" />
   </ItemGroup>
 
   <ItemGroup>

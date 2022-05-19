@@ -22,12 +22,6 @@ namespace SME.GoogleClassroom.IoC
 
             RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
-            RegistrarServicos(services);
-        }
-
-        private static void RegistrarServicos(IServiceCollection services)
-        {
-            services.TryAddTransient<IServicoTelemetria, ServicoTelemetria>();
         }
 
         private static void RegistrarRepositorios(IServiceCollection services)
@@ -220,7 +214,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ICargaInicialUseCase, CargaInicialUseCase>();
             services.TryAddScoped<IRemoverTurmaUseCase, RemoverTurmaUseCase>();
 
-
             #region Formação Cidade
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasUseCase>();
             services.TryAddScoped<IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase, IniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase>();
@@ -304,7 +297,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IExecutarImportacaoDeNotasDaAtividadeUseCase, ExecutarImportacaoDeNotasDaAtividadeUseCase>();
             services.TryAddScoped<IImportarNotasGsaProcessarErroUseCase, ImportarNotasGsaProcessarErroUseCase>();
             services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
-
         }
     }
 }
