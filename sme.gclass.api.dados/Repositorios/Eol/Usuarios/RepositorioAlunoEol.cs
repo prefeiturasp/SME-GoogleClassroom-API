@@ -795,7 +795,7 @@ namespace SME.GoogleClassroom.Dados
 									AND matr.an_letivo = @anoLetivo
 									AND te.an_letivo = @anoLetivo
 									AND matr.dt_status_matricula >= @dataReferencia
-									AND NOT EXISTS (select 1 from v_matricula_cotic where an_letivo >= matr.an_letivo and st_matricula IN(1,6,10,13) and cd_aluno = a.cd_aluno) ");
+									AND matr.cd_matricula NOT IN (select cd_matricula from v_matricula_cotic where an_letivo >= matr.an_letivo and st_matricula IN(1,6,10,13) and cd_aluno = a.cd_aluno)");
 
                 if (alunoId != null && alunoId > 0)
                     query.AppendLine("AND a.cd_aluno = @alunoId ");
