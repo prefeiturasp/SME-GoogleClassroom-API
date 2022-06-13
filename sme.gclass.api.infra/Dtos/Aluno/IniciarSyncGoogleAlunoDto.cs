@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SME.GoogleClassroom.Dominio;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Infra
 {
@@ -21,5 +22,6 @@ namespace SME.GoogleClassroom.Infra
         public List<long> Ues { get; set; }
         public List<long> Turmas { get; set; }
         public long? CodigoAluno { get; set; }
+        public Paginacao Paginacao { get; set; }
     }
 }

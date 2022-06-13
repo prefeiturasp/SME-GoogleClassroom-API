@@ -27,15 +27,14 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(query,
                 new
                 {
-                    anoLetivo = anoLetivo,
-                    dataReferencia,
-                    paginacao.QuantidadeRegistros,
-                    paginacao.QuantidadeRegistrosIgnorados,
+                    anoLetivo,
+                    pagina = paginacao.Pagina,
+					quantidadeRegistros = paginacao.QuantidadeRegistros,
                     codigoEol,
                     TiposUes = parametrosCargaInicialDto.TiposUes,
 					parametrosCargaInicialDto.Ues,
 					parametrosCargaInicialDto.Turmas,
-				}, commandTimeout: 6000);
+				}, commandTimeout: 120);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -407,15 +406,15 @@ namespace SME.GoogleClassroom.Dados
             query.Append(querySelectCount);
             query.Append(queryFrom);
 
-            using var multi = await conn.QueryMultipleAsync(query.ToString(),
-                new
-                {
-                    quantidadeRegistros = paginacao.QuantidadeRegistros,
-                    quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
-                    anoLetivo,
-                    dataReferencia,
-                    turmaId
-                }, commandTimeout: 6000);
+			using var multi = await conn.QueryMultipleAsync(query.ToString(),
+				new
+				{
+					quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+					quantidadeRegistros = paginacao.QuantidadeRegistros,
+					anoLetivo,
+					dataReferencia,
+					turmaId
+				}, commandTimeout: 6000);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -497,7 +496,7 @@ namespace SME.GoogleClassroom.Dados
 						ON temp.cd_aluno_eol = aluno.cd_aluno
 					ORDER BY
 						cd_aluno_eol
-					{(paginacao?.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
+					{(paginacao.Pagina > 0 ? @"OFFSET (@pagina - 1) * @quantidadeRegistros ROWS
 					FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";")}
 
 					-- Totalizacao
@@ -510,29 +509,7 @@ namespace SME.GoogleClassroom.Dados
         private static StringBuilder QueryAgrupaBuscaRecenteAnoAluno(ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             string query = $@" 
-					--- 2.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes;
-					SELECT
-						cd_aluno,
-						MAX(dt_status_matricula) AS dt_status_matricula
-					INTO #tempAlunosMatriculasProgramaAtivasDatasMaisRecentes
-					FROM #tempAlunosMatriculasProgramaAtivas
-					GROUP BY cd_aluno;
-
-					--- 2.2 Mantém apenas a matrícula mais recente de cada aluno
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas;
-					SELECT
-						t1.*
-					INTO #tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas
-					FROM
-						#tempAlunosMatriculasProgramaAtivas t1
-					INNER JOIN
-						#tempAlunosMatriculasProgramaAtivasDatasMaisRecentes t2
-						ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
-
-					--- 2.3 Montagem da tabela de inserção
+					-- 2.1 Montagem da tabela de inserção
 					IF OBJECT_ID('tempdb..#tempAlunosProgramaAtivos') IS NOT NULL
 						DROP TABLE #tempAlunosProgramaAtivos;
 					SELECT
@@ -546,7 +523,7 @@ namespace SME.GoogleClassroom.Dados
 						1 AS AlunoPrograma
 					INTO #tempAlunosProgramaAtivos
 					FROM
-						#tempAlunosMatriculasProgramaAtivasRemovendoDuplicadas temp
+						#tempAlunosMatriculasProgramaAtivas temp
 					INNER JOIN
 						v_aluno_cotic aluno (NOLOCK)
 						ON aluno.cd_aluno = temp.cd_aluno
@@ -585,8 +562,8 @@ namespace SME.GoogleClassroom.Dados
 						DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 					SELECT
 						aluno.cd_aluno,
-						matr.cd_matricula,
-						matr.dt_status_matricula
+						max(matr.cd_matricula) cd_matricula,
+						max(matr.dt_status_matricula) dt_status_matricula
 					INTO #tempAlunosMatriculasProgramaAtivas
 					FROM
 						v_aluno_cotic aluno (NOLOCK)
@@ -609,11 +586,9 @@ namespace SME.GoogleClassroom.Dados
 						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
-						{(dataReferecia.HasValue ? "AND matr.dt_status_matricula >= @dataReferencia " : "")}
 						AND te.st_turma_escola in ('O', 'A', 'C')
 						AND te.an_letivo = @anoLetivo
 						AND NOT matr.cd_tipo_programa IS NULL
-
 						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol " : " ")} ";
 
             var queryBuilder = new StringBuilder(query);
@@ -621,37 +596,15 @@ namespace SME.GoogleClassroom.Dados
             queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
             queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
             queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-            queryBuilder.Append(";");
+            queryBuilder.AppendLine("GROUP BY aluno.cd_aluno;");
 
 			return queryBuilder; 
 		}
 
         private static StringBuilder QueryBuscaRecenteAnoAluno(ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
-            var query = $@"-- - 1.1 Agrupa para buscar a mais recente em caso de mais de uma no ano por aluno
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasDatasMaisRecentes') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasAtivasDatasMaisRecentes;
-					SELECT
-						cd_aluno,
-						MAX(dt_status_matricula) AS dt_status_matricula
-					INTO #tempAlunosMatriculasAtivasDatasMaisRecentes
-					FROM #tempAlunosMatriculasAtivas
-					GROUP BY cd_aluno;
-
-					--- 1.2 Mantém apenas a matrícula mais recente de cada aluno
-					IF OBJECT_ID('tempdb..#tempAlunosMatriculasAtivasRemovendoDuplicadas') IS NOT NULL
-						DROP TABLE #tempAlunosMatriculasAtivasRemovendoDuplicadas;
-					SELECT
-						DISTINCT
-						t1.*
-					INTO #tempAlunosMatriculasAtivasRemovendoDuplicadas
-					FROM
-						#tempAlunosMatriculasAtivas t1
-					INNER JOIN
-						#tempAlunosMatriculasAtivasDatasMaisRecentes t2
-						ON t1.cd_aluno = t2.cd_aluno AND t1.dt_status_matricula = t2.dt_status_matricula;
-
-					--- 1.3 Montagem da tabela de inserção
+            var query = $@"
+					--- 1.2 Montagem da tabela de inserção
 					IF OBJECT_ID('tempdb..#tempAlunosAtivos') IS NOT NULL
 						DROP TABLE #tempAlunosAtivos;
 					SELECT
@@ -665,7 +618,7 @@ namespace SME.GoogleClassroom.Dados
 						0 AS AlunoPrograma
 					INTO #tempAlunosAtivos
 					FROM
-						#tempAlunosMatriculasAtivasRemovendoDuplicadas temp
+						#tempAlunosMatriculasAtivas temp
 					INNER JOIN
 						v_aluno_cotic aluno (NOLOCK)
 						ON aluno.cd_aluno = temp.cd_aluno
@@ -726,8 +679,8 @@ namespace SME.GoogleClassroom.Dados
 						DROP TABLE #tempAlunosMatriculasAtivas;
 					SELECT
 						aluno.cd_aluno,
-						matr.cd_matricula,
-						matr.dt_status_matricula
+						max(matr.cd_matricula) cd_matricula,
+						max(matr.dt_status_matricula) dt_status_matricula
 					INTO #tempAlunosMatriculasAtivas
 					FROM
 						v_aluno_cotic aluno (NOLOCK)
@@ -750,11 +703,9 @@ namespace SME.GoogleClassroom.Dados
 						matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
 						AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
 						AND matr.an_letivo = @anoLetivo
-						{(dataReferecia.HasValue ? "AND matr.dt_status_matricula >= @dataReferencia " : "")}
-						AND te.st_turma_escola in ('O', 'A', 'C')											
+						AND te.st_turma_escola in ('O', 'A', 'C')
 						AND te.an_letivo = @anoLetivo
 						AND NOT cd_serie_ensino IS NULL
-
 						{(codigoEol.HasValue ? @"AND aluno.cd_aluno = @codigoEol " : " ")}";
 
             var queryBuilder = new StringBuilder(query);
@@ -762,7 +713,7 @@ namespace SME.GoogleClassroom.Dados
             queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
             queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
             queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-            queryBuilder.Append(";");
+            queryBuilder.AppendLine("GROUP BY aluno.cd_aluno;");
 
             return queryBuilder;
         }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Elastic.Apm;
+﻿using Elastic.Apm;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +10,13 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Interfaces.Metricas;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit
 {
@@ -41,7 +41,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         public WorkerRabbitMQ(IConnection conexaoRabbit,
                               IServiceScopeFactory serviceScopeFactory,
                               IMetricReporter metricReporter,
-                              ServicoTelemetria servicoTelemetria, 
+                              IServicoTelemetria servicoTelemetria, 
                               ConsumoDeFilasOptions consumoDeFilasOptions,
                               ConfiguracaoRabbitOptions configuracaoRabbitOptions,
                               TelemetriaOptions telemetriaOptions,
@@ -165,26 +165,30 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             var mensagem = Encoding.UTF8.GetString(ea.Body.Span);
             var rota = ea.RoutingKey;
+
             Console.WriteLine(string.Concat(rota, " - ", DateTime.Now.ToString("G")));
+
             if (comandos.ContainsKey(rota))
             {
                 var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                 var comandoRabbit = comandos[rota];
                 var tempoExecucao = Stopwatch.StartNew();
+                var transacao = telemetriaOptions.Apm ? Agent.Tracer.StartTransaction(rota, "WorkerRabbitGCA") : null;
+
                 try
                 {
-                    if (telemetriaOptions.Apm)
-                        Agent.Tracer.StartTransaction("TratarMensagem", "WorkerRabbitGCA");
-
                     using var scope = serviceScopeFactory.CreateScope();
                     var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
 
                     metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
+
                     await servicoTelemetria.RegistrarAsync(async () =>
-                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar").InvokeAsync(casoDeUso, new object[] { mensagemRabbit }),
+                        await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar")
+                            .InvokeAsync(casoDeUso, new object[] { mensagemRabbit }),
                         "WorkerRabbitGCA",
-                        "TratarMensagem",
-                        rota);
+                        rota,
+                        rota,
+                        mensagem);
 
                     canalRabbit.BasicAck(ea.DeliveryTag, false);
                 }
@@ -193,21 +197,25 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     canalRabbit.BasicReject(ea.DeliveryTag, false);
                     metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                     RegistrarErro(ea, mensagemRabbit, nex, LogNivel.Negocio);
+                    transacao.CaptureException(nex);
                 }
                 catch (ValidacaoException vex)
                 {
                     canalRabbit.BasicReject(ea.DeliveryTag, false);
                     metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                     RegistrarErro(ea, mensagemRabbit, vex, LogNivel.Negocio);
+                    transacao.CaptureException(vex);
                 }
                 catch (Exception ex)
                 {
                     canalRabbit.BasicReject(ea.DeliveryTag, false);
                     metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                     RegistrarErro(ea, mensagemRabbit, ex, LogNivel.Critico);
+                    transacao.CaptureException(ex);
                 }
                 finally
                 {
+                    transacao?.End();
                     tempoExecucao.Stop();
                     metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                 }
@@ -374,7 +382,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, false, consumer);
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoErroTratar, false, consumer);
-                
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIniciar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
@@ -388,7 +395,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaInativarProfessoresEFuncionariosInativarSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarProfessorSync, false, consumer);
-
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoExtintoArquivarCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarTratar, false, consumer);

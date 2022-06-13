@@ -29,11 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.ParametrosCargaInicialDto)
                 .NotEmpty()
-                .WithMessage("A configuração de parâmetros deve ser informada.");
-
-            RuleFor(x => x.Paginacao)
-                .NotEmpty()
-                .WithMessage("A página e a quantidade de registros devem ser informados.");
+                .WithMessage("A configuração de parâmetros deve ser informada.");            
         }
     }
 }
