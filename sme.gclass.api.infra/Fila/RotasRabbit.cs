@@ -92,6 +92,7 @@
         
         public static string FilaGsaCursosCelpTratar => "googleclass.gsa.cursos.celp.tratar";
         public static string FilaGsaCursosCelpTurmaTratar => "googleclass.gsa.cursos.celp.turma.tratar";
+        public static string FilaGsaCursosCelpTurmaAlunoTratar => "googleclass.gsa.cursos.celp.turma.aluno.tratar";
 
         //Carga inicial
         public static string FilaGsaCargaInicial => "googleclass.gsa.carga.inicial.sync";

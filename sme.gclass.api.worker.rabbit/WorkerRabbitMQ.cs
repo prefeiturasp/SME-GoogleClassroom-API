@@ -163,6 +163,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             //Celp
             comandos.Add(RotasRabbit.FilaGsaCursosCelpTratar, new ComandoRabbit("Sincroniza os cursos do Celp no GSA com base na configuração da tabela config_celp", typeof(ITratarSincronizacaoCursosCelpUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursosCelpTurmaTratar, new ComandoRabbit("Sincroniza os cursos do Celp por Turma no GSA com base na configuração da tabela config_celp", typeof(ITratarSincronizacaoCursosCelpTurmaUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursosCelpTurmaAlunoTratar, new ComandoRabbit("Sincronizar os cursos do Celp para os alunos da turma no GSA com base na configuração da tabela config_celp", typeof(ITratarSincronizacaoCursosCelpTurmaAlunoUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -413,6 +414,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpTurmaTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpTurmaAlunoTratar, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
