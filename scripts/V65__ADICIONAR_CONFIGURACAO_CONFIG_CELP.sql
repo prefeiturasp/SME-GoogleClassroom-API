@@ -49,9 +49,9 @@ insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('108300
 insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('108300','700012','smecelpsul2@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
 insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('108300','700013','smecelpsul2@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
 
---Ipiranga   
-insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('108600','700039','smecelpsul3@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
+--Santo Amaro     
+insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('109100','700039','smecelpsul3@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
 
---Santo Amaro   
-insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('109100','700045','smecelpsul3@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
-insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('109100','700022','smecelpsul3@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
+--Ipiranga 
+insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('108600','700045','smecelpsul3@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
+insert into config_celp (dre_id,ue_id,email,ativo,data_inclusao) values ('108600','700022','smecelpsul3@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
