@@ -4,6 +4,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -43,7 +44,11 @@ namespace SME.GoogleClassroom.Aplicacao
                         {
                             TurmaCodigo = cursoCelp.TurmaCodigo,
                             ComponenteCurricularCodigo = cursoCelp.ComponenteCodigo,
-                            ComponenteCurricularNome = cursoCelp.DescricaoGradePrograma
+                            ComponenteCurricularNome = cursoCelp.DescricaoGradePrograma,
+                            Secao = cursoCelp.Secao,
+                            UeCodigo = cursoCelp.UeCodigo,
+                            TipoId = cursoCelp.TurmaTipo,
+                            Email = configCelp.Email
                         };
 
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursosCelpTurmaTratar, filtroFilaTurma));    
@@ -61,10 +66,10 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task<int[]> ObterComponentesCurriculares(int anoLetivo)
+        private async Task<IEnumerable<int>> ObterComponentesCurriculares(int anoLetivo)
         {
             var parametrosComponentesCelp = await ObterParametroSistema(TipoParametroSistema.ComponentesCurricularesCELP, anoLetivo);
-            return parametrosComponentesCelp.Valor.Split(',').Select(s => int.Parse(s)).ToArray();
+            return parametrosComponentesCelp.Valor.Split(',').Select(s => int.Parse(s)).ToList();
         }
 
         private async Task<ParametrosSistema> ObterParametroSistema(TipoParametroSistema componentesCurricularesCELP, int anoLetivo)
