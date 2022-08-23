@@ -7,5 +7,6 @@
         Atividades = 3,
         FormacaoCidade = 4,
         UsuarioGsa = 5,
+        CelpGsa = 6,
     }
 }
