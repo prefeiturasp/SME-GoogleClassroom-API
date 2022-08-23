@@ -71,6 +71,8 @@ namespace SME.GoogleClassroom.IoC
 
             services.TryAddScoped<IRepositorioDreEol, RepositorioDreEol>();
             services.TryAddScoped<IRepositorioComponenteCurricularFormacaoCidade, RepositorioComponenteCurricularFormacaoCidade>();
+            
+            services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
