@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var componentesCurricularsIds = await ObterComponentesCurriculares(filtroSincronizacao.AnoLetivo);
 
-                var cursosCelpEol = await mediator.Send(new ObterCursosCelpPorComponenteCurricularEAnoQuery(filtroSincronizacao.AnoLetivo,componentesCurricularsIds));
+                var cursosCelpEol = await mediator.Send(new ObterCursosCelpQuery(componentesCurricularsIds,filtroSincronizacao.AnoLetivo));
 
                 foreach (var configCelp in configsCelp)
                 {
@@ -42,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
                         var filtroFilaTurma = new FiltroTurmaComponenteCurricularUeDto()
                         {
                             TurmaCodigo = cursoCelp.TurmaCodigo,
-                            ComponenteCurricularCodigo = cursoCelp.ComponenteCurricularCodigo,
+                            ComponenteCurricularCodigo = cursoCelp.ComponenteCodigo,
                             ComponenteCurricularNome = cursoCelp.DescricaoGradePrograma
                         };
 
