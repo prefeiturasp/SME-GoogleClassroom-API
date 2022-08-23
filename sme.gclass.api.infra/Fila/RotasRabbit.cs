@@ -89,6 +89,9 @@
         public static string FilaGsaNotasAtividadesTratar => "googleclass.gsa.notas.atividades.tratar";
         public static string FilaGsaNotasAtividadesSync => "googleclass.gsa.notas.atividades.sync";
         public static string FilaGsaNotasAtividadesSyncErro => "googleclass.gsa.notas.atividades.sync.erro";
+        
+        public static string FilaGsaCursosCelpTratar => "googleclass.gsa.cursos.celp.tratar";
+        public static string FilaGsaCursosCelpTurmaTratar => "googleclass.gsa.cursos.celp.turma.tratar";
 
         //Carga inicial
         public static string FilaGsaCargaInicial => "googleclass.gsa.carga.inicial.sync";

@@ -299,6 +299,10 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IExecutarImportacaoDeNotasDaAtividadeUseCase, ExecutarImportacaoDeNotasDaAtividadeUseCase>();
             services.TryAddScoped<IImportarNotasGsaProcessarErroUseCase, ImportarNotasGsaProcessarErroUseCase>();
             services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
+            
+            //Celp
+            services.TryAddScoped<ITratarSincronizacaoCursosCelpUseCase, TratarSincronizacaoCursosCelpUseCase>();
+            services.TryAddScoped<ITratarSincronizacaoCursosCelpTurmaUseCase, TratarSincronizacaoCursosCelpTurmaUseCase>();
         }
     }
 }

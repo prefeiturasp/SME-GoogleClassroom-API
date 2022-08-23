@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<ConfiguracaoCelpDto>> ObterConfiguracaoInicial()
         {
-            var query = @"select id, dre_id as DreId, ue_id as UeId, email from config_celp ";
+            var query = @"select id, dre_id as DreCodigo, ue_id as UeCodigo, email from config_celp ";
 
             using var conn = ObterConexao();
 
