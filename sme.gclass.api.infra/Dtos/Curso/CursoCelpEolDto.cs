@@ -6,6 +6,8 @@ namespace SME.GoogleClassroom.Infra
         public string UeCodigo { get; set; }
         public string DreCodigo { get; set; }
         public string DescricaoGradePrograma { get; set; }
-        public string ComponenteCodigo { get; set; }        
+        public string ComponenteCodigo { get; set; }
+        public string Secao { get; set; }
+        public int TurmaTipo { get; set; }
     }
 }
