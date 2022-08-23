@@ -9,7 +9,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCelpQueryHandler : IRequestHandler<ObterCursosCelpQuery, IReadOnlyList<CursoCelpEolDto>>
+    public class ObterCursosCelpQueryHandler : IRequestHandler<ObterCursosCelpQuery, IEnumerable<CursoCelpEolDto>>
     {
         private readonly IRepositorioCursoCelpEol repositorioCursoCelpEol;
 
@@ -18,10 +18,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoCelpEol = repositorioCursoCelpEol ?? throw new ArgumentNullException(nameof(repositorioCursoCelpEol));
         }
 
-        public async Task<IReadOnlyList<CursoCelpEolDto>> Handle(ObterCursosCelpQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CursoCelpEolDto>> Handle(ObterCursosCelpQuery request, CancellationToken cancellationToken)
         {
-            return (await repositorioCursoCelpEol.ObterCursosCelpPorComponentesEAno(request.Componentes,
-                request.AnoLetivo)).ToList();
+            return await repositorioCursoCelpEol.ObterCursosCelpPorComponentesEAno(request.Componentes, request.AnoLetivo);
         }
     }
 }

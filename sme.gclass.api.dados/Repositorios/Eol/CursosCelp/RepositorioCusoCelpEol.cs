@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<IEnumerable<CursoCelpEolDto>> ObterCursosCelpPorComponentesEAno(IReadOnlyList<int> componentes, int anoLetivo)
+        public async Task<IEnumerable<CursoCelpEolDto>> ObterCursosCelpPorComponentesEAno(IEnumerable<int> componentes, int anoLetivo)
         {
 	        var tiposItinerarioMedio = (await ObterTiposItinerarioMedio()).ToList();
 	        

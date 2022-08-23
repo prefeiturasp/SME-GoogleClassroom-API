@@ -4,15 +4,15 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCelpQuery : IRequest<IReadOnlyList<CursoCelpEolDto>>
+    public class ObterCursosCelpQuery : IRequest<IEnumerable<CursoCelpEolDto>>
     {
-        public ObterCursosCelpQuery(IReadOnlyList<int> componentes, int anoLetivo)
+        public ObterCursosCelpQuery(IEnumerable<int> componentes, int anoLetivo)
         {
             Componentes = componentes;
             AnoLetivo = anoLetivo;
         }
 
-        public IReadOnlyList<int> Componentes { get; }
+        public IEnumerable<int> Componentes { get; }
         public int AnoLetivo { get; }
     }
 }
