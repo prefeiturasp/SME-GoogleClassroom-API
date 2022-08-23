@@ -1412,7 +1412,7 @@ namespace SME.GoogleClassroom.Dados
             if (parametrosCargaInicialDto.Ues.Any())
                 query.AppendLine("		AND e.cd_escola = ANY(@ues)");
             if (turmaId.HasValue)
-                query.AppendLine("		AND ee.cd_turma_escola = @turmaId");
+                query.AppendLine("		AND te.cd_turma_escola = @turmaId");
             else if (parametrosCargaInicialDto.Turmas.Any())
                 query.AppendLine("		AND ee.cd_turma_escola IN(@turmasId)");
             if (componenteCurricularId.HasValue && componenteCurricularId.Value != 512)
@@ -1487,7 +1487,7 @@ namespace SME.GoogleClassroom.Dados
             if (parametrosCargaInicialDto.Ues.Any())
                 query.AppendLine("		AND e.cd_escola = ANY(@ues)");
             if (turmaId.HasValue)
-                query.AppendLine("		AND ee.cd_turma_escola = @turmaId");
+                query.AppendLine("		AND te.cd_turma_escola = @turmaId");
             else if (parametrosCargaInicialDto.Turmas.Any())
                 query.AppendLine("		AND ee.cd_turma_escola IN(@turmasId)");
             if (componenteCurricularId.HasValue && componenteCurricularId.Value != 512)
