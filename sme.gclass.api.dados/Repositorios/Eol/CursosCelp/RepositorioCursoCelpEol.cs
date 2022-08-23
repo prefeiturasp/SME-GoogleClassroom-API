@@ -6,9 +6,9 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Dados
 {
-    public class RepositorioCusoCelpEol : RepositorioEol, IRepositorioCursoCelpEol
+    public class RepositorioCursoCelpEol : RepositorioEol, IRepositorioCursoCelpEol
     {
-        public RepositorioCusoCelpEol(ConnectionStrings connectionStrings) : base(connectionStrings)
+        public RepositorioCursoCelpEol(ConnectionStrings connectionStrings) : base(connectionStrings)
         {
         }
 

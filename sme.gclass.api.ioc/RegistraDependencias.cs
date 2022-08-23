@@ -65,7 +65,6 @@ namespace SME.GoogleClassroom.IoC
             //Notas
             services.TryAddScoped<IRepositorioNota, RepositorioNota>();
             
-            
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
 
@@ -73,6 +72,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioComponenteCurricularFormacaoCidade, RepositorioComponenteCurricularFormacaoCidade>();
             
             services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
+            
+            //Celp
+            services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
