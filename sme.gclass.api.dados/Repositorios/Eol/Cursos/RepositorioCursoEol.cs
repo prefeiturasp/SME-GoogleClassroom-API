@@ -1507,8 +1507,6 @@ namespace SME.GoogleClassroom.Dados
             query.AppendLine("		   sc.nm_pessoa,");
             query.AppendLine("		   sc.cd_registro_funcional");
             query.AppendLine("ORDER BY te.cd_turma_escola");
-            query.AppendLine("OFFSET(@pagina - 1) * @quantidadeRegistros ROWS");
-            query.AppendLine("FETCH NEXT @quantidadeRegistros ROWS ONLY");
             query.AppendLine("SELECT Nome,");
             query.AppendLine("	     Secao,");
             query.AppendLine("	     ComponenteCurricularId,");
