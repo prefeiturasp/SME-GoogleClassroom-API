@@ -9,5 +9,6 @@ namespace SME.GoogleClassroom.Infra
         public string UeCodigo { get; set; }
         public string Email { get; set; }
         public int TipoId { get; set; }
+        public int TipoEscola { get; set; }
     }
 }

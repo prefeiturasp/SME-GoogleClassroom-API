@@ -48,7 +48,8 @@ namespace SME.GoogleClassroom.Aplicacao
                             Secao = cursoCelp.Secao,
                             UeCodigo = cursoCelp.UeCodigo,
                             TipoId = cursoCelp.TurmaTipo,
-                            Email = configCelp.Email
+                            Email = configCelp.Email,
+                            TipoEscola = cursoCelp.TipoEscola
                         };
 
                         await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursosCelpTurmaTratar, filtroFilaTurma));    

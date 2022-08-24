@@ -21,7 +21,7 @@
             UeCodigo = ueCodigo;            
         }
 
-        public CursoEol(string nome, string secao, long turmaId, long componenteCurricularId, string ueCodigo, string email, TurmaTipo turmaTipo)
+        public CursoEol(string nome, string secao, long turmaId, long componenteCurricularId, string ueCodigo, string email, TurmaTipo turmaTipo, TipoEscola tipoEscola)
         {
             Nome = nome;
             Secao = secao;
@@ -30,6 +30,7 @@
             Email = email;
             UeCodigo = ueCodigo;
             TurmaTipo = turmaTipo;
+            TipoEscola = tipoEscola;
         }
 
         protected CursoEol()

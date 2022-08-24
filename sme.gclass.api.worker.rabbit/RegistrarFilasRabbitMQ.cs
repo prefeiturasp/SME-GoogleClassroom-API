@@ -80,9 +80,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoProfessorSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoProfessorSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoProfessorSync);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoProfessorCelpSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoProfessorCelpSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoProfessorCelpSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoAlunoSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoAlunoSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoAlunoSync);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoAlunoCelpSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoAlunoCelpSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoAlunoCelpSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoGradeSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoGradeSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoGradeSync);
@@ -268,6 +274,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoIncluir);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoCelpIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoCelpIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoCelpIncluir);
         }
 
         private static void RegistrarFilasAlunoDeInclusao(IModel canalRabbit)

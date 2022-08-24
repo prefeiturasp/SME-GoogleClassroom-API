@@ -9,5 +9,6 @@ namespace SME.GoogleClassroom.Infra
         public string ComponenteCodigo { get; set; }
         public string Secao { get; set; }
         public int TurmaTipo { get; set; }
+        public int TipoEscola { get; set; }
     }
 }

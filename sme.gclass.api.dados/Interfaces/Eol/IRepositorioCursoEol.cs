@@ -19,6 +19,5 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao);
         Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, Paginacao paginacao, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<IEnumerable<CursoEolDto>> ObterTurmasConcluidasPorAnoLetivo(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, long? turmaId);
-        Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoCelpParaIncluirAsync(int requestAnoLetivo, long requestTurmaId, long requestComponenteCurricularId);
     }
 }

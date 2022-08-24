@@ -56,7 +56,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             return new CursoEol(filtro.ComponenteCurricularNome, 
                 filtro.Secao, long.Parse(filtro.TurmaCodigo),long.Parse(filtro.ComponenteCurricularCodigo), 
-                filtro.UeCodigo,filtro.Email,(TurmaTipo)filtro.TipoId);
+                filtro.UeCodigo,filtro.Email,(TurmaTipo)filtro.TipoId,(TipoEscola)filtro.TipoEscola);
         }
         
         private async Task IncluirGradeDeCursoComErroAsync(FiltroTurmaComponenteCurricularUeDto filtro, string mensagem)

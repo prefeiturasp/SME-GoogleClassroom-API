@@ -35,7 +35,7 @@ namespace SME.GoogleClassroom.Dados
 				    END, ' - ', te.dc_turma_escola, ' - ', te.cd_turma_escola, ' - ', ue.cd_unidade_educacao, ' - ',
 				    	LTRIM(RTRIM(tpe.sg_tp_escola)), ' ', ue.nm_unidade_educacao
 				) as secao,
-    			te.cd_tipo_turma turmatipo
+    			te.cd_tipo_turma turmatipo, e.tp_escola tipoEscola
 				from turma_escola te
 				inner join turma_escola_grade_programa tegp on te.cd_turma_escola = tegp.cd_turma_escola
 				inner join escola_grade eg on tegp.cd_escola_grade = eg.cd_escola_grade

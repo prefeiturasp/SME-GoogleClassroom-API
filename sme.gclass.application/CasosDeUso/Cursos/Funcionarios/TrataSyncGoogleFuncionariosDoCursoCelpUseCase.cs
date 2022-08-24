@@ -5,6 +5,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,27 +28,55 @@ namespace SME.GoogleClassroom.Aplicacao
                 await IncluirCursoParaIncluirFuncionariosComErroAsync(cursoParaIncluirFuncionarios, "Não foi possível iniciar a inclusão de funcionários do curso no Google Classroom. O funcionário não foi informado corretamente.");
                 return true;
             }
-            //Chamar uma query com celp (tipo_escola = 27)
-            var funcionariosDoCursoParaIncluir = await mediator.Send(new ObterFuncionariosDoCursoCelpParaIncluirGoogleQuery(DateTime.Now.Year, cursoParaIncluirFuncionarios.TurmaId, cursoParaIncluirFuncionarios.ComponenteCurricularId));
-            if (!funcionariosDoCursoParaIncluir?.Any() ?? true) return true;
+            
+            var parametroEmailCoordenador = await ObterParametroEmailCoordenador();
 
-            foreach (var funcionarioDoCursoParaIncluir in funcionariosDoCursoParaIncluir)
+            var coordenadorDoCurso = await mediator.Send(new ObterFuncionariosGooglePorEmailQuery(parametroEmailCoordenador.Valor));
+            if (coordenadorDoCurso is null || !coordenadorDoCurso.Any())
             {
-                try
+                await IncluirCursoParaIncluirFuncionariosComErroAsync(cursoParaIncluirFuncionarios, @"Não foi possível iniciar a inclusão do Coordenador (funcionários) do curso CELP no Google Classroom. O funcionário não foi encontrado.");
+                return true;
+            }
+            
+            var funcionarioDoCursoParaIncluir = ObterFuncionarioDoCursoParaIncluir(parametroEmailCoordenador, coordenadorDoCurso, cursoParaIncluirFuncionarios);
+            
+            try
+            {
+                var publicarFuncionarioCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoIncluir, RotasRabbit.FilaFuncionarioCursoIncluir, funcionarioDoCursoParaIncluir));
+                if (!publicarFuncionarioCurso)
                 {
-                    var publicarFuncionarioCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioCursoIncluir, RotasRabbit.FilaFuncionarioCursoIncluir, funcionarioDoCursoParaIncluir));
-                    if (!publicarFuncionarioCurso)
-                    {
-                        await IncluirCursoDoFuncionarioComErroAsync(funcionarioDoCursoParaIncluir, ObterMensagemDeErro(funcionarioDoCursoParaIncluir));
-                    }
+                    await IncluirCursoDoFuncionarioComErroAsync(funcionarioDoCursoParaIncluir, ObterMensagemDeErro(funcionarioDoCursoParaIncluir));
                 }
-                catch (Exception ex)
-                {
-                    await IncluirCursoDoFuncionarioComErroAsync(funcionarioDoCursoParaIncluir, ObterMensagemDeErro(funcionarioDoCursoParaIncluir, ex));
-                }
+            }
+            catch (Exception ex)
+            {
+                await IncluirCursoDoFuncionarioComErroAsync(funcionarioDoCursoParaIncluir, ObterMensagemDeErro(funcionarioDoCursoParaIncluir, ex));
             }
 
             return true;
+        }
+
+        private async Task<ParametrosSistema> ObterParametroEmailCoordenador()
+        {
+            var parametroEmailCoordenador =
+                await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(TipoParametroSistema.EmailCoordenadorCELP,
+                    DateTime.Now.Year));
+            if (parametroEmailCoordenador is null)
+                throw new NegocioException(
+                    $"Parâmetro do E-mail do Coordenador do CELP não localizado para o ano {DateTime.Now.Year}");
+            return parametroEmailCoordenador;
+        }
+
+        private static FuncionarioCursoEol ObterFuncionarioDoCursoParaIncluir(ParametrosSistema parametroEmailCoordenador, IEnumerable<FuncionarioGoogle> coordenadorDoCurso, CursoGoogle cursoParaIncluirFuncionarios)
+        {
+            return new FuncionarioCursoEol
+            {
+                Email = parametroEmailCoordenador.Valor,
+                Indice = coordenadorDoCurso.FirstOrDefault().Indice,
+                Rf = coordenadorDoCurso.FirstOrDefault().Rf.Value,
+                TurmaId = cursoParaIncluirFuncionarios.TurmaId,
+                ComponenteCurricularId = cursoParaIncluirFuncionarios.ComponenteCurricularId
+            };
         }
 
         private async Task IncluirCursoParaIncluirFuncionariosComErroAsync(CursoGoogle cursoGoogle, string mensagem)

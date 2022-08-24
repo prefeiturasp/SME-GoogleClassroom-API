@@ -62,5 +62,6 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretosPorCpfs(string[] Cpfs);
         Task<IEnumerable<UsuarioGoogleDto>> ObteUsuariosPorClassroomIdsAsync(IEnumerable<string> classroomIds);
 
+        Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorEmail(string requestEmail);
     }
 }

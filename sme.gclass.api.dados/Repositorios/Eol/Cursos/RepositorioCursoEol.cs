@@ -346,47 +346,6 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoCelpParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId)
-        {
-            using var conn = ObterConexao();
-
-            var variaveis = ObterVariaveis();
-
-            var queryBuscafuncionarioPorCargoFixo = ObterQueryBuscafuncionarioPorCargoFixo();
-
-            var queryBuscafuncionarioPorCargoSobreposto = ObterQueryBuscafuncionarioPorCargoSobreposto();
-
-            var queryBuscafuncionarioPorFuncao = ObterQueryBuscafuncionarioPorFuncao();
-
-            var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoFixo);
-            var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoSobreposto);
-            var queryBuscafuncionarioPorFuncaoStringBuilder = new StringBuilder(queryBuscafuncionarioPorFuncao);
-
-            queryBuscafuncionarioPorCargoFixoStringBuilder.AppendLine($" AND esc.tp_escola = 27");
-            queryBuscafuncionarioPorCargoFixoStringBuilder.AppendLine($" AND te.cd_turma_escola = @turmaId");
-            queryBuscafuncionarioPorCargoFixoStringBuilder.Append("), ");
-            
-            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AppendLine($" AND esc.tp_escola = 27");
-            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AppendLine($" AND te.cd_turma_escola = @turmaId");
-            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.Append("), ");
-
-            queryBuscafuncionarioPorFuncaoStringBuilder.AppendLine($" AND esc.tp_escola = 27");
-            queryBuscafuncionarioPorFuncaoStringBuilder.AppendLine($" AND te.cd_turma_escola = @turmaId");
-            queryBuscafuncionarioPorFuncaoStringBuilder.Append("), ");
-
-            var query = AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(variaveis, queryBuscafuncionarioPorCargoFixoStringBuilder, queryBuscafuncionarioPorCargoSobrepostoStringBuilder, queryBuscafuncionarioPorFuncaoStringBuilder);
-
-            var retorno = await conn.QueryAsync<FuncionarioCursoEol>(query,
-                new
-                {
-                    turmaId,
-                    componenteCurricularId,
-                    anoLetivo
-                });
-
-            return retorno;
-        }
-
         private string ObterVariaveis()
         {
 	        return @"DECLARE @cargoCP AS INT = 3379;
