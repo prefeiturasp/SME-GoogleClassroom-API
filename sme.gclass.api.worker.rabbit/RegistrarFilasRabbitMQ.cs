@@ -89,6 +89,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoFuncionarioSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoFuncionarioSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoFuncionarioSync);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaCursoFuncionarioCelpSync, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaCursoFuncionarioCelpSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoFuncionarioCelpSync);
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoErroSync, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoErroSync, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoErroSync);

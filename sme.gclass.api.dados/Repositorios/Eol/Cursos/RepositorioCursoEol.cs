@@ -346,11 +346,50 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoCelpParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId)
         {
             using var conn = ObterConexao();
 
-            var variaveis = @"DECLARE @cargoCP AS INT = 3379;
+            var variaveis = ObterVariaveis();
+
+            var queryBuscafuncionarioPorCargoFixo = ObterQueryBuscafuncionarioPorCargoFixo();
+
+            var queryBuscafuncionarioPorCargoSobreposto = ObterQueryBuscafuncionarioPorCargoSobreposto();
+
+            var queryBuscafuncionarioPorFuncao = ObterQueryBuscafuncionarioPorFuncao();
+
+            var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoFixo);
+            var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoSobreposto);
+            var queryBuscafuncionarioPorFuncaoStringBuilder = new StringBuilder(queryBuscafuncionarioPorFuncao);
+
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AppendLine($" AND esc.tp_escola = 27");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.AppendLine($" AND te.cd_turma_escola = @turmaId");
+            queryBuscafuncionarioPorCargoFixoStringBuilder.Append("), ");
+            
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AppendLine($" AND esc.tp_escola = 27");
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AppendLine($" AND te.cd_turma_escola = @turmaId");
+            queryBuscafuncionarioPorCargoSobrepostoStringBuilder.Append("), ");
+
+            queryBuscafuncionarioPorFuncaoStringBuilder.AppendLine($" AND esc.tp_escola = 27");
+            queryBuscafuncionarioPorFuncaoStringBuilder.AppendLine($" AND te.cd_turma_escola = @turmaId");
+            queryBuscafuncionarioPorFuncaoStringBuilder.Append("), ");
+
+            var query = AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(variaveis, queryBuscafuncionarioPorCargoFixoStringBuilder, queryBuscafuncionarioPorCargoSobrepostoStringBuilder, queryBuscafuncionarioPorFuncaoStringBuilder);
+
+            var retorno = await conn.QueryAsync<FuncionarioCursoEol>(query,
+                new
+                {
+                    turmaId,
+                    componenteCurricularId,
+                    anoLetivo
+                });
+
+            return retorno;
+        }
+
+        private string ObterVariaveis()
+        {
+	        return @"DECLARE @cargoCP AS INT = 3379;
 				DECLARE @cargoAD AS INT = 3085;
 				DECLARE @cargoDiretor AS INT = 3360;
 				DECLARE @tipoFuncaoPAP AS INT = 30;
@@ -359,82 +398,19 @@ namespace SME.GoogleClassroom.Dados
 				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
 				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
 				DECLARE @cdUe AS VARCHAR(20) = (SELECT cd_escola FROM turma_escola (NOLOCK) WHERE cd_turma_escola = @turmaId); ";
+        }
 
+        public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            using var conn = ObterConexao();
 
-            const string queryBuscafuncionarioPorCargoFixo = @"
-				-- 1. Busca os funcionários por cargo fixo
-				with tempServidorCargosBase as(
-				SELECT
-					serv.cd_registro_funcional AS Rf,
-					esc.cd_escola AS CdUe,
-					cbc.cd_cargo AS CdCagoFuncao,
-					cbc.cd_cargo_base_servidor
-				FROM
-					v_servidor_cotic serv (NOLOCK)
-				INNER JOIN
-					v_cargo_base_cotic cbc (NOLOCK)
-					ON serv.cd_servidor = cbc.cd_servidor
-				INNER JOIN
-					lotacao_servidor ls (NOLOCK)
-					ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
-				INNER JOIN
-					escola esc
-					ON ls.cd_unidade_educacao = esc.cd_escola
-				WHERE
-					dt_fim_nomeacao IS NULL
-					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE()) ";
+            var variaveis = ObterVariaveis();
 
-            const string queryBuscafuncionarioPorCargoSobreposto = @"
-				-- 2. Busca os funcionários por cargo sobreposto fixo
-				tempServidorCargosSobrepostos as (
-				SELECT
-					serv.cd_registro_funcional AS Rf,
-					css.cd_unidade_local_servico AS CdUe,
-					css.cd_cargo AS CdCagoFuncao,
-					cbc.cd_cargo_base_servidor
-				FROM
-					tempServidorCargosBase temp
-				INNER JOIN
-					v_cargo_base_cotic cbc (NOLOCK)
-					ON temp.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
-				INNER JOIN
-					v_servidor_cotic serv (NOLOCK)
-					ON serv.cd_servidor = cbc.cd_servidor
-				INNER JOIN
-					cargo_sobreposto_servidor css (NOLOCK)
-					ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
-				INNER JOIN
-					escola esc
-					ON css.cd_unidade_local_servico = esc.cd_escola
-				WHERE
-					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) ";
+            var queryBuscafuncionarioPorCargoFixo = ObterQueryBuscafuncionarioPorCargoFixo();
 
-            const string queryBuscafuncionarioPorFuncao = @"
-				-- 3. Busca os funcionários por função
-				tempServidorFuncao as (
-				SELECT
-					serv.cd_registro_funcional AS Rf,
-					esc.cd_escola AS CdUe,
-					facs.cd_tipo_funcao AS CdCagoFuncao,
-					cbc.cd_cargo_base_servidor
-				FROM
-					tempServidorCargosBase temp
-				INNER JOIN
-					v_cargo_base_cotic cbc (NOLOCK)
-					ON temp.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
-				INNER JOIN
-					v_servidor_cotic serv (NOLOCK)
-					ON serv.cd_servidor = cbc.cd_servidor
-				INNER JOIN
-					funcao_atividade_cargo_servidor facs (NOLOCK)
-					ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
-				INNER JOIN
-					escola esc
-					ON facs.cd_unidade_local_servico = esc.cd_escola
-				WHERE
-					(facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
-					AND dt_fim_nomeacao IS NULL ";
+            var queryBuscafuncionarioPorCargoSobreposto = ObterQueryBuscafuncionarioPorCargoSobreposto();
 
+            var queryBuscafuncionarioPorFuncao = ObterQueryBuscafuncionarioPorFuncao();
 
             var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoFixo);
             var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoSobreposto);
@@ -455,7 +431,23 @@ namespace SME.GoogleClassroom.Dados
             queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
             queryBuscafuncionarioPorFuncaoStringBuilder.Append("), ");
 
-            var query = $@" {variaveis}
+            var query = AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(variaveis, queryBuscafuncionarioPorCargoFixoStringBuilder, queryBuscafuncionarioPorCargoSobrepostoStringBuilder, queryBuscafuncionarioPorFuncaoStringBuilder);
+
+            return await conn.QueryAsync<FuncionarioCursoEol>(query,
+                new
+                {
+                    turmaId,
+                    componenteCurricularId,
+                    anoLetivo,
+                    parametrosCargaInicialDto.TiposUes,
+                    parametrosCargaInicialDto.Ues,
+                    parametrosCargaInicialDto.Turmas
+                });
+        }
+
+        private string AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(string variaveis, StringBuilder queryBuscafuncionarioPorCargoFixoStringBuilder, StringBuilder queryBuscafuncionarioPorCargoSobrepostoStringBuilder, StringBuilder queryBuscafuncionarioPorFuncaoStringBuilder)
+        {
+	        return $@" {variaveis}
 							{queryBuscafuncionarioPorCargoFixoStringBuilder} 
 						    {queryBuscafuncionarioPorCargoSobrepostoStringBuilder}
 						    {queryBuscafuncionarioPorFuncaoStringBuilder}
@@ -492,17 +484,89 @@ namespace SME.GoogleClassroom.Dados
 				WHERE
 					temp.CdCagoFuncao IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
 					AND temp.CdUe = @cdUe;";
+        }
 
-            return await conn.QueryAsync<FuncionarioCursoEol>(query,
-                new
-                {
-                    turmaId,
-                    componenteCurricularId,
-                    anoLetivo,
-                    parametrosCargaInicialDto.TiposUes,
-                    parametrosCargaInicialDto.Ues,
-                    parametrosCargaInicialDto.Turmas
-                });
+        private string ObterQueryBuscafuncionarioPorFuncao()
+        {
+	        return @"
+				-- 3. Busca os funcionários por função
+				tempServidorFuncao as (
+				SELECT
+					serv.cd_registro_funcional AS Rf,
+					esc.cd_escola AS CdUe,
+					facs.cd_tipo_funcao AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor
+				FROM
+					tempServidorCargosBase temp
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON temp.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
+				INNER JOIN
+					v_servidor_cotic serv (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					funcao_atividade_cargo_servidor facs (NOLOCK)
+					ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc
+					ON facs.cd_unidade_local_servico = esc.cd_escola
+				WHERE
+					(facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE())
+					AND dt_fim_nomeacao IS NULL ";
+        }
+
+        private string ObterQueryBuscafuncionarioPorCargoSobreposto()
+        {
+	        return @"
+				-- 2. Busca os funcionários por cargo sobreposto fixo
+				tempServidorCargosSobrepostos as (
+				SELECT
+					serv.cd_registro_funcional AS Rf,
+					css.cd_unidade_local_servico AS CdUe,
+					css.cd_cargo AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor
+				FROM
+					tempServidorCargosBase temp
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON temp.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
+				INNER JOIN
+					v_servidor_cotic serv (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					cargo_sobreposto_servidor css (NOLOCK)
+					ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc
+					ON css.cd_unidade_local_servico = esc.cd_escola
+				WHERE
+					(css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) ";
+        }
+
+        private string ObterQueryBuscafuncionarioPorCargoFixo()
+        {
+	        return @"
+				-- 1. Busca os funcionários por cargo fixo
+				with tempServidorCargosBase as(
+				SELECT
+					serv.cd_registro_funcional AS Rf,
+					esc.cd_escola AS CdUe,
+					cbc.cd_cargo AS CdCagoFuncao,
+					cbc.cd_cargo_base_servidor
+				FROM
+					v_servidor_cotic serv (NOLOCK)
+				INNER JOIN
+					v_cargo_base_cotic cbc (NOLOCK)
+					ON serv.cd_servidor = cbc.cd_servidor
+				INNER JOIN
+					lotacao_servidor ls (NOLOCK)
+					ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
+				INNER JOIN
+					escola esc
+					ON ls.cd_unidade_educacao = esc.cd_escola
+				WHERE
+					dt_fim_nomeacao IS NULL
+					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE()) ";
         }
 
         public async Task<bool> ExisteTurmaAtivaPorId(long turmaId)

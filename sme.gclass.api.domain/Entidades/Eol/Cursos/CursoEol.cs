@@ -9,6 +9,7 @@
         public string UeCodigo { get; set; }
         public string Email { get; set; }
         public TurmaTipo TurmaTipo { get; set; }
+        public TipoEscola TipoEscola { get; set; }
 
         public CursoEol(string nome, string secao, long turmaId, long componenteCurricularId, string ueCodigo, string email)
         {

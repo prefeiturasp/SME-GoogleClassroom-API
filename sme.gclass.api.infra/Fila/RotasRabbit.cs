@@ -13,6 +13,7 @@
         public static string FilaCursoAlunoSync => "googleclass.curso.aluno.sync";
         public static string FilaCursoGradeSync => "googleclass.curso.grade.sync";
         public static string FilaCursoFuncionarioSync => "googleclass.curso.funcionario.sync";
+        public static string FilaCursoFuncionarioCelpSync => "googleclass.curso.funcionario.celp.sync";
         public static string FilaCursoExtintoArquivarCarregar => "googleclass.gsa.curso.extinto.arquivar.carregar";
         public static string FilaCursoArquivarAnoAnteriorCarregar => "googleclass.gsa.curso.arquivar.iniciar";
         public static string FilaCursoArquivarCarregar => "googleclass.gsa.curso.arquivar.carregar";

@@ -45,14 +45,14 @@ namespace SME.GoogleClassroom.Aplicacao
                 var existeCurso = await mediator.Send(new ExisteCursoPorTurmaComponenteCurricularQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId));
                 if (existeCurso)
                 {
-                    await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
+                    await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle,cursoParaIncluir.TipoEscola);
                     return true;
                 }
 
                 await mediator.Send(new InserirCursoGoogleCommand(cursoGoogle));
 
                 await InserirCursoAsync(cursoGoogle);
-                await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
+                await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle,cursoParaIncluir.TipoEscola);
                 return true;
             }
             catch (Exception ex)
@@ -76,12 +76,17 @@ namespace SME.GoogleClassroom.Aplicacao
             }
         }
 
-        private async Task IniciarSyncGoogleUsuariosDoCursoAsync(CursoGoogle cursoGoogle)
+        private async Task IniciarSyncGoogleUsuariosDoCursoAsync(CursoGoogle cursoGoogle, TipoEscola tipoEscola)
         {
             await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
+            
             await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
+            
             if (cursoGoogle.TurmaTipo != TurmaTipo.Programa)
                 await IniciarSyncGoogleFuncionariosDoCursoAsync(cursoGoogle);
+            
+            if (tipoEscola == TipoEscola.Celp)
+                await IniciarSyncGoogleFuncionariosDoCursoCelpAsync(cursoGoogle);
         }
 
         private async Task IniciarSyncGoogleProfessoresDoCursoAsync(CursoGoogle cursoGoogle)
@@ -113,6 +118,17 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 await mediator.Send(new InserirCursoErroCommand(cursoGoogle.TurmaId, cursoGoogle.ComponenteCurricularId,
                     $"O curso Turma {cursoGoogle.TurmaId} e Componente Curricular {cursoGoogle.ComponenteCurricularId} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos funcionários deste curso.",
+                    null, ExecucaoTipo.FuncionarioCursoAdicionar, ErroTipo.Interno));
+            }
+        }
+        
+        private async Task IniciarSyncGoogleFuncionariosDoCursoCelpAsync(CursoGoogle cursoGoogle)
+        {
+            var publicarFuncionariosDoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoFuncionarioCelpSync, RotasRabbit.FilaCursoFuncionarioCelpSync, cursoGoogle));
+            if (!publicarFuncionariosDoCurso)
+            {
+                await mediator.Send(new InserirCursoErroCommand(cursoGoogle.TurmaId, cursoGoogle.ComponenteCurricularId,
+                    $"O curso Turma {cursoGoogle.TurmaId} e Componente Curricular {cursoGoogle.ComponenteCurricularId} foi incluído com sucesso, mas não foi possível iniciar a sincronização dos funcionários CELP deste curso.",
                     null, ExecucaoTipo.FuncionarioCursoAdicionar, ErroTipo.Interno));
             }
         }

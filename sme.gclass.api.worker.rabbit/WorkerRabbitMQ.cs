@@ -82,6 +82,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaFuncionarioCursoSync, new ComandoRabbit("Tratamento de cursos do funcionário do sync com Google", typeof(ITrataSyncGoogleCursosDoFuncionarioUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioCursoIncluir, new ComandoRabbit("Atribuir funcionário ao curso no google", typeof(IInserirFuncionarioCursoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaCursoFuncionarioSync, new ComandoRabbit("Tratamento de funcionários do curso do sync com Google", typeof(ITrataSyncGoogleFuncionariosDoCursoUseCase)));
+            comandos.Add(RotasRabbit.FilaCursoFuncionarioCelpSync, new ComandoRabbit("Tratamento de funcionários do curso Celp do sync com Google", typeof(ITrataSyncGoogleFuncionariosDoCursoCelpUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIndiretoSync, new ComandoRabbit("Tratamento de funcionários indiretos do sync com Google", typeof(ITrataSyncGoogleFuncionarioIndiretoUseCase)));
             comandos.Add(RotasRabbit.FilaFuncionarioIndiretoIncluir, new ComandoRabbit("Incluir funcionários indiretos novos no Google", typeof(IInserirFuncionarioIndiretoGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaAlunoErroSync, new ComandoRabbit("Tratamento de erros na inclusão de alunos", typeof(ITrataSyncGoogleAlunoErrosUseCase)));
@@ -413,6 +414,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpTurmaTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoFuncionarioCelpSync, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
