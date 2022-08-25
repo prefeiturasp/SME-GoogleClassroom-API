@@ -53,6 +53,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 await InserirCursoAsync(cursoGoogle);
                 await IniciarSyncGoogleUsuariosDoCursoAsync(cursoGoogle);
+
                 return true;
             }
             catch (Exception ex)
@@ -80,6 +81,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             await IniciarSyncGoogleProfessoresDoCursoAsync(cursoGoogle);
             await IniciarSyncGoogleAlunosDoCursoAsync(cursoGoogle);
+
             if (cursoGoogle.TurmaTipo != TurmaTipo.Programa)
                 await IniciarSyncGoogleFuncionariosDoCursoAsync(cursoGoogle);
         }

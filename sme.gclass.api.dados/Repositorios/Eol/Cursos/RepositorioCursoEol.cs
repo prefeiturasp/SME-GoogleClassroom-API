@@ -301,7 +301,6 @@ namespace SME.GoogleClassroom.Dados
             sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
             sql.Append(";");
 
-
             return await conn.QueryAsync<AlunoCursoEol>(sql.ToString(),
                 new
                 {
