@@ -6,17 +6,13 @@
 
         #region Cursos
         public static string FilaCursoIncluir => "googleclass.curso.incluir";
-        public static string FilaCursoCelpIncluir => "googleclass.curso.celp.incluir";
         public static string FilaCursoSync => "googleclass.curso.sync";
         public static string FilaCursoErroSync => "googleclass.curso.erro.sync";
         public static string FilaCursoErroTratar => "googleclass.curso.erro.tratar";
         public static string FilaCursoProfessorSync => "googleclass.curso.professor.sync";
-        public static string FilaCursoProfessorCelpSync => "googleclass.curso.professor.celp.sync";
         public static string FilaCursoAlunoSync => "googleclass.curso.aluno.sync";
-        public static string FilaCursoAlunoCelpSync => "googleclass.curso.aluno.celp.sync";
         public static string FilaCursoGradeSync => "googleclass.curso.grade.sync";
         public static string FilaCursoFuncionarioSync => "googleclass.curso.funcionario.sync";
-        public static string FilaCursoFuncionarioCelpSync => "googleclass.curso.funcionario.celp.sync";
         public static string FilaCursoExtintoArquivarCarregar => "googleclass.gsa.curso.extinto.arquivar.carregar";
         public static string FilaCursoArquivarAnoAnteriorCarregar => "googleclass.gsa.curso.arquivar.iniciar";
         public static string FilaCursoArquivarCarregar => "googleclass.gsa.curso.arquivar.carregar";
@@ -94,8 +90,11 @@
         public static string FilaGsaNotasAtividadesSync => "googleclass.gsa.notas.atividades.sync";
         public static string FilaGsaNotasAtividadesSyncErro => "googleclass.gsa.notas.atividades.sync.erro";
         
-        public static string FilaGsaCursosCelpTratar => "googleclass.gsa.cursos.celp.tratar";
-        public static string FilaGsaCursosCelpTurmaTratar => "googleclass.gsa.cursos.celp.turma.tratar";
+        //Celp
+        public static string FilaGsaCursosCelpSync => "googleclass.gsa.cursos.celp.tratar";
+        public static string FilaGsaCursoCelpIncluir => "googleclass.gsa.curso.celp.incluir";
+        public static string FilaGsaCursosAlunosCelpSync => "googleclass.gsa.cursos.celp.alunos.sync";
+        public static string FilaGsaFuncionarioCursoCelpIncluir => "googleclass.gsa.funcionario.curso.celp.incluir";
 
         //Carga inicial
         public static string FilaGsaCargaInicial => "googleclass.gsa.carga.inicial.sync";

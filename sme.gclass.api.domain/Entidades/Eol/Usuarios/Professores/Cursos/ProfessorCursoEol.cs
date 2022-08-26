@@ -22,7 +22,7 @@
             ComponenteCurricularId = componenteCurricularId;
         }
 
-        protected ProfessorCursoEol()
+        public ProfessorCursoEol()
         {
         }
     }

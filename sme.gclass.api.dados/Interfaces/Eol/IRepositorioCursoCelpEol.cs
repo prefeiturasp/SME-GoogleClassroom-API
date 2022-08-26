@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
 {
     public interface IRepositorioCursoCelpEol
     {
-        Task<IEnumerable<CursoCelpEolDto>> ObterCursosCelpPorComponentesEAno(IEnumerable<int> componentes, int anoLetivo);
+        Task<IEnumerable<CursoCelpEolDto>> ObterCursosCelpPorComponentesEAnoLetivo(IEnumerable<int> componentes, int anoLetivo);
     }
 }

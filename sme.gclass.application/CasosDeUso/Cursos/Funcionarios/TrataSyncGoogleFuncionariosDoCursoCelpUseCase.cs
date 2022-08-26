@@ -1,12 +1,9 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
-using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -22,23 +19,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var cursoParaIncluirFuncionarios = JsonConvert.DeserializeObject<CursoGoogle>(mensagemRabbit.Mensagem.ToString());
+            var cursoParaIncluirFuncionarios = JsonConvert.DeserializeObject<FiltroFuncionarioDoCursoCelpDto>(mensagemRabbit.Mensagem.ToString());
             if (cursoParaIncluirFuncionarios is null)
             {
-                await IncluirCursoParaIncluirFuncionariosComErroAsync(cursoParaIncluirFuncionarios, "Não foi possível iniciar a inclusão de funcionários do curso no Google Classroom. O funcionário não foi informado corretamente.");
+                await IncluirCursoParaIncluirFuncionariosComErroAsync(cursoParaIncluirFuncionarios, "Não foi possível iniciar a inclusão de funcionários do curso Celp no Google Classroom. O funcionário não foi informado corretamente.");
                 return true;
             }
             
-            var parametroEmailCoordenador = await ObterParametroEmailCoordenador();
-
-            var coordenadorDoCurso = await mediator.Send(new ObterFuncionariosGooglePorEmailQuery(parametroEmailCoordenador.Valor));
-            if (coordenadorDoCurso is null || !coordenadorDoCurso.Any())
-            {
-                await IncluirCursoParaIncluirFuncionariosComErroAsync(cursoParaIncluirFuncionarios, @"Não foi possível iniciar a inclusão do Coordenador (funcionários) do curso CELP no Google Classroom. O funcionário não foi encontrado.");
-                return true;
-            }
-            
-            var funcionarioDoCursoParaIncluir = ObterFuncionarioDoCursoParaIncluir(parametroEmailCoordenador, coordenadorDoCurso, cursoParaIncluirFuncionarios);
+            var funcionarioDoCursoParaIncluir = ObterFuncionarioDoCursoParaIncluir(cursoParaIncluirFuncionarios);
             
             try
             {
@@ -56,34 +44,23 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
-        private async Task<ParametrosSistema> ObterParametroEmailCoordenador()
-        {
-            var parametroEmailCoordenador =
-                await mediator.Send(new ObterParametroSistemaPorTipoEAnoQuery(TipoParametroSistema.EmailCoordenadorCELP,
-                    DateTime.Now.Year));
-            if (parametroEmailCoordenador is null)
-                throw new NegocioException(
-                    $"Parâmetro do E-mail do Coordenador do CELP não localizado para o ano {DateTime.Now.Year}");
-            return parametroEmailCoordenador;
-        }
-
-        private static FuncionarioCursoEol ObterFuncionarioDoCursoParaIncluir(ParametrosSistema parametroEmailCoordenador, IEnumerable<FuncionarioGoogle> coordenadorDoCurso, CursoGoogle cursoParaIncluirFuncionarios)
+        private FuncionarioCursoEol ObterFuncionarioDoCursoParaIncluir(FiltroFuncionarioDoCursoCelpDto funcionarioDoCursoCelpDto)
         {
             return new FuncionarioCursoEol
             {
-                Email = parametroEmailCoordenador.Valor,
-                Indice = coordenadorDoCurso.FirstOrDefault().Indice,
-                Rf = coordenadorDoCurso.FirstOrDefault().Rf.Value,
-                TurmaId = cursoParaIncluirFuncionarios.TurmaId,
-                ComponenteCurricularId = cursoParaIncluirFuncionarios.ComponenteCurricularId
+                Email = funcionarioDoCursoCelpDto.EmailCoordenadorParametro,
+                Indice = funcionarioDoCursoCelpDto.Indice,
+                Rf = funcionarioDoCursoCelpDto.Rf.Value,
+                TurmaId = funcionarioDoCursoCelpDto.TurmaId,
+                ComponenteCurricularId = funcionarioDoCursoCelpDto.ComponenteCurricularId
             };
         }
 
-        private async Task IncluirCursoParaIncluirFuncionariosComErroAsync(CursoGoogle cursoGoogle, string mensagem)
+        private async Task IncluirCursoParaIncluirFuncionariosComErroAsync(FiltroFuncionarioDoCursoCelpDto funcionarioDoCursoCelpDto, string mensagem)
         {
             var command = new IncluirCursoUsuarioErroCommand(
-                cursoGoogle.TurmaId,
-                cursoGoogle.ComponenteCurricularId,
+                funcionarioDoCursoCelpDto.TurmaId,
+                funcionarioDoCursoCelpDto.ComponenteCurricularId,
                 ExecucaoTipo.FuncionarioCursoAdicionar,
                 ErroTipo.Negocio,
                 mensagem);

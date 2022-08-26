@@ -6,6 +6,7 @@ using SME.GoogleClassroom.Infra;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -25,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível incluir o funcionário no curso. A mensagem enviada é inválida.");
 
-            var funcionarioCursoEolParaIncluir = JsonConvert.DeserializeObject<FuncionarioCursoEol>(mensagemRabbit.Mensagem.ToString());
+            var funcionarioCursoEolParaIncluir = JsonConvert.DeserializeObject<FiltroFuncionarioDoCursoCelpDto>(mensagemRabbit.Mensagem.ToString());
             if (funcionarioCursoEolParaIncluir is null) return true;
             
             if (funcionarioCursoEolParaIncluir.Rf <= 0)
@@ -34,7 +35,11 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(funcionarioCursoEolParaIncluir.TurmaId, funcionarioCursoEolParaIncluir.ComponenteCurricularId));
-                if (curso is null) return false;
+               if (curso is null)
+               {
+                   await LogarCursoErro(mensagemRabbit, funcionarioCursoEolParaIncluir, $"O curso não foi encontrado para a turma '{funcionarioCursoEolParaIncluir.TurmaId}' e para o componente curricular '{funcionarioCursoEolParaIncluir.ComponenteCurricularId}'.");
+                   return false;
+               }
 
                 var existeFuncionarioCurso = await mediator.Send(new ExisteFuncionarioCursoGoogleQuery(funcionarioCursoEolParaIncluir.Indice, curso.Id));
                 if (existeFuncionarioCurso) return true;
@@ -50,14 +55,21 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw;
             }
         }
-
-        private async Task InserirFuncionarioCursoGoogleAsync(FuncionarioCursoEol funcionarioGoogle, CursoGoogle cursoGoogle)
+        
+        private async Task LogarCursoErro(MensagemRabbit mensagemRabbit, FiltroFuncionarioDoCursoCelpDto funcionarioCursoEolParaIncluir,
+            string mensagem)
         {
-            var funcionarioCursoGoogle = new FuncionarioCursoGoogle(funcionarioGoogle.Indice, cursoGoogle.Id);
+            await mediator.Send(new InserirCursoErroCommand(funcionarioCursoEolParaIncluir.TurmaId, funcionarioCursoEolParaIncluir.ComponenteCurricularId,
+                $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+        }
+
+        private async Task InserirFuncionarioCursoGoogleAsync(FiltroFuncionarioDoCursoCelpDto filtroFuncionarioDoCursoCelpDto, CursoGoogle cursoGoogle)
+        {
+            var funcionarioCursoGoogle = new FuncionarioCursoGoogle(filtroFuncionarioDoCursoCelpDto.Indice, cursoGoogle.Id);
 
             try
             {
-                var funcionarioCursoSincronizado = await mediator.Send(new InserirFuncionarioCursoGoogleCommand(funcionarioCursoGoogle, funcionarioGoogle.Email));
+                var funcionarioCursoSincronizado = await mediator.Send(new InserirFuncionarioCursoGoogleCommand(funcionarioCursoGoogle, filtroFuncionarioDoCursoCelpDto.EmailCoordenadorParametro));
                 if (funcionarioCursoSincronizado)
                 {
                     await InserirFuncionarioCursoAsync(funcionarioCursoGoogle);

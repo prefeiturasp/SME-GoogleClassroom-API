@@ -844,5 +844,26 @@ namespace SME.GoogleClassroom.Dados
             retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
             return retorno;
         }
+        public async Task<IEnumerable<AlunoCelpDto>> ObterAlunosMatriculadosCelpPorComponenteEAnoLetivo(long componenteCurricularId, int anoLetivo, long turmaId)
+        {
+	        const string query = @"select amn.CodigoAluno,
+				te.cd_turma_escola as TurmaCodigo,
+				gcc.cd_componente_curricular as ComponenteCodigo
+				from alunos_matriculas_norm amn
+				inner join turma_escola te on te.cd_turma_escola = amn.CodigoTurma
+				inner join turma_escola_grade_programa tegp on tegp.cd_turma_escola = te.cd_turma_escola
+				inner join escola_grade eg on eg.cd_escola_grade = tegp.cd_escola_grade
+				inner join grade g on g.cd_grade = eg.cd_grade
+				inner join grade_componente_curricular gcc on gcc.cd_grade = g.cd_grade
+				inner join escola e on e.cd_escola = te.cd_escola
+				where gcc.cd_componente_curricular = @componenteCurricularId
+				and te.an_letivo = @anoLetivo
+				and te.cd_turma_escola = @turmaId
+				and e.tp_escola = 27
+				and amn.CodigoSituacaoMatricula in (1, 2, 3, 6, 10, 13)";
+
+	        using var conn = ObterConexao();
+	        return await conn.QueryAsync<AlunoCelpDto>(query, new { componenteCurricularId, anoLetivo, turmaId });
+        }
     }
 }

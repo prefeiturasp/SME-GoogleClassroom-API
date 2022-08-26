@@ -71,9 +71,8 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioDreEol, RepositorioDreEol>();
             services.TryAddScoped<IRepositorioComponenteCurricularFormacaoCidade, RepositorioComponenteCurricularFormacaoCidade>();
             
-            services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
-            
             //Celp
+            services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
             services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
         }
 
@@ -122,7 +121,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ITrataSyncGoogleCursosDoFuncionarioUseCase, TrataSyncGoogleCursosDoFuncionarioUseCase>();
             services.TryAddScoped<IInserirFuncionarioCursoGoogleUseCase, InserirFuncionarioCursoGoogleUseCase>();
             services.TryAddScoped<ITrataSyncGoogleFuncionariosDoCursoUseCase, TrataSyncGoogleFuncionariosDoCursoUseCase>();
-            services.TryAddScoped<ITrataSyncGoogleFuncionariosDoCursoCelpUseCase, TrataSyncGoogleFuncionariosDoCursoCelpUseCase>();
             services.TryAddScoped<IEnviarRequisicaoAtribuirFuncionarioCursoUseCase, EnviarRequisicaoAtribuirFuncionarioCursoUseCase>();
             services.TryAddScoped<IObterFuncionariosCursosGoogleUseCase, ObterFuncionariosCursosGoogleUseCase>();
             services.TryAddScoped<IObterFuncionariosCursosParaIncluirGoogleUseCase, ObterFuncionariosCursosParaIncluirGoogleUseCase>();
@@ -305,7 +303,9 @@ namespace SME.GoogleClassroom.IoC
             
             //Celp
             services.TryAddScoped<ITratarSincronizacaoCursosCelpUseCase, TratarSincronizacaoCursosCelpUseCase>();
-            services.TryAddScoped<ITratarSincronizacaoCursosCelpTurmaUseCase, TratarSincronizacaoCursosCelpTurmaUseCase>();
+            services.TryAddScoped<IInserirCursoCelpGoogleUseCase, InserirCursoCelpGoogleUseCase>();
+            services.TryAddScoped<ITratarSincronizacaoGoogleAlunosDoCursoCelpUseCase, TratarSincronizacaoGoogleAlunosDoCursoCelpUseCase>();
+            services.TryAddScoped<IInserirFuncionarioCursoCelpGoogleUseCase, InserirFuncionarioCursoCelpGoogleUseCase>();
         }
     }
 }

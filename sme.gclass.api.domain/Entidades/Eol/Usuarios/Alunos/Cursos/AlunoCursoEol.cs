@@ -35,7 +35,7 @@
             CursoId = cursoId;
         }
 
-        protected AlunoCursoEol()
+        public AlunoCursoEol()
         {
         }
     }
