@@ -846,7 +846,7 @@ namespace SME.GoogleClassroom.Dados
         }
         public async Task<IEnumerable<AlunoCelpDto>> ObterAlunosMatriculadosCelpPorComponenteEAnoLetivo(long componenteCurricularId, int anoLetivo, long turmaId)
         {
-	        const string query = @"select amn.CodigoAluno,
+	        const string query = @"select distinct amn.CodigoAluno,
 				te.cd_turma_escola as TurmaCodigo,
 				gcc.cd_componente_curricular as ComponenteCodigo,
 				amn.NomeAluno as Nome,amn.NomeSocialAluno as NomeSocial, amn.DataNascimento

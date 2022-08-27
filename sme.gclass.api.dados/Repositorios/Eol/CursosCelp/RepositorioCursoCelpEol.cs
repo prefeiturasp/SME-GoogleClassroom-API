@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Dados
         {
 	        var tiposItinerarioMedio = (await ObterTiposItinerarioMedio()).ToList();
 	        
-	        var query = @$"select te.cd_turma_escola as turmacodigo,
+	        var query = @$"select distinct te.cd_turma_escola as turmacodigo,
 				te.cd_escola as uecodigo,
 				ue.cd_unidade_administrativa_referencia as drecodigo,
 				g.dc_grade as descricaogradeprograma,
