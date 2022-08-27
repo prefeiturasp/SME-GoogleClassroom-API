@@ -4,6 +4,11 @@ namespace SME.GoogleClassroom.Infra
     {
         public int AnoLetivo { get; set; }
         
-        public FiltroSincronizacaoCelpDto(){} 
+        public FiltroSincronizacaoCelpDto(){}
+
+        public FiltroSincronizacaoCelpDto(int anoLetivo)
+        {
+            AnoLetivo = anoLetivo;
+        } 
     }
 }

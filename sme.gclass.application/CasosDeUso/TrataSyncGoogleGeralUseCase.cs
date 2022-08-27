@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -32,6 +34,9 @@ namespace SME.GoogleClassroom.Aplicacao
             var publicarTratamentoDeErrosProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaProfessorErroSync, RotasRabbit.FilaProfessorErroSync, resposta));
             var publicarTratamentoDeErrosFuncionarios = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroSync, RotasRabbit.FilaFuncionarioErroSync, resposta));
             var publicarCursoErro = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroSync, RotasRabbit.FilaCursoErroSync, resposta));
+            
+            var mensagemCelp = new MensagemRabbit(JsonConvert.SerializeObject(new FiltroSincronizacaoCelpDto(DateTime.Now.Year)));
+            var publicarCursoCelp = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursosCelpSync, RotasRabbit.FilaGsaCursosCelpSync, mensagemCelp));
 
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoExtintoArquivarCarregar, new FiltroArquivamentoTurmasDto()));
 
@@ -93,6 +98,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (!publicarInativarUsuario)
                 throw new NegocioException("Erro ao enviar a sync de inativar usuários (alunos).");
+            
+            if (!publicarCursoCelp)
+                throw new NegocioException("Erro ao realizar a sincronização de cursos CELP.");
 
             return await Task.FromResult(true);
         }
