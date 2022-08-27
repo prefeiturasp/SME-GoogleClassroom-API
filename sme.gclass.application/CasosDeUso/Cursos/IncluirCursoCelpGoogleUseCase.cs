@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirCursoCelpGoogleUseCase : IInserirCursoCelpGoogleUseCase
+    public class IncluirCursoCelpGoogleUseCase : IIncluirCursoCelpGoogleUseCase
     {
         private readonly IMediator mediator;
         private readonly bool _deveExecutarIntegracao;
 
-        public InserirCursoCelpGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
+        public IncluirCursoCelpGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;

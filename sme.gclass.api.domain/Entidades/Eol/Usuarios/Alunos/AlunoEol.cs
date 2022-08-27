@@ -20,8 +20,8 @@ namespace SME.GoogleClassroom.Dominio
             DataNascimento = dataNascimento;
             GerarEmail();
         }
-
-        protected AlunoEol()
+        
+        public AlunoEol()
         {
         }
 

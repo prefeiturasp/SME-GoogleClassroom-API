@@ -28,18 +28,18 @@ namespace SME.GoogleClassroom.Aplicacao
         protected override async Task<bool> ExecutarAsync(InserirProfessorCursoGoogleCommand request, CancellationToken cancellationToken)
         {
             var servicoClassroom = await mediator.Send(new ObterClassroomServiceGoogleClassroomQuery());
-            await policy.ExecuteAsync(() => IncluirProfessorCursoNoGoogle(request.ProfessorCursoGoogle, request.Email, servicoClassroom));
+            await policy.ExecuteAsync(() => IncluirProfessorCursoNoGoogle(request.CursoId, request.Email, servicoClassroom));
             return true;
         }
 
-        private async Task IncluirProfessorCursoNoGoogle(ProfessorCursoGoogle professorCursoGoogle, string email, ClassroomService servicoClassroom)
+        private async Task IncluirProfessorCursoNoGoogle(long cursoId, string email, ClassroomService servicoClassroom)
         {
             var professorParaIncluirGoogle = new Teacher()
             {
                 UserId = email
             };
 
-            var requestCreate = servicoClassroom.Courses.Teachers.Create(professorParaIncluirGoogle, professorCursoGoogle.CursoId.ToString());
+            var requestCreate = servicoClassroom.Courses.Teachers.Create(professorParaIncluirGoogle, cursoId.ToString());
             await requestCreate.ExecuteAsync();
         }
     }

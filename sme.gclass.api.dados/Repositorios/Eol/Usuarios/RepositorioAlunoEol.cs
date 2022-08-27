@@ -848,7 +848,8 @@ namespace SME.GoogleClassroom.Dados
         {
 	        const string query = @"select amn.CodigoAluno,
 				te.cd_turma_escola as TurmaCodigo,
-				gcc.cd_componente_curricular as ComponenteCodigo
+				gcc.cd_componente_curricular as ComponenteCodigo,
+				amn.NomeAluno as Nome,amn.NomeSocialAluno as NomeSocial, amn.DataNascimento
 				from alunos_matriculas_norm amn
 				inner join turma_escola te on te.cd_turma_escola = amn.CodigoTurma
 				inner join turma_escola_grade_programa tegp on tegp.cd_turma_escola = te.cd_turma_escola

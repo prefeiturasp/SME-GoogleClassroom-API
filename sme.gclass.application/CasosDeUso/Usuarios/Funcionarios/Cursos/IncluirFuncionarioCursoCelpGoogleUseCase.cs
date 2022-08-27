@@ -10,12 +10,12 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirFuncionarioCursoCelpGoogleUseCase : IInserirFuncionarioCursoCelpGoogleUseCase
+    public class IncluirFuncionarioCursoCelpGoogleUseCase : IIncluirFuncionarioCursoCelpGoogleUseCase
     {
         private readonly IMediator mediator;
         private readonly bool _deveExecutarIntegracao;
 
-        public InserirFuncionarioCursoCelpGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
+        public IncluirFuncionarioCursoCelpGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
@@ -69,7 +69,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var funcionarioCursoSincronizado = await mediator.Send(new InserirFuncionarioCursoGoogleCommand(funcionarioCursoGoogle, filtroFuncionarioDoCursoCelpDto.EmailCoordenadorParametro));
+                var funcionarioCursoSincronizado = await mediator.Send(new InserirFuncionarioCursoGoogleCommand(cursoGoogle.Id, filtroFuncionarioDoCursoCelpDto.EmailCoordenadorParametro));
                 if (funcionarioCursoSincronizado)
                 {
                     await InserirFuncionarioCursoAsync(funcionarioCursoGoogle);

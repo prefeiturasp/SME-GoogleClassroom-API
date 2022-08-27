@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -34,20 +35,27 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            Console.WriteLine($"TurmaId: {filtroDosAlunosParaIncluir.TurmaId} - ComponenteCurricularId: {filtroDosAlunosParaIncluir.ComponenteCurricularId} - Qtde: {alunosDoCursoParaIncluir.Count}");
+            //alunosDoCursoParaIncluir = new List<AlunoCelpDto>(){alunosDoCursoParaIncluir.FirstOrDefault()};
             
             foreach (var alunoDoCursoParaIncluir in alunosDoCursoParaIncluir)
             {
                 try
                 {
+                    var alunoEol = new AlunoEol(int.Parse(alunoDoCursoParaIncluir.CodigoAluno.ToString()), alunoDoCursoParaIncluir.Nome,alunoDoCursoParaIncluir.NomeSocial,"/Alunos/FUNDAMENTAL", alunoDoCursoParaIncluir.DataNascimento);
+                    
+                    var incluirAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAlunoCelpIncluir, RotasRabbit.FilaGsaAlunoCelpIncluir, alunoEol));
+                    if (!incluirAluno)
+                        await IncluirAlunoComErroAsync(alunoDoCursoParaIncluir.CodigoAluno, ObterMensagemDeErro(alunoDoCursoParaIncluir.TurmaCodigo, alunoDoCursoParaIncluir.ComponenteCodigo,alunoDoCursoParaIncluir.CodigoAluno));
+                    
                     var alunoCursoEol = new AlunoCursoEol()
                     {
                         CodigoAluno = alunoDoCursoParaIncluir.CodigoAluno,
                         TurmaId = alunoDoCursoParaIncluir.TurmaCodigo,
-                        ComponenteCurricularId = alunoDoCursoParaIncluir.ComponenteCodigo
+                        ComponenteCurricularId = alunoDoCursoParaIncluir.ComponenteCodigo,
+                        
                     };
                     
-                    var publicarAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoCursoIncluir, RotasRabbit.FilaAlunoCursoIncluir, alunoCursoEol));
+                    var publicarAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, RotasRabbit.FilaGsaCursoAlunoCelpIncluir, alunoCursoEol));
                     if (!publicarAlunoCurso)
                     {
                         await IncluirCursoDoAlunoComErroAsync(alunoDoCursoParaIncluir, filtroDosAlunosParaIncluir, 
@@ -64,6 +72,17 @@ namespace SME.GoogleClassroom.Aplicacao
             return true;
         }
 
+        private async Task IncluirAlunoComErroAsync(long codigoAluno, string mensagem)
+        {
+            var alunoComErro = new IncluirUsuarioErroCommand(
+                codigoAluno,
+                String.Empty, 
+                mensagem,
+                UsuarioTipo.Aluno,
+                ExecucaoTipo.AlunoAdicionar);
+            await mediator.Send(alunoComErro);
+        }
+        
         private async Task IncluirCursoParaIncluirAlunosComErroAsync(FiltroCursoCelpDto filtroCursoCelpDto, string mensagem)
         {
             var command = new IncluirCursoUsuarioErroCommand(

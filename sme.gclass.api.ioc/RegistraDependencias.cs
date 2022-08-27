@@ -102,7 +102,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterAlunosParaCadastrarUseCase, ObterAlunosParaCadastrarUseCase>();
             services.TryAddScoped<ITrataSyncGoogleCursosDoProfessorUseCase, TrataSyncGoogleCursosDoProfessorUseCase>();
             services.TryAddScoped<ITrataSyncGoogleAtribuicoesDosProfessoresUseCase, TrataSyncGoogleAtribuicoesDosProfessoresUseCase>();
-            services.TryAddScoped<IInserirProfessorCursoGoogleUseCase, InserirProfessorCursoGoogleUseCase>();
+            services.TryAddScoped<IIncluirProfessorCursoGoogleUseCase, IncluirProfessorCursoGoogleUseCase>();
             services.TryAddScoped<ITrataSyncGoogleProfessoresDoCursoUseCase, TrataSyncGoogleProfessoresDoCursoUseCase>();
             services.TryAddScoped<IObterProfessoresCursosGoogleUseCase, ObterProfessoresCursosGoogleUseCase>();
             services.TryAddScoped<IEnviarRequisicaoAtribuirProfessorCursoUseCase, EnviarRequisicaoAtribuirProfessorCursoUseCase>();
@@ -303,9 +303,11 @@ namespace SME.GoogleClassroom.IoC
             
             //Celp
             services.TryAddScoped<ITratarSincronizacaoCursosCelpUseCase, TratarSincronizacaoCursosCelpUseCase>();
-            services.TryAddScoped<IInserirCursoCelpGoogleUseCase, InserirCursoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirCursoCelpGoogleUseCase, IncluirCursoCelpGoogleUseCase>();
             services.TryAddScoped<ITratarSincronizacaoGoogleAlunosDoCursoCelpUseCase, TratarSincronizacaoGoogleAlunosDoCursoCelpUseCase>();
-            services.TryAddScoped<IInserirFuncionarioCursoCelpGoogleUseCase, InserirFuncionarioCursoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirFuncionarioCursoCelpGoogleUseCase, IncluirFuncionarioCursoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirAlunoCelpGoogleUseCase, IncluirAlunoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirAlunoCursoCelpGoogleUseCase, IncluirAlunoCursoCelpGoogleUseCase>();
         }
     }
 }

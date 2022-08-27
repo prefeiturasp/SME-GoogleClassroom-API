@@ -1,9 +1,9 @@
 ﻿using SME.GoogleClassroom.Infra;
 using System.Threading.Tasks;
 
-namespace SME.GoogleClassroom.Aplicacao.Interfaces
+namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IInserirFuncionarioCursoCelpGoogleUseCase
+    public interface IIncluirCursoCelpGoogleUseCase
     {
         Task<bool> Executar(MensagemRabbit mensagemRabbit);
     }

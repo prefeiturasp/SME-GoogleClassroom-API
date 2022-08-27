@@ -41,13 +41,15 @@ namespace SME.GoogleClassroom.Aplicacao
                     await mediator.Send(new SalvarLogViaRabbitCommand($"O e-mail do Coordenador dos cursos para o ano de {filtroSincronizacao.AnoLetivo} não foi localizado. Sincronização Celp encerrada", LogNivel.Negocio, LogContexto.CelpGsa, string.Empty, rastreamento: string.Empty));
                     return true;
                 }
+
+                //configsCelp = new List<ConfiguracaoCelpDto>() { configsCelp.FirstOrDefault() };
                 
                 foreach (var configCelp in configsCelp)
                 {
-                    Console.WriteLine($"TratarSincronizacaoCursosCelpUseCase - DreCodigo: {configCelp.DreCodigo} - ueCodigo: {configCelp.UeCodigo} - E-mail: {configCelp.Email}");
-                    
                     var cursosCelpEolParaInserir = cursosCelpEol.Where(f =>f.UeCodigo.Equals(configCelp.UeCodigo) && f.DreCodigo.Equals(configCelp.DreCodigo));
 
+                    // cursosCelpEolParaInserir = new List<CursoCelpEolDto>(){cursosCelpEolParaInserir.FirstOrDefault()};
+                    
                     foreach (var cursoCelpEolParaInserir in cursosCelpEolParaInserir)
                     {
                         if (cursoCelpEolParaInserir != null)
@@ -68,8 +70,6 @@ namespace SME.GoogleClassroom.Aplicacao
                                 AnoLetivo = filtroSincronizacao.AnoLetivo
                             };
 
-                            Console.WriteLine(
-                                $"TratarSincronizacaoCursosCelpUseCase - Processando Ue {configCelp.UeCodigo}, da Dre {configCelp.DreCodigo} e TurmaID {cursoCelpEolParaInserir.TurmaCodigo}");
                             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCelpIncluir, filtroCursoCelp));    
                         }
                     }

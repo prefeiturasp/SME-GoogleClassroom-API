@@ -52,6 +52,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir, ExchangeRabbit.GoogleSync,
                 RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaAlunoCelpIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaAlunoCelpIncluir, ExchangeRabbit.GoogleSync,
+                RotasRabbit.FilaGsaAlunoCelpIncluir);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, ExchangeRabbit.GoogleSync,
+                RotasRabbit.FilaGsaCursoAlunoCelpIncluir);
         }
 
         private static void RegistrarFilasFormacaoCidadeSync(IModel canalRabbit)

@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InserirProfessorCursoGoogleUseCase : IInserirProfessorCursoGoogleUseCase
+    public class IncluirProfessorCursoGoogleUseCase : IIncluirProfessorCursoGoogleUseCase
     {
         private readonly IMediator mediator;
         private readonly bool _deveExecutarIntegracao;
 
-        public InserirProfessorCursoGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
+        public IncluirProfessorCursoGoogleUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
@@ -50,8 +50,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!existeProfessorCursoLocal)
                     await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
 
-                await AtribuirProfessorComoDonoDoCurso(professorCursoEolParaIncluir, professor, curso);
-
                 return true;
             }
             catch (Exception ex)
@@ -79,23 +77,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
         }
 
-        private async Task AtribuirProfessorComoDonoDoCurso(ProfessorCursoEol professorCursoEolParaIncluir, IEnumerable<ProfessorGoogle> professor, CursoGoogle curso)
-        {
-            var usuarioAtual = await mediator.Send(new ObterUsuarioPorEmailQuery(curso.Email));
-
-            var ehGestor = DonoDoCursoEhGestor(usuarioAtual);
-
-            if (professorCursoEolParaIncluir.Modalidade != 0 && professorCursoEolParaIncluir.Modalidade != 1 && ehGestor)
-            {
-                var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, professor.First().GoogleClassroomId));
-                if (retornoGoogle)
-                {
-                    curso.Email = professor.First().Email;
-                    await mediator.Send(new AlterarCursoCommand(curso));
-                }
-            }
-        }
-
         private static bool DonoDoCursoEhGestor(UsuarioGoogleDto usuarioAtual)
         {
             return usuarioAtual.UsuarioTipo == 3 ? true : false;
@@ -107,7 +88,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var professorCursoSincronizado = !existeProfessorCursoLocal && await mediator.Send(new InserirProfessorCursoGoogleCommand(professorCursoGoogle, professorGoogle.Email));
+                var professorCursoSincronizado = !existeProfessorCursoLocal && await mediator.Send(new InserirProfessorCursoGoogleCommand(cursoGoogle.Id, professorGoogle.Email));
                 if (professorCursoSincronizado && !existeProfessorCursoLocal)
                 {
                     await InserirProfessorCursoAsync(professorCursoGoogle);
