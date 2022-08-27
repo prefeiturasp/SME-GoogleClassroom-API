@@ -46,15 +46,13 @@ namespace SME.GoogleClassroom.Aplicacao
                     var incluirAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAlunoCelpIncluir, RotasRabbit.FilaGsaAlunoCelpIncluir, alunoEol));
                     if (!incluirAluno)
                         await IncluirAlunoComErroAsync(alunoDoCursoParaIncluir.CodigoAluno, ObterMensagemDeErro(alunoDoCursoParaIncluir.TurmaCodigo, alunoDoCursoParaIncluir.ComponenteCodigo,alunoDoCursoParaIncluir.CodigoAluno));
-                    
-                    var alunoCursoEol = new AlunoCursoEol()
-                    {
-                        CodigoAluno = alunoDoCursoParaIncluir.CodigoAluno,
-                        TurmaId = alunoDoCursoParaIncluir.TurmaCodigo,
-                        ComponenteCurricularId = alunoDoCursoParaIncluir.ComponenteCodigo,
-                        NomeSocial = alunoDoCursoParaIncluir.NomeSocial,
-                        DataNascimento = alunoDoCursoParaIncluir.DataNascimento
-                    };
+
+                    var alunoCursoEol = new AlunoCursoEol(alunoDoCursoParaIncluir.CodigoAluno,
+                        alunoDoCursoParaIncluir.TurmaCodigo,
+                        alunoDoCursoParaIncluir.ComponenteCodigo,
+                        alunoDoCursoParaIncluir.NomeSocial,
+                        alunoDoCursoParaIncluir.Nome,
+                        alunoDoCursoParaIncluir.DataNascimento);
                     
                     var publicarAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, RotasRabbit.FilaGsaCursoAlunoCelpIncluir, alunoCursoEol));
                     if (!publicarAlunoCurso)

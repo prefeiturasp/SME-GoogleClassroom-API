@@ -37,8 +37,18 @@ namespace SME.GoogleClassroom.Dominio
             CodigoAluno = codigoAluno;
             CursoId = cursoId;
         }
+        
+        public AlunoCursoEol(long codigoAluno, long turmaId, long componenteCurricularId, string nomeSocial, string nomePessoa, DateTime dataNascimento)
+        {
+            CodigoAluno = codigoAluno;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+            NomeSocial = nomeSocial;
+            NomePessoa = NomePessoa;
+            DataNascimento = dataNascimento;
+        }
 
-        public AlunoCursoEol()
+        protected AlunoCursoEol()
         {
         }
     }
