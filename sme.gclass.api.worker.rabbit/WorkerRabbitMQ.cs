@@ -161,8 +161,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, new ComandoRabbit("Sincroniza as turmas de formação cidade no GSA - atribuição de Aluno", typeof(ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase)));
             
             //Celp
-            comandos.Add(RotasRabbit.FilaGsaCursosCelpSync, new ComandoRabbit("Sincroniza os cursos do Celp no Google com base na configuração da tabela config_celp", typeof(ITratarSincronizacaoCursosCelpUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaCursosAlunosCelpSync, new ComandoRabbit("Tratamento de alunos do curso celp do sync no Google", typeof(ITratarSincronizacaoGoogleAlunosDoCursoCelpUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursosCelpSync, new ComandoRabbit("Sincroniza os cursos do Celp no Google com base na configuração da tabela config_celp", typeof(ITratarSincronizacaoCursosCelpGoogleUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursosAlunosCelpSync, new ComandoRabbit("Tratamento de alunos do curso celp do sync no Google", typeof(ITratarSincronizacaoAlunosDoCursoCelpGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoCelpIncluir, new ComandoRabbit("Incluir cursos novos do Celp com Google", typeof(IIncluirCursoCelpGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, new ComandoRabbit("Inclusão do aluno no curso celp no Google", typeof(IIncluirAlunoCursoCelpGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir, new ComandoRabbit("Inclusão do coordenador (funcionario) do curso celp no Google", typeof(IIncluirFuncionarioCursoCelpGoogleUseCase)));

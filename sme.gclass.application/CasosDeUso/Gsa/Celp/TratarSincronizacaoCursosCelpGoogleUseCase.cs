@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarSincronizacaoCursosCelpUseCase : ITratarSincronizacaoCursosCelpUseCase
+    public class TratarSincronizacaoCursosCelpGoogleUseCase : ITratarSincronizacaoCursosCelpGoogleUseCase
     {
         private readonly IMediator mediator;
 
-        public TratarSincronizacaoCursosCelpUseCase(IMediator mediator)
+        public TratarSincronizacaoCursosCelpGoogleUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }

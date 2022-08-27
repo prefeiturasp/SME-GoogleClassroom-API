@@ -91,7 +91,7 @@
         public static string FilaGsaNotasAtividadesSyncErro => "googleclass.gsa.notas.atividades.sync.erro";
         
         //Celp
-        public static string FilaGsaCursosCelpSync => "googleclass.gsa.cursos.celp.tratar";
+        public static string FilaGsaCursosCelpSync => "googleclass.gsa.cursos.celp.sync";
         public static string FilaGsaCursoCelpIncluir => "googleclass.gsa.curso.celp.incluir";
         public static string FilaGsaCursosAlunosCelpSync => "googleclass.gsa.cursos.alunos.celp.sync";
         public static string FilaGsaFuncionarioCursoCelpIncluir => "googleclass.gsa.funcionario.curso.celp.incluir";

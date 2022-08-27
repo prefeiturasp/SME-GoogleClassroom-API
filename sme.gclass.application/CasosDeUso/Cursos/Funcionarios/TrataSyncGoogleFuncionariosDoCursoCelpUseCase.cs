@@ -46,14 +46,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private FuncionarioCursoEol ObterFuncionarioDoCursoParaIncluir(FiltroFuncionarioDoCursoCelpDto funcionarioDoCursoCelpDto)
         {
-            return new FuncionarioCursoEol
-            {
-                Email = funcionarioDoCursoCelpDto.EmailCoordenadorParametro,
-                Indice = funcionarioDoCursoCelpDto.Indice,
-                Rf = funcionarioDoCursoCelpDto.Rf.Value,
-                TurmaId = funcionarioDoCursoCelpDto.TurmaId,
-                ComponenteCurricularId = funcionarioDoCursoCelpDto.ComponenteCurricularId
-            };
+            return new FuncionarioCursoEol(funcionarioDoCursoCelpDto.EmailCoordenadorParametro,
+                funcionarioDoCursoCelpDto.Indice,
+                funcionarioDoCursoCelpDto.Rf.Value,
+                funcionarioDoCursoCelpDto.TurmaId,
+                funcionarioDoCursoCelpDto.ComponenteCurricularId);
         }
 
         private async Task IncluirCursoParaIncluirFuncionariosComErroAsync(FiltroFuncionarioDoCursoCelpDto funcionarioDoCursoCelpDto, string mensagem)

@@ -87,12 +87,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task IniciarSyncGoogleUsuariosDoCursoAsync(FiltroCursoCelpDto filtroCursoCelpDto, FuncionarioGoogle professorDoCurso)
         {
-            await IniciarSyncGoogleProfessoresDoCursoCelpAsync(new ProfessorCursoEol()
-            {
-                Rf = professorDoCurso.Rf.Value,
-                TurmaId = filtroCursoCelpDto.TurmaId,
-                ComponenteCurricularId = filtroCursoCelpDto.ComponenteCurricularId,
-            });
+            await IniciarSyncGoogleProfessoresDoCursoCelpAsync(new ProfessorCursoEol(professorDoCurso.Rf.Value,
+                filtroCursoCelpDto.TurmaId,
+                filtroCursoCelpDto.ComponenteCurricularId));
             
             await IniciarSyncGoogleAlunosDoCursoCelpAsync(filtroCursoCelpDto);
             

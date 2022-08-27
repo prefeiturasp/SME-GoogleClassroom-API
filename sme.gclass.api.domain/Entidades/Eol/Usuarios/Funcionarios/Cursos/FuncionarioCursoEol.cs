@@ -15,8 +15,17 @@
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
         }
+        
+        public FuncionarioCursoEol(string email, long indice, long rf, long turmaId, long componenteCurricularId)
+        {
+            Email = email;
+            Indice = indice;
+            Rf = rf;
+            TurmaId = turmaId;
+            ComponenteCurricularId = componenteCurricularId;
+        }
 
-        public FuncionarioCursoEol()
+        protected FuncionarioCursoEol()
         {
         }        
     }

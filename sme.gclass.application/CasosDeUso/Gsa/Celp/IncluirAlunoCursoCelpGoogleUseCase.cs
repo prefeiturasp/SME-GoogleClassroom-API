@@ -33,11 +33,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoCursoEolParaIncluir.CodigoAluno));
                 if (aluno is null || !aluno.Any()) 
                 {
-                    var alunoIncluir = new AlunoEol();
-                    alunoIncluir.Codigo = int.Parse(alunoCursoEolParaIncluir.CodigoAluno.ToString());
-                    alunoIncluir.NomePessoa = alunoCursoEolParaIncluir.NomePessoa;
-                    alunoIncluir.DefinirEmail();
-                    alunoIncluir.OrganizationPath = alunoCursoEolParaIncluir.OrganizationPath;
+                    var alunoIncluir = new AlunoEol(int.Parse(alunoCursoEolParaIncluir.CodigoAluno.ToString()),alunoCursoEolParaIncluir.NomePessoa,alunoCursoEolParaIncluir.NomeSocial,alunoCursoEolParaIncluir.OrganizationPath, alunoCursoEolParaIncluir.DataNascimento);
 
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAlunoCelpIncluir, RotasRabbit.FilaAlunoIncluir, alunoIncluir));
                     

@@ -1,4 +1,6 @@
-﻿namespace SME.GoogleClassroom.Dominio
+﻿using System;
+
+namespace SME.GoogleClassroom.Dominio
 {
     public class AlunoCursoEol
     {
@@ -12,6 +14,7 @@
         public string NomeSocial { get; set; }
         public string OrganizationPath { get; set; }
         public long CodigoRF { get; set; }
+        public DateTime DataNascimento { get; set; }
 
         public AlunoCursoEol(long codigoAluno, long turmaId, long componenteCurricularId)
         {

@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Dominio
             GerarEmail();
         }
         
-        public AlunoEol()
+        protected AlunoEol()
         {
         }
 

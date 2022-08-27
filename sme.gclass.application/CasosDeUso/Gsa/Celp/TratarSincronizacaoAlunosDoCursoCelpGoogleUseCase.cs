@@ -10,11 +10,11 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarSincronizacaoGoogleAlunosDoCursoCelpUseCase : ITratarSincronizacaoGoogleAlunosDoCursoCelpUseCase
+    public class TratarSincronizacaoAlunosDoCursoCelpGoogleUseCase : ITratarSincronizacaoAlunosDoCursoCelpGoogleUseCase
     {
         private readonly IMediator mediator;
 
-        public TratarSincronizacaoGoogleAlunosDoCursoCelpUseCase(IMediator mediator)
+        public TratarSincronizacaoAlunosDoCursoCelpGoogleUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -52,7 +52,8 @@ namespace SME.GoogleClassroom.Aplicacao
                         CodigoAluno = alunoDoCursoParaIncluir.CodigoAluno,
                         TurmaId = alunoDoCursoParaIncluir.TurmaCodigo,
                         ComponenteCurricularId = alunoDoCursoParaIncluir.ComponenteCodigo,
-                        
+                        NomeSocial = alunoDoCursoParaIncluir.NomeSocial,
+                        DataNascimento = alunoDoCursoParaIncluir.DataNascimento
                     };
                     
                     var publicarAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, RotasRabbit.FilaGsaCursoAlunoCelpIncluir, alunoCursoEol));

@@ -302,9 +302,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
             
             //Celp
-            services.TryAddScoped<ITratarSincronizacaoCursosCelpUseCase, TratarSincronizacaoCursosCelpUseCase>();
+            services.TryAddScoped<ITratarSincronizacaoCursosCelpGoogleUseCase, TratarSincronizacaoCursosCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirCursoCelpGoogleUseCase, IncluirCursoCelpGoogleUseCase>();
-            services.TryAddScoped<ITratarSincronizacaoGoogleAlunosDoCursoCelpUseCase, TratarSincronizacaoGoogleAlunosDoCursoCelpUseCase>();
+            services.TryAddScoped<ITratarSincronizacaoAlunosDoCursoCelpGoogleUseCase, TratarSincronizacaoAlunosDoCursoCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirFuncionarioCursoCelpGoogleUseCase, IncluirFuncionarioCursoCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirAlunoCelpGoogleUseCase, IncluirAlunoCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirAlunoCursoCelpGoogleUseCase, IncluirAlunoCursoCelpGoogleUseCase>();
