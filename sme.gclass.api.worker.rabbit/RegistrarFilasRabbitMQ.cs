@@ -281,9 +281,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             canalRabbit.QueueDeclare(RotasRabbit.FilaCursoIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaCursoIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaCursoIncluir);
-            
-            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoCelpIncluir, true, false, false);
-            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoCelpIncluir, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoCelpIncluir);
         }
 
         private static void RegistrarFilasAlunoDeInclusao(IModel canalRabbit)
