@@ -35,8 +35,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            //alunosDoCursoParaIncluir = new List<AlunoCelpDto>(){alunosDoCursoParaIncluir.FirstOrDefault()};
-            
             foreach (var alunoDoCursoParaIncluir in alunosDoCursoParaIncluir)
             {
                 try

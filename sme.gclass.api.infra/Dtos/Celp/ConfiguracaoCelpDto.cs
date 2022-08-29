@@ -4,7 +4,6 @@ namespace SME.GoogleClassroom.Infra
     {
         public long Id { get; set; }
         public string DreCodigo { get; set; }
-        public string UeCodigo { get; set; }
         public string Email { get; set; }
     }
 }
