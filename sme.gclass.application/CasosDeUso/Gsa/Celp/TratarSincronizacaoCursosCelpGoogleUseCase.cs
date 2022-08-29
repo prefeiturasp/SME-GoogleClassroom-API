@@ -44,7 +44,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 
                 foreach (var configCelp in configsCelp)
                 {
-                    var cursosCelpEolParaInserir = cursosCelpEol.Where(f =>f.UeCodigo.Equals(configCelp.UeCodigo) && f.DreCodigo.Equals(configCelp.DreCodigo));
+                    var cursosCelpEolParaInserir = cursosCelpEol.Where(f => f.DreCodigo.Equals(configCelp.DreCodigo));
 
                     foreach (var cursoCelpEolParaInserir in cursosCelpEolParaInserir)
                     {
