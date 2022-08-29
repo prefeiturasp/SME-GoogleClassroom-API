@@ -49,7 +49,8 @@ namespace SME.GoogleClassroom.Dados
 				inner join tipo_escola tpe ON tpe.tp_escola	= e.tp_escola
 				where gcc.cd_componente_curricular in ({string.Join(',', componentes)})
 				and te.an_letivo = @anoLetivo
-				and e.tp_escola = 27";
+				and e.tp_escola = 27 
+				and tegp.dt_fim is null ";
 	        
 	        using var conn = ObterConexao();
 	        return await conn.QueryAsync<CursoCelpEolDto>(query, new { componentes, anoLetivo });

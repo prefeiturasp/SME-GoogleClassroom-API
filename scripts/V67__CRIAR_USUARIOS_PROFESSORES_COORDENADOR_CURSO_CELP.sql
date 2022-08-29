@@ -1,4 +1,4 @@
-insert into usuarios (id,usuario_tipo,email,organization_path,data_inclusao,nome) values (9999999,3,'ana.katy@sme.prefeitura.sp.gov.br','/Professores',CURRENT_TIMESTAMP,'ANA KATY COORDENADORA');
+insert into usuarios (id,usuario_tipo,email,organization_path,data_inclusao,nome) values (8078424,3,'anagabriel.8078424@edu.sme.prefeitura.sp.gov.br','/Professores',CURRENT_TIMESTAMP,'ANA KATY COORDENADORA');
 insert into usuarios (id,usuario_tipo,email,organization_path,data_inclusao,nome,google_classroom_id) values (9999998,3,'smecelpnoroeste1@edu.sme.prefeitura.sp.gov.br','/Professores',CURRENT_TIMESTAMP,'SME CELP NOROESTE 1',107774596766595625517);
 insert into usuarios (id,usuario_tipo,email,organization_path,data_inclusao,nome,google_classroom_id) values (9999997,3,'smecelpleste2@edu.sme.prefeitura.sp.gov.br','/Professores',CURRENT_TIMESTAMP,'SME CELP LESTE 2',100393855253115242532);
 insert into usuarios (id,usuario_tipo,email,organization_path,data_inclusao,nome,google_classroom_id) values (9999996,3,'smecelpleste3@edu.sme.prefeitura.sp.gov.br','/Professores',CURRENT_TIMESTAMP,'SME CELP LESTE 3',112827736796471429503);
