@@ -65,12 +65,15 @@ namespace SME.GoogleClassroom.IoC
             //Notas
             services.TryAddScoped<IRepositorioNota, RepositorioNota>();
             
-            
             //Funcionario Removido
             services.TryAddScoped<ITratarFuncionarioRemovidosCursosUseCase, TratarFuncionarioRemovidosCursosUseCase>();
 
             services.TryAddScoped<IRepositorioDreEol, RepositorioDreEol>();
             services.TryAddScoped<IRepositorioComponenteCurricularFormacaoCidade, RepositorioComponenteCurricularFormacaoCidade>();
+            
+            //Celp
+            services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
+            services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -99,7 +102,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterAlunosParaCadastrarUseCase, ObterAlunosParaCadastrarUseCase>();
             services.TryAddScoped<ITrataSyncGoogleCursosDoProfessorUseCase, TrataSyncGoogleCursosDoProfessorUseCase>();
             services.TryAddScoped<ITrataSyncGoogleAtribuicoesDosProfessoresUseCase, TrataSyncGoogleAtribuicoesDosProfessoresUseCase>();
-            services.TryAddScoped<IInserirProfessorCursoGoogleUseCase, InserirProfessorCursoGoogleUseCase>();
+            services.TryAddScoped<IIncluirProfessorCursoGoogleUseCase, IncluirProfessorCursoGoogleUseCase>();
             services.TryAddScoped<ITrataSyncGoogleProfessoresDoCursoUseCase, TrataSyncGoogleProfessoresDoCursoUseCase>();
             services.TryAddScoped<IObterProfessoresCursosGoogleUseCase, ObterProfessoresCursosGoogleUseCase>();
             services.TryAddScoped<IEnviarRequisicaoAtribuirProfessorCursoUseCase, EnviarRequisicaoAtribuirProfessorCursoUseCase>();
@@ -297,6 +300,14 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IExecutarImportacaoDeNotasDaAtividadeUseCase, ExecutarImportacaoDeNotasDaAtividadeUseCase>();
             services.TryAddScoped<IImportarNotasGsaProcessarErroUseCase, ImportarNotasGsaProcessarErroUseCase>();
             services.TryAddScoped<IIniciarSincronizacaoNotasUseCase, IniciarSincronizacaoNotasUseCase>();
+            
+            //Celp
+            services.TryAddScoped<ITratarSincronizacaoCursosCelpGoogleUseCase, TratarSincronizacaoCursosCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirCursoCelpGoogleUseCase, IncluirCursoCelpGoogleUseCase>();
+            services.TryAddScoped<ITratarSincronizacaoAlunosDoCursoCelpGoogleUseCase, TratarSincronizacaoAlunosDoCursoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirFuncionarioCursoCelpGoogleUseCase, IncluirFuncionarioCursoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirAlunoCelpGoogleUseCase, IncluirAlunoCelpGoogleUseCase>();
+            services.TryAddScoped<IIncluirAlunoCursoCelpGoogleUseCase, IncluirAlunoCursoCelpGoogleUseCase>();
         }
     }
 }

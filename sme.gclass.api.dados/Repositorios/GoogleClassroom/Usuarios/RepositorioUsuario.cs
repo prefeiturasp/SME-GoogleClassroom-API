@@ -223,6 +223,31 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryAsync<FuncionarioGoogle>(query, parametros);
         }
+        
+        public async Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorEmail(string email)
+        {
+            var query = @"SELECT
+                                 u.indice,
+                                 u.id as Rf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           WHERE usuario_tipo = any(@tipos)
+                             and lower(email) = lower(@email)";
+
+            var parametros = new
+            {
+                email,
+                tipos =  new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+            };
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<FuncionarioGoogle>(query, parametros);
+        }
 
         public async Task<bool> ExisteFuncionarioPorRf(long rf)
         {

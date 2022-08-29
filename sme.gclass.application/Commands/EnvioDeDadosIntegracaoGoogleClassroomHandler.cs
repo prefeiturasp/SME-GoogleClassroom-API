@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Aplicacao
         where TRequest : IRequest<bool>
     {
         private readonly bool _deveExecutarIntegracao;
-        private const int TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento = 10000;
+        private const int TempoParaSimularExecucaoEmAmbienteDeDesenvolvimento = 1000;
 
         protected EnvioDeDadosIntegracaoGoogleClassroomHandler(VariaveisGlobaisOptions variaveisGlobaisOptions)
             :base()
