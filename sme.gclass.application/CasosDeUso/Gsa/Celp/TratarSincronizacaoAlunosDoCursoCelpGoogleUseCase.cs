@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var alunosDoCursoParaIncluir = await mediator.Send(new ObterAlunosMatriculadosCelpQuery(filtroDosAlunosParaIncluir.ComponenteCurricularId, filtroDosAlunosParaIncluir.AnoLetivo,filtroDosAlunosParaIncluir.TurmaId ));
             if (alunosDoCursoParaIncluir == null || !alunosDoCursoParaIncluir.Any())
             {
-                await IncluirCursoParaIncluirAlunosComErroAsync(filtroDosAlunosParaIncluir, $"Os alunos do componente curricular {filtroDosAlunosParaIncluir.ComponenteCurricularId} sa turma {filtroDosAlunosParaIncluir.TurmaId} e no ano letivo {filtroDosAlunosParaIncluir.AnoLetivo} não foram localizados.");
+                await IncluirCursoParaIncluirAlunosComErroAsync(filtroDosAlunosParaIncluir, $"Os alunos do componente curricular {filtroDosAlunosParaIncluir.ComponenteCurricularId} da turma {filtroDosAlunosParaIncluir.TurmaId} e no ano letivo {filtroDosAlunosParaIncluir.AnoLetivo} não foram localizados.");
                 return true;
             }
 
