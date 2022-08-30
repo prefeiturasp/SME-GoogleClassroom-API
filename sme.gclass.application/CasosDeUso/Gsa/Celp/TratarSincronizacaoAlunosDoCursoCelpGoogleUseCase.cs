@@ -109,7 +109,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var mensagem = $"Não foi possível inserir o curso Celp para [TurmaId:{turmaId}, ComponenteCurricularId:{componenteCurricularId}] aluno RA{codigoAluno} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
-            return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}. {ex.StackTrace}";
+            return $"TratarSincronizacaoAlunosDoCursoCelpGoogleUseCase - Erro: {mensagem}. {ex.InnerException?.Message ?? ex.Message}. {ex.StackTrace}";
         }
     }
 }
