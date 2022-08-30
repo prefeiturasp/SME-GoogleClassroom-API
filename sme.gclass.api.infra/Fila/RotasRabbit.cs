@@ -113,7 +113,6 @@
         public static string FilaGsaInativarUsuarioIniciar => "googleclass.gsa.inativar.usuario.iniciar";
         public static string FilaGsaInativarUsuarioCarregar => "googleclass.gsa.inativar.usuario.carregar";
         public static string FilaGsaInativarUsuarioSync => "googleclass.gsa.inativar.usuario.sync";
-        public static string FilaGsaInativarUsuarioTratar => "googleclass.gsa.inativar.usuario.tratar";
         public static string FilaGsaInativarUsuarioIncluir => "googleclass.gsa.inativar.usuario.incluir";
 
         #endregion
