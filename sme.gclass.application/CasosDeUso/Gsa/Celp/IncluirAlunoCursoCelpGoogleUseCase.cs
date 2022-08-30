@@ -57,7 +57,7 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 await mediator.Send(new IncluirCursoUsuarioErroCommand(alunoCursoEolParaIncluir.CodigoAluno, alunoCursoEolParaIncluir.TurmaId,
                     alunoCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.AlunoCursoAdicionar, ErroTipo.Interno,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace: {ex.StackTrace}."));
+                    $"IncluirAlunoCursoCelpGoogleUseCase - Erro: {ex.Message} - Mensagem Rabbit: {mensagemRabbit} - StackTrace: {ex.StackTrace}."));
                 throw;
             }
         }
@@ -66,7 +66,7 @@ namespace SME.GoogleClassroom.Aplicacao
             string mensagem)
         {
             await mediator.Send(new InserirCursoErroCommand(alunoCursoEolParaIncluir.TurmaId, alunoCursoEolParaIncluir.ComponenteCurricularId,
-                $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                $"IncluirAlunoCursoCelpGoogleUseCase - LogarCursoErro - Erro: {mensagem} - Mensagem Rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
         }
 
         private async Task InserirAlunoCursoGoogleAsync(AlunoGoogle alunoGoogle, CursoGoogle cursoGoogle)

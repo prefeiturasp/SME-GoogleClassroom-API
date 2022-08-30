@@ -50,14 +50,34 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!existeProfessorCursoLocal)
                     await InserirProfessorCursoGoogleAsync(professor.First(), curso, existeProfessorCursoLocal);
 
+                if (!professorCursoEolParaIncluir.EhTipoEscolaCelp)
+                    await AtribuirProfessorComoDonoDoCurso(professorCursoEolParaIncluir, professor, curso);
+                
                 return true;
             }
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirCursoUsuarioErroCommand(professorCursoEolParaIncluir.Rf, professorCursoEolParaIncluir.TurmaId,
                     professorCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace: {ex.StackTrace}."));
+                    $"IncluirProfessorCursoGoogleUseCase - Erro: {ex.Message} - Mensagem Rabbit: {mensagemRabbit} - StackTrace: {ex.StackTrace}."));
                 throw;
+            }
+        }
+        
+        private async Task AtribuirProfessorComoDonoDoCurso(ProfessorCursoEol professorCursoEolParaIncluir, IEnumerable<ProfessorGoogle> professor, CursoGoogle curso)
+        {
+            var usuarioAtual = await mediator.Send(new ObterUsuarioPorEmailQuery(curso.Email));
+
+            var ehGestor = DonoDoCursoEhGestor(usuarioAtual);
+
+            if (professorCursoEolParaIncluir.Modalidade != 0 && professorCursoEolParaIncluir.Modalidade != 1 && ehGestor)
+            {
+                var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, professor.First().GoogleClassroomId));
+                if (retornoGoogle)
+                {
+                    curso.Email = professor.First().Email;
+                    await mediator.Send(new AlterarCursoCommand(curso));
+                }
             }
         }
 
@@ -67,14 +87,14 @@ namespace SME.GoogleClassroom.Aplicacao
             await mediator.Send(new IncluirCursoUsuarioErroCommand(professorCursoEolParaIncluir.Rf,
                 professorCursoEolParaIncluir.TurmaId,
                 professorCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno,
-                $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit}"));
+                $"IncluirProfessorCursoGoogleUseCase - LogarCursoUsuarioErro - Erro: {mensagem} - Mensagem Rabbit: {mensagemRabbit}"));
         }
         
         private async Task LogarCursoErro(MensagemRabbit mensagemRabbit, ProfessorCursoEol professorCursoEolParaIncluir,
             string mensagem)
         {
             await mediator.Send(new InserirCursoErroCommand(professorCursoEolParaIncluir.TurmaId, professorCursoEolParaIncluir.ComponenteCurricularId,
-                $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                $"IncluirProfessorCursoGoogleUseCase - LogarCursoErro - Erro: {mensagem} - Mensagem Rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
         }
 
         private static bool DonoDoCursoEhGestor(UsuarioGoogleDto usuarioAtual)

@@ -75,7 +75,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                mediator.Send(new SalvarLogViaRabbitCommand($"Erro ao iniciar a sincronização dos cursos CELP", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, rastreamento: ex.StackTrace));
+                mediator.Send(new SalvarLogViaRabbitCommand($"TratarSincronizacaoCursosCelpGoogleUseCase - Erro ao iniciar a sincronização dos cursos CELP", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, rastreamento: ex.StackTrace));
                 return false;
             }
         }
@@ -99,7 +99,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var parametroEmailCoordenador = await ObterParametroSistema(TipoParametroSistema.EmailCoordenadorCELP,anoLetivo);
             if (parametroEmailCoordenador is null)
                 throw new NegocioException(
-                    $"Parâmetro do E-mail do Coordenador do CELP não localizado para o ano {anoLetivo}");
+                    $"TratarSincronizacaoCursosCelpGoogleUseCase - Parâmetro do E-mail do Coordenador do CELP não localizado para o ano {anoLetivo}");
             return parametroEmailCoordenador;
         }
 
