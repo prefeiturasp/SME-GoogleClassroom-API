@@ -18,6 +18,5 @@
         public bool ProcessarCursoGsa { get; set; }
         public bool CargaCursoUsuarioGsa { get; set; }
         public bool ProcessarCursoUsuarioGsa { get; set; }
-        public bool CargaInicial { get; set; }
     }
 }
