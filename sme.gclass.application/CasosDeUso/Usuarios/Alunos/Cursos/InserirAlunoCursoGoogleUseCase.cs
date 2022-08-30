@@ -31,10 +31,18 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 var aluno = await mediator.Send(new ObterAlunosPorCodigosQuery(alunoCursoEolParaIncluir.CodigoAluno));
-                if (aluno is null || !aluno.Any()) return false;
+                if (aluno is null || !aluno.Any()) 
+                {
+                    await LogarCursoUsuarioErro(mensagemRabbit, alunoCursoEolParaIncluir, $"O aluno de código '{alunoCursoEolParaIncluir.CodigoAluno}' não foi encontrado.");
+                    return false;
+                }
 
                 var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(alunoCursoEolParaIncluir.TurmaId, alunoCursoEolParaIncluir.ComponenteCurricularId));
-                if (curso is null) return false;
+                if (curso is null)
+                {
+                    await LogarCursoErro(mensagemRabbit, alunoCursoEolParaIncluir, $"O curso não foi encontrado para a turma '{alunoCursoEolParaIncluir.TurmaId}' e para o componente curricular '{alunoCursoEolParaIncluir.ComponenteCurricularId}'.");
+                    return false;
+                }
 
                 var existeProfessorCurso = await mediator.Send(new ExisteAlunoCursoGoogleQuery(aluno.First().Indice, curso.Id));
                 if (existeProfessorCurso) return true;
@@ -49,6 +57,22 @@ namespace SME.GoogleClassroom.Aplicacao
                     $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace: {ex.StackTrace}."));
                 throw;
             }
+        }
+        
+        private async Task LogarCursoUsuarioErro(MensagemRabbit mensagemRabbit, AlunoCursoEol alunoCursoEolParaIncluir,
+            string mensagem)
+        {
+            await mediator.Send(new IncluirCursoUsuarioErroCommand(null,
+                alunoCursoEolParaIncluir.TurmaId,
+                alunoCursoEolParaIncluir.ComponenteCurricularId, ExecucaoTipo.ProfessorCursoAdicionar, ErroTipo.Interno,
+                $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit}"));
+        }
+        
+        private async Task LogarCursoErro(MensagemRabbit mensagemRabbit, AlunoCursoEol alunoCursoEolParaIncluir,
+            string mensagem)
+        {
+            await mediator.Send(new InserirCursoErroCommand(alunoCursoEolParaIncluir.TurmaId, alunoCursoEolParaIncluir.ComponenteCurricularId,
+                $"ex.: {mensagem} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
         }
 
         private async Task InserirAlunoCursoGoogleAsync(AlunoGoogle alunoGoogle, CursoGoogle cursoGoogle)

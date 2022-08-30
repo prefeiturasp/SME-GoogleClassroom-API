@@ -19,12 +19,12 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
     public class InserirProfessorCursoGoogleUseCaseTeste : TesteIntegracaoGoogleClassroom
     {
         private readonly Mock<IMediator> mediator;
-        private readonly IInserirProfessorCursoGoogleUseCase inserirProfessorCursoGoogleUseCase;
+        private readonly IIncluirProfessorCursoGoogleUseCase incluirProfessorCursoGoogleUseCase;
 
         public InserirProfessorCursoGoogleUseCaseTeste()
         {
             mediator = new Mock<IMediator>();
-            inserirProfessorCursoGoogleUseCase = new InserirProfessorCursoGoogleUseCase(mediator.Object, GerarVariaveisGlobais());
+            incluirProfessorCursoGoogleUseCase = new IncluirProfessorCursoGoogleUseCase(mediator.Object, GerarVariaveisGlobais());
         }
 
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir o professor no curso no Google Classroom.")]
@@ -34,7 +34,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(null);
 
             // Assert
-            await Assert.ThrowsAsync<NegocioException>(() => inserirProfessorCursoGoogleUseCase.Executar(mensagem));
+            await Assert.ThrowsAsync<NegocioException>(() => incluirProfessorCursoGoogleUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida o tratamento para professores que ainda não foram inclusos.")]
@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Act
-            var retorno = await inserirProfessorCursoGoogleUseCase.Executar(mensagem);
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
 
             // Assert
             Assert.False(retorno);
@@ -74,7 +74,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Act
-            var retorno = await inserirProfessorCursoGoogleUseCase.Executar(mensagem);
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
 
             // Assert
             Assert.False(retorno);
@@ -101,7 +101,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Act
-            var retorno = await inserirProfessorCursoGoogleUseCase.Executar(mensagem);
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
 
             // Assert
             Assert.True(retorno);
@@ -136,7 +136,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Act
-            var retorno = await inserirProfessorCursoGoogleUseCase.Executar(mensagem);
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
 
             // Assert
             Assert.True(retorno);
@@ -171,7 +171,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Assert
-            await Assert.ThrowsAsync<GoogleApiException>(() => inserirProfessorCursoGoogleUseCase.Executar(mensagem));
+            await Assert.ThrowsAsync<GoogleApiException>(() => incluirProfessorCursoGoogleUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
@@ -203,7 +203,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Assert
-            await Assert.ThrowsAsync<NullReferenceException>(() => inserirProfessorCursoGoogleUseCase.Executar(mensagem));
+            await Assert.ThrowsAsync<NullReferenceException>(() => incluirProfessorCursoGoogleUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida a inclusão de um professor no curso válido.")]
@@ -233,7 +233,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             var mensagem = new MensagemRabbit(professorCursoJson);
 
             // Act
-            var retorno = await inserirProfessorCursoGoogleUseCase.Executar(mensagem);
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
 
             // Assert
             Assert.True(retorno);

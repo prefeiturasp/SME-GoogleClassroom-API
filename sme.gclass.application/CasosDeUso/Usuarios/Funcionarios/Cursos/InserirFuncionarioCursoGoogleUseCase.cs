@@ -57,7 +57,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             try
             {
-                var funcionarioCursoSincronizado = await mediator.Send(new InserirFuncionarioCursoGoogleCommand(funcionarioCursoGoogle, funcionarioGoogle.Email));
+                var funcionarioCursoSincronizado = await mediator.Send(new InserirFuncionarioCursoGoogleCommand(funcionarioCursoGoogle.CursoId, funcionarioGoogle.Email));
                 if (funcionarioCursoSincronizado)
                 {
                     await InserirFuncionarioCursoAsync(funcionarioCursoGoogle);

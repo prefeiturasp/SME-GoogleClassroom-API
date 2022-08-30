@@ -8,5 +8,7 @@
         DiasRemocaoProfessor = 4,
         DiasInativacaoFuncionario = 5,
         TotalDiasImportacaoNotas = 6,
+        EmailCoordenadorCELP = 7,
+        ComponentesCurricularesCELP = 8,
     }
 }

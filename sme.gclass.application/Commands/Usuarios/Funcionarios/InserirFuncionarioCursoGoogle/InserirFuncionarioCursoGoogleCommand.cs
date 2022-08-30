@@ -6,26 +6,26 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class InserirFuncionarioCursoGoogleCommand : IRequest<bool>
     {
-        public InserirFuncionarioCursoGoogleCommand(FuncionarioCursoGoogle funcionarioCursoGoogle, string email)
+        public InserirFuncionarioCursoGoogleCommand(long cursoId, string email)
         {
-            FuncionarioCursoGoogle = funcionarioCursoGoogle;
+            CursoId = cursoId;
             Email = email;
         }
 
-        public FuncionarioCursoGoogle FuncionarioCursoGoogle { get; set; }
         public string Email { get; set; }
+        public long CursoId { get; set; }
     }
     public class InserirFuncionarioCursoGoogleCommandValidator : AbstractValidator<InserirFuncionarioCursoGoogleCommand>
     {
         public InserirFuncionarioCursoGoogleCommandValidator()
         {
-            RuleFor(x => x.FuncionarioCursoGoogle)
+            RuleFor(x => x.CursoId)
                 .NotEmpty()
-                .WithMessage("É necessário informar um funcionario x curso que será incluído no Google Classroom.");
+                .WithMessage("O identificador do curso deve ser informado para funcionário ser incluído no curso no Google Classroom.");
 
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage("O e-mail do funcionario deve ser informado.");
+                .WithMessage("O e-mail do funcionario deve ser informado para funcionário ser incluído no curso no Google Classroom.");
         }
     }
 }
