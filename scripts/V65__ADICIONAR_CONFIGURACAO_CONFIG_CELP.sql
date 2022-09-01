@@ -23,7 +23,7 @@ insert into config_celp (dre_id,email,ativo,data_inclusao) values ('108800','sme
 insert into config_celp (dre_id,email,ativo,data_inclusao) values ('109000','smecelpnoroeste2@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
 
 --Campo limpo
-insert into config_celp (dre_id,email,ativo,data_inclusao) values ('108200','smecelpnoroeste2@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
+insert into config_celp (dre_id,email,ativo,data_inclusao) values ('108200','smecelpsul1@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);
 
 --Capela socorro
 insert into config_celp (dre_id,email,ativo,data_inclusao) values ('108300','smecelpsul2@edu.sme.prefeitura.sp.gov.br',true, CURRENT_TIMESTAMP);

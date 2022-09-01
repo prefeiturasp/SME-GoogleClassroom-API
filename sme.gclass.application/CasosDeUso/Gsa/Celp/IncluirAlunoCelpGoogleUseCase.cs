@@ -47,7 +47,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoParaIncluir?.Codigo, alunoParaIncluir?.Email,
-                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit}. StackTrace:{ex.StackTrace}.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                    $"IncluirAlunoCelpGoogleUseCase - Erro: {ex.Message} - Mensagem Rabbit: {mensagemRabbit} - StackTrace:{ex.StackTrace}.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                 throw;
             }
         }
@@ -60,7 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (!incluiuAlunoGoogle)
                 {
                     await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                        $"Não foi possível incluir o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                        $"IncluirAlunoCelpGoogleUseCase - InserirAlunoGoogleAsync - Não foi possível incluir o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                     return;
                 }
 
@@ -96,7 +96,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!incluiuAlunoGoogle)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                    $"Não foi possível atualizar o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                    $"IncluirAlunoCelpGoogleUseCase - AtualizarAlunoGoogleSync - Não foi possível atualizar o aluno no Google Classroom. {alunoGoogle}", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                 return;
             }
 
@@ -104,7 +104,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!usuarioAlterado)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                    $"Não foi possível atualizar o aluno {alunoGoogle} no Google Classroom. O aluno não foi encontrado na base.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                    $"IncluirAlunoCelpGoogleUseCase - AtualizarAlunoGoogleSync - Não foi possível atualizar o aluno {alunoGoogle} no Google Classroom. O aluno não foi encontrado na base.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                 return;
             }
 
@@ -112,7 +112,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!idAlterado)
             {
                 await mediator.Send(new IncluirUsuarioErroCommand(alunoGoogle?.Codigo, alunoGoogle?.Email,
-                    $"Não foi possível atualizar o Id do aluno {alunoGoogle} no Google Classroom.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
+                    $"IncluirAlunoCelpGoogleUseCase - AtualizarAlunoGoogleSync - Não foi possível atualizar o Id do aluno {alunoGoogle} no Google Classroom.", UsuarioTipo.Aluno, ExecucaoTipo.AlunoAdicionar));
                 return;
             }
         }
