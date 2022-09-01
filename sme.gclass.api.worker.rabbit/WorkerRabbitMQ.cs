@@ -394,7 +394,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIniciar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioSync, false, consumer);
-                
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioTratar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, false, consumer);
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaInativarProfessoresEFuncionariosIniciar, false, consumer);
@@ -409,20 +410,22 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarAnoAnteriorCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoArquivarCarregar, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaCursoAhRemover, false, consumer);
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarSmeDre, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarComponente, false, consumer);
                 
                 //Celp
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCelpIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosAlunosCelpSync, false, consumer);
-                
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCargaInicial, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaAlunoCelpIncluir, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, false, consumer);
             }
 
             if (consumoDeFilasOptions.ConsumirFilasDeInclusao)
             {
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaInativarUsuarioIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaCursoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaAlunoIncluir, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaProfessorIncluir, false, consumer);
@@ -436,12 +439,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarCurso, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaFormacaoCidadeTurmasTratarAluno, false, consumer);
-                
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoCelpIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaAlunoCelpIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, false, consumer);
-                canalRabbit.BasicConsume(RotasRabbit.FilaCursoAhRemover, false, consumer);
             }
         }
 
@@ -492,6 +489,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaNotasAtividadesSyncErro, false, consumer);
+            }
+            
+            if (consumoDeFilasOptions.Gsa.CargaInicial)
+            {
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCargaInicial, false, consumer);
             }
         }
     }

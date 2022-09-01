@@ -67,7 +67,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId,
-                    $"IncluirCursoCelpGoogleUseCase - Erro: {ex.Message} - Mensagem Rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                    $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
                 throw;
             }
         }
@@ -87,13 +87,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task IniciarSyncGoogleUsuariosDoCursoAsync(FiltroCursoCelpDto filtroCursoCelpDto, FuncionarioGoogle professorDoCurso)
         {
-            var professorCursoEol = new ProfessorCursoEol(professorDoCurso.Rf.Value,
+            await IniciarSyncGoogleProfessoresDoCursoCelpAsync(new ProfessorCursoEol(professorDoCurso.Rf.Value,
                 filtroCursoCelpDto.TurmaId,
-                filtroCursoCelpDto.ComponenteCurricularId
-            );
-            professorCursoEol.EhTipoEscolaCelp = true;
-            
-            await IniciarSyncGoogleProfessoresDoCursoCelpAsync(professorCursoEol);
+                filtroCursoCelpDto.ComponenteCurricularId));
             
             await IniciarSyncGoogleAlunosDoCursoCelpAsync(filtroCursoCelpDto);
             

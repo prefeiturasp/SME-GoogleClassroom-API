@@ -13,10 +13,6 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(c => c.AnoLetivo)
                 .GreaterThan(0)
                 .WithMessage("O ano letivo deve ser informado para obter os cursos CELP.");
-            
-            RuleFor(c => c.DataUltimaExecucao)
-                .NotNull()
-                .WithMessage("A data da última execução deve ser informada para obter os cursos CELP.");
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<IEnumerable<CursoCelpEolDto>> ObterCursosCelpPorComponentesEAnoLetivo(IEnumerable<int> componentes, int anoLetivo, DateTime dataUltimaExecucao)
+        public async Task<IEnumerable<CursoCelpEolDto>> ObterCursosCelpPorComponentesEAnoLetivo(IEnumerable<int> componentes, int anoLetivo)
         {
 	        var tiposItinerarioMedio = (await ObterTiposItinerarioMedio()).ToList();
 	        
@@ -51,11 +50,10 @@ namespace SME.GoogleClassroom.Dados
 				where gcc.cd_componente_curricular in ({string.Join(',', componentes)})
 				and te.an_letivo = @anoLetivo
 				and e.tp_escola = 27 
-				and tegp.dt_fim is null 
-				and te.dt_inicio_turma = @dataUltimaExecucao";
+				and tegp.dt_fim is null ";
 	        
 	        using var conn = ObterConexao();
-	        return await conn.QueryAsync<CursoCelpEolDto>(query, new { componentes, anoLetivo, dataUltimaExecucao });
+	        return await conn.QueryAsync<CursoCelpEolDto>(query, new { componentes, anoLetivo });
         }
         
         private async Task<IEnumerable<int>> ObterTiposItinerarioMedio()

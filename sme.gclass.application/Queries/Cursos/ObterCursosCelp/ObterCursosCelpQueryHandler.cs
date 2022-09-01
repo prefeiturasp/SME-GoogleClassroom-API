@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<CursoCelpEolDto>> Handle(ObterCursosCelpQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioCursoCelpEol.ObterCursosCelpPorComponentesEAnoLetivo(request.Componentes, request.AnoLetivo, request.DataUltimaExecucao);
+            return await repositorioCursoCelpEol.ObterCursosCelpPorComponentesEAnoLetivo(request.Componentes, request.AnoLetivo);
         }
     }
 }

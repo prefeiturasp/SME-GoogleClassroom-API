@@ -65,7 +65,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (GoogleApiException gEx)
             {
-                if (!gEx.EhErroDeDuplicidade())
+                if (gEx.EhErroDeDuplicidade())
                     await InserirFuncionarioCursoAsync(funcionarioCursoGoogle);
                 else
                     throw;
