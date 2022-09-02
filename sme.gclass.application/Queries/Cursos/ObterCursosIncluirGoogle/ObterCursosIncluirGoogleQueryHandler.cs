@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var anoLetivo = request.UltimaExecucao?.Year ?? DateTime.Now.Year;
             return await repositorioCursoEol
-                .ObterCursosParaInclusao(request.ParametrosCargaInicialDto, request.UltimaExecucao, anoLetivo, request.Paginacao, request.ComponenteCurricularId, request.TurmaId);
+                .ObterCursosParaInclusao(request.ParametrosCargaInicialDto, request?.UltimaExecucao ?? new DateTime(anoLetivo, 1, 1), anoLetivo, request.Paginacao, request.ComponenteCurricularId, request.TurmaId);
         }
     }
 }

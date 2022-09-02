@@ -15,9 +15,9 @@ namespace SME.GoogleClassroom.Infra
 
         public ParametrosCargaInicialDto(IList<int> tiposUes, IList<long> ues, IList<long> turmas, int? anoLetivo)
         {
-            TiposUes = tiposUes;
-            Ues = ues;
-            Turmas = turmas;
+            TiposUes = tiposUes ?? new List<int>();
+            Ues = ues ?? new List<long>();
+            Turmas = turmas ?? new List<long>();
             AnoLetivo = anoLetivo;
         }
 
