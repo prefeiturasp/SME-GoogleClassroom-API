@@ -54,22 +54,37 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<long> SalvarAsync(CursoUsuario cursoUsuario)
         {
-            var query = @"INSERT INTO public.cursos_usuarios
-                           (curso_id, usuario_id, data_inclusao, excluido)
-                         VALUES
-                           (@cursoId, @usuarioId, @dataInclusao, @excluido)
-                         RETURNING id";
-
-            var parametros = new
+            using (var conn = ObterConexao())
             {
-                cursoUsuario.CursoId,
-                cursoUsuario.UsuarioId,
-                cursoUsuario.DataInclusao,
-                cursoUsuario.Excluido
-            };
+                var id = await conn.ExecuteScalarAsync<long>(@"SELECT id 
+                                                                  FROM public.cursos_usuarios 
+                                                               WHERE curso_id = @cursoId and 
+                                                                     usuario_id = @usuarioId;",
+                    new
+                    {
+                        cursoId = cursoUsuario.CursoId,
+                        usuarioId = cursoUsuario.UsuarioId
+                    });
 
-            using var conn = ObterConexao();
-            return await conn.ExecuteAsync(query, parametros);
+                if (id > 0)
+                    return id;
+
+                var query = @"INSERT INTO public.cursos_usuarios
+                                (curso_id, usuario_id, data_inclusao, excluido)
+                              VALUES
+                                (@cursoId, @usuarioId, @dataInclusao, @excluido)
+                              RETURNING id";
+
+                var parametros = new
+                {
+                    cursoUsuario.CursoId,
+                    cursoUsuario.UsuarioId,
+                    cursoUsuario.DataInclusao,
+                    cursoUsuario.Excluido
+                };
+
+                return await conn.ExecuteAsync(query, parametros);
+            }
         }
 
         public async Task<PaginacaoResultadoDto<ProfessorCursosCadastradosDto>> ObterProfessoresCursosAsync(Paginacao paginacao, long? rf, long? turmaId, long? componenteCurricularId)
