@@ -23,43 +23,36 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            try
+        
+            var errosParaTratar = await mediator.Send(new ObterAlunoCursoRemovidoErroQuery());
+            if (errosParaTratar != null && errosParaTratar.Any())
             {
-                var errosParaTratar = await mediator.Send(new ObterAlunoCursoRemovidoErroQuery());
-                if (errosParaTratar != null && errosParaTratar.Any())
+                foreach (var erroParaTratar in errosParaTratar)
                 {
-                    foreach (var erroParaTratar in errosParaTratar)
+                    try
                     {
-                        try
+                        var dto = new CursoUsuarioRemoverDto
                         {
-                            var dto = new CursoUsuarioRemoverDto
-                            {
-                                CursoUsuarioId = erroParaTratar.CursoUsuarioId,
-                                TipoUsuario = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioTipo.Aluno : (int)UsuarioTipo.Professor,
-                                TipoGsa = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioCursoGsaTipo.Estudante : (int)UsuarioCursoGsaTipo.Professor,
-                                UsuarioId = erroParaTratar.UsuarioId,
-                                CursoId = erroParaTratar.CursoId,
-                                UsuarioGsaId = erroParaTratar.UsuarioIdGsa,
-                            };
+                            CursoUsuarioId = erroParaTratar.CursoUsuarioId,
+                            TipoUsuario = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioTipo.Aluno : (int)UsuarioTipo.Professor,
+                            TipoGsa = erroParaTratar.UsuarioTipo.Equals(1) ? (int)UsuarioCursoGsaTipo.Estudante : (int)UsuarioCursoGsaTipo.Professor,
+                            UsuarioId = erroParaTratar.UsuarioId,
+                            CursoId = erroParaTratar.CursoId,
+                            UsuarioGsaId = erroParaTratar.UsuarioIdGsa,
+                        };
 
-                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, dto));
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, dto));
 
-                            await ExcluirCursoErroAsync(erroParaTratar);
-                        }
-                        catch (Exception ex)
-                        {
-                            mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível excluir curso", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
-                        }
+                        await ExcluirCursoErroAsync(erroParaTratar);
+                    }
+                    catch (Exception ex)
+                    {
+                        await mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível excluir curso", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
+                        return false;
                     }
                 }
-                return true;
             }
-            catch (Exception ex)
-            {
-                mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível tratar a sincronização", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
-            }
-
-            return false;
+            return true;
         }
 
         private async Task ExcluirCursoErroAsync(CursoUsuarioRemovidoGsaErro cursoUsuarioRemovidoGsaErro)
@@ -68,7 +61,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!await mediator.Send(new ExcluirRemoverCursoAlunoErroCommand(cursoUsuarioRemovidoGsaErro.UsuarioId,
                 cursoUsuarioRemovidoGsaErro.UsuarioId)))
             {
-                mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível excluir o erro do usuario Id {cursoUsuarioRemovidoGsaErro.UsuarioId} do curso id {cursoUsuarioRemovidoGsaErro.CursoId}", LogNivel.Critico, LogContexto.CelpGsa, null, null));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível excluir o erro do usuario Id {cursoUsuarioRemovidoGsaErro.UsuarioId} do curso id {cursoUsuarioRemovidoGsaErro.CursoId}", LogNivel.Critico, LogContexto.CelpGsa, null, null));
             }
         }
     }

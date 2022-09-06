@@ -43,7 +43,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                mediator.Send(new SalvarLogViaRabbitCommand($"ArquivarCursoGoogleCommandHandler - Não foi possível arquivar curso google - CELP", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"ArquivarCursoGoogleCommandHandler", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
             }
         }
     }
