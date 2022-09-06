@@ -28,8 +28,13 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var parametrosCargaInicialDto = filtroCargaInicial != null ? new ParametrosCargaInicialDto(filtroCargaInicial.TiposUes, filtroCargaInicial.Ues, filtroCargaInicial.Turmas, filtroCargaInicial.AnoLetivo)
                     : await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-                await mediator.Send(new ObterCursoIncluirGooglePorIdQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, DateTime.Now.Year, parametrosCargaInicialDto));
-               
+                var cursoEol = await mediator.Send(new ObterCursoIncluirGooglePorIdQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, DateTime.Now.Year, parametrosCargaInicialDto));
+                if (cursoEol is null)
+                {
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"RealizarTratamentoCursoErroUseCase - Não foi possível realizar o tratamento de erro do curso de turma id {cursoParaIncluir.TurmaId} e Componente Curricular id {cursoParaIncluir.ComponenteCurricularId} na fila. Curso não encontrado no Eol", LogNivel.Critico, LogContexto.Gsa, null, null));
+                    return false;
+                }
+
                 var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoEol));
                 if (!publicarCurso)
                     await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
@@ -37,7 +42,7 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (Exception ex)
             {
                 await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
-                await mediator.Send(new SalvarLogViaRabbitCommand($"RealizarTratamentoCursoErroUseCase - Não foi possível realizar tratamento curso erro", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"RealizarTratamentoCursoErroUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
 
             return true;
