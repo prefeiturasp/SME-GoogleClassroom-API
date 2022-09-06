@@ -28,10 +28,8 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var parametrosCargaInicialDto = filtroCargaInicial != null ? new ParametrosCargaInicialDto(filtroCargaInicial.TiposUes, filtroCargaInicial.Ues, filtroCargaInicial.Turmas, filtroCargaInicial.AnoLetivo)
                     : await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-                var cursoEol = await mediator.Send(new ObterCursoIncluirGooglePorIdQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, DateTime.Now.Year, parametrosCargaInicialDto));
-                if (cursoEol is null)
-                    return false;
-
+                await mediator.Send(new ObterCursoIncluirGooglePorIdQuery(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, DateTime.Now.Year, parametrosCargaInicialDto));
+               
                 var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoEol));
                 if (!publicarCurso)
                     await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
