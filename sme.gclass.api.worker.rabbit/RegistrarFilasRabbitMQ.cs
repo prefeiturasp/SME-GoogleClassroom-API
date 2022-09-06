@@ -60,6 +60,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, ExchangeRabbit.GoogleSync,
                 RotasRabbit.FilaGsaCursoAlunoCelpIncluir);
+            
+            canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosCelpTratar, true, false, false);
+            canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosCelpTratar, ExchangeRabbit.GoogleSync, 
+                RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosCelpTratar);
         }
 
         private static void RegistrarFilasFormacaoCidadeSync(IModel canalRabbit)
@@ -204,7 +208,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar);
-
+            
             canalRabbit.QueueDeclare(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, true, false, false);
             canalRabbit.QueueBind(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, ExchangeRabbit.GoogleSync, RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar);
 

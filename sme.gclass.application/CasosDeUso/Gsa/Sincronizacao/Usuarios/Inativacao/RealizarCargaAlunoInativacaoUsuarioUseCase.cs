@@ -32,11 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 var alunosInativacao = new FiltroAlunoInativacaoUsuarioDto(dto.DataReferencia, alunosParaInativar);
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaInativarUsuarioSync, alunosInativacao));
             }
-            else 
-            {
-                SentrySdk.CaptureMessage($"Não foi possível localizar a alunos para o ANO: {DateTime.Now.Year}, REFERÊNCIA: {dto.DataReferencia} e ALUNO: {dto.AlunoId} na base do EOL!");
-            }
-
+            
             await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AlunoInativar));
             
             return true;

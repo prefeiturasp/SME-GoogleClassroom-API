@@ -18,7 +18,10 @@ namespace SME.GoogleClassroom.Aplicacao
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
             if (dto.ProcessarAlunos)
+            {
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, dto));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosCelpTratar, dto));
+            }
 
             if (dto.ProcessarProfessores)
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, dto));

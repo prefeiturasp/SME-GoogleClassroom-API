@@ -167,6 +167,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaCursoAlunoCelpIncluir, new ComandoRabbit("Inclusão do aluno no curso celp no Google", typeof(IIncluirAlunoCursoCelpGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaGsaFuncionarioCursoCelpIncluir, new ComandoRabbit("Inclusão do coordenador (funcionario) do curso celp no Google", typeof(IIncluirFuncionarioCursoCelpGoogleUseCase)));
             comandos.Add(RotasRabbit.FilaGsaAlunoCelpIncluir, new ComandoRabbit("Inclusão do aluno do celp no Google", typeof(IIncluirAlunoCelpGoogleUseCase)));
+            comandos.Add(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosCelpTratar, new ComandoRabbit("Carregar codigos dos alunos para remoção de cursos celp", typeof(ITratarAlunosCursoUsuarioRemovidoCelpUseCase)));
         }
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
@@ -386,6 +387,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosTratar, false, consumer);
+                
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratar, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratar, false, consumer);
 
@@ -416,6 +418,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 //Celp
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosCelpSync, false, consumer);
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursosAlunosCelpSync, false, consumer);
+                canalRabbit.BasicConsume(RotasRabbit.FilaGsaCursoUsuarioRemovidoAlunosCelpTratar, false, consumer);
                 
                 canalRabbit.BasicConsume(RotasRabbit.FilaGsaCargaInicial, false, consumer);
             }

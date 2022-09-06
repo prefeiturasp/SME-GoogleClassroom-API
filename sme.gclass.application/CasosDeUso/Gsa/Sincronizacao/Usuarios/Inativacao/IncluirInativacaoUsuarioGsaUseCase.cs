@@ -38,7 +38,6 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
                 await InserirMensagemErroIntegracaoAsync(filtro, ex.Message);
             }
             return true;

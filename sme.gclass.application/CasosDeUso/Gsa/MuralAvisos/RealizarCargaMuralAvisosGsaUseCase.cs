@@ -52,7 +52,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"RealizarCargaMuralAvisosGsaUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
 
             return true;

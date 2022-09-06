@@ -32,24 +32,27 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new InciarAtualizacaoUsuarioGoogleClassroomIdCommand());
 
             var resultadoPaginacao = await mediator.Send(new ObterUsuariosSemGoogleClassroomIdPorTipoQuery(paginacao));
-            resultadoPaginacao.Items
-                .AsParallel()
-                .WithDegreeOfParallelism(10)
-                .ForAll(async usuario =>
-                {
-                    try
+
+            try
+            {
+                resultadoPaginacao.Items
+                    .AsParallel()
+                    .WithDegreeOfParallelism(10)
+                    .ForAll(async usuario =>
                     {
                         var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioGoogleIdAtualizar, RotasRabbit.FilaUsuarioGoogleIdAtualizar, usuario));
                         if (!publicarAluno) return;
-                    }
-                    catch (Exception ex)
-                    {
-                        SentrySdk.CaptureException(ex);
-                    }
-                });
+                        
+                    });
 
-            await ValidaProximaExecucaoAsync(dto, resultadoPaginacao);
-            return true;
+                await ValidaProximaExecucaoAsync(dto, resultadoPaginacao);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TrataAtualizacaoUsuarioGoogleClassroomIdUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
+                return false;
+            }
         }
 
         private async Task ValidaProximaExecucaoAsync(AtualizacaoUsuarioGoogleClassroomIdPaginadoDto dto, PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto> resultadoPaginacao)
@@ -71,16 +74,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             dto.Pagina++;
 
-            try
-            {
-                var publicarAluno = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.FilaUsuarioGoogleIdSync, dto));
-                if (!publicarAluno)
-                    SentrySdk.CaptureMessage("Não foi possível iniciar a próxima página da atualização de GoogleClassroomId.");
-            }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-            }
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaUsuarioGoogleIdSync, RotasRabbit.FilaUsuarioGoogleIdSync, dto));
         }
     }
 }

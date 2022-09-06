@@ -8,5 +8,6 @@
         FormacaoCidade = 4,
         UsuarioGsa = 5,
         CelpGsa = 6,
+        Gsa = 7,
     }
 }

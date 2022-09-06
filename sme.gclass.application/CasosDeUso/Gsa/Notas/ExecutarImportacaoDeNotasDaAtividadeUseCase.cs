@@ -45,11 +45,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 return await EnviaParaSGP(notaSgpDto);
             }
-            catch
+            catch(Exception)
             {
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSyncErro, importacaoDto));
-                SentrySdk.CaptureMessage($"Não foi possível importar a nota {importacaoDto.Nota.Id} referente a atividade {importacaoDto.DadosAvaliacao.Id} do aluno {importacaoDto.Nota.UsuarioId}");
-                throw;
+                return false;
             }
         }
 

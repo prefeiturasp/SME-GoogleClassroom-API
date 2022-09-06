@@ -10,6 +10,7 @@ using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -40,8 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (GoogleApiException gex)
             {
-                SentrySdk.CaptureException(gex);
-                throw gex;
+                await mediator.Send(new SalvarLogViaRabbitCommand($"InativarProfessorGoogleCommandHandler", LogNivel.Critico, LogContexto.Gsa, gex.Message, gex.StackTrace));
             }
 
             return true;

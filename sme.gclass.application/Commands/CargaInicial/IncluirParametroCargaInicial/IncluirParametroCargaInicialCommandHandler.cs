@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -78,9 +79,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureMessage(
-                    $"Não foi possível incluir os parametros da carga inicial. {ex.Message}");
-
+                await mediator.Send(new SalvarLogViaRabbitCommand($"IncluirParametroCargaInicialCommandHandler - Não foi possível incluir os parametros da carga inicial", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
                 return false;
             }
 

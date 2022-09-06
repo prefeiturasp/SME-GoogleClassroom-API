@@ -20,6 +20,6 @@
         ProfessorInativar = 17,
         ArquivarCursosPorAnoLetivo = 18,
         NotasAtividadesCarregar = 19,
-        CursosCelp = 20
+        CursosCelpIncluir = 20
     }
 }

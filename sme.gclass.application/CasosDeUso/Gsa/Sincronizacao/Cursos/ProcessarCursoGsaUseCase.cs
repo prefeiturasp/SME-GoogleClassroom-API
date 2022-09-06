@@ -47,13 +47,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var iniciarFilaDeValidacao = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoValidar, RotasRabbit.FilaGsaCursoValidar, true));
-                if (!iniciarFilaDeValidacao)
-                    SentrySdk.CaptureMessage("Não foi possível iniciar a fila de validação de cursos.");
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoValidar, RotasRabbit.FilaGsaCursoValidar, true));
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"ProcessarCursoGsaUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
         }
 
@@ -64,17 +62,13 @@ namespace SME.GoogleClassroom.Aplicacao
                 var filtroEstudantes = new FiltroCargaCursoUsuariosGsaDto(cursoGsaDto, (short)UsuarioCursoGsaTipo.Estudante);
                 var filtroProfessores = new FiltroCargaCursoUsuariosGsaDto(cursoGsaDto, (short)UsuarioCursoGsaTipo.Professor);
 
-                var iniciarCargaEstudantes = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.FilaGsaCursoUsuarioCarregar, filtroEstudantes));
-                if (!iniciarCargaEstudantes)
-                    SentrySdk.CaptureMessage($"Não foi possível iniciar a carga de estudantes do curso {cursoGsaDto.Id}.");
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.FilaGsaCursoUsuarioCarregar, filtroEstudantes));
 
-                var iniciarCargaProfessores = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.FilaGsaCursoUsuarioCarregar, filtroProfessores));
-                if (!iniciarCargaProfessores)
-                    SentrySdk.CaptureMessage($"Não foi possível iniciar a carga de professores do curso {cursoGsaDto.Id}.");
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioCarregar, RotasRabbit.FilaGsaCursoUsuarioCarregar, filtroProfessores));
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"ProcessarCursoGsaUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
         }
     }
