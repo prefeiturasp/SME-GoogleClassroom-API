@@ -32,7 +32,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     var filtroFuncionarioErro = new FiltroUsuarioErroDto(usuarioErro, filtroCargaInicial);
                     
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.FilaFuncionarioErroTratar, filtroFuncionarioErro));
+                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.FilaFuncionarioErroTratar, filtroFuncionarioErro));
+                    if (!publicarFuncionario)
+                        continue;
 
                     await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id));
                 }

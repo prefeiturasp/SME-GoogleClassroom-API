@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
                 catch (Exception ex)
                 {
-                    mediator.Send(new SalvarLogViaRabbitCommand($"ReplicarParametrosDoSistemaPorAnoCommandHandler - Não foi possível replicar os parametros do sistema para o ano de {request.Ano}", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"ReplicarParametrosDoSistemaPorAnoCommandHandler - Não foi possível replicar os parametros do sistema para o ano de {request.Ano}", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
                     return false;
                 }
             }

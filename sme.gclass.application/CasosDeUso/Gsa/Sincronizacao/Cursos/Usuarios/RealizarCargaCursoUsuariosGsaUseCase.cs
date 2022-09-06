@@ -37,7 +37,12 @@ namespace SME.GoogleClassroom.Aplicacao
                 : await mediator.Send(new ObterCursoProfessoresGsaGoogleQuery(filtro.Curso.Id, filtro.TokenProximaPagina));
 
             foreach (var usuarioCurso in paginaConsultaCursosDoUsuario.CursosDoUsuario)
+            {
+                var publicarCursoUsuario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioIncluir, RotasRabbit.FilaGsaCursoUsuarioIncluir, usuarioCurso));
+                if (!publicarCursoUsuario) continue;
+                
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioIncluir, RotasRabbit.FilaGsaCursoUsuarioIncluir, usuarioCurso));
+            }
 
             filtro.TokenProximaPagina = paginaConsultaCursosDoUsuario.TokenProximaPagina;
             if (!string.IsNullOrEmpty(filtro.TokenProximaPagina))

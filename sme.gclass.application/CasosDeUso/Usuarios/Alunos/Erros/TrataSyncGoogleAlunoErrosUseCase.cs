@@ -32,9 +32,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     var filtroAluno = new FiltroAlunoErroDto(usuarioErro, filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas);
                     
-                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, filtroAluno));
+                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, filtroAluno));
+                    if (!publicarFuncionario)
+                        continue;
 
-                    await ExcluirUsuarioErroAsync(usuarioErro);
+                    await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id));
                 }
 
                 return true;
@@ -45,11 +47,6 @@ namespace SME.GoogleClassroom.Aplicacao
             }
 
             return false;
-        }
-
-        private async Task ExcluirUsuarioErroAsync(UsuarioErro usuarioErro)
-        {
-            await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id));
         }
 
         private FiltroCargaInicialDto ObterFiltro(MensagemRabbit mensagem)

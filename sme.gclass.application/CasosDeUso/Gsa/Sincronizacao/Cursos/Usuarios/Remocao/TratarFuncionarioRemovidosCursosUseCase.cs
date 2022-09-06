@@ -76,7 +76,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception exception)
             {
-                mediator.Send(new SalvarLogViaRabbitCommand($"TratarFuncionarioRemovidosCursosUseCase - Não foi possível tratar funcionários removidos curso gsa", LogNivel.Critico, LogContexto.CelpGsa, exception.Message, exception.StackTrace));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TratarFuncionarioRemovidosCursosUseCase - Não foi possível tratar funcionários removidos curso gsa", LogNivel.Critico, LogContexto.CelpGsa, exception.Message, exception.StackTrace));
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoFuncionarioTratarErro,dto));
             }
 
