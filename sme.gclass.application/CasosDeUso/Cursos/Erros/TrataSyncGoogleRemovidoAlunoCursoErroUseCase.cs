@@ -48,7 +48,7 @@ namespace SME.GoogleClassroom.Aplicacao
                         }
                         catch (Exception ex)
                         {
-                            SentrySdk.CaptureException(ex);
+                            mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível excluir curso", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
                         }
                     }
                 }
@@ -56,7 +56,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível tratar a sincronização", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
             }
 
             return false;
@@ -68,8 +68,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!await mediator.Send(new ExcluirRemoverCursoAlunoErroCommand(cursoUsuarioRemovidoGsaErro.UsuarioId,
                 cursoUsuarioRemovidoGsaErro.UsuarioId)))
             {
-                SentrySdk.CaptureMessage(
-                    $"Não foi possível excluir o erro do usuario Id {cursoUsuarioRemovidoGsaErro.UsuarioId} do curso id {cursoUsuarioRemovidoGsaErro.CursoId}");
+                mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleRemovidoAlunoCursoErroUseCase - Não foi possível excluir o erro do usuario Id {cursoUsuarioRemovidoGsaErro.UsuarioId} do curso id {cursoUsuarioRemovidoGsaErro.CursoId}", LogNivel.Critico, LogContexto.CelpGsa, null, null));
             }
         }
     }

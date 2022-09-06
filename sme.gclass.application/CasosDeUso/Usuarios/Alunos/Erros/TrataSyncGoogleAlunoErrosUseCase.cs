@@ -31,12 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 foreach (var usuarioErro in usuarioErros)
                 {
                     var filtroAluno = new FiltroAlunoErroDto(usuarioErro, filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas);
-                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, filtroAluno));
-                    if (!publicarFuncionario)
-                    {
-                        SentrySdk.CaptureMessage($"Não foi possível inserir o tratamento de erro do aluno RA{usuarioErro.UsuarioId} na fila.");
-                        continue;
-                    }
+                    
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, filtroAluno));
 
                     await ExcluirUsuarioErroAsync(usuarioErro);
                 }
@@ -45,7 +41,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleAlunoErrosUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
 
             return false;
@@ -53,10 +49,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task ExcluirUsuarioErroAsync(UsuarioErro usuarioErro)
         {
-            if (!await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id)))
-            {
-                SentrySdk.CaptureMessage($"Não foi possível excluir o erro Id {usuarioErro.Id} do aluno RA{usuarioErro.UsuarioId}.");
-            }
+            await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id));
         }
 
         private FiltroCargaInicialDto ObterFiltro(MensagemRabbit mensagem)

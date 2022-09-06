@@ -40,10 +40,6 @@ namespace SME.GoogleClassroom.Aplicacao
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmaTratar, filtroTurma));
                 }
             }
-            else
-            {
-                SentrySdk.CaptureMessage($"Não foi possível localizar curso de turma id {dto.TurmaId} na base do GSA!");
-            }
 
             if (!dto.TurmaId.HasValue)
                 await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.UsuarioCursoRemover));

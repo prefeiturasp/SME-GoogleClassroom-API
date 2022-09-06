@@ -31,32 +31,20 @@ namespace SME.GoogleClassroom.Aplicacao
                 foreach (var usuarioErro in usuarioErros)
                 {
                     var filtroFuncionarioErro = new FiltroUsuarioErroDto(usuarioErro, filtroCargaInicial);
-                    var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.FilaFuncionarioErroTratar, filtroFuncionarioErro));
-                    if (!publicarFuncionario)
-                    {
-                        SentrySdk.CaptureMessage($"Não foi possível inserir o tratamento de erro do funcionário RF{usuarioErro.UsuarioId} na fila.");
-                        continue;
-                    }
+                    
+                    await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioErroTratar, RotasRabbit.FilaFuncionarioErroTratar, filtroFuncionarioErro));
 
-                    await ExcluirUsuarioErroAsync(usuarioErro);
+                    await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id));
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleFuncionarioErrosUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
 
             return false;
-        }
-
-        private async Task ExcluirUsuarioErroAsync(UsuarioErro usuarioErro)
-        {
-            if (!await mediator.Send(new ExcluirUsuarioErroCommand(usuarioErro.Id)))
-            {
-                SentrySdk.CaptureMessage($"Não foi possível excluir o erro Id {usuarioErro.Id} do funcionário RF{usuarioErro.UsuarioId}.");
-            }
         }
     }
 }

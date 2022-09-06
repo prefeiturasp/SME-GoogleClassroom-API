@@ -26,16 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var paginaCursosGoogle = await mediator.Send(new ObterCursosGsaGoogleQuery(filtro?.TokenProximaPagina));
             foreach (var curso in paginaCursosGoogle.Cursos)
             {
-                try
-                {
-                    var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoIncluir, RotasRabbit.FilaGsaCursoIncluir, curso));
-                    if (!publicarCurso) continue;
-                }
-                catch (Exception ex)
-                {
-                    SentrySdk.CaptureException(ex);
-                    continue;
-                }
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoIncluir, RotasRabbit.FilaGsaCursoIncluir, curso));
             }
 
             filtro.TokenProximaPagina = paginaCursosGoogle.TokenProximaPagina;
@@ -49,13 +40,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var syncCursoComparativo = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
-                if (!syncCursoComparativo)
-                    SentrySdk.CaptureMessage("Não foi possível sincronizar os cursos GSA.");
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoCarregar, RotasRabbit.FilaGsaCursoCarregar, dto));
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"RealizarCargaCursosGsaUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
         }
     }

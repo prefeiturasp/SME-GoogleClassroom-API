@@ -31,11 +31,8 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
                 return true;
             }
-            else
-            {
-                SentrySdk.CaptureMessage($"Não foi possível localizar os usuários (alunos) pelos códigos {string.Join(", ", alunosCodigos)} no GSA");
-                return false;
-            }
+            
+            return false;
         }
     }
 }

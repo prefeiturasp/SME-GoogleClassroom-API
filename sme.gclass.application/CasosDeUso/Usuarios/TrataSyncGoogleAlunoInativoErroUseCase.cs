@@ -31,18 +31,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     foreach (var erroParaTratar in errosParaTratar)
                     {
-                        try
-                        {
-                            await mediator.Send(new PublicaFilaRabbitCommand(
+                        await mediator.Send(new PublicaFilaRabbitCommand(
                                 RotasRabbit.FilaGsaInativarUsuarioIniciar,
                                 RotasRabbit.FilaGsaInativarUsuarioIniciar, erroParaTratar));
 
-                            await ExcluirCursoErroAsync(erroParaTratar);
-                        }
-                        catch (Exception ex)
-                        {
-                            SentrySdk.CaptureException(ex);
-                        }
+                        await ExcluirCursoErroAsync(erroParaTratar);
                     }
                 }
 
@@ -50,7 +43,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleAlunoInativoErroUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
 
             return false;
@@ -60,11 +53,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var usuarioId = usuarioInativoErro.UsuarioId ??
                             throw new ArgumentNullException(nameof(usuarioInativoErro.UsuarioId));
-            if (!await mediator.Send(new ExluirAlunoInativoErroQuery(usuarioId)))
-            {
-                SentrySdk.CaptureMessage(
-                    $"Não foi possível excluir o erro do usuario Id {usuarioInativoErro.UsuarioId}");
-            }
+            await mediator.Send(new ExluirAlunoInativoErroQuery(usuarioId));
         }
     }
 }

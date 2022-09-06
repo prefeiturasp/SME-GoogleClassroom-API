@@ -10,6 +10,7 @@ using SME.GoogleClassroom.Infra.Politicas;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -42,7 +43,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                mediator.Send(new SalvarLogViaRabbitCommand($"ArquivarCursoGoogleCommandHandler - Não foi possível arquivar curso google - CELP", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
             }
         }
     }
