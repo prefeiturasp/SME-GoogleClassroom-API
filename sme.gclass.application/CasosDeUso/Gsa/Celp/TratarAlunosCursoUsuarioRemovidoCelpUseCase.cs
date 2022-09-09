@@ -1,28 +1,30 @@
-﻿using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarAlunosCursoUsuarioRemovidoUseCase : ITratarAlunosCursoUsuarioRemovidoUseCase
+    public class TratarAlunosCursoUsuarioRemovidoCelpUseCase :ITratarAlunosCursoUsuarioRemovidoCelpUseCase
     {
         private readonly IMediator mediator;
+        private readonly bool _deveExecutarIntegracao;
 
-        public TratarAlunosCursoUsuarioRemovidoUseCase(IMediator mediator)
+        public TratarAlunosCursoUsuarioRemovidoCelpUseCase(IMediator mediator, VariaveisGlobaisOptions variaveisGlobaisOptions)
         {
-            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _deveExecutarIntegracao = variaveisGlobaisOptions.DeveExecutarIntegracao;
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            var alunosCodigosInativosEOL = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaQuery(DateTime.Today.Year, dto.TurmaId, dto.DatasAluno.DataInicio, dto.DatasAluno.DataFim, parametrosCargaInicialDto));
+            var alunosCodigosInativosEOL = await mediator.Send(new ObterAlunosCodigosInativosPorAnoLetivoETurmaCelpQuery(DateTime.Today.Year, dto.TurmaId));
 
             if (alunosCodigosInativosEOL != null && alunosCodigosInativosEOL.Any())
             {
@@ -30,6 +32,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (cursosUsuarios != null && cursosUsuarios.Any())
                 {
+                    cursosUsuarios = new List<CursoUsuarioRemoverDto>(){cursosUsuarios.FirstOrDefault()};
+                    
                     foreach (var cursoUsuario in cursosUsuarios)
                     {
                         var cursoUsuarioRemover = new CursoUsuarioRemoverDto()
@@ -46,7 +50,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 }
             }
-
+            
             return true;
         }
     }

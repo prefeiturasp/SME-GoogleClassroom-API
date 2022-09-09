@@ -43,10 +43,6 @@ namespace SME.GoogleClassroom.Aplicacao
                 var professoresEFuncionariosInativacao = new FiltroProfessoresEFuncionarioInativosDto(dto.DataReferencia, professoresEFuncionariosParaInativar, null, dto.ProcessarProfessoresEFuncionarios, dto.ProcessarFuncionariosIndiretos);
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, professoresEFuncionariosInativacao));
             }
-            else
-            {
-                SentrySdk.CaptureMessage($"Não foi possível localizar a professores e funcionários para o ANO: {DateTime.Now.Year}, REFERÊNCIA: {dto.DataReferencia} e RF: {dto.Rf} na base do EOL!");
-            }
         }
 
         private async Task TratarInativacaoFuncionariosIndiretos(CarregarProfessoresEFuncionariosInativosDto dto)
@@ -56,10 +52,6 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 var funcionariosIndiretosInativacao = new FiltroProfessoresEFuncionarioInativosDto(dto.DataReferencia, null, funcionariosIndiretosInativar, dto.ProcessarProfessoresEFuncionarios, dto.ProcessarFuncionariosIndiretos);
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaTratarProfessoresEFuncionariosInativar, funcionariosIndiretosInativacao));
-            }
-            else
-            {
-                SentrySdk.CaptureMessage($"Não foi possível localizar a funcionários indiretos para o CPF: {dto.Cpf} na base do EOL!");
             }
         }
 

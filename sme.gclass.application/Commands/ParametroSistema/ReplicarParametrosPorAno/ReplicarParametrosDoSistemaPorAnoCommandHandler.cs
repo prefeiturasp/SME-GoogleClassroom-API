@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -37,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
                 catch (Exception ex)
                 {
-                    SentrySdk.CaptureMessage($"Não foi possível replicar os parametros do sistema para o ano de {request.Ano}");
+                    await mediator.Send(new SalvarLogViaRabbitCommand($"ReplicarParametrosDoSistemaPorAnoCommandHandler - Não foi possível replicar os parametros do sistema para o ano de {request.Ano}", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
                     return false;
                 }
             }

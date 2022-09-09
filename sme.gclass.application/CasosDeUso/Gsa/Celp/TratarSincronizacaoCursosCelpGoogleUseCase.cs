@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var componentesCurricularsIds = await ObterComponentesCurriculares(filtroSincronizacao.AnoLetivo);
                 
-                var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursosCelp));
+                var ultimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursosCelpIncluir));
 
                 var cursosCelpEol = await mediator.Send(new ObterCursosCelpQuery(componentesCurricularsIds,filtroSincronizacao.AnoLetivo, ultimaExecucao));
 
@@ -72,7 +72,7 @@ namespace SME.GoogleClassroom.Aplicacao
                         }
                     }
                 }
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursosCelp));
+                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.CursosCelpIncluir));
 
                 return true;
             }

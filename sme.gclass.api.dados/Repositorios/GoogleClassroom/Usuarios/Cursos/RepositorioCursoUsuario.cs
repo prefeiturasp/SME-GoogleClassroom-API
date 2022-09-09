@@ -419,10 +419,11 @@ namespace SME.GoogleClassroom.Dados
         {
             try
             {
-                const string query = "UPDATE public.cursos_usuarios SET excluido = true WHERE id = @id";
+                const string query = "UPDATE public.cursos_usuarios SET excluido = true, data_atualizacao = @data_atualizacao WHERE id = @id";
                 var parametros = new
                 {
-                    id
+                    id,
+                    data_atualizacao = DateTime.Now
                 };
 
                 using var conn = ObterConexao();

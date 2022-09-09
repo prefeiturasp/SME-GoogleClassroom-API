@@ -42,7 +42,6 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
                 await InserirMensagemErroIntegracaoAsync(filtro, ex.Message);
             }
             return true;
@@ -97,7 +96,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task InserirMensagemErroIntegracaoAsync(ProfessorEFuncionarioInativoDto filtro, string mensagem)
         {
-            SentrySdk.CaptureMessage($"Erro ao processar inativação do funcionário / professor {filtro.EmailUsuario}-{mensagem}" );
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessorErroTratar, filtro));
         }
     }

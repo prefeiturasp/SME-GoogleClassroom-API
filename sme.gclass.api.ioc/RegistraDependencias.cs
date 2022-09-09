@@ -308,6 +308,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIncluirFuncionarioCursoCelpGoogleUseCase, IncluirFuncionarioCursoCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirAlunoCelpGoogleUseCase, IncluirAlunoCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirAlunoCursoCelpGoogleUseCase, IncluirAlunoCursoCelpGoogleUseCase>();
+            services.TryAddScoped<ITratarAlunosCursoUsuarioRemovidoCelpUseCase, TratarAlunosCursoUsuarioRemovidoCelpUseCase>();
         }
     }
 }

@@ -3,6 +3,7 @@ using Sentry;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -26,7 +27,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"IniciarCargaCursosGsaUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
                 return false;
             }
         }

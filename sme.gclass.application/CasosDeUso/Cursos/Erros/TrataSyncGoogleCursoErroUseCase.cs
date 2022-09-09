@@ -29,35 +29,17 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     foreach (var cursoErroParaTratar in cursosErroParaTratar)
                     {
-                        try
-                        {
-                            var filtroCursoErro = new FiltroCursoErroDto(cursoErroParaTratar, filtroCargaInicialDto);
-                            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroTratar, RotasRabbit.FilaCursoErroTratar, filtroCursoErro));
-
-                            await ExcluirCursoErroAsync(cursoErroParaTratar);                            
-                        }
-                        catch (Exception ex)
-                        {
-                            SentrySdk.CaptureException(ex);
-                        }                        
+                       var filtroCursoErro = new FiltroCursoErroDto(cursoErroParaTratar, filtroCargaInicialDto);
+                       await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoErroTratar, RotasRabbit.FilaCursoErroTratar, filtroCursoErro));
                     }
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);                
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TrataSyncGoogleCursoErroUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));               
             }
             return false;
-        }
-
-        private async Task ExcluirCursoErroAsync(CursoErro cursoErro)
-        {
-            if (!_deveExecutarIntegracao) return;
-            if(!await mediator.Send(new ExcluirCursoErroCommand(cursoErro.Id)))
-            {
-                SentrySdk.CaptureMessage($"Não foi possível excluir o erro Id {cursoErro.Id} da turma Id {cursoErro.TurmaId} e componente curricular Id {cursoErro.ComponenteCurricularId}");
-            }
         }
     }
 }

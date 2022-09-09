@@ -46,7 +46,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (UsuarioEhDonoDoCurso)
                 {
-                    SentrySdk.CaptureMessage($"Não foi possível prosseguir com a inativação.(Usuário é o dono do curso) Email: {usuario.Email}");
                     var funcionarioIndiretoInativar = new ProfessorEFuncionarioInativoDto(usuario.Indice, funcionarioIndireto.Indice, funcionarioIndireto.Email, usuario.UsuarioTipo);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessorErroTratar, funcionarioIndiretoInativar));
                 }
@@ -68,7 +67,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (UsuarioEhDonoDoCurso)
                 {
-                    SentrySdk.CaptureMessage($"Não foi possível prosseguir com a inativação.(Usuário é o dono do curso) Email: {usuario.Email}");
                     var funcionarioIndiretoInativar = new ProfessorEFuncionarioInativoDto(usuario.Indice, professor.Indice, professor.Email, usuario.UsuarioTipo);
                     await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaInativarProfessorErroTratar, funcionarioIndiretoInativar));
                 }
