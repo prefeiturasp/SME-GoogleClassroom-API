@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -31,6 +32,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (cursosUsuarios != null && cursosUsuarios.Any())
                 {
+                    cursosUsuarios = new List<CursoUsuarioRemoverDto>(){cursosUsuarios.FirstOrDefault()};
+                    
                     foreach (var cursoUsuario in cursosUsuarios)
                     {
                         var cursoUsuarioRemover = new CursoUsuarioRemoverDto()
