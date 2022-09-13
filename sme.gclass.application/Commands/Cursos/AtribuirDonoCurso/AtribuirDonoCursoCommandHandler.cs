@@ -44,7 +44,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 else if (gEx.EmailContaServicoInvalido()) throw new NegocioException("Email informado é inválido");
                 else
                 {
-                    SentrySdk.CaptureException(gEx);
+                    mediator.Send(new SalvarLogViaRabbitCommand($"AtribuirDonoCursoCommandHandler - Não foi possível atribuir dono do curso", LogNivel.Critico, LogContexto.CelpGsa, gEx.Message, gEx.StackTrace));
                     return false;
                 }
             }

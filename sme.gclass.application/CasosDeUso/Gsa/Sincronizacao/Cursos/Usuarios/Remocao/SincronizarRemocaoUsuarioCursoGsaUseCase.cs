@@ -50,7 +50,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                await mediator.Send(new SalvarLogViaRabbitCommand($"SincronizarRemocaoUsuarioCursoGsaUseCase - Não foi possível sincronizar a remoção dos usuários curso gsa - CELP", LogNivel.Critico, LogContexto.CelpGsa, ex.Message, ex.StackTrace));
                 await InserirMensagemErroIntegracaoAsync(filtro, ex.Message);
             }
             return true;

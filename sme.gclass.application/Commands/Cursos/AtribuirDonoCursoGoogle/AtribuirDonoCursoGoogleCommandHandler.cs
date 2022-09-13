@@ -55,11 +55,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (GoogleApiException gEx)
             {
-                if (gEx.RegistroNaoEncontrado()) throw new NegocioException("Curso não existe no Google Classroom");
-                else
-                {
-                    SentrySdk.CaptureException(gEx);
-                }
+               await mediator.Send(new SalvarLogViaRabbitCommand($"AtribuirDonoCursoGoogleCommandHandler - Não foi possível atribuir dono curso google", LogNivel.Critico, LogContexto.Gsa, gEx.Message, gEx.StackTrace));
             }
         }
     }
