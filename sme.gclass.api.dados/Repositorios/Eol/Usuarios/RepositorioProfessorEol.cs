@@ -53,7 +53,8 @@ namespace SME.GoogleClassroom.Dados
 			var parametros = new
 			{
 				anoLetivo = anoLetivo,
-				rf
+				rf,
+				TiposUes = parametrosCargaInicialDto.TiposUes
 			};
 
 			using var conn = ObterConexao();

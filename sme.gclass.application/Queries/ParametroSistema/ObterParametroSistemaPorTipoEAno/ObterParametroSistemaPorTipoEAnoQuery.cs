@@ -22,11 +22,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(a => a.Tipo)
                 .NotEmpty()
-                .WithMessage("O tipo deve ser informada");
+                .WithMessage("O tipo deve ser informado");
 
             RuleFor(a => a.Ano)
                 .NotEmpty()
-                .WithMessage("O ano deve ser informada");
+                .WithMessage("O ano deve ser informado");
         }
     }
 }
