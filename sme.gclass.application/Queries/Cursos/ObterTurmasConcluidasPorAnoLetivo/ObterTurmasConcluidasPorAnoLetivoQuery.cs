@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(a => a.AnoLetivo)
                 .NotEmpty()
-                .WithMessage("O Ano deve ser informada");
+                .WithMessage("O Ano deve ser informado");
 
             RuleFor(x => x.ParametrosCargaInicialDto)
                 .NotEmpty()
