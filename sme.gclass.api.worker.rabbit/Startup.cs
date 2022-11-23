@@ -1,9 +1,11 @@
 ﻿using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
+using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +37,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                throw new ArgumentNullException(nameof(configuration));
         }
 
+        private ConfiguracaoRabbitLogOptions RabbitOptionsLog { get; set; }
+
         public IConfiguration Configuration { get; }
         public ConfiguracaoRabbitOptions RabbitOptions { get; set; }
 
@@ -55,7 +59,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             services.AddHostedService<WorkerRabbitMQ>();
 
-            ConfiguraRabbitParaLogs(services);
             ConfiguraTelemetria(services);
 
             services.AddControllers();
@@ -89,6 +92,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             });
 
             services.UseMetricReporter();
+
+            services.AddHealthChecks()
+                   .AddPostgresGoogleClassroom(Configuration)
+                   .AddPostgresApiEol(Configuration)
+                   .AddRabbitMQ(RabbitOptions)
+                   .AddRabbitMQLog(RabbitOptionsLog)
+                   .AddSqlServerEol(Configuration);
         }
 
         private void ConfiguraVariaveisAmbiente(IServiceCollection services)
@@ -105,10 +115,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             RabbitOptions = new ConfiguracaoRabbitOptions();
             Configuration.GetSection(ConfiguracaoRabbitOptions.Secao).Bind(RabbitOptions, c => c.BindNonPublicProperties = true);
 
+            RabbitOptionsLog = new ConfiguracaoRabbitLogOptions();
+            Configuration.GetSection(ConfiguracaoRabbitLogOptions.Secao).Bind(RabbitOptionsLog, c => c.BindNonPublicProperties = true);
+
             services.AddSingleton(variaveisGlobais);
             services.AddSingleton(consumoDeFilasOptions);
             services.AddSingleton(gsaSyncOptions);
             services.AddSingleton(RabbitOptions);
+            services.AddSingleton(RabbitOptionsLog);
         }
 
         private static void RegistrarHttpClients(IServiceCollection services, IConfiguration configuration)
@@ -169,6 +183,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 endpoints.MapControllers();
             });
 
+            app.UseHealthChecks("/healthz", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("GoogleClassroom Worker!");
@@ -188,14 +208,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             services.AddSingleton(telemetriaOptions);
             services.AddSingleton<IServicoTelemetria, ServicoTelemetria>();
-        }
-
-        private void ConfiguraRabbitParaLogs(IServiceCollection services)
-        {
-            var configuracaoRabbitLogOptions = new ConfiguracaoRabbitLogOptions();
-            Configuration.GetSection("ConfiguracaoRabbitLog").Bind(configuracaoRabbitLogOptions, c => c.BindNonPublicProperties = true);
-
-            services.AddSingleton(configuracaoRabbitLogOptions);
         }
     }
 }
