@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             RuleFor(a => a.Ano)
                 .NotEmpty()
-                .WithMessage("O ano deve ser informada");
+                .WithMessage("O ano deve ser informado");
         }
     }
 }

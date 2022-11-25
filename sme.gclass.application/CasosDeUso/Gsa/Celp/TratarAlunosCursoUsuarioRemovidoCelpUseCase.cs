@@ -32,8 +32,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 if (cursosUsuarios != null && cursosUsuarios.Any())
                 {
-                    cursosUsuarios = new List<CursoUsuarioRemoverDto>(){cursosUsuarios.FirstOrDefault()};
-                    
                     foreach (var cursoUsuario in cursosUsuarios)
                     {
                         var cursoUsuarioRemover = new CursoUsuarioRemoverDto()
