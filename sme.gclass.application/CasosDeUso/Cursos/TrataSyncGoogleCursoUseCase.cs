@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
-            var dataReferencia = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
+            var dataReferencia = new DateTime(filtro.AnoLetivo.HasValue ? filtro.AnoLetivo.Value : DateTime.Today.Year, 1, 1);
             var paginacao = new Paginacao(filtro?.Pagina ?? 1, QUANTIDADE_PADRAO_REGISTROS_POR_PAGINA);
 
             var cursosResgatados = await mediator
