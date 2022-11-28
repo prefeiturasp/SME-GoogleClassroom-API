@@ -23,8 +23,10 @@ namespace SME.GoogleClassroom.Dados
 				return await conn.QueryAsync<int>("select Id from turma_tipo_itinerario");
 		}
 
-		public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
+		public async Task<PaginacaoResultadoDto<CursoEol>> ObterCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? dataReferencia, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId)			
 		{
+			dataReferencia = dataReferencia?.Add(new TimeSpan(0, 0, 0));
+
 			var tiposItinerarioMedio = await ObterTiposItinerarioMedio();
 
 			var paginar = paginacao.QuantidadeRegistros > 0;
@@ -51,7 +53,7 @@ namespace SME.GoogleClassroom.Dados
 				quantidadeRegistros = paginacao.QuantidadeRegistros,
 				componenteCurricularId,
 				turmaId,
-				dataReferencia = dataReferencia.Date
+				dataReferencia = dataReferencia
 			};
 
 			var cursos = await conn.QueryAsync<CursoEol>(query, parametros, commandTimeout: 300);
