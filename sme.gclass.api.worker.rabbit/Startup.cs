@@ -57,7 +57,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddRabbit(RabbitOptions);
             services.AddPolicies();
 
-            services.AddHostedService<WorkerRabbitMQ>();
+            //services.AddHostedService<WorkerRabbitMQ>();
 
             ConfiguraTelemetria(services);
 
