@@ -18,6 +18,9 @@ namespace SME.GoogleClassroom.Aplicacao
         
         public async Task<bool> Handle(LancarFrequenciaCommand request, CancellationToken cancellationToken)
         {
+            if (request.FrequenciaSalvarAulaAlunos == null || !request.FrequenciaSalvarAulaAlunos.Any())
+                return false;
+            
             foreach(var frequenciaAula in request.FrequenciaSalvarAulaAlunos)
             {
                 var frequencia = new FrequenciaDto(frequenciaAula.AulaId);
@@ -31,7 +34,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     });
                 }
 
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSgaSync, RotasRabbit.FilaAlunoCursoIncluir, frequencia));
+                await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSgaSync, frequencia));
             }
             return true;
         }
