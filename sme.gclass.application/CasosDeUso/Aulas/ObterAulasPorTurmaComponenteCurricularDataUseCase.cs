@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
@@ -14,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<AulaQuantidadeTipoDto>> Executar(FiltroAulasPorTurmaComponenteDataDto filtro)
         {
-            var retorno = await mediator.Send(new ObterAulasPorDataTurmaComponenteCurricularQuery(filtro.DataAulaTicks, filtro.TurmaCodigo, filtro.ComponenteCurricular));
+            var retorno = await mediator.Send(new ObterAulasPorDataTurmaComponenteCurricularQuery(filtro.DataAula.Ticks, filtro.TurmaCodigo, filtro.ComponenteCurricular));
 
             return retorno;
         }

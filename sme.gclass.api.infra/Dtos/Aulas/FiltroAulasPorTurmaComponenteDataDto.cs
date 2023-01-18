@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SME.GoogleClassroom.Infra
@@ -10,7 +11,7 @@ namespace SME.GoogleClassroom.Infra
         [Required(ErrorMessage = "É necessário informar o código do componente curricular")]
         public long ComponenteCurricular { get; set; }
         
-        [Required(ErrorMessage = "É necessário informar a data da aula em formato ticks")]
-        public long DataAulaTicks { get; set; }
+        [Required(ErrorMessage = "É necessário informar a data da aula")]
+        public DateTime DataAula { get; set; }
     }
 }
