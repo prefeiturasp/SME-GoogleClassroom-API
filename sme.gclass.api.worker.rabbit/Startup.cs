@@ -51,7 +51,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddApplicationInsightsTelemetry(Configuration);
 
             RegistraDependencias.Registrar(services, Configuration);
-
+            
             RegistrarHttpClients(services, Configuration);
 
             services.AddRabbit(RabbitOptions);
@@ -60,6 +60,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             //services.AddHostedService<WorkerRabbitMQ>(); Todo
 
             ConfiguraTelemetria(services);
+            services.RegistraElasticSearch(Configuration);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -84,8 +85,6 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var serviceProvider = services.BuildServiceProvider();
             var mediator = serviceProvider.GetService<IMediator>();
             services.AddSingleton(mediator);
-
-            services.RegistraElasticSearch(Configuration);
 
             services.AddMvc(options =>
             {

@@ -12,18 +12,18 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
     public class
         ObterAlunosAtivosPorCodigoTurmaQueryHandler : IRequestHandler<ObterAlunosAtivosPorCodigoTurmaQuery, IEnumerable<AlunoEolSimplificadoDto>>
     {
-        private readonly IRepositorioAlunoEol repositorio;
+        private readonly IRepositorioElasticTurma repositorioElasticSearch;
 
-        public ObterAlunosAtivosPorCodigoTurmaQueryHandler(IRepositorioAlunoEol repositorio)
+        public ObterAlunosAtivosPorCodigoTurmaQueryHandler(IRepositorioElasticTurma repositorioElasticSearch)
         {
-            this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
+            this.repositorioElasticSearch = repositorioElasticSearch ?? throw new ArgumentNullException(nameof(repositorioElasticSearch));
         }
 
         public async Task<IEnumerable<AlunoEolSimplificadoDto>> Handle(ObterAlunosAtivosPorCodigoTurmaQuery request,
             CancellationToken cancellationToken)
         {
-            var retorno = await repositorio.ObterAlunosAtivosPorTurmaCodigo(request.CodigoTurma);
-            return retorno?.Select(aluno => new AlunoEolSimplificadoDto{ Codigo = aluno.CodigoAluno, DataNascimento = aluno.DataNascimento, Nome = aluno.NomeAluno } );
+            var retornoElastic = await repositorioElasticSearch.ObterAlunosAtivosNaTurmaAsync((int)request.CodigoTurma, DateTime.Today);
+            return retornoElastic?.Select(aluno => new AlunoEolSimplificadoDto { Codigo = aluno.CodigoAluno, DataNascimento = aluno.DataNascimento, Nome = aluno.NomeAluno });
         }
     }
 }
