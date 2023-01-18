@@ -235,7 +235,14 @@ namespace SME.GoogleClassroom.IoC
             #endregion
 
             RegistrarCasosDeUsoGsa(services);
+            RegistrarCasosDeUsoSGA(services);
         }
+
+        private static void RegistrarCasosDeUsoSGA(IServiceCollection services)
+        {
+            services.TryAddScoped<IObterAlunosAtivosUseCase, ObterAlunosAtivosUseCase>();
+        }
+
 
         private static void RegistrarCasosDeUsoGsa(IServiceCollection services)
         {
