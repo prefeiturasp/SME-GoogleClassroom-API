@@ -1,15 +1,12 @@
 ﻿using Nest;
-using SME.Pedagogico.Domain.Entidades;
-using SME.Pedagogico.Interface.Turmas;
+using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SME.Pedagogico.Interface.DTO;
-using SME.Pedagogico.Repository;
-using SME.GoogleClassroom.Infra.Dtos.ElasticSearch.AlunoTurma;
 
-namespace SME.GoogleClassroom.Dados.Repositorios.ElasticSearch.Turma
+namespace SME.GoogleClassroom.Dados
 {
     public class RepositorioElasticTurma : RepositorioElasticBase<DocumentoElasticTurma>, IRepositorioElasticTurma
     {

@@ -1,11 +1,9 @@
-﻿using SME.GoogleClassroom.Dados.Repositorios.ElasticSearch;
-using SME.Pedagogico.Interface.DTO;
-using SME.Pedagogico.Interface.RetornoQueryDTO;
+﻿using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Interface.Turmas
+namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioElasticTurma : IRepositorioElasticBase<DocumentoElasticTurma>
     {

@@ -1,6 +1,6 @@
 ﻿using Nest;
 
-namespace SME.Pedagogico.Interface.DTO
+namespace SME.GoogleClassroom.Infra
 {
     [ElasticsearchType(RelationName = "Turma")]
     public class DocumentoElasticTurma: DocumentoElastic

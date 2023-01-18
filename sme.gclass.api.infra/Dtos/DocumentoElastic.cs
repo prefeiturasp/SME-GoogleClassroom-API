@@ -1,6 +1,6 @@
 ﻿using Nest;
 
-namespace SME.Pedagogico.Interface.DTO
+namespace SME.GoogleClassroom.Infra
 {
     public class DocumentoElastic 
     {

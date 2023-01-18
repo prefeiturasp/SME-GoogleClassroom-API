@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
-using SME.Pedagogico.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using Elasticsearch.Net;
-using SME.GoogleClassroom.Infra.Dtos.ElasticSearch.AlunoTurma;
+using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Dominio;
 
-namespace SME.Pedagogico.IoC
+namespace SME.GoogleClassroom.IoC
 {
     public static class ElasticSearchExtension
     {

@@ -1,4 +1,4 @@
-namespace SME.Pedagogico.Domain.Entidades
+namespace SME.GoogleClassroom.Dominio
 {
     public static class IndicesElastic
     {

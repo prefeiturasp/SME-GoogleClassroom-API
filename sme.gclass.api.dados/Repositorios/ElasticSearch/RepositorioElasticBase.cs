@@ -1,14 +1,12 @@
 ﻿using Nest;
 using Newtonsoft.Json;
-using SME.Pedagogico.Infra;
-using SME.Pedagogico.Interface;
-using SME.Pedagogico.Interface.DTO;
+using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Repository
+namespace SME.GoogleClassroom.Dados
 {
     public abstract class RepositorioElasticBase<T> : IRepositorioElasticBase<T> where T : class
     {

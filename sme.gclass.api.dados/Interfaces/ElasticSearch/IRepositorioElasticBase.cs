@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nest;
 
-namespace SME.GoogleClassroom.Dados.Repositorios.ElasticSearch
+namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioElasticBase<T> where T : class
     {

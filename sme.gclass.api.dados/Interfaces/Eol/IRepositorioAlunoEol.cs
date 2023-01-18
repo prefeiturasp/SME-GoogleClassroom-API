@@ -1,6 +1,5 @@
 ﻿using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos.ElasticSearch.AlunoTurma;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

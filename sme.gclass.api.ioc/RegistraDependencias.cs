@@ -8,7 +8,6 @@ using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
-using SME.Pedagogico.Interface.Turmas;
 
 namespace SME.GoogleClassroom.IoC
 {

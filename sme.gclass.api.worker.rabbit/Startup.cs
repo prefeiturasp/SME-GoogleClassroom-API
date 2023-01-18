@@ -21,8 +21,6 @@ using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using SME.GoogleClassroom.Worker.Rabbit.Middlewares;
-using SME.Pedagogico.Infra.Extensoes;
-using SME.Pedagogico.IoC;
 using System;
 using System.Collections.Generic;
 using System.IO;

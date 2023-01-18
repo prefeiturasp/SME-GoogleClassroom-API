@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Infra.Extensoes
+namespace SME.GoogleClassroom.Infra
 {
     public class ElasticSearchHealthCheck : IHealthCheck
     {

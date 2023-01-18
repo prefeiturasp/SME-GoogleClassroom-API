@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SME.Pedagogico.Interface.DTO
+namespace SME.GoogleClassroom.Infra
 {
     [ElasticsearchType(RelationName = "TurmaComponentes")]
     public class TurmaComponentesDto : DocumentoElasticTurma
