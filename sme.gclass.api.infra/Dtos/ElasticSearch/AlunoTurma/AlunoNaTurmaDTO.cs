@@ -1,17 +1,17 @@
-﻿//using Nest;
-//using SME.Pedagogico.Interface.DTO;
+﻿using Nest;
+using SME.Pedagogico.Interface.DTO;
 using System;
 
-namespace SME.GoogleClassroom.Infra
+namespace SME.GoogleClassroom.Infra.Dtos.ElasticSearch.AlunoTurma
 {
-    //[ElasticsearchType(RelationName = "alunonaturma")]
-    public class AlunoNaTurmaDTO //: DocumentoElasticTurma
+    [ElasticsearchType(RelationName = "alunonaturma")]
+    public class AlunoNaTurmaDTO : DocumentoElasticTurma
     {
-        //[Number(Name = "codigoaluno")]
+        [Number(Name = "codigoaluno")]
         public int CodigoAluno { get; set; }
-        //[Text(Name = "nomealuno")]
+        [Text(Name = "nomealuno")]
         public string NomeAluno { get; set; }
-        //[Date(Name = "datanascimento", Format = "MMddyyyy")]
+        [Date(Name = "datanascimento", Format = "MMddyyyy")]
         public DateTime DataNascimento { get; set; }
         //[Text(Name = "nomesocialaluno")]
         public string NomeSocialAluno { get; set; }

@@ -21,6 +21,8 @@ using SME.GoogleClassroom.Infra.Metricas;
 using SME.GoogleClassroom.IoC;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using SME.GoogleClassroom.Worker.Rabbit.Middlewares;
+using SME.Pedagogico.Infra.Extensoes;
+using SME.Pedagogico.IoC;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -85,6 +87,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var mediator = serviceProvider.GetService<IMediator>();
             services.AddSingleton(mediator);
 
+            services.RegistraElasticSearch(Configuration);
+
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = true;
@@ -98,7 +102,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                    .AddPostgresApiEol(Configuration)
                    .AddRabbitMQ(RabbitOptions)
                    .AddRabbitMQLog(RabbitOptionsLog)
-                   .AddSqlServerEol(Configuration);
+                   .AddSqlServerEol(Configuration)
+                   .AddCheck<ElasticSearchHealthCheck>("ElasticSearch");
         }
 
         private void ConfiguraVariaveisAmbiente(IServiceCollection services)

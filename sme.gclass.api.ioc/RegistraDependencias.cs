@@ -8,6 +8,7 @@ using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
+using SME.Pedagogico.Interface.Turmas;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -74,6 +75,9 @@ namespace SME.GoogleClassroom.IoC
             //Celp
             services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
             services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
+
+            //Elastic
+            services.TryAddScoped<IRepositorioElasticTurma, RepositorioElasticTurma>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
