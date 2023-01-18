@@ -214,5 +214,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
+
+        [HttpGet("turmas/{CodigoTurma}")]
+        [ProducesResponseType(typeof(IReadOnlyList<AlunoEolSimplificadoDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterAlunosAtivosPorTurma([FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
+                                                                   [FromRoute] FiltroObterAlunosAtivosDto filtro) => Ok(await obterAlunosAtivosUseCase.Executar(filtro));
+
     }
 }
