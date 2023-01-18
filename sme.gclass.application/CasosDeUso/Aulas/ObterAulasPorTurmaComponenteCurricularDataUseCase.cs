@@ -15,9 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<AulaQuantidadeTipoDto>> Executar(FiltroAulasPorTurmaComponenteDataDto filtro)
         {
-            var retorno = await mediator.Send(new ObterAulasPorDataTurmaComponenteCurricularQuery(filtro.DataAula.Ticks, filtro.TurmaCodigo, filtro.ComponenteCurricular));
-
-            return retorno;
+            return await mediator.Send(new ObterAulasPorDataTurmaComponenteCurricularQuery(filtro.DataAula.Ticks, filtro.TurmaCodigo, filtro.ComponenteCurricular));
         }
     }
 }

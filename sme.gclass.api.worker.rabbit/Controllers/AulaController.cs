@@ -13,7 +13,7 @@ using System.Linq;
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
     /// <summary>
-    /// Alunos
+    /// Aulas
     /// </summary>
     [ApiController]
     [ChaveIntegracaoGoogleClassroomApi]
@@ -33,8 +33,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> ObterAulasPorTurmaComponenteData([FromServices] IObterAulasPorTurmaComponenteCurricularDataUseCase obterAulasPorTurmaComponenteCurricularDataUseCase,
             [FromQuery] FiltroAulasPorTurmaComponenteDataDto filtro)
         {
-            var retorno = await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(filtro);
-            return Ok(retorno);
+            return Ok(await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(filtro));
         }
     }
 }
