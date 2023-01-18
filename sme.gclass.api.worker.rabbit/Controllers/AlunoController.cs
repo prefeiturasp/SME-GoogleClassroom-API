@@ -215,9 +215,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok(retorno);
         }
 
-        [HttpGet("turmas/{CodigoTurma}")]
+        /// <summary>
+        /// Retorna os alunos ativos na turma informada.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("turmas/{CodigoTurma}/ativos")]
         [ProducesResponseType(typeof(IReadOnlyList<AlunoEolSimplificadoDto>), 200)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAlunosAtivosPorTurma([FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
                                                                    [FromRoute] FiltroObterAlunosAtivosDto filtro) => Ok(await obterAlunosAtivosUseCase.Executar(filtro));

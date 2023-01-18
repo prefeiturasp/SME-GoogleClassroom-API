@@ -7,8 +7,6 @@ namespace SME.GoogleClassroom.Infra
     //[ElasticsearchType(RelationName = "alunonaturma")]
     public class AlunoNaTurmaDTO //: DocumentoElasticTurma
     {
-        public int CodigoComponenteCurricular { get; set; }
-
         //[Number(Name = "codigoaluno")]
         public int CodigoAluno { get; set; }
         //[Text(Name = "nomealuno")]
@@ -29,12 +27,6 @@ namespace SME.GoogleClassroom.Infra
         public string NumeroAlunoChamada { get; set; }
         //[Number(Name="possuideficiencia")]
         public int PossuiDeficiencia { get; set; }
-        public bool Transferencia_Interna { get; set; }
-        public bool Remanejado { get; set; }
-        public string EscolaTransferencia { get; set; }
-        public string TurmaTransferencia { get; set; }
-        public string TurmaRemanejamento { get; set; }
-        public char? ParecerConclusivo { get; set; }
         //[Text(Name = "nomeresponsavel")]
         public string NomeResponsavel { get; set; }
         //[Number(Name = "tiporesponsavel")]
