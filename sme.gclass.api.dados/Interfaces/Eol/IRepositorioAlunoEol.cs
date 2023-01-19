@@ -17,5 +17,7 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia);
         Task<IEnumerable<AlunoCelpDto>> ObterAlunosMatriculadosCelpPorComponenteEAnoLetivo(long componenteCurricularId, int anoLetivo, long turmaId);
         Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurmaCelp(int requestAnoLetivo, long requestTurmaId);
+
+        Task<IEnumerable<AlunoNaTurmaDTO>> ObterAlunosAtivosPorTurmaCodigo(long turmaCodigo);
     }
 }

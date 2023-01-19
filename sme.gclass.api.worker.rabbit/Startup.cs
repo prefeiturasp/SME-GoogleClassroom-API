@@ -51,15 +51,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddApplicationInsightsTelemetry(Configuration);
 
             RegistraDependencias.Registrar(services, Configuration);
-
+            
             RegistrarHttpClients(services, Configuration);
 
             services.AddRabbit(RabbitOptions);
             services.AddPolicies();
 
-            services.AddHostedService<WorkerRabbitMQ>();
+            //services.AddHostedService<WorkerRabbitMQ>(); Todo
 
             ConfiguraTelemetria(services);
+            services.RegistraElasticSearch(Configuration);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -98,7 +99,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                    .AddPostgresApiEol(Configuration)
                    .AddRabbitMQ(RabbitOptions)
                    .AddRabbitMQLog(RabbitOptionsLog)
-                   .AddSqlServerEol(Configuration);
+                   .AddSqlServerEol(Configuration)
+                   .AddCheck<ElasticSearchHealthCheck>("ElasticSearch");
         }
 
         private void ConfiguraVariaveisAmbiente(IServiceCollection services)

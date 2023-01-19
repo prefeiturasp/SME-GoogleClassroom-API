@@ -74,6 +74,9 @@ namespace SME.GoogleClassroom.IoC
             //Celp
             services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
             services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
+
+            //Elastic
+            services.TryAddScoped<IRepositorioElasticTurma, RepositorioElasticTurma>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -235,7 +238,14 @@ namespace SME.GoogleClassroom.IoC
             #endregion
 
             RegistrarCasosDeUsoGsa(services);
+            RegistrarCasosDeUsoSGA(services);
         }
+
+        private static void RegistrarCasosDeUsoSGA(IServiceCollection services)
+        {
+            services.TryAddScoped<IObterAlunosAtivosUseCase, ObterAlunosAtivosUseCase>();
+        }
+
 
         private static void RegistrarCasosDeUsoGsa(IServiceCollection services)
         {
