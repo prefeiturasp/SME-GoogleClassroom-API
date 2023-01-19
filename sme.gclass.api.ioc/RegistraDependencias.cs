@@ -235,6 +235,8 @@ namespace SME.GoogleClassroom.IoC
             #endregion
             
             services.TryAddScoped<IObterAulasPorTurmaComponenteCurricularDataUseCase, ObterAulasPorTurmaComponenteCurricularDataUseCase>();
+            
+            services.TryAddScoped<ILancarFrequenciaUseCase, LancarFrequenciaUseCase>();
 
             RegistrarCasosDeUsoGsa(services);
         }
