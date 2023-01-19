@@ -6,9 +6,9 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Funcionarios.ObterFuncionarioEolPorUeAnoLetivo
 {
-    public class ObterFuncionarioEolPorUeAnoLetivoQuery : IRequest<IEnumerable<FuncionarioEolGsaDto>>
+    public class ObterFuncionarioEolPorUeAnoLetivoQuery : IRequest<IEnumerable<FuncionarioSgaDto>>
     {
-        public ObterFuncionarioEolPorUeAnoLetivoQuery(string codigoEscola, string anoLetivo,bool escolaEhCieja = false)
+        public ObterFuncionarioEolPorUeAnoLetivoQuery(string codigoEscola, int anoLetivo,bool escolaEhCieja = false)
         {
             CodigoEscola = codigoEscola;
             AnoLetivo = anoLetivo;
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Funcionarios.ObterFunci
         }
 
         public string CodigoEscola { get; set; }
-        public string AnoLetivo { get; set; }
+        public int AnoLetivo { get; set; }
         public bool EscolaEhCieja { get; set; }
     }
     

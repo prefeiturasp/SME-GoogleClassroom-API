@@ -919,7 +919,41 @@ namespace SME.GoogleClassroom.Dados
 			}
 		}
 
-		public async Task<IEnumerable<FuncionarioEolGsaDto>> ObterFuncionarioEolPorUeAnoLetivo(string anoLetivo,string codigoEscola,bool escolaCieja = false)
+		public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola)
+		{
+			var query = new StringBuilder(@"	select
+											    case 
+													when p.nm_social = '' or p.nm_social IS NULL then p.nm_pessoa
+													when p.nm_social <> '' or p.nm_social IS NOT NULL then p.nm_social
+												end NomeCompleto,
+											    p.cd_cpf_pessoa as cpf,
+										        cd_unidade_educacao as ueCodigo,
+											    ffe.cd_funcao_externo as funcao
+										    from
+											    contrato_externo ce
+										    inner join funcao_funcionario_externo ffe on
+											    ce.cd_tipo_funcao_funcionario_externo = ffe.cd_tipo_funcao_funcionario_externo
+										    inner join pessoa p on
+											    ce.cd_pessoa = p.cd_pessoa
+										    INNER JOIN
+										        escola e (NOLOCK)
+										        ON ce.cd_unidade_educacao = e.cd_escola
+											INNER JOIN turma_escola te (NOLOCK)
+												ON te.cd_escola = e.cd_escola
+										    where ce.cd_motivo_desligamento_externo is null 
+											     and ffe.cd_funcao_externo in(1,2,7,18)
+											     AND e.tp_escola IN (11,12,32,33) 
+												 and te.an_letivo = @anoLetivo
+											     and e.cd_escola = @codigoEscola ");
+			
+			using var conn = ObterConexao();
+
+			var retorno = await conn.QueryAsync<FuncionarioSgaDto>(query.ToString(), new {anoLetivo, codigoEscola});
+
+			return retorno;
+		}
+
+		public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo,string codigoEscola,bool escolaCieja = false)
 		{
 			try
 			{
@@ -964,7 +998,7 @@ namespace SME.GoogleClassroom.Dados
 													cbc.cd_cargo,
 													te.an_letivo ,
 													esc.cd_escola,
-													0 as funcao,
+													facs.cd_tipo_funcao as funcao,
 													CASE
 														WHEN cbc.cd_cargo = @cargoSupervisorTecnico433 OR cbc.cd_cargo = @cargoSupervisorTecnico434 THEN 1
 														WHEN cbc.cd_cargo = @cargoSupervisor THEN 2
@@ -978,6 +1012,9 @@ namespace SME.GoogleClassroom.Dados
 												FROM
 													v_cargo_base_cotic cbc (NOLOCK)
 												INNER JOIN
+													funcao_atividade_cargo_servidor facs (NOLOCK)
+													ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
+												INNER JOIN
 													lotacao_servidor ls (NOLOCK)
 													ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
 												INNER JOIN
@@ -986,7 +1023,8 @@ namespace SME.GoogleClassroom.Dados
 												INNER JOIN
 													turma_escola te (NOLOCK)
 													ON te.cd_escola = esc.cd_escola	
-												WHERE  (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE()) and ");
+												WHERE  (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE()) and  
+												 te.an_letivo = @anoLetivo and esc.cd_escola = @codigoEscola and  ");
 				query.AppendLine(escolaCieja ? @" cbc.cd_cargo = 0 " : @" cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE,(SELECT @ProfessorresReadaptados as ProfessorresReadaptados)) ");
 
 				query.AppendLine(@"-- 2. Cargos sobrepostos fixos
@@ -998,7 +1036,7 @@ namespace SME.GoogleClassroom.Dados
 										css.cd_cargo,
 										te.an_letivo ,
 										esc.cd_escola,
-										0 as funcao,
+										facs.cd_tipo_funcao as funcao,
 										CASE
 											WHEN css.cd_cargo = @cargoSupervisorTecnico433 OR css.cd_cargo = @cargoSupervisorTecnico434 THEN 1
 											WHEN css.cd_cargo = @cargoSupervisor THEN 2
@@ -1014,6 +1052,9 @@ namespace SME.GoogleClassroom.Dados
 									INNER JOIN
 										v_cargo_base_cotic cbc (NOLOCK)
 										ON serv.cd_servidor = cbc.cd_servidor
+								   INNER JOIN
+										funcao_atividade_cargo_servidor facs (NOLOCK)
+										ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
 									INNER JOIN
 										cargo_sobreposto_servidor css (NOLOCK)
 										ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
@@ -1023,7 +1064,8 @@ namespace SME.GoogleClassroom.Dados
 									INNER JOIN
 										turma_escola te (NOLOCK)
 										ON te.cd_escola = esc.cd_escola
-									WHERE (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) and ");
+									WHERE (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) and 
+										te.an_letivo = @anoLetivo and esc.cd_escola = @codigoEscola and  ");
 				query.AppendLine(escolaCieja ? @" css.cd_cargo = 0 " : @" css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE,(SELECT @ProfessorresReadaptados as ProfessorresReadaptados)) ");
 
 				query.AppendLine(@" -- 3. União das tabelas de cargo fixo
@@ -1148,7 +1190,7 @@ namespace SME.GoogleClassroom.Dados
 
 				using var conn = ObterConexao();
 
-				var retorno = await conn.QueryAsync<FuncionarioEolGsaDto>(query.ToString(), new {anoLetivo, codigoEscola});
+				var retorno = await conn.QueryAsync<FuncionarioSgaDto>(query.ToString(), new {anoLetivo, codigoEscola});
 
 				return retorno;
 			}

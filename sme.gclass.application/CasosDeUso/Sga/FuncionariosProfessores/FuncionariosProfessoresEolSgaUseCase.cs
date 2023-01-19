@@ -19,16 +19,16 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<ProfessoresFuncionariosSgaDto> Executar(string anoLetivo, string codigoEscola)
+        public async Task<ProfessoresFuncionariosSgaDto> Executar(int anoLetivo, string codigoEscola)
         {
             var tiposEscolasParceirasLiceu = new List<int>() { 11,12,32,33}; 
             
-            IEnumerable<FuncionarioEolGsaDto> funcionario;
+            IEnumerable<FuncionarioSgaDto> funcionario;
             //Obter o Tipo da UE
             var tipoEscola = await mediator.Send(new ObterTipoDaEscolaQuery(codigoEscola));
 
             //verificar se Escola é cieja
-            bool escolaCieja = tipoEscola == (int)TipoEscola.Cieja;
+            var escolaCieja = tipoEscola == (int)TipoEscola.Cieja;
             
             //Obter funcionarios
             if (!tiposEscolasParceirasLiceu.Contains(tipoEscola))

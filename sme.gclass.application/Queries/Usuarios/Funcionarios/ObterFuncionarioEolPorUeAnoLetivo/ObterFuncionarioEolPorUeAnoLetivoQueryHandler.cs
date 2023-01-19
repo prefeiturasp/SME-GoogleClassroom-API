@@ -8,7 +8,7 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Funcionarios.ObterFuncionarioEolPorUeAnoLetivo
 {
-    public class ObterFuncionarioEolPorUeAnoLetivoQueryHandler : IRequestHandler<ObterFuncionarioEolPorUeAnoLetivoQuery,IEnumerable<FuncionarioEolGsaDto>>
+    public class ObterFuncionarioEolPorUeAnoLetivoQueryHandler : IRequestHandler<ObterFuncionarioEolPorUeAnoLetivoQuery,IEnumerable<FuncionarioSgaDto>>
     {
         private IRepositorioFuncionarioEol repositorioFuncionarioEol;
 
@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Funcionarios.ObterFunci
             repositorioFuncionarioEol = funcionarioEol ?? throw new ArgumentNullException(nameof(funcionarioEol));
         }
 
-        public async Task<IEnumerable<FuncionarioEolGsaDto>> Handle(ObterFuncionarioEolPorUeAnoLetivoQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FuncionarioSgaDto>> Handle(ObterFuncionarioEolPorUeAnoLetivoQuery request, CancellationToken cancellationToken)
         {
             return await repositorioFuncionarioEol.ObterFuncionarioEolPorUeAnoLetivo(request.AnoLetivo,request.CodigoEscola,request.EscolaEhCieja);
         }

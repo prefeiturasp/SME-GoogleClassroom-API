@@ -1,6 +1,6 @@
 ﻿namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
-    public class FuncionarioEolGsaDto
+    public class FuncionarioEolSgaDto
     {
         public string NomeCompleto { get; set; }
         public string Rf { get; set; }

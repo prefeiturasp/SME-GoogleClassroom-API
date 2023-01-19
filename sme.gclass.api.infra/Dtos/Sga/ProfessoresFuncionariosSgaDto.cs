@@ -4,7 +4,7 @@ namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
     public class ProfessoresFuncionariosSgaDto
     {
-        public IEnumerable<FuncionarioEolGsaDto> Funcionarios { get; set; }
-        public IEnumerable<FuncionarioEolGsaDto> Professores { get; set; }
+        public IEnumerable<FuncionarioEolSgaDto> Funcionarios { get; set; }
+        public IEnumerable<ModalidadeEolSgaDto> Modalidades { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<IEnumerable<AlunoCursoEol>> ObterProfessoresPAPPAEEorTipoEscolaAnoQuery(string codigoDre, int[] tipoEscola, int tipoConsulta);
         Task<IEnumerable<RemoverAtribuicaoFuncionarioTurmaEolDto>> ObterFuncionariosParaRemoverCurso(string turmaId, DateTime dataInicio, DateTime dataFim, ParametrosCargaInicialDto parametrosCargaInicialDto);        
         Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia, string codigoRf);
-        Task<IEnumerable<FuncionarioEolGsaDto>> ObterFuncionarioEolPorUeAnoLetivo(string anoLetivo, string codigoEscola,bool escolaCieja = false);
+        Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo, string codigoEscola,bool escolaCieja = false);
+        Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola);
     }
 }
