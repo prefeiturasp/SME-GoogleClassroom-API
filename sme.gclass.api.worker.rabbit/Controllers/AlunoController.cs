@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Linq;
+using MediatR;
+using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -227,6 +229,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAlunosAtivosPorTurma([FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
                                                                    [FromRoute] FiltroObterAlunosAtivosDto filtro) => Ok(await obterAlunosAtivosUseCase.Executar(filtro));
+
+        [HttpGet("teste")]
+        public async Task<IActionResult> ObterTurmas([FromQuery] string ue, [FromServices] IMediator mediator) => Ok(await mediator.Send(new ObterTurmasPorUeAnoLetivoQuery(ue, 2023)));
 
     }
 }

@@ -151,13 +151,15 @@ namespace SME.GoogleClassroom.Dados
         public async Task<IEnumerable<TurmaComponentesDto>> ObterListaTurmasAsync(
             string codigoUe, int[] tiposEscolaModalidade, long codigoTurma, int anoLetivo,
             bool ehProfessor, string codigoRf, bool consideraHistorico,
-            DateTime periodoEscolarInicio, int modalidade)
+            DateTime? periodoEscolarInicio, int modalidade)
         {
             QueryContainer query = new QueryContainerDescriptor<TurmaComponentesDto>();
 
             query = query && new QueryContainerDescriptor<TurmaComponentesDto>().Term(p => p.CodigoEscola, codigoUe);
             query = query && new QueryContainerDescriptor<TurmaComponentesDto>().Term(termo => termo.Ano, anoLetivo);
-            query = query && new QueryContainerDescriptor<TurmaComponentesDto>().Term(termo => termo.Modalidade, modalidade);
+            
+            if (modalidade > 0)
+                query = query && new QueryContainerDescriptor<TurmaComponentesDto>().Term(termo => termo.Modalidade, modalidade);
 
             if (codigoTurma > 0)
                 query = query && new QueryContainerDescriptor<TurmaComponentesDto>().Term(termo => termo.CodigoTurma, codigoTurma);
@@ -173,7 +175,7 @@ namespace SME.GoogleClassroom.Dados
                     .Terms(tiposEscolaModalidade));
             }
 
-            if (consideraHistorico)
+            if (consideraHistorico && periodoEscolarInicio.HasValue)
             {
                 query = query && (new QueryContainerDescriptor<TurmaComponentesDto>().Term(termo => termo.Historica, consideraHistorico)
                                 && new QueryContainerDescriptor<TurmaComponentesDto>().MatchPhrase(p => p.Field(f => f.SituacaoTurmaEscola.Equals("C")))

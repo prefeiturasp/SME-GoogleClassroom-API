@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<TurmaComponentesDto>> ObterListaTurmasAsync(
             string codigoUe, int[] tiposEscolaModalidade, long codigoTurma, int anoLetivo,
             bool ehProfessor, string codigoRf, bool consideraHistorico,
-            DateTime periodoEscolarInicio, int modalidade);
+            DateTime? periodoEscolarInicio, int modalidade);
         Task<IEnumerable<AlunoNaTurmaDTO>> ObterMatriculasTurmaDoAlunoAsync(string codigoAluno, DateTime? dataAula, int? anoLetivo);
 
         Task<IReadOnlyList<AlunoNaTurmaDTO>> ObterTodosAlunosNaTurmaAsync(int codigoTurma, int? codigoAluno);
