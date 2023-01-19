@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Dados
 		{
 		}
 
-		public Task<IEnumerable<ComponenteCurricularEol>> ObterDisciplinasAsync()
+		public async Task<IEnumerable<ComponenteCurricularEol>> ObterDisciplinasAsync()
 		{
             var query = @"SELECT ccp.Id,
                             cc.IdComponenteCurricular, 
@@ -36,11 +36,11 @@ namespace SME.GoogleClassroom.Dados
                      FROM ComponenteCurricular cc
                         LEFT JOIN componentecurricularpai ccp on cc.idcomponentecurricular = ccp.idcomponentecurricular";
 
-            using var conn = ObterConexao();
-            return conn.QueryAsync<ComponenteCurricularEol>(query);
+            using var conn = ObterConexaoApiEOL();
+			return await conn.QueryAsync<ComponenteCurricularEol>(query);
         }
 
-        public Task<IEnumerable<DisciplinaTerritorioSaberDTO>> ObterDisciplinaTerritorioDosSaberesAsync(string codigoTurma, IEnumerable<long> codigosComponentesCurriculares)
+        public async Task<IEnumerable<DisciplinaTerritorioSaberDTO>> ObterDisciplinaTerritorioDosSaberesAsync(string codigoTurma, IEnumerable<long> codigosComponentesCurriculares)
         {
 			var query = @"select
 						grade_ter.cd_experiencia_pedagogica as CodigoExperienciaPedagogica,
@@ -66,7 +66,7 @@ namespace SME.GoogleClassroom.Dados
 						and grade_ter.cd_componente_curricular in @codigosComponentesCurriculares
 					";
 			using var conn = ObterConexao();
-            return conn.QueryAsync<DisciplinaTerritorioSaberDTO>(query, new { codigoTurma = int.Parse(codigoTurma), codigosComponentesCurriculares });
+            return await conn.QueryAsync<DisciplinaTerritorioSaberDTO>(query, new { codigoTurma = int.Parse(codigoTurma), codigosComponentesCurriculares });
         }
     }
 }

@@ -75,8 +75,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
             services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
 
-            //Elastic
+            //Elastic e BD SGA
             services.TryAddScoped<IRepositorioElasticTurma, RepositorioElasticTurma>();
+            services.TryAddScoped<IRepositorioComponenteCurricularEol, RepositorioComponenteCurricularEol>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)

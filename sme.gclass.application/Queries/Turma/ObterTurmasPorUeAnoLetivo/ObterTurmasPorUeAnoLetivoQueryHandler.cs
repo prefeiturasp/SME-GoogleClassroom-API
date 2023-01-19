@@ -53,22 +53,21 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
         private async Task<IEnumerable<TurmaComponentesDto>> TratarComponentesTerritorioSaber(List<TurmaComponentesDto> turmasComponentes)
          {
-            var componentesApiEol = await componenteCurricularRepository.ObterDisciplinasAsync();
+            var componentesTerritorioApiEol = (await componenteCurricularRepository.ObterDisciplinasAsync()).Where(componente => componente.EhTerritorio);
             Dictionary<long, List<DisciplinaTerritorioSaberDTO>> disciplinasTerritoriosTurmaMemory = new Dictionary<long, List<DisciplinaTerritorioSaberDTO>>();
             List<DisciplinaTerritorioSaberDTO> territoriosBanco = null;
 
             foreach (var turma in 
                       turmasComponentes.Where(turma => 
                                                 turma.Componentes.Any(componente => 
-                                                                        componentesApiEol.Any(componenteEol => 
-                                                                                                componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo
-                                                                                                && componenteEol.EhTerritorio))))
+                                                                        componentesTerritorioApiEol.Any(componenteEol => 
+                                                                                                componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo))))
              {
                 if (!disciplinasTerritoriosTurmaMemory.ContainsKey(turma.CodigoTurma))
                 {
-                   var codigosDisciplinasTerritorio = turma.Componentes.Where(componente => componentesApiEol.Any(componenteEol =>
-                                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo
-                                                                                                    && componenteEol.EhTerritorio)).Select(componente => componente.ComponenteCurricularCodigo);
+                   var codigosDisciplinasTerritorio = turma.Componentes.Where(componente => componentesTerritorioApiEol.Any(componenteEol =>
+                                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo))
+                                                                                            .Select(componente => componente.ComponenteCurricularCodigo);
                     disciplinasTerritoriosTurmaMemory.Add(turma.CodigoTurma,
                                                     (await componenteCurricularRepository.ObterDisciplinaTerritorioDosSaberesAsync(turma.CodigoTurma.ToString(), codigosDisciplinasTerritorio)).ToList());
                 }
@@ -78,13 +77,13 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                  {
                     var territorios = territoriosBanco.GroupBy(c => new { c.CodigoTerritorioSaber, c.CodigoExperienciaPedagogica, c.DataInicio });
 
+                    var componentesTurma = turma.Componentes.Where(componente =>
+                                                            componentesTerritorioApiEol.Any(componenteEol =>
+                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo)).ToList();
                     foreach (var componenteTurma in
-                                turma.Componentes.Where(componente => 
-                                                            componentesApiEol.Any(componenteEol =>
-                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo
-                                                                                    && componenteEol.EhTerritorio)).ToList())
+                                componentesTurma)
                     {
-                        turma.Componentes.ToList().RemoveAll(componente => 
+                        turma.Componentes.RemoveAll(componente => 
                                                              componente.ComponenteCurricularCodigo == componenteTurma.ComponenteCurricularCodigo
                                                              && componente.RegistroFuncional == componenteTurma.RegistroFuncional);
                         
@@ -94,11 +93,12 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                             if (!turma.Componentes.Any(componente =>
                                                              componente.ComponenteCurricularCodigo == codigoComponenteCurricular
                                                              && componente.RegistroFuncional == componenteTurma.RegistroFuncional))
-                            turma.Componentes.ToList().Add(new ComponenteTurmaDto()
+                                turma.Componentes.Add(new ComponenteTurmaDto()
                             {
                                 ComponenteCurricularCodigo = codigoComponenteCurricular,
                                 NomeComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterDescricaoComponenteCurricular(),
                                 RegistroFuncional = componenteTurma.RegistroFuncional,
+                                DataDisponibizacao = componenteTurma.DataDisponibizacao,
                             });
                         }
                     }                      
