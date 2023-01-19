@@ -8,6 +8,7 @@ using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
+using SME.Pedagogico.Interface.DTO.RetornoQueryDTO;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
@@ -31,81 +32,80 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
             if (!turmasCacheadas.Any())
                 return default;
 
-            /*var retorno = turmasCacheadas.SelectMany(a => a.Componentes, (turma, componente) => 
+            var retorno = turmasCacheadas.SelectMany(a => a.Componentes, (turma, componente) => 
                 new RetornoConsultaListagemTurmaComponenteDto()
                 {
                     TurmaCodigo = turma.CodigoTurma.ToString(),
                     Modalidade = turma.Modalidade.ToString(),
                     NomeTurma = turma.NomeTurma,
                     Ano = turma.AnoTurma,
+                    Turno = turma.Turno,
                     ComplementoTurmaEJA = turma.ComplementoTurmaEJA,
                     NomeComponenteCurricular = componente.NomeComponenteCurricular,
-                    Turno = turma.Turno,
-                    ComponenteCurricularCodigo = componente.ComponenteCurricularCodigo
-                }).GroupBy(g => new { g.TurmaCodigo, g.Modalidade, g.NomeTurma, g.NomeComponenteCurricular, g.Ano, g.ComplementoTurmaEJA, g.Turno, g.ComponenteCurricularCodigo })
-                .Select(s => new RetornoConsultaListagemTurmaComponenteDto()
-                {
-                    TurmaCodigo = s.Key.TurmaCodigo,
-                    Modalidade = s.Key.Modalidade,
-                    NomeTurma = s.Key.NomeTurma,
-                    Ano = s.Key.Ano,
-                    ComplementoTurmaEJA = s.Key.ComplementoTurmaEJA,
-                    NomeComponenteCurricular = s.Key.NomeComponenteCurricular,
-                    Turno = s.Key.Turno,
-                    ComponenteCurricularCodigo = s.Key.ComponenteCurricularCodigo
-                });*/
+                    ComponenteCurricularCodigo = componente.ComponenteCurricularCodigo,                   
+                    RegistroFuncional= componente.RegistroFuncional
+                });
 
           
-            var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(null);
-
-            var totalRegistros = turmasComTerritorioSaber.Any() ? turmasComTerritorioSaber.Count() : 0;
-
-            return default;
+            var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(turmasCacheadas.ToList());
+            return turmasComTerritorioSaber;
         }
 
-        private async Task<IEnumerable<RetornoConsultaListagemTurmaComponenteDto>> TratarComponentesTerritorioSaber(IEnumerable<RetornoConsultaListagemTurmaComponenteDto> listagemTurmasComponentes)
+        private async Task<IEnumerable<TurmaComponentesDto>> TratarComponentesTerritorioSaber(List<TurmaComponentesDto> turmasComponentes)
          {
-             var componentesApiEol = await componenteCurricularRepository.ObterDisciplinasAsync();
+            var componentesApiEol = await componenteCurricularRepository.ObterDisciplinasAsync();
+            Dictionary<long, List<DisciplinaTerritorioSaberDTO>> disciplinasTerritoriosTurmaMemory = new Dictionary<long, List<DisciplinaTerritorioSaberDTO>>();
+            List<DisciplinaTerritorioSaberDTO> territoriosBanco = null;
 
-             var turmasComponentes = listagemTurmasComponentes.ToList();
-
-             foreach (var turmaComponentes in turmasComponentes
-                 .Where(a => componentesApiEol.Any(c => c.IdComponenteCurricular == a.ComponenteCurricularCodigo && c.EhTerritorio))
-                 .GroupBy(a => a.TurmaCodigo))
+            foreach (var turma in 
+                      turmasComponentes.Where(turma => 
+                                                turma.Componentes.Any(componente => 
+                                                                        componentesApiEol.Any(componenteEol => 
+                                                                                                componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo
+                                                                                                && componenteEol.EhTerritorio))))
              {
-                 var territoriosBanco = await componenteCurricularRepository.ObterDisciplinaTerritorioDosSaberesAsync(turmaComponentes.Key.ToString(), turmaComponentes.Select(a => a.ComponenteCurricularCodigo));
+                if (!disciplinasTerritoriosTurmaMemory.ContainsKey(turma.CodigoTurma))
+                {
+                   var codigosDisciplinasTerritorio = turma.Componentes.Where(componente => componentesApiEol.Any(componenteEol =>
+                                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo
+                                                                                                    && componenteEol.EhTerritorio)).Select(componente => componente.ComponenteCurricularCodigo);
+                    disciplinasTerritoriosTurmaMemory.Add(turma.CodigoTurma,
+                                                    (await componenteCurricularRepository.ObterDisciplinaTerritorioDosSaberesAsync(turma.CodigoTurma.ToString(), codigosDisciplinasTerritorio)).ToList());
+                }
+                territoriosBanco = disciplinasTerritoriosTurmaMemory.GetValueOrDefault(turma.CodigoTurma);
+
                  if (territoriosBanco != null && territoriosBanco.Any())
                  {
-                     var turma = turmaComponentes.First();
-                     turmasComponentes.RemoveAll(c => territoriosBanco.Any(x => x.CodigoComponenteCurricular == c.ComponenteCurricularCodigo));
+                    var territorios = territoriosBanco.GroupBy(c => new { c.CodigoTerritorioSaber, c.CodigoExperienciaPedagogica, c.DataInicio });
 
-                     var territorios = territoriosBanco.GroupBy(c => new { c.CodigoTerritorioSaber, c.CodigoExperienciaPedagogica, c.DataInicio });
-
-                     foreach (var componenteTerritorio in territorios)
-                     {
-                         var componenteCurricular = turmaComponentes.FirstOrDefault(c => c.ComponenteCurricularCodigo == componenteTerritorio.First().CodigoComponenteCurricular);
-
-                         var componenteCurricularCodigo = componenteTerritorio.FirstOrDefault().ObterCodigoComponenteCurricular(turmaComponentes.Key.ToString());
-
-                         turmasComponentes.Add(new RetornoConsultaListagemTurmaComponenteDto()
-                         {
-                             ComponenteCurricularCodigo = componenteCurricularCodigo,
-                             ComponenteCurricularTerritorioSaberCodigo = componenteTerritorio.FirstOrDefault().CodigoComponenteCurricular,
-                             NomeComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterDescricaoComponenteCurricular(),
-                             TerritorioSaber = true,
-                             Ano = turma.Ano,
-                             Id = (turmasComponentes.Where(a => a.TurmaCodigo == turmaComponentes.Key).Count() + 1).ToString(),
-                             Modalidade = turma.Modalidade,
-                             NomeTurma = turma.NomeTurma,
-                             TurmaCodigo = turma.TurmaCodigo,
-                             Turno = turma.Turno,
-                             ComplementoTurmaEJA = componenteCurricular.ComplementoTurmaEJA
-                         });
-                     }
+                    foreach (var componenteTurma in
+                                turma.Componentes.Where(componente => 
+                                                            componentesApiEol.Any(componenteEol =>
+                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo
+                                                                                    && componenteEol.EhTerritorio)).ToList())
+                    {
+                        turma.Componentes.ToList().RemoveAll(componente => 
+                                                             componente.ComponenteCurricularCodigo == componenteTurma.ComponenteCurricularCodigo
+                                                             && componente.RegistroFuncional == componenteTurma.RegistroFuncional);
+                        
+                        foreach (var componenteTerritorio in territorios)
+                        {
+                            var codigoComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterCodigoComponenteCurricular(turma.CodigoTurma.ToString());
+                            if (!turma.Componentes.Any(componente =>
+                                                             componente.ComponenteCurricularCodigo == codigoComponenteCurricular
+                                                             && componente.RegistroFuncional == componenteTurma.RegistroFuncional))
+                            turma.Componentes.ToList().Add(new ComponenteTurmaDto()
+                            {
+                                ComponenteCurricularCodigo = codigoComponenteCurricular,
+                                NomeComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterDescricaoComponenteCurricular(),
+                                RegistroFuncional = componenteTurma.RegistroFuncional,
+                            });
+                        }
+                    }                      
                  }
              }
-             listagemTurmasComponentes = turmasComponentes;
-             return listagemTurmasComponentes;
+             return turmasComponentes;
          }
+
     }
 }
