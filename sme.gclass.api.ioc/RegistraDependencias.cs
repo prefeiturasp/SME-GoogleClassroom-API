@@ -4,8 +4,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Aplicacao.Interfaces.RemoverTurma;
+using SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores;
+using SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dados.Escola;
 using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dados.Interfaces.Eol;
 using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
 
@@ -53,6 +57,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioAtividade, RepositorioAtividade>();            
             services.TryAddScoped<IRepositorioUsuarioInativoErro, RepositorioUsuarioInativoErro>();
             services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
+            services.TryAddScoped<IRepositorioEscolaEol, RepositorioEscolaEol>();
             
             // Carga Inicial
             services.TryAddScoped<IRepositorioCargaInicial, RepositorioCargaInicial>();
@@ -149,6 +154,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
             services.TryAddScoped<IIncluirAtividadesGsaProcessarErroUseCase, IncluirAtividadesGsaProcessarErroUseCase>();
+            services.TryAddScoped<IFuncionariosProfessoresEolSgaUseCase, FuncionariosProfessoresEolSgaUseCase>();
+            
+            
 
             services.TryAddScoped<IObterAlunosCursosUsuariosRemovidosUseCase, ObterAlunosCursosUsuariosRemovidosUseCase>();
 

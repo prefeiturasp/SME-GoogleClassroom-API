@@ -8,6 +8,9 @@
     <Compile Remove="Contexto\**" />
     <EmbeddedResource Remove="Contexto\**" />
     <None Remove="Contexto\**" />
+    <Compile Remove="Dtos\Funcionario\**" />
+    <EmbeddedResource Remove="Dtos\Funcionario\**" />
+    <None Remove="Dtos\Funcionario\**" />
   </ItemGroup>
 
   <ItemGroup>
