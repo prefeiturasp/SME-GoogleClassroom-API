@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -26,14 +27,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
-        [HttpGet]
+        [HttpGet("turma/{turmaCodigo}/componente-curricular/{componenteCurricular}/data/{data}")]
         [ProducesResponseType(typeof(IEnumerable<AulaQuantidadeTipoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterAulasPorTurmaComponenteData([FromServices] IObterAulasPorTurmaComponenteCurricularDataUseCase obterAulasPorTurmaComponenteCurricularDataUseCase,
-            [FromQuery] FiltroAulasPorTurmaComponenteDataDto filtro)
+        public async Task<IActionResult> ObterAulasPorTurmaComponenteData(string turmaCodigo, long componenteCurricular, DateTime data,[FromServices] IObterAulasPorTurmaComponenteCurricularDataUseCase obterAulasPorTurmaComponenteCurricularDataUseCase)
         {
-            return Ok(await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(filtro));
+            return Ok(await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(new FiltroAulasPorTurmaComponenteDataDto() {ComponenteCurricular = componenteCurricular, DataAula = data, TurmaCodigo = turmaCodigo}));
         }
     }
 }

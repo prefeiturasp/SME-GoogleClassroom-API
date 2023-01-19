@@ -9,12 +9,13 @@ namespace SME.GoogleClassroom.Infra
             CodigoCorrelacao = Guid.NewGuid();
         }
 
-        public MensagemRabbitSgp(object mensagem, string usuarioLogadoRF = "", string usuarioLogadoNome = "")
+        public MensagemRabbitSgp(object mensagem, string usuarioLogadoRF = "", string usuarioLogadoNome = "", string usuarioLogadoPerfil = "")
         {
             Mensagem = mensagem;
             UsuarioLogadoRF = usuarioLogadoRF;
             UsuarioLogadoNome = usuarioLogadoNome;
             CodigoCorrelacao = Guid.NewGuid();
+            PerfilUsuario = usuarioLogadoPerfil;
         }
 
         public string Action { get; set; }

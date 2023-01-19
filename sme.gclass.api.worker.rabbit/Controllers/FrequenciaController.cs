@@ -26,8 +26,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> LancamentoFrequencia([FromServices] ILancarFrequenciaUseCase lancarFrequenciaUseCase,
-            [FromBody] IEnumerable<FrequenciaSalvarAulaAlunosDto> frequenciaSalvarAulaAlunosDtos)
+        public async Task<IActionResult> LancamentoFrequencia([FromServices] ILancarFrequenciaUseCase lancarFrequenciaUseCase,[FromBody] IEnumerable<FrequenciaSalvarAulaAlunosDto> frequenciaSalvarAulaAlunosDtos)
         {
             return Ok(await lancarFrequenciaUseCase.Executar(frequenciaSalvarAulaAlunosDtos));
         }
