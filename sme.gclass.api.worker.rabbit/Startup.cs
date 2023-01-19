@@ -57,7 +57,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddRabbit(RabbitOptions);
             services.AddPolicies();
 
-            services.AddHostedService<WorkerRabbitMQ>();
+            //services.AddHostedService<WorkerRabbitMQ>(); Todo
 
             ConfiguraTelemetria(services);
 
@@ -85,6 +85,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             var mediator = serviceProvider.GetService<IMediator>();
             services.AddSingleton(mediator);
 
+            services.RegistraElasticSearch(Configuration);
+
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = true;
@@ -98,7 +100,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                    .AddPostgresApiEol(Configuration)
                    .AddRabbitMQ(RabbitOptions)
                    .AddRabbitMQLog(RabbitOptionsLog)
-                   .AddSqlServerEol(Configuration);
+                   .AddSqlServerEol(Configuration)
+                   .AddCheck<ElasticSearchHealthCheck>("ElasticSearch");
         }
 
         private void ConfiguraVariaveisAmbiente(IServiceCollection services)
