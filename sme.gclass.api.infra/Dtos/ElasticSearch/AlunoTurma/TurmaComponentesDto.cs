@@ -7,6 +7,10 @@ namespace SME.GoogleClassroom.Infra
     [ElasticsearchType(RelationName = "TurmaComponentes")]
     public class TurmaComponentesDto : DocumentoElasticTurma
     {
+        public TurmaComponentesDto()
+        {
+            Componentes = new List<ComponenteTurmaDto>();
+        }
         [Number(Name = "Modalidade")]
         public int Modalidade { get; set; }
         [Text(Name = "NomeTurma")]
@@ -25,6 +29,6 @@ namespace SME.GoogleClassroom.Infra
         public string SituacaoTurmaEscola { get; set; }
         [Date(Name = "DataStatusTurmaEscola", Format = "MMddyyyy")]
         public DateTime DataStatusTurmaEscola { get; set; }
-        public IEnumerable<ComponenteTurmaDto> Componentes { get; set; }
+        public List<ComponenteTurmaDto> Componentes { get; set; }
     }
 }

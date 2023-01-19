@@ -230,6 +230,5 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         public async Task<IActionResult> ObterAlunosAtivosPorTurma([FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
                                                                    [FromRoute] FiltroObterAlunosAtivosDto filtro) => Ok(await obterAlunosAtivosUseCase.Executar(filtro));
 
-
     }
 }

@@ -6,32 +6,30 @@ using System.Threading.Tasks;
 using MediatR;
 using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
+using SME.Pedagogico.Interface.DTO.RetornoQueryDTO;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
     public class ObterTurmasPorUeAnoLetivoQueryHandler : IRequestHandler<ObterTurmasPorUeAnoLetivoQuery, IEnumerable<TurmaComponentesDto>>
     {
         private readonly IRepositorioElasticTurma repositorioElasticTurma;
-        //private readonly IComponenteCurricularService componenteCurricularService;
-        //private readonly IFuncionarioRepository funcionarioRepository;
-        //private readonly IMediator mediator;
-
-        public ObterTurmasPorUeAnoLetivoQueryHandler(IRepositorioElasticTurma repositorioElasticTurma)
+        private readonly IRepositorioComponenteCurricularEol componenteCurricularRepository;
+        
+        public ObterTurmasPorUeAnoLetivoQueryHandler(IRepositorioElasticTurma repositorioElasticTurma, IRepositorioComponenteCurricularEol componenteCurricularRepository)
         {
             this.repositorioElasticTurma = repositorioElasticTurma ?? throw new ArgumentNullException(nameof(repositorioElasticTurma));
-            //this.componenteCurricularService = componenteCurricularService ?? throw new ArgumentNullException(nameof(componenteCurricularService));
-            //this.funcionarioRepository = funcionarioRepository ?? throw new ArgumentNullException(nameof(funcionarioRepository));
-            //this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.componenteCurricularRepository = componenteCurricularRepository ?? throw new ArgumentNullException(nameof(componenteCurricularRepository));
         }
 
         public async Task<IEnumerable<TurmaComponentesDto>> Handle(ObterTurmasPorUeAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioElasticTurma.ObterListaTurmasAsync(
+            var turmasCacheadas = await repositorioElasticTurma.ObterListaTurmasAsync(
                                                     request.CodigoUe, null, 0, request.AnoLetivo, false, 
                                                     "", false, null, 0);
 
-            /*if (!turmasCacheadas.Any())
+            if (!turmasCacheadas.Any())
                 return default;
 
             var retorno = turmasCacheadas.SelectMany(a => a.Componentes, (turma, componente) => 
@@ -41,83 +39,73 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                     Modalidade = turma.Modalidade.ToString(),
                     NomeTurma = turma.NomeTurma,
                     Ano = turma.AnoTurma,
+                    Turno = turma.Turno,
                     ComplementoTurmaEJA = turma.ComplementoTurmaEJA,
                     NomeComponenteCurricular = componente.NomeComponenteCurricular,
-                    Turno = turma.Turno,
-                    ComponenteCurricularCodigo = componente.ComponenteCurricularCodigo
-                }).GroupBy(g => new { g.TurmaCodigo, g.Modalidade, g.NomeTurma, g.NomeComponenteCurricular, g.Ano, g.ComplementoTurmaEJA, g.Turno, g.ComponenteCurricularCodigo })
-                .Select(s => new RetornoConsultaListagemTurmaComponenteDto()
-                {
-                    TurmaCodigo = s.Key.TurmaCodigo,
-                    Modalidade = s.Key.Modalidade,
-                    NomeTurma = s.Key.NomeTurma,
-                    Ano = s.Key.Ano,
-                    ComplementoTurmaEJA = s.Key.ComplementoTurmaEJA,
-                    NomeComponenteCurricular = s.Key.NomeComponenteCurricular,
-                    Turno = s.Key.Turno,
-                    ComponenteCurricularCodigo = s.Key.ComponenteCurricularCodigo
+                    ComponenteCurricularCodigo = componente.ComponenteCurricularCodigo,                   
+                    RegistroFuncional= componente.RegistroFuncional
                 });
 
-            if (request.AnosInfantilDesconsiderar.Any(a => a != null))
-                retorno = retorno.Where(w => !request.AnosInfantilDesconsiderar.Contains(w.Ano));
-
-            var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(retorno);
-
-            var totalRegistros = turmasComTerritorioSaber.Any() ? turmasComTerritorioSaber.Count() : 0;
-
-            var retornoTurmas = new PaginacaoResultadoDto<RetornoConsultaListagemTurmaComponenteDto>()
-            {
-                Items = turmasComTerritorioSaber,
-                TotalRegistros = totalRegistros,
-                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / request.QtdeRegistros)
-            };
-
-            return retornoTurmas;*/
+          
+            var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(turmasCacheadas.ToList());
+            return turmasComTerritorioSaber;
         }
 
-        /* private async Task<IEnumerable<RetornoConsultaListagemTurmaComponenteDto>> TratarComponentesTerritorioSaber(IEnumerable<RetornoConsultaListagemTurmaComponenteDto> listagemTurmasComponentes)
+        private async Task<IEnumerable<TurmaComponentesDto>> TratarComponentesTerritorioSaber(List<TurmaComponentesDto> turmasComponentes)
          {
-             var componentesApiEol = await componenteCurricularService.ObterComponentesCurricularesAPIEol();
+            var componentesTerritorioApiEol = (await componenteCurricularRepository.ObterDisciplinasAsync()).Where(componente => componente.EhTerritorio);
+            Dictionary<long, List<DisciplinaTerritorioSaberDTO>> disciplinasTerritoriosTurmaMemory = new Dictionary<long, List<DisciplinaTerritorioSaberDTO>>();
+            List<DisciplinaTerritorioSaberDTO> territoriosBanco = null;
 
-             var turmasComponentes = listagemTurmasComponentes.ToList();
-
-             foreach (var turmaComponentes in turmasComponentes
-                 .Where(a => componentesApiEol.Any(c => c.IdComponenteCurricular == a.ComponenteCurricularCodigo && c.EhTerritorio))
-                 .GroupBy(a => a.TurmaCodigo))
+            foreach (var turma in 
+                      turmasComponentes.Where(turma => 
+                                                turma.Componentes.Any(componente => 
+                                                                        componentesTerritorioApiEol.Any(componenteEol => 
+                                                                                                componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo))))
              {
-                 var territoriosBanco = await funcionarioRepository.BuscarDisciplinaTerritorioDosSaberesAsync(turmaComponentes.Key.ToString(), turmaComponentes.Select(a => a.ComponenteCurricularCodigo));
+                if (!disciplinasTerritoriosTurmaMemory.ContainsKey(turma.CodigoTurma))
+                {
+                   var codigosDisciplinasTerritorio = turma.Componentes.Where(componente => componentesTerritorioApiEol.Any(componenteEol =>
+                                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo))
+                                                                                            .Select(componente => componente.ComponenteCurricularCodigo);
+                    disciplinasTerritoriosTurmaMemory.Add(turma.CodigoTurma,
+                                                    (await componenteCurricularRepository.ObterDisciplinaTerritorioDosSaberesAsync(turma.CodigoTurma.ToString(), codigosDisciplinasTerritorio)).ToList());
+                }
+                territoriosBanco = disciplinasTerritoriosTurmaMemory.GetValueOrDefault(turma.CodigoTurma);
+
                  if (territoriosBanco != null && territoriosBanco.Any())
                  {
-                     var turma = turmaComponentes.First();
-                     turmasComponentes.RemoveAll(c => territoriosBanco.Any(x => x.CodigoComponenteCurricular == c.ComponenteCurricularCodigo));
+                    var territorios = territoriosBanco.GroupBy(c => new { c.CodigoTerritorioSaber, c.CodigoExperienciaPedagogica, c.DataInicio });
 
-                     var territorios = territoriosBanco.GroupBy(c => new { c.CodigoTerritorioSaber, c.CodigoExperienciaPedagogica, c.DataInicio });
-
-                     foreach (var componenteTerritorio in territorios)
-                     {
-                         var componenteCurricular = turmaComponentes.FirstOrDefault(c => c.ComponenteCurricularCodigo == componenteTerritorio.First().CodigoComponenteCurricular);
-
-                         var componenteCurricularCodigo = componenteTerritorio.FirstOrDefault().ObterCodigoComponenteCurricular(turmaComponentes.Key.ToString());
-
-                         turmasComponentes.Add(new RetornoConsultaListagemTurmaComponenteDto()
-                         {
-                             ComponenteCurricularCodigo = componenteCurricularCodigo,
-                             ComponenteCurricularTerritorioSaberCodigo = componenteTerritorio.FirstOrDefault().CodigoComponenteCurricular,
-                             NomeComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterDescricaoComponenteCurricular(),
-                             TerritorioSaber = true,
-                             Ano = turma.Ano,
-                             Id = (turmasComponentes.Where(a => a.TurmaCodigo == turmaComponentes.Key).Count() + 1).ToString(),
-                             Modalidade = turma.Modalidade,
-                             NomeTurma = turma.NomeTurma,
-                             TurmaCodigo = turma.TurmaCodigo,
-                             Turno = turma.Turno,
-                             ComplementoTurmaEJA = componenteCurricular.ComplementoTurmaEJA
-                         });
-                     }
+                    var componentesTurma = turma.Componentes.Where(componente =>
+                                                            componentesTerritorioApiEol.Any(componenteEol =>
+                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo)).ToList();
+                    foreach (var componenteTurma in
+                                componentesTurma)
+                    {
+                        turma.Componentes.RemoveAll(componente => 
+                                                             componente.ComponenteCurricularCodigo == componenteTurma.ComponenteCurricularCodigo
+                                                             && componente.RegistroFuncional == componenteTurma.RegistroFuncional);
+                        
+                        foreach (var componenteTerritorio in territorios)
+                        {
+                            var codigoComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterCodigoComponenteCurricular(turma.CodigoTurma.ToString());
+                            if (!turma.Componentes.Any(componente =>
+                                                             componente.ComponenteCurricularCodigo == codigoComponenteCurricular
+                                                             && componente.RegistroFuncional == componenteTurma.RegistroFuncional))
+                                turma.Componentes.Add(new ComponenteTurmaDto()
+                            {
+                                ComponenteCurricularCodigo = codigoComponenteCurricular,
+                                NomeComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterDescricaoComponenteCurricular(),
+                                RegistroFuncional = componenteTurma.RegistroFuncional,
+                                DataDisponibizacao = componenteTurma.DataDisponibizacao,
+                            });
+                        }
+                    }                      
                  }
              }
-             listagemTurmasComponentes = turmasComponentes;
-             return listagemTurmasComponentes;
-         }*/
+             return turmasComponentes;
+         }
+
     }
 }
