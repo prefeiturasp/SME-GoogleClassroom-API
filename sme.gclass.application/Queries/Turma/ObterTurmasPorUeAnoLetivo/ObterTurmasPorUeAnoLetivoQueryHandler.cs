@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
@@ -13,28 +14,24 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
     public class ObterTurmasPorUeAnoLetivoQueryHandler : IRequestHandler<ObterTurmasPorUeAnoLetivoQuery, IEnumerable<TurmaComponentesDto>>
     {
         private readonly IRepositorioElasticTurma repositorioElasticTurma;
-        //private readonly IComponenteCurricularService componenteCurricularService;
-        //private readonly IFuncionarioRepository funcionarioRepository;
-        //private readonly IMediator mediator;
-
-        public ObterTurmasPorUeAnoLetivoQueryHandler(IRepositorioElasticTurma repositorioElasticTurma)
+        private readonly IRepositorioComponenteCurricularEol componenteCurricularRepository;
+        
+        public ObterTurmasPorUeAnoLetivoQueryHandler(IRepositorioElasticTurma repositorioElasticTurma, IRepositorioComponenteCurricularEol componenteCurricularRepository)
         {
             this.repositorioElasticTurma = repositorioElasticTurma ?? throw new ArgumentNullException(nameof(repositorioElasticTurma));
-            //this.componenteCurricularService = componenteCurricularService ?? throw new ArgumentNullException(nameof(componenteCurricularService));
-            //this.funcionarioRepository = funcionarioRepository ?? throw new ArgumentNullException(nameof(funcionarioRepository));
-            //this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.componenteCurricularRepository = componenteCurricularRepository ?? throw new ArgumentNullException(nameof(componenteCurricularRepository));
         }
 
         public async Task<IEnumerable<TurmaComponentesDto>> Handle(ObterTurmasPorUeAnoLetivoQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioElasticTurma.ObterListaTurmasAsync(
+            var turmasCacheadas = await repositorioElasticTurma.ObterListaTurmasAsync(
                                                     request.CodigoUe, null, 0, request.AnoLetivo, false, 
                                                     "", false, null, 0);
 
-            /*if (!turmasCacheadas.Any())
+            if (!turmasCacheadas.Any())
                 return default;
 
-            var retorno = turmasCacheadas.SelectMany(a => a.Componentes, (turma, componente) => 
+            /*var retorno = turmasCacheadas.SelectMany(a => a.Componentes, (turma, componente) => 
                 new RetornoConsultaListagemTurmaComponenteDto()
                 {
                     TurmaCodigo = turma.CodigoTurma.ToString(),
@@ -56,28 +53,19 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                     NomeComponenteCurricular = s.Key.NomeComponenteCurricular,
                     Turno = s.Key.Turno,
                     ComponenteCurricularCodigo = s.Key.ComponenteCurricularCodigo
-                });
+                });*/
 
-            if (request.AnosInfantilDesconsiderar.Any(a => a != null))
-                retorno = retorno.Where(w => !request.AnosInfantilDesconsiderar.Contains(w.Ano));
-
-            var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(retorno);
+          
+            var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(null);
 
             var totalRegistros = turmasComTerritorioSaber.Any() ? turmasComTerritorioSaber.Count() : 0;
 
-            var retornoTurmas = new PaginacaoResultadoDto<RetornoConsultaListagemTurmaComponenteDto>()
-            {
-                Items = turmasComTerritorioSaber,
-                TotalRegistros = totalRegistros,
-                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / request.QtdeRegistros)
-            };
-
-            return retornoTurmas;*/
+            return default;
         }
 
-        /* private async Task<IEnumerable<RetornoConsultaListagemTurmaComponenteDto>> TratarComponentesTerritorioSaber(IEnumerable<RetornoConsultaListagemTurmaComponenteDto> listagemTurmasComponentes)
+        private async Task<IEnumerable<RetornoConsultaListagemTurmaComponenteDto>> TratarComponentesTerritorioSaber(IEnumerable<RetornoConsultaListagemTurmaComponenteDto> listagemTurmasComponentes)
          {
-             var componentesApiEol = await componenteCurricularService.ObterComponentesCurricularesAPIEol();
+             var componentesApiEol = await componenteCurricularRepository.ObterDisciplinasAsync();
 
              var turmasComponentes = listagemTurmasComponentes.ToList();
 
@@ -85,7 +73,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                  .Where(a => componentesApiEol.Any(c => c.IdComponenteCurricular == a.ComponenteCurricularCodigo && c.EhTerritorio))
                  .GroupBy(a => a.TurmaCodigo))
              {
-                 var territoriosBanco = await funcionarioRepository.BuscarDisciplinaTerritorioDosSaberesAsync(turmaComponentes.Key.ToString(), turmaComponentes.Select(a => a.ComponenteCurricularCodigo));
+                 var territoriosBanco = await componenteCurricularRepository.ObterDisciplinaTerritorioDosSaberesAsync(turmaComponentes.Key.ToString(), turmaComponentes.Select(a => a.ComponenteCurricularCodigo));
                  if (territoriosBanco != null && territoriosBanco.Any())
                  {
                      var turma = turmaComponentes.First();
@@ -118,6 +106,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
              }
              listagemTurmasComponentes = turmasComponentes;
              return listagemTurmasComponentes;
-         }*/
+         }
     }
 }
