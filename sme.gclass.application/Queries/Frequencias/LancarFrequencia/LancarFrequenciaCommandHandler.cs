@@ -34,7 +34,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     });
                 }
 
-                await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSgaSync, frequencia,frequenciaAula.UsuarioLogado, string.Empty, frequenciaAula.PerfilUsuario));
+                await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSync, frequencia,frequenciaAula.UsuarioLogado, string.Empty, frequenciaAula.PerfilUsuario));
             }
             return true;
         }
