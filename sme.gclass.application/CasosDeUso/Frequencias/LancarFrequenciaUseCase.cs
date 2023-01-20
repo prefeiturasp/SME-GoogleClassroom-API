@@ -13,9 +13,9 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public async Task<bool> Executar(IEnumerable<FrequenciaSalvarAulaAlunosDto> frequenciaSalvarAulaAlunosDtos)
+        public async Task<bool> Executar(FrequenciaSalvarAulaAlunosDto frequenciaSalvarAulaAlunosDto)
         {
-            return await mediator.Send(new LancarFrequenciaCommand(frequenciaSalvarAulaAlunosDtos));
+            return await mediator.Send(new LancarFrequenciaCommand(frequenciaSalvarAulaAlunosDto));
         }
     }
 }

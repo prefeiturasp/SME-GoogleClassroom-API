@@ -18,24 +18,23 @@ namespace SME.GoogleClassroom.Aplicacao
         
         public async Task<bool> Handle(LancarFrequenciaCommand request, CancellationToken cancellationToken)
         {
-            if (request.FrequenciaSalvarAulaAlunos == null || !request.FrequenciaSalvarAulaAlunos.Any())
+            if (request.FrequenciaSalvarAulaAlunos == null)
                 return false;
+
+            var frequenciaSalvarAulaAlunos = request.FrequenciaSalvarAulaAlunos;
             
-            foreach(var frequenciaAula in request.FrequenciaSalvarAulaAlunos)
+            var frequencia = new FrequenciaDto(frequenciaSalvarAulaAlunos.AulaId);
+
+            foreach(var frequenciaAluno in frequenciaSalvarAulaAlunos.Alunos)
             {
-                var frequencia = new FrequenciaDto(frequenciaAula.AulaId);
-
-                foreach(var frequenciaAluno in frequenciaAula.Alunos)
+                frequencia.ListaFrequencia.Add(new RegistroFrequenciaAlunoDto()
                 {
-                    frequencia.ListaFrequencia.Add(new RegistroFrequenciaAlunoDto()
-                    {
-                        CodigoAluno = frequenciaAluno.CodigoAluno,
-                        Aulas = frequenciaAluno.Frequencias.ToList()
-                    });
-                }
-
-                await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSync, frequencia,frequenciaAula.UsuarioLogado, string.Empty, frequenciaAula.PerfilUsuario));
+                    CodigoAluno = frequenciaAluno.CodigoAluno,
+                    Aulas = frequenciaAluno.Frequencias.ToList()
+                });
             }
+
+            await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSync, frequencia,frequenciaSalvarAulaAlunos.UsuarioLogado, string.Empty, frequenciaSalvarAulaAlunos.PerfilUsuario));
             return true;
         }
     }

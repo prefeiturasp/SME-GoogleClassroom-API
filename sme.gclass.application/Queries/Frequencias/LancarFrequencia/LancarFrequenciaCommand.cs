@@ -7,12 +7,12 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class LancarFrequenciaCommand : IRequest<bool>
     {
-        public LancarFrequenciaCommand(IEnumerable<FrequenciaSalvarAulaAlunosDto> frequenciaSalvarAulaAlunosDtos)
+        public LancarFrequenciaCommand(FrequenciaSalvarAulaAlunosDto frequenciaSalvarAulaAlunosDto)
         {
-            FrequenciaSalvarAulaAlunos = frequenciaSalvarAulaAlunosDtos;
+            FrequenciaSalvarAulaAlunos = frequenciaSalvarAulaAlunosDto;
         }
 
-        public IEnumerable<FrequenciaSalvarAulaAlunosDto> FrequenciaSalvarAulaAlunos { get; set; }
+        public FrequenciaSalvarAulaAlunosDto FrequenciaSalvarAulaAlunos { get; set; }
     }
     
     public class LancarFrequenciaCommandValidator : AbstractValidator<LancarFrequenciaCommand>
