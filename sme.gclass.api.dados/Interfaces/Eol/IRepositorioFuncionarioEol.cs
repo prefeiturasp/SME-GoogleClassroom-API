@@ -19,5 +19,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<PaginacaoResultadoDto<FuncionarioEol>> ObterFuncionariosQueSeraoInativados(Paginacao paginacao, DateTime dataReferencia, string codigoRf);
         Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo, string codigoEscola,bool escolaCieja = false);
         Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola);
+        Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao);
+        Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao);
     }
 }

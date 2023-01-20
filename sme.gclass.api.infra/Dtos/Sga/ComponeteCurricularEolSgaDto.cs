@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
-    public class ComponeteCurricularEolSga
+    public class ComponeteCurricularEolSgaDto
     {
         public string ComponenteCodigo { get; set; }
         public string Descricao { get; set; }

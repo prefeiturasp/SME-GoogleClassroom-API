@@ -13,6 +13,7 @@ namespace SME.GoogleClassroom.Dados.Escola
 
         public async Task<int> ObterTipoDaEscolaPorCodigoEscola(string codigoEscola)
         {
+
             var query = @"	select e.tp_escola as TipoEscola
                             from escola e 
                             inner join tipo_escola te on e.tp_escola = te.tp_escola 

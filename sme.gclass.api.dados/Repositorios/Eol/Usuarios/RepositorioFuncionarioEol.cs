@@ -953,6 +953,45 @@ namespace SME.GoogleClassroom.Dados
 			return retorno;
 		}
 
+		public async Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao)
+		{
+			try
+			{
+				var query = @"select 
+								g.nome as Perfil ,
+								gfe.funcaoexterna as Codigo
+								from grupofuncaoexterna gfe
+									inner join grupos g  on gfe.idgrupo = g.id
+								where gfe.funcaoexterna  = any(@codigosFuncao);";
+				
+				using var conn = ObterConexaoApiEOL();
+				return await conn.QueryAsync<PerfilFuncionarioSgaDto>(query.ToString(), new {codigosFuncao});
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}		
+		public async Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao)
+		{
+			try
+			{
+				var query = @"select 
+							g.nome as Perfil ,
+							gc.cargo as Codigo
+							from grupocargos gc
+							inner join grupos g  on gc.idgrupo = g.id
+							where cargo = any(@codigosFuncao) ";
+				
+				using var conn = ObterConexaoApiEOL();
+				return await conn.QueryAsync<PerfilFuncionarioSgaDto>(query.ToString(), new {codigosFuncao});
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
+
 		public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo,string codigoEscola,bool escolaCieja = false)
 		{
 			try
@@ -967,8 +1006,6 @@ namespace SME.GoogleClassroom.Dados
 												Declare @ProfessorresReadaptados as varchar;
 
 												--Funções específicas ativas
-												DECLARE @tipoFuncaoPAP AS INT = 30;
-												DECLARE @tipoFuncaoPAEE AS INT = 6;
 												DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
 												DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
 												DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
@@ -1080,9 +1117,9 @@ namespace SME.GoogleClassroom.Dados
 						UNION
 							(SELECT * FROM #tempCargosBaseFuncionarios_Fixos
 								WHERE NOT cd_cargo_base_servidor IN (SELECT DISTINCT cd_cargo_base_servidor FROM #tempCargosSobrepostosFuncionarios_Fixos)); ");
-								
-							
-							
+
+
+
 				query.AppendLine(@"      
                         -- 4. Funções específicas ativas
 						IF OBJECT_ID('tempdb..#tempProfessores_PAP_PAEE_CIEJA') IS NOT NULL
@@ -1094,11 +1131,7 @@ namespace SME.GoogleClassroom.Dados
 							te.an_letivo ,
 							esc.cd_escola,
 							facs.cd_tipo_funcao as funcao,
-							CASE
-								WHEN facs.cd_tipo_funcao = @tipoFuncaoPAP THEN 6
-								WHEN facs.cd_tipo_funcao = @tipoFuncaoPAEE THEN 7
-								ELSE 10
-							END AS prioridade
+							10  prioridade
 						INTO #tempProfessores_PAP_PAEE_CIEJA
 						FROM
 							v_cargo_base_cotic cbc (NOLOCK)
@@ -1112,10 +1145,9 @@ namespace SME.GoogleClassroom.Dados
 							turma_escola te (NOLOCK)
 							ON te.cd_escola = esc.cd_escola
 						WHERE  dt_fim_nomeacao IS NULL
-					    AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE()) ");
+					    AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE()) 
+				       and facs.cd_tipo_funcao IN (@tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD) ");
 
-				query.AppendLine(escolaCieja ? @" and facs.cd_tipo_funcao IN (@tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD) " 
-					                         : @" and facs.cd_tipo_funcao IN (@tipoFuncaoPAP, @tipoFuncaoPAEE,@tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD) ");
 
 
 				query.AppendLine(@"-- 5. União das tabelas de cargo fixo e função
@@ -1174,7 +1206,7 @@ namespace SME.GoogleClassroom.Dados
 			                COALESCE(serv.nm_social,serv.nm_pessoa) as NomeCompleto,
 							serv.cd_registro_funcional AS Rf,
 							serv.cd_cpf_pessoa as Cpf,
-							c.dc_cargo  AS Perfil,
+							c.dc_cargo  AS Cargo,
 							c.cd_cargo as CodCargo,
 							funcao
 						FROM
