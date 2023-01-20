@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface ILancarFrequenciaUseCase
     {
-        Task<bool> Executar(IEnumerable<FrequenciaSalvarAulaAlunosDto> frequenciaSalvarAulaAlunosDtos);
+        Task<bool> Executar(FrequenciaSalvarAulaAlunosDto frequenciaSalvarAulaAlunosDto);
     }
 }
