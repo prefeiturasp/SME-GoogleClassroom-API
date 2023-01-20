@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             try
             {
-                var mensagemRabbit = new MensagemRabbitSgp(request.Mensagem, request.UsuarioLogadoRF, request.UsuarioLogadoNome);
+                var mensagemRabbit = new MensagemRabbitSgp(request.Mensagem, request.UsuarioLogadoRF, request.UsuarioLogadoNome, request.UsuarioLogadoPerfil);
 
                 var mensagem = JsonConvert.SerializeObject(mensagemRabbit, new JsonSerializerSettings
                 {
