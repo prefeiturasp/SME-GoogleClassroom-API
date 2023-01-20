@@ -5,7 +5,7 @@ namespace SME.GoogleClassroom.Infra.Dtos.Gsa
     public class ModalidadeEolSgaDto
     {
 
-        public string Modalidade { get; set; }
+        public string NomeModalidade { get; set; }
         public IEnumerable<TurmaEolGsaDto> Turmas { get; set; }
     }
 }

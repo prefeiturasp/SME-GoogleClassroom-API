@@ -4,7 +4,7 @@ namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
     public class ComponeteCurricularEolSgaDto
     {
-        public string ComponenteCodigo { get; set; }
+        public long ComponenteCodigo { get; set; }
         public string Descricao { get; set; }
         public IEnumerable<ProfessorEolSgaDto> Professores { get; set; }
     }

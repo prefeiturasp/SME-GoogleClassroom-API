@@ -31,21 +31,6 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
             if (!turmasCacheadas.Any())
                 return default;
-
-            var retorno = turmasCacheadas.SelectMany(a => a.Componentes, (turma, componente) => 
-                new RetornoConsultaListagemTurmaComponenteDto()
-                {
-                    TurmaCodigo = turma.CodigoTurma.ToString(),
-                    Modalidade = turma.Modalidade.ToString(),
-                    NomeTurma = turma.NomeTurma,
-                    Ano = turma.AnoTurma,
-                    Turno = turma.Turno,
-                    ComplementoTurmaEJA = turma.ComplementoTurmaEJA,
-                    NomeComponenteCurricular = componente.NomeComponenteCurricular,
-                    ComponenteCurricularCodigo = componente.ComponenteCurricularCodigo,                   
-                    RegistroFuncional= componente.RegistroFuncional
-                });
-
           
             var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(turmasCacheadas.ToList());
             return turmasComTerritorioSaber;
