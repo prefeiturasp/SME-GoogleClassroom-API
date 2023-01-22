@@ -60,12 +60,12 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 
             MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno);
 
-            MapearTurmas(listaTurmas, retorno, rfsProfessoresCjSgp);
+            await MapearTurmas(listaTurmas, retorno, rfsProfessoresCjSgp);
 
             return retorno;
         }
 
-        private async void MapearTurmas(List<TurmaComponentesDto> listaTurmas, ProfessoresFuncionariosSgaDto retorno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
+        private async Task MapearTurmas(List<TurmaComponentesDto> listaTurmas, ProfessoresFuncionariosSgaDto retorno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
         {
             var modalidades = new List<ModalidadeEolSgaDto>();
             var listaProfessoresEol = new List<DadosProfessorEolSgaDto>();

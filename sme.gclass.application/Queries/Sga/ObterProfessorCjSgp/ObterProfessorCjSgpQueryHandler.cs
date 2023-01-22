@@ -23,11 +23,12 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterProfessorCjSgp
             var listaCj = new List<ProfessorCjSgpDto>();
 
             var httpClient = httpClientFactory.CreateClient("servicoSgp");
-            var resposta = await httpClient.GetAsync($"/v1/atribuicoes/cjs/integracoes?UeId=${request.CodigoEscola}&AnoLetivo=${request.AnoLetivo}");
+            var resposta = await httpClient.GetAsync($"v1/atribuicoes/cjs/integracoes/{request.CodigoEscola}/{request.AnoLetivo}", cancellationToken);
             if (resposta.IsSuccessStatusCode)
             {
                 var json = await resposta.Content.ReadAsStringAsync();
-                listaCj = JsonConvert.DeserializeObject<List<ProfessorCjSgpDto>>(json);
+                if (!string.IsNullOrEmpty(json))
+                    listaCj = JsonConvert.DeserializeObject<List<ProfessorCjSgpDto>>(json);
             }
             return listaCj;
         }
