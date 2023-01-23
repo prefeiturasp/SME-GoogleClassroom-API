@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Infra
         public DateTime DataMatricula { get; set; }
         [Text(Name = "numeroalunochamada")]
         public string NumeroAlunoChamada { get; set; }
-        [Number(Name = "possuideficiencia")]
+        //[Number(Name = "possuideficiencia")]
         public int PossuiDeficiencia { get; set; }
         public bool Transferencia_Interna { get; set; }
         public bool Remanejado { get; set; }
@@ -34,11 +34,11 @@ namespace SME.GoogleClassroom.Infra
         public string TurmaTransferencia { get; set; }
         public string TurmaRemanejamento { get; set; }
         public char? ParecerConclusivo { get; set; }
-        [Text(Name = "nomeresponsavel")]
+        //[Text(Name = "nomeresponsavel")]
         public string NomeResponsavel { get; set; }
-        [Number(Name = "tiporesponsavel")]
+        //[Number(Name = "tiporesponsavel")]
         public int? TipoResponsavel { get; set; }
-        [Text(Name = "celularresponsavel")]
+        //[Text(Name = "celularresponsavel")]
         public string CelularResponsavel { get; set; }
         [Date(Name = "dataatualizacaocontato", Format = "MMddyyyy")]
         public DateTime? DataAtualizacaoContato { get; set; }

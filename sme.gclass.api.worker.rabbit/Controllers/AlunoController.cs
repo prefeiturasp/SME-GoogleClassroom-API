@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Linq;
+using MediatR;
+using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {

@@ -6,6 +6,8 @@ using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores;
+using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
