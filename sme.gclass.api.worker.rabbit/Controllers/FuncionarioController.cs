@@ -8,6 +8,8 @@ using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores;
+using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -256,6 +258,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         {
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
+        }
+        
+        /// <summary>
+        /// Retorna os professores e funcionarios de uma Escola pelo Código da escola e Ano Letivo
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("escola/{codigoEscola}/anoLetivo/{anoLetivo}")]
+        [ProducesResponseType(typeof(ProfessoresFuncionariosSgaDto), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterProfessoresEFuncionariosSga(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolSgaUseCase useCase)
+        {
+            return Ok(await useCase.Executar(anoLetivo,codigoEscola));
         }
     }
 }

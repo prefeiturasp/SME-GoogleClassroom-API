@@ -1,4 +1,4 @@
-﻿namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
+﻿namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
     public class FiltroConsultaSgaFuncionarioProfessorDto
     {
