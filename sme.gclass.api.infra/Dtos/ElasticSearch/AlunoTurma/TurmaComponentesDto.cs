@@ -30,5 +30,7 @@ namespace SME.GoogleClassroom.Infra
         [Date(Name = "DataStatusTurmaEscola", Format = "MMddyyyy")]
         public DateTime DataStatusTurmaEscola { get; set; }
         public List<ComponenteTurmaDto> Componentes { get; set; }
+        [Number(Name = "codigoturma")]
+        public int CodigoTurma { get; set; }
     }
 }
