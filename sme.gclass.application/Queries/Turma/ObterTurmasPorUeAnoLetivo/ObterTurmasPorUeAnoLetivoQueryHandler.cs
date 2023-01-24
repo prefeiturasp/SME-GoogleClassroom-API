@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                                                     "", false, null, 0);
 
             if (!turmasCacheadas.Any())
-                return default;
+                return new List<TurmaComponentesDto>();
           
             var turmasComTerritorioSaber = await TratarComponentesTerritorioSaber(turmasCacheadas.ToList());
             return turmasComTerritorioSaber;
