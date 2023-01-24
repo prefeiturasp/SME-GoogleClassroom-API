@@ -16,24 +16,33 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<AlunoNaTurmaDTO>> ObterAlunosAtivosNaTurmaAsync(int codigoTurma, DateTime dataAula)
         {
-            QueryContainer query = new QueryContainerDescriptor<AlunoNaTurmaDTO>();
+            try
+            {
+                var tiposSituacoesMatricula = new List<int>() {1, 6, 10, 13};
+                QueryContainer query = new QueryContainerDescriptor<AlunoNaTurmaDTO>();
 
-            query = query && new QueryContainerDescriptor<AlunoNaTurmaDTO>().Term(termo => termo.CodigoTurma, codigoTurma);
-            query = query && new QueryContainerDescriptor<AlunoNaTurmaDTO>().DateRange(termo => termo.Field(a => a.DataSituacao).LessThanOrEquals(dataAula));
+                query = query && new QueryContainerDescriptor<AlunoNaTurmaDTO>().Term(termo => termo.CodigoTurma, codigoTurma);
+                query = query && new QueryContainerDescriptor<AlunoNaTurmaDTO>().DateRange(termo => termo.Field(a => a.DataSituacao).LessThanOrEquals(dataAula));
 
-            var alunosTurma = await ObterListaAsync<AlunoNaTurmaDTO>(
-                        IndicesElastic.INDICE_ALUNO_TURMA_DRE, _ => query,
-                        "Buscar alunos ativos na turma",
-                        new { codigoTurma, DataSituacao = dataAula });
+                var alunosTurma = await ObterListaAsync<AlunoNaTurmaDTO>(
+                    IndicesElastic.INDICE_ALUNO_TURMA_DRE, _ => query,
+                    "Buscar alunos ativos na turma",
+                    new { codigoTurma, DataSituacao = dataAula });
 
-            var result = alunosTurma?.GroupBy(aluno => aluno.CodigoAluno)
-                                                .Select(agrupado =>
-                                                    agrupado.OrderByDescending(aluno => aluno.DataSituacao)
-                                                            .ThenByDescending(aluno => aluno.NumeroAlunoChamada)
-                                                            .First())
-                                                .Where(aluno => aluno.CodigoSituacaoMatricula == (int)TipoSituacaoMatricula.Ativo);
+                var result = alunosTurma?.GroupBy(aluno => aluno.CodigoAluno)
+                    .Select(agrupado =>
+                        agrupado.OrderByDescending(aluno => aluno.DataSituacao)
+                            .ThenByDescending(aluno => aluno.NumeroAlunoChamada)
+                            .First())
+                    .Where(aluno => tiposSituacoesMatricula.Contains(aluno.CodigoSituacaoMatricula));
 
-            return result?.ToList();
+                return result?.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         
