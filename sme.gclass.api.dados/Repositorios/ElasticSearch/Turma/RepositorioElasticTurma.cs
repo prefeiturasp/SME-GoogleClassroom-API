@@ -16,8 +16,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<AlunoNaTurmaDTO>> ObterAlunosAtivosNaTurmaAsync(int codigoTurma, DateTime dataAula)
         {
-            try
-            {
+
                 var tiposSituacoesMatricula = new List<int>() {1, 6, 10, 13};
                 QueryContainer query = new QueryContainerDescriptor<AlunoNaTurmaDTO>();
 
@@ -37,12 +36,6 @@ namespace SME.GoogleClassroom.Dados
                     .Where(aluno => tiposSituacoesMatricula.Contains(aluno.CodigoSituacaoMatricula));
 
                 return result?.ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
         }
 
         
