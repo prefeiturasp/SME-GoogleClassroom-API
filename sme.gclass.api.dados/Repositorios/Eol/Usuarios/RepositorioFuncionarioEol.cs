@@ -921,7 +921,7 @@ namespace SME.GoogleClassroom.Dados
 
 		public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola)
 		{
-			var query = new StringBuilder(@"	select
+			var query = new StringBuilder(@"	select DISTINCT
 											    case 
 													when p.nm_social = '' or p.nm_social IS NULL then p.nm_pessoa
 													when p.nm_social <> '' or p.nm_social IS NOT NULL then p.nm_social
