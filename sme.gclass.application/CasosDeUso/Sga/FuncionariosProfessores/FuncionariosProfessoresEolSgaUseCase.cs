@@ -59,8 +59,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             var obterListaDePerfils = listaPerfis.Length >0 ? (await mediator.Send(new ObterPerfilFuncionarioQuery(listaPerfis, ehFuncionarioExterno))).ToList() 
                                                                                            : new List<PerfilFuncionarioSgaDto>();
 
-            if(obterListaDePerfils.Any())
-                MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno);
+            MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno);
 
             await MapearTurmas(listaTurmas, retorno, rfsProfessoresCjSgp);
 
@@ -159,7 +158,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     NomeCompleto = funcionario.NomeCompleto,
                     Rf = funcionario.Rf,
                     Cpf = funcionario.Cpf,
-                    Perfil = ehFuncionarioExterno ? perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == funcionario.Funcao)!.Perfil : perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == int.Parse(funcionario.CodCargo))!.Perfil
+                    Perfil = perfilFuncionarioSgaDtos.Any() ? ehFuncionarioExterno ? perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == funcionario.Funcao)!.Perfil : perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == int.Parse(funcionario.CodCargo))!.Perfil : string.Empty
                 });
             }
 
