@@ -47,16 +47,17 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             var rfsProfessoresCjSgp = (await mediator.Send(new ObterProfessorCjSgpQuery(anoLetivo, codigoEscola))).ToList();
             var listaTurmas = (await mediator.Send(new ObterTurmasPorUeAnoLetivoQuery(codigoEscola, anoLetivo))).ToList();
 
-            return await MapearRetorno(funcionario.ToList(), listaTurmas, ehFuncionarioExterno, rfsProfessoresCjSgp);
+            return await MapearRetorno(funcionario.ToList(), listaTurmas, ehFuncionarioExterno, rfsProfessoresCjSgp,escolaCieja);
         }
 
-        private async Task<ProfessoresFuncionariosSgaDto> MapearRetorno(List<FuncionarioSgaDto> funcionarioSgaDtos, List<Infra.TurmaComponentesDto> listaTurmas, bool ehFuncionarioExterno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
+        private async Task<ProfessoresFuncionariosSgaDto> MapearRetorno(List<FuncionarioSgaDto> funcionarioSgaDtos, List<TurmaComponentesDto> listaTurmas, bool ehFuncionarioExterno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp, bool escolaCieja)
         {
             var retorno = new ProfessoresFuncionariosSgaDto();
 
-            var listaPerfis = ehFuncionarioExterno ? funcionarioSgaDtos.Select(x => x.Funcao).Distinct().ToArray() : funcionarioSgaDtos.Select(x => int.Parse(x.CodCargo)).Distinct().ToArray();
+            var listaPerfis = ehFuncionarioExterno || escolaCieja ? funcionarioSgaDtos.Select(x => x.Funcao).Distinct().ToArray() : funcionarioSgaDtos.Select(x => int.Parse(x.CodCargo)).Distinct().ToArray();
 
-            var obterListaDePerfils = (await mediator.Send(new ObterPerfilFuncionarioQuery(listaPerfis, ehFuncionarioExterno))).ToList();
+            var obterListaDePerfils = listaPerfis.Length >0 ? (await mediator.Send(new ObterPerfilFuncionarioQuery(listaPerfis, ehFuncionarioExterno))).ToList() 
+                                                                                           : new List<PerfilFuncionarioSgaDto>();
 
             MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno);
 
@@ -157,7 +158,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     NomeCompleto = funcionario.NomeCompleto,
                     Rf = funcionario.Rf,
                     Cpf = funcionario.Cpf,
-                    Perfil = ehFuncionarioExterno ? perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == funcionario.Funcao)!.Perfil : perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == int.Parse(funcionario.CodCargo))!.Perfil
+                    Perfil = perfilFuncionarioSgaDtos.Any() ? ehFuncionarioExterno ? perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == funcionario.Funcao)!.Perfil : perfilFuncionarioSgaDtos!.FirstOrDefault(x => x.Codigo == int.Parse(funcionario.CodCargo))!.Perfil : string.Empty
                 });
             }
 
