@@ -257,6 +257,7 @@ namespace SME.GoogleClassroom.IoC
         private static void RegistrarCasosDeUsoSGA(IServiceCollection services)
         {
             services.TryAddScoped<IObterAlunosAtivosUseCase, ObterAlunosAtivosUseCase>();
+            services.TryAddScoped<IObterEscolasUseCase, ObterEscolasUseCase>();
         }
 
 
