@@ -11,18 +11,18 @@ using SME.GoogleClassroom.Infra;
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
     public class
-        ObterEscolasQueryHandler : IRequestHandler<ObterEscolasQuery, IEnumerable<EscolaDTO>>
+        ObterEscolasPorTipoEscolaQueryHandler : IRequestHandler<ObterEscolasPorTipoEscolaQuery, IEnumerable<EscolaDTO>>
     {
         private readonly IRepositorioEscolaEol repositorioEscola;
 
-        public ObterEscolasQueryHandler(IRepositorioEscolaEol repositorioEscola)
+        public ObterEscolasPorTipoEscolaQueryHandler(IRepositorioEscolaEol repositorioEscola)
         {
             this.repositorioEscola = repositorioEscola ?? throw new ArgumentNullException(nameof(repositorioEscola));
         }
 
-        public async Task<IEnumerable<EscolaDTO>> Handle(ObterEscolasQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EscolaDTO>> Handle(ObterEscolasPorTipoEscolaQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioEscola.ObterEscolas();
+            return await repositorioEscola.ObterEscolas(request.TiposEscola);
         }
     }
 }
