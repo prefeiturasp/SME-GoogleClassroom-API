@@ -69,8 +69,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
         private async Task MapearTurmas(List<TurmaComponentesDto> listaTurmas, ProfessoresFuncionariosSgaDto retorno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
         {
             var modalidades = new List<ModalidadeEolSgaDto>();
-            var listaProfessoresEol = new List<DadosProfessorEolSgaDto>();
-            var listaProfessoresCj = new List<DadosProfessorEolSgaDto>();
+
 
             var listaModalidades = listaTurmas.Select(x => (Modalidade) x.Modalidade).ToList().Distinct();
 
@@ -82,17 +81,26 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     var modalidadeTurma = (Modalidade) turma.Modalidade;
                     var componentes = new List<ComponeteCurricularEolSgaDto>();
 
-                    var rfProfessoresEol = (turma.Componentes.Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
-                    var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma).Select(s => s.ProfessorRf)).Distinct()).ToList();
-
-                    if (rfProfessoresEol.Any())
-                        listaProfessoresEol = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfProfessoresEol.ToArray()))).ToList();
-
-                    if (rfCjTurma.Any())
-                        listaProfessoresCj = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfCjTurma.ToArray()))).ToList();
 
                     foreach (var componente in turma.Componentes)
                     {
+                        var listaProfessoresEol = new List<DadosProfessorEolSgaDto>();
+                        var listaProfessoresCj = new List<DadosProfessorEolSgaDto>();
+
+                        var rfProfessoresEol = (turma.Componentes.Where(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigo).Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
+
+                        string codigoComponente = componente.ComponenteCurricularCodigo.ToString();
+                        
+                        var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma && x.Disciplinas.ToList().Contains(codigoComponente)).Select(s => s.ProfessorRf)).Distinct()).ToList();
+
+                        if (rfProfessoresEol.Any())
+                            listaProfessoresEol = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfProfessoresEol.ToArray()))).ToList();
+
+                        if (rfCjTurma.Any())
+                            listaProfessoresCj = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfCjTurma.ToArray()))).ToList();
+
+
+
                         var professores = new List<ProfessorEolSgaDto>();
 
                         foreach (var professor in listaProfessoresEol)
