@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Linq;
+using MediatR;
+using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -16,7 +18,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Alunos
     /// </summary>
     [ApiController]
-    // todo: [ChaveIntegracaoGoogleClassroomApi]
+    [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/alunos")]
     public class AlunoController : Controller
     {
@@ -214,5 +216,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await useCase.Executar(filtro);
             return Ok(retorno);
         }
+
+        /// <summary>
+        /// Retorna os alunos ativos na turma informada.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("turmas/{CodigoTurma}/ativos")]
+        [ProducesResponseType(typeof(IReadOnlyList<AlunoEolSimplificadoDto>), 200)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ObterAlunosAtivosPorTurma([FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
+                                                                   [FromRoute] FiltroObterAlunosAtivosDto filtro) => Ok(await obterAlunosAtivosUseCase.Executar(filtro));
+
     }
 }

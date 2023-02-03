@@ -4,8 +4,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Aplicacao.Interfaces.RemoverTurma;
+using SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores;
+using SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores;
 using SME.GoogleClassroom.Dados;
+using SME.GoogleClassroom.Dados.Escola;
 using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dados.Interfaces.Eol;
 using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
 
@@ -53,7 +57,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioAtividade, RepositorioAtividade>();            
             services.TryAddScoped<IRepositorioUsuarioInativoErro, RepositorioUsuarioInativoErro>();
             services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
-            
+            services.TryAddScoped<IRepositorioEscolaEol, RepositorioEscolaEol>();
+            services.TryAddScoped<IRepositorioParametrosEol, RepositorioParametrosEol>();
+
             // Carga Inicial
             services.TryAddScoped<IRepositorioCargaInicial, RepositorioCargaInicial>();
 
@@ -74,6 +80,10 @@ namespace SME.GoogleClassroom.IoC
             //Celp
             services.TryAddScoped<IRepositorioConfiguracaoCelp, RepositorioConfiguracaoCelp>();
             services.TryAddScoped<IRepositorioCursoCelpEol, RepositorioCursoCelpEol>();
+
+            //Elastic e BD SGA
+            services.TryAddScoped<IRepositorioElasticTurma, RepositorioElasticTurma>();
+            services.TryAddScoped<IRepositorioComponenteCurricularEol, RepositorioComponenteCurricularEol>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -149,6 +159,9 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IAtualizacaoUsuarioGoogleClassroomIdUseCase, AtualizacaoUsuarioGoogleClassroomIdUseCase>();
             services.TryAddScoped<IRemoverProfessorCursoGoogleUseCase, RemoverProfessorCursoGoogleUseCase>();
             services.TryAddScoped<IIncluirAtividadesGsaProcessarErroUseCase, IncluirAtividadesGsaProcessarErroUseCase>();
+            services.TryAddScoped<IFuncionariosProfessoresEolSgaUseCase, FuncionariosProfessoresEolSgaUseCase>();
+            
+            
 
             services.TryAddScoped<IObterAlunosCursosUsuariosRemovidosUseCase, ObterAlunosCursosUsuariosRemovidosUseCase>();
 
@@ -233,9 +246,21 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoUseCase>();
             services.TryAddScoped<ISincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase, SincronizacaoGsaFormacaoCidadeTurmaAlunoComErrosUseCase>();
             #endregion
+            
+            services.TryAddScoped<IObterAulasPorTurmaComponenteCurricularDataUseCase, ObterAulasPorTurmaComponenteCurricularDataUseCase>();
+            
+            services.TryAddScoped<ILancarFrequenciaUseCase, LancarFrequenciaUseCase>();
 
             RegistrarCasosDeUsoGsa(services);
+            RegistrarCasosDeUsoSGA(services);
         }
+
+        private static void RegistrarCasosDeUsoSGA(IServiceCollection services)
+        {
+            services.TryAddScoped<IObterAlunosAtivosUseCase, ObterAlunosAtivosUseCase>();
+            services.TryAddScoped<IObterEscolasUseCase, ObterEscolasUseCase>();
+        }
+
 
         private static void RegistrarCasosDeUsoGsa(IServiceCollection services)
         {

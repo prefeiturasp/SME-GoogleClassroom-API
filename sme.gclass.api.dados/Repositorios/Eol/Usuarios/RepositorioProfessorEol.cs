@@ -2,6 +2,7 @@
 using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Sga;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -723,5 +724,25 @@ namespace SME.GoogleClassroom.Dados
 			return !string.IsNullOrEmpty(anoTurma) ? $" AND serie_ensino.sg_resumida_serie in ({anoTurma}) " : string.Empty;
 
 		}
+
+        public async Task<IEnumerable<DadosProfessorEolSgaDto>> ObterDadosDoProfessorPorRfs(string[] rfs)
+        {
+			try
+			{
+				var query = new StringBuilder(@$"select 
+												distinct cd_registro_funcional as Rf,
+												coalesce(nm_social,nm_pessoa) as NomeCompleto,
+												cd_cpf_pessoa as Cpf
+											from v_servidor_cotic 
+											where cd_registro_funcional in ({string.Join(',', rfs)}) ");
+                using var conn = ObterConexao();
+                return await conn.QueryAsync<DadosProfessorEolSgaDto>(query.ToString());
+            }
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+        }
     }
 }
