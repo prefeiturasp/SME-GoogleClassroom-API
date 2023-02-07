@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Aulas
     /// </summary>
     [ApiController]
-    [ChaveIntegracaoGoogleClassroomApi]
+    //[ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/aulas")]
     public class AulaController : Controller
     {
@@ -25,6 +25,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// Retorna as aulas conforme a data, turma e componente curricular.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="204">Aula não encontrada.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("turma/{turmaCodigo}/componente-curricular/{componenteCurricular}/data/{data}")]
@@ -33,7 +34,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAulasPorTurmaComponenteData(string turmaCodigo, long componenteCurricular, DateTime data,[FromServices] IObterAulasPorTurmaComponenteCurricularDataUseCase obterAulasPorTurmaComponenteCurricularDataUseCase)
         {
-            return Ok(await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(new FiltroAulasPorTurmaComponenteDataDto() {ComponenteCurricular = componenteCurricular, DataAula = data, TurmaCodigo = turmaCodigo}));
+
+            var retorno = await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(new FiltroAulasPorTurmaComponenteDataDto() { ComponenteCurricular = componenteCurricular, DataAula = data, TurmaCodigo = turmaCodigo });
+            
+            if (retorno.Any())
+                return Ok(retorno);
+
+            return StatusCode(204);
         }
     }
 }
