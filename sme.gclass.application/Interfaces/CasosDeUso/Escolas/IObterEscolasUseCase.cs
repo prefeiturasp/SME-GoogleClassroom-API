@@ -7,6 +7,6 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public interface IObterEscolasUseCase
     {
-        Task<IEnumerable<EscolaDTO>> Executar();
+        Task<IEnumerable<EscolaDTO>> Executar(FiltroObterEscolasDto filtro);
     }
 }

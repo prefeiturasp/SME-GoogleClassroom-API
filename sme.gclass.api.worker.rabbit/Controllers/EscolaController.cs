@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
-using SME.GoogleClassroom.Aplicacao.Interfaces;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using System.Linq;
-using MediatR;
-using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -32,11 +27,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(IReadOnlyList<EscolaDTO>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterEscolas([FromServices] IObterEscolasUseCase obterEscolasUseCase)
+        public async Task<IActionResult> ObterEscolas(
+                                            [FromServices] IObterEscolasUseCase obterEscolasUseCase,
+                                            [FromQuery] FiltroObterEscolasDto filtro)
         {
-            var retorno = await obterEscolasUseCase.Executar();
-            return Ok(retorno);
-        }
+            var retorno = await obterEscolasUseCase.Executar(filtro);
 
+            if (retorno.Any())
+                return Ok(retorno);
+
+            return StatusCode(204);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Dados.Escola
         {
         }
 
-        public async Task<IEnumerable<EscolaDTO>> ObterEscolas(int[] tiposEscola)
+        public async Task<IEnumerable<EscolaDTO>> ObterEscolas(int[] tiposEscola, string codigoDre, string siglaTipoEscola)
         {
             var query = $@"	SELECT 
 	                         esc.cd_escola Codigo,
@@ -27,11 +27,18 @@ namespace SME.GoogleClassroom.Dados.Escola
                        INNER JOIN v_cadastro_unidade_educacao vcue ON esc.cd_escola = vcue.cd_unidade_educacao
                        INNER JOIN tipo_escola te ON esc.tp_escola = te.tp_escola
                        INNER JOIN v_cadastro_unidade_educacao dre ON dre.cd_unidade_educacao = vcue.cd_unidade_administrativa_referencia
-                       where esc.tp_escola in({string.Join(',', tiposEscola)})
-                       order by RTRIM(LTRIM(dre.nm_unidade_educacao)), RTRIM(LTRIM(vcue.nm_unidade_educacao))";
+                       where esc.tp_escola in({string.Join(',', tiposEscola)})";
+
+            if (!string.IsNullOrEmpty(codigoDre)) 
+                query += " AND dre.cd_unidade_educacao = @codigoDre";
+            
+            if (!string.IsNullOrEmpty(siglaTipoEscola))
+                query += " AND RTRIM(LTRIM(te.sg_tp_escola)) = @siglaTipoEscola";
+
+            query += " order by RTRIM(LTRIM(dre.nm_unidade_educacao)), RTRIM(LTRIM(vcue.nm_unidade_educacao))";
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<EscolaDTO>(query);
+            return await conn.QueryAsync<EscolaDTO>(query, new { codigoDre, siglaTipoEscola });
         }
 
         public async Task<int> ObterTipoDaEscolaPorCodigoEscola(string codigoEscola)

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SME.GoogleClassroom.Dados;
+﻿using MediatR;
 using SME.GoogleClassroom.Dados.Interfaces.Eol;
 using SME.GoogleClassroom.Infra;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries
 {
@@ -22,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
         public async Task<IEnumerable<EscolaDTO>> Handle(ObterEscolasPorTipoEscolaQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioEscola.ObterEscolas(request.TiposEscola);
+            return await repositorioEscola.ObterEscolas(request.TiposEscola, request.CodigoDRE, request.SiglaTipoEscola);
         }
     }
 }
