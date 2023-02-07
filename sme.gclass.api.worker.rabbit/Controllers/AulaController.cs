@@ -33,7 +33,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAulasPorTurmaComponenteData(string turmaCodigo, long componenteCurricular, DateTime data,[FromServices] IObterAulasPorTurmaComponenteCurricularDataUseCase obterAulasPorTurmaComponenteCurricularDataUseCase)
         {
-            return Ok(await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(new FiltroAulasPorTurmaComponenteDataDto() {ComponenteCurricular = componenteCurricular, DataAula = data, TurmaCodigo = turmaCodigo}));
+            var retorno = await obterAulasPorTurmaComponenteCurricularDataUseCase.Executar(new FiltroAulasPorTurmaComponenteDataDto() { ComponenteCurricular = componenteCurricular, DataAula = data, TurmaCodigo = turmaCodigo });
+
+            if (retorno.Any())
+                return Ok(retorno);
+
+            return StatusCode(204);
         }
     }
 }
