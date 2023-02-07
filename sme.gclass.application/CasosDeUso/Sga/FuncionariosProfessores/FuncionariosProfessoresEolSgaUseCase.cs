@@ -137,17 +137,20 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     turmas.Add(new TurmaEolGsaDto
                     {
                         TurmaCodigo = turma.CodigoTurma,
-                        TumaAnoModalidade = turma.AnoTurma?.Trim().Length > 0 ? (modalidadeTurma.ShortName() + turma.AnoTurma) : string.Empty,
+                        TurmaAnoModalidade = turma.AnoTurma?.Trim().Length > 0 ? (modalidadeTurma.ShortName() + turma.AnoTurma) : string.Empty,
                         NomeAno = turma.AnoTurma?.Trim().Length > 0 ? (turma.AnoTurma == "0" ? turma.AnoTurma : turma.AnoTurma + "º ano") : string.Empty,
                         TumaModalidade = modalidadeTurma.ShortName() + turma.NomeTurma,
                         TurmaNome = turma.NomeTurma,
-                        ComponentesCurriculares = componentes
+                        ComponentesCurriculares = componentes,
+                        ComplementoTurma = turma.NomeFiltro,
                     });
                 }
 
                 modalidades.Add(new ModalidadeEolSgaDto
                 {
                     NomeModalidade = modalidade.Name(),
+                    IdModalidade = (int)modalidade,
+                    SiglaModalidade = modalidade.ShortName(),
                     Turmas = turmas
                 });
                 ;

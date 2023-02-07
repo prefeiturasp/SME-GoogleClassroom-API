@@ -79,7 +79,7 @@ namespace SME.GoogleClassroom.Dados
             else
                 query = query && new QueryContainerDescriptor<TurmaComponentesDto>().Term(termo => termo.Historica, consideraHistorico);
 
-            var listagemTurmas = await ObterListaAsync<TurmaComponentesDto>(IndicesElastic.INDICE_TURMA_COMPONENTES, _ => query, "Buscar listagem de turmas");
+            var listagemTurmas = await ObterListaAsync<TurmaComponentesDto>("turma_componentes_teste", _ => query, "Buscar listagem de turmas");
 
             if (listagemTurmas == null)
                 return default;
