@@ -20,10 +20,13 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<IEnumerable<EscolaDTO>> Executar()
+        public async Task<IEnumerable<EscolaDTO>> Executar(FiltroObterEscolasDto filtro)
         {
             var parametroTiposEscola = await mediator.Send(new ObterParametrosAPIEolPorNomeQuery(PARAMETRO_TIPO_ESCOLA_SGP));
-            return await mediator.Send(new ObterEscolasPorTipoEscolaQuery(parametroTiposEscola.Valor.Split(",").Select(c => int.Parse(c)).ToArray()));
+            return await mediator.Send(new ObterEscolasPorTipoEscolaQuery(
+                                                    parametroTiposEscola.Valor.Split(",").Select(c => int.Parse(c)).ToArray(),
+                                                    filtro.CodigoDRE,
+                                                    filtro.SiglaTipoEscola));
         }
 
 
