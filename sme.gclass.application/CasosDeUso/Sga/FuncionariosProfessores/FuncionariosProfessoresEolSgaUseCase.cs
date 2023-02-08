@@ -153,7 +153,6 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     SiglaModalidade = modalidade.ShortName(),
                     Turmas = turmas
                 });
-                ;
             }
 
             retorno.Modalidades = modalidades;
