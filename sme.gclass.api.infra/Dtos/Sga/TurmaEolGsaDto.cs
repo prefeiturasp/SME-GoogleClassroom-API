@@ -6,7 +6,7 @@ namespace SME.GoogleClassroom.Infra.Dtos.Gsa
     {
         public long TurmaCodigo { get; set; }
         public string TurmaAnoModalidade { get; set; }
-        public string TumaModalidade { get; set; }
+        public string TurmaModalidade { get; set; }
         public string NomeAno { get; set; }
         public string TurmaNome { get; set; }
         public string ComplementoTurma { get; set; }

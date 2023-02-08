@@ -139,7 +139,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                         TurmaCodigo = turma.CodigoTurma,
                         TurmaAnoModalidade = turma.AnoTurma?.Trim().Length > 0 ? (modalidadeTurma.ShortName() + turma.AnoTurma) : string.Empty,
                         NomeAno = turma.AnoTurma?.Trim().Length > 0 ? (turma.AnoTurma == "0" ? turma.AnoTurma : turma.AnoTurma + "º ano") : string.Empty,
-                        TumaModalidade = modalidadeTurma.ShortName() + turma.NomeTurma,
+                        TurmaModalidade = modalidadeTurma.ShortName() + turma.NomeTurma,
                         TurmaNome = turma.NomeTurma,
                         ComponentesCurriculares = componentes,
                         ComplementoTurma = turma.NomeFiltro,
