@@ -66,13 +66,38 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             return retorno;
         }
 
+        private async Task<List<DadosProfessorEolSgaDto>> ObterListaRegistroFuncional(List<TurmaComponentesDto> listaTurmas)
+        {
+            var professoresEol   = new List<DadosProfessorEolSgaDto>();
+            var listaModalidades = listaTurmas.Select(x => (Modalidade) x.Modalidade).ToList().Distinct();
+            var listaTurmaComponentes = listaTurmas.Where(x => listaModalidades.Contains((Modalidade) x.Modalidade)).ToList();
+            var listaComponentes = new List<ComponenteTurmaDto>();
+            listaTurmaComponentes?.ForEach(x => listaComponentes?.AddRange(x.Componentes));
+            var listaRegistroFuncional = listaComponentes?.Select(x => x.RegistroFuncional).Where(r => r != null).Distinct().ToArray();
+            if (listaRegistroFuncional.Any())
+                professoresEol = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(listaRegistroFuncional))).ToList();
+
+            return professoresEol;
+        }
+
+        private async Task<List<DadosProfessorEolSgaDto>> ObterListaRegistroProfessorCj(List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
+        {
+            var professoresCj = new List<DadosProfessorEolSgaDto>();
+            var listaProfessoresCjSgp = rfsProfessoresCjSgp.Select(x => x.ProfessorRf).Distinct().ToArray();
+            if (listaProfessoresCjSgp.Any())
+                professoresCj = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(listaProfessoresCjSgp))).ToList();
+            
+            return professoresCj;
+        }
         private async Task MapearTurmas(List<TurmaComponentesDto> listaTurmas, ProfessoresFuncionariosSgaDto retorno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
         {
             var modalidades = new List<ModalidadeEolSgaDto>();
 
-
             var listaModalidades = listaTurmas.Select(x => (Modalidade) x.Modalidade).ToList().Distinct();
 
+             var professoresEol   = await ObterListaRegistroFuncional(listaTurmas);
+             var professoresCj = await ObterListaRegistroProfessorCj(rfsProfessoresCjSgp);
+            
             foreach (var modalidade in listaModalidades)
             {
                 var turmas = new List<TurmaEolGsaDto>();
@@ -81,7 +106,6 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     var modalidadeTurma = (Modalidade) turma.Modalidade;
                     var componentes = new List<ComponeteCurricularEolSgaDto>();
 
-
                     foreach (var componente in turma.Componentes)
                     {
                         var listaProfessoresEol = new List<DadosProfessorEolSgaDto>();
@@ -89,17 +113,15 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 
                         var rfProfessoresEol = (turma.Componentes.Where(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigo).Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
 
-                        string codigoComponente = componente.ComponenteCurricularCodigo.ToString();
+                        var codigoComponente = componente.ComponenteCurricularCodigo.ToString();
                         
                         var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma && x.Disciplinas.ToList().Contains(codigoComponente)).Select(s => s.ProfessorRf)).Distinct()).ToList();
 
                         if (rfProfessoresEol.Any())
-                            listaProfessoresEol = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfProfessoresEol.ToArray()))).ToList();
+                            listaProfessoresEol = professoresEol?.Where(r => rfProfessoresEol.Contains(r.Rf)).ToList();
 
                         if (rfCjTurma.Any())
-                            listaProfessoresCj = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfCjTurma.ToArray()))).ToList();
-
-
+                            listaProfessoresCj = professoresCj?.Where(x => rfCjTurma.Contains(x.Rf)).ToList() ;
 
                         var professores = new List<ProfessorEolSgaDto>();
 
