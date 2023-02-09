@@ -23,6 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
     public class FuncionariosProfessoresEolSgaUseCase : IFuncionariosProfessoresEolSgaUseCase
     {
         private readonly IMediator mediator;
+        private const string SUPERVISOR = "SUPERVISOR"; 
 
         public FuncionariosProfessoresEolSgaUseCase(IMediator mediator)
         {
@@ -45,12 +46,15 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                 funcionario = await mediator.Send(new ObterFuncionarioExternoEolSgaPorUeAnoLetivoQuery(codigoEscola, anoLetivo));
 
             var rfsProfessoresCjSgp = (await mediator.Send(new ObterProfessorCjSgpQuery(anoLetivo, codigoEscola))).ToList();
+            
+            var rfsSupervisoresSgp = (await mediator.Send(new ObterAtribuicaoResponsaveisSgpQuery((int)TipoResponsavelAtribuicao.SupervisorEscolar,codigoEscola))).ToList();
+            
             var listaTurmas = (await mediator.Send(new ObterTurmasPorUeAnoLetivoQuery(codigoEscola, anoLetivo))).ToList();
 
-            return await MapearRetorno(funcionario.ToList(), listaTurmas, ehFuncionarioExterno, rfsProfessoresCjSgp,escolaCieja);
+            return await MapearRetorno(funcionario.ToList(), listaTurmas, ehFuncionarioExterno, rfsProfessoresCjSgp,escolaCieja,rfsSupervisoresSgp);
         }
 
-        private async Task<ProfessoresFuncionariosSgaDto> MapearRetorno(List<FuncionarioSgaDto> funcionarioSgaDtos, List<TurmaComponentesDto> listaTurmas, bool ehFuncionarioExterno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp, bool escolaCieja)
+        private async Task<ProfessoresFuncionariosSgaDto> MapearRetorno(List<FuncionarioSgaDto> funcionarioSgaDtos, List<TurmaComponentesDto> listaTurmas, bool ehFuncionarioExterno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp, bool escolaCieja, List<ResponsaveisSgpDto> responsaveisSgp)
         {
             var retorno = new ProfessoresFuncionariosSgaDto();
 
@@ -59,7 +63,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             var obterListaDePerfils = listaPerfis.Length >0 ? (await mediator.Send(new ObterPerfilFuncionarioQuery(listaPerfis, ehFuncionarioExterno))).ToList() 
                                                                                            : new List<PerfilFuncionarioSgaDto>();
 
-            MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno, escolaCieja);
+            MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno, escolaCieja, responsaveisSgp);
 
             await MapearTurmas(listaTurmas, retorno, rfsProfessoresCjSgp);
 
@@ -158,7 +162,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             retorno.Modalidades = modalidades;
         }
 
-        private void MapearFuncionarios(IEnumerable<FuncionarioSgaDto> funcionarioSgaDtos, ProfessoresFuncionariosSgaDto retorno, List<PerfilFuncionarioSgaDto> perfilFuncionarioSgaDtos, bool ehFuncionarioExterno,bool escolaCieja)
+        private void MapearFuncionarios(IEnumerable<FuncionarioSgaDto> funcionarioSgaDtos, ProfessoresFuncionariosSgaDto retorno, List<PerfilFuncionarioSgaDto> perfilFuncionarioSgaDtos, bool ehFuncionarioExterno,bool escolaCieja, List<ResponsaveisSgpDto> responsaveisSgp)
         {
             var funcionarios = new List<FuncionarioEolSgaDto>();
             foreach (var funcionario in funcionarioSgaDtos)
@@ -170,6 +174,16 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     Rf = funcionario.Rf,
                     Cpf = funcionario.Cpf,
                     Perfil = perfil
+                });
+            }
+
+            foreach (var responsaveis in responsaveisSgp)
+            {
+                funcionarios.Add(new FuncionarioEolSgaDto
+                {
+                    NomeCompleto = responsaveis.NomeResponsavel,
+                    Rf = responsaveis.CodigoRF,
+                    Perfil = SUPERVISOR
                 });
             }
 
