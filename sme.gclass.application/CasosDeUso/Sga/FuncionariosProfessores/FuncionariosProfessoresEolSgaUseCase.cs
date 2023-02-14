@@ -151,7 +151,6 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                             });
                         }
 
-                        var rfProfessor = componente.RegistroFuncional;
                         componentes.Add(new ComponeteCurricularEolSgaDto
                         {
                             Descricao = componente.NomeComponenteCurricular,
