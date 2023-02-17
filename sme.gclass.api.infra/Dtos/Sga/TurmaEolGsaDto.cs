@@ -10,6 +10,6 @@ namespace SME.GoogleClassroom.Infra.Dtos.Gsa
         public string NomeAno { get; set; }
         public string TurmaNome { get; set; }
         public string ComplementoTurma { get; set; }
-        public IEnumerable<ComponeteCurricularEolSgaDto> ComponentesCurriculares { get; set; }
+        public IEnumerable<ComponeteCurricularEolDto> ComponentesCurriculares { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterPerfilUsuario
 {
-    public class ObterPerfilFuncionarioQueryHandler : IRequestHandler<ObterPerfilFuncionarioQuery,IEnumerable<PerfilFuncionarioSgaDto>>
+    public class ObterPerfilFuncionarioQueryHandler : IRequestHandler<ObterPerfilFuncionarioQuery,IEnumerable<PerfilFuncionarioDto>>
     {
         private IRepositorioFuncionarioEol repositorioFuncionarioEol;
 
@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterPerfilUsuario
             repositorioFuncionarioEol = funcionarioEol ?? throw new ArgumentNullException(nameof(funcionarioEol));
         }
 
-        public async Task<IEnumerable<PerfilFuncionarioSgaDto>> Handle(ObterPerfilFuncionarioQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PerfilFuncionarioDto>> Handle(ObterPerfilFuncionarioQuery request, CancellationToken cancellationToken)
         {
             var retorno = request.EhFuncionarioExterno ? await repositorioFuncionarioEol.ObterPerfilFuncionarioExternoPorFuncao(request.CodigosFuncao)
                                                        : await repositorioFuncionarioEol.ObterPerfilFuncionarioPorFuncao(request.CodigosFuncao);

@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores
 {
     public interface IFuncionariosProfessoresEolUseCase
     {
-        Task<ProfessoresFuncionariosSgaDto> Executar(int anoLetivo, string codigoEscola);
+        Task<ProfessoresFuncionariosDto> Executar(int anoLetivo, string codigoEscola);
     }
 }

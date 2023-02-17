@@ -921,7 +921,7 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola)
+        public async Task<IEnumerable<FuncionarioDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola)
         {
             var query = new StringBuilder(@" select DISTINCT
 											    case 
@@ -950,12 +950,12 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            var retorno = await conn.QueryAsync<FuncionarioSgaDto>(query.ToString(), new { anoLetivo, codigoEscola });
+            var retorno = await conn.QueryAsync<FuncionarioDto>(query.ToString(), new { anoLetivo, codigoEscola });
 
             return retorno;
         }
 
-        public async Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao)
+        public async Task<IEnumerable<PerfilFuncionarioDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao)
         {
             try
             {
@@ -967,14 +967,14 @@ namespace SME.GoogleClassroom.Dados
 								where gfe.funcaoexterna  = any(@codigosFuncao);";
 
                 using var conn = ObterConexaoApiEOL();
-                return await conn.QueryAsync<PerfilFuncionarioSgaDto>(query.ToString(), new { codigosFuncao });
+                return await conn.QueryAsync<PerfilFuncionarioDto>(query.ToString(), new { codigosFuncao });
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
-        public async Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao)
+        public async Task<IEnumerable<PerfilFuncionarioDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao)
         {
             try
             {
@@ -986,7 +986,7 @@ namespace SME.GoogleClassroom.Dados
 						where cargo = any(@codigosFuncao) ";
 
                using var conn = ObterConexaoApiEOL();
-               return await conn.QueryAsync<PerfilFuncionarioSgaDto>(query.ToString(), new { codigosFuncao });
+               return await conn.QueryAsync<PerfilFuncionarioDto>(query.ToString(), new { codigosFuncao });
                 
             }
             catch (Exception e)
@@ -995,7 +995,7 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo, string codigoEscola, bool escolaCieja = false)
+        public async Task<IEnumerable<FuncionarioDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo, string codigoEscola, bool escolaCieja = false)
         {
             try
             {
@@ -1205,7 +1205,7 @@ namespace SME.GoogleClassroom.Dados
 
                 using var conn = ObterConexao();
 
-                var retorno = await conn.QueryAsync<FuncionarioSgaDto>(query.ToString(), new { anoLetivo, codigoEscola });
+                var retorno = await conn.QueryAsync<FuncionarioDto>(query.ToString(), new { anoLetivo, codigoEscola });
 
                 return retorno;
             }

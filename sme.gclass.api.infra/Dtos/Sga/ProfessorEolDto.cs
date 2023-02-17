@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
-    public class ProfessorEolSgaDto
+    public class ProfessorEolDto
     {
         public string NomeCompleto { get; set; }
         public string Rf { get; set; }

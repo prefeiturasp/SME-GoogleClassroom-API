@@ -267,10 +267,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("escola/{codigoEscola}/anoLetivo/{anoLetivo}")]
-        [ProducesResponseType(typeof(ProfessoresFuncionariosSgaDto), 200)]
+        [ProducesResponseType(typeof(ProfessoresFuncionariosDto), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterProfessoresEFuncionariosSga(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolUseCase useCase)
+        public async Task<IActionResult> ObterProfessoresEFuncionarios(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolUseCase useCase)
         {
             return Ok(await useCase.Executar(anoLetivo,codigoEscola));
         }
