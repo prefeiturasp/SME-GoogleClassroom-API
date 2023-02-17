@@ -20,12 +20,12 @@ using SME.GoogleClassroom.Infra.Enumeradores;
 
 namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 {
-    public class FuncionariosProfessoresEolSgaUseCase : IFuncionariosProfessoresEolSgaUseCase
+    public class FuncionariosProfessoresEolUseCase : IFuncionariosProfessoresEolUseCase
     {
         private readonly IMediator mediator;
         private const string SUPERVISOR = "SUPERVISOR"; 
 
-        public FuncionariosProfessoresEolSgaUseCase(IMediator mediator)
+        public FuncionariosProfessoresEolUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }

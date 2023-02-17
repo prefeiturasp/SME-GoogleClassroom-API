@@ -4,7 +4,7 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores
 {
-    public interface IFuncionariosProfessoresEolSgaUseCase
+    public interface IFuncionariosProfessoresEolUseCase
     {
         Task<ProfessoresFuncionariosSgaDto> Executar(int anoLetivo, string codigoEscola);
     }

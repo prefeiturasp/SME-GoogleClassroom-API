@@ -270,7 +270,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(ProfessoresFuncionariosSgaDto), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterProfessoresEFuncionariosSga(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolSgaUseCase useCase)
+        public async Task<IActionResult> ObterProfessoresEFuncionariosSga(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolUseCase useCase)
         {
             return Ok(await useCase.Executar(anoLetivo,codigoEscola));
         }
