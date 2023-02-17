@@ -921,7 +921,7 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola)
+        public async Task<IEnumerable<FuncionarioDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola)
         {
             var query = new StringBuilder(@" select DISTINCT
 											    case 
@@ -950,12 +950,12 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            var retorno = await conn.QueryAsync<FuncionarioSgaDto>(query.ToString(), new { anoLetivo, codigoEscola });
+            var retorno = await conn.QueryAsync<FuncionarioDto>(query.ToString(), new { anoLetivo, codigoEscola });
 
             return retorno;
         }
 
-        public async Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao)
+        public async Task<IEnumerable<PerfilFuncionarioDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao)
         {
             try
             {
@@ -967,14 +967,14 @@ namespace SME.GoogleClassroom.Dados
 								where gfe.funcaoexterna  = any(@codigosFuncao);";
 
                 using var conn = ObterConexaoApiEOL();
-                return await conn.QueryAsync<PerfilFuncionarioSgaDto>(query.ToString(), new { codigosFuncao });
+                return await conn.QueryAsync<PerfilFuncionarioDto>(query.ToString(), new { codigosFuncao });
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
-        public async Task<IEnumerable<PerfilFuncionarioSgaDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao)
+        public async Task<IEnumerable<PerfilFuncionarioDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao)
         {
             try
             {
@@ -986,7 +986,7 @@ namespace SME.GoogleClassroom.Dados
 						where cargo = any(@codigosFuncao) ";
 
                using var conn = ObterConexaoApiEOL();
-               return await conn.QueryAsync<PerfilFuncionarioSgaDto>(query.ToString(), new { codigosFuncao });
+               return await conn.QueryAsync<PerfilFuncionarioDto>(query.ToString(), new { codigosFuncao });
                 
             }
             catch (Exception e)
@@ -995,7 +995,7 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<FuncionarioSgaDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo, string codigoEscola, bool escolaCieja = false)
+        public async Task<IEnumerable<FuncionarioDto>> ObterFuncionarioEolPorUeAnoLetivo(int anoLetivo, string codigoEscola, bool escolaCieja = false)
         {
             try
             {
@@ -1003,230 +1003,209 @@ namespace SME.GoogleClassroom.Dados
 												DECLARE @cargoAD AS INT = 3085;
 												DECLARE @cargoDiretor AS INT = 3360;
 												DECLARE @cargoSupervisor AS INT = 3352;
-												DECLARE @cargoSupervisorTecnico433 AS INT = 433;
-												DECLARE @cargoSupervisorTecnico434 AS INT = 434;
 												DECLARE @cargoATE AS INT = 4906;
-												Declare @ProfessorresReadaptados as varchar;
+												DECLARE @secretarioEscolar AS INT = 3182;
 
 												--Funções específicas ativas
 												DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
 												DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
 												DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
 
-												IF OBJECT_ID('tempdb..#tempProfessorresReadaptados') IS NOT NULL
-												   DROP TABLE #tempProfessorresReadaptados;
+												with tempProfessorresReadaptados as 
+												(
+													  select DISTINCT  
+															vcbc.cd_cargo_base_servidor
+													    from laudo_medico lm 
+													    inner join v_cargo_base_cotic vcbc on lm.cd_cargo_base_servidor = vcbc.cd_cargo_base_servidor
+													    inner join cargo c on vcbc.cd_cargo =  c.cd_cargo 
+													    where lm.cd_tipo_laudo in('R','T','D') 
+													    and c.dc_cargo like '%Professor%'
+												),
+												tempCargosBaseFuncionarios_Fixos_todos as -- 1.Cargos base Fixos
+												(	
+													SELECT distinct 
+														cbc.cd_cargo_base_servidor,
+														cbc.cd_servidor,
+														cbc.cd_cargo,
+														te.an_letivo ,
+														esc.cd_escola,
+														CASE			
+															WHEN cbc.cd_cargo = @cargoSupervisor THEN 2
+															WHEN cbc.cd_cargo = @cargoDiretor THEN 3
+															WHEN cbc.cd_cargo = @cargoAD THEN 4
+															WHEN cbc.cd_cargo = @cargoCP THEN 5
+															WHEN cbc.cd_cargo = @secretarioEscolar THEN 6
+															WHEN cbc.cd_cargo = @cargoATE THEN 8
+															WHEN (select count(*) from tempProfessorresReadaptados where cd_cargo_base_servidor in(cbc.cd_cargo))>0 then 9
+														END AS prioridade 
+													FROM v_cargo_base_cotic cbc (NOLOCK)
+													JOIN lotacao_servidor ls (NOLOCK) ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
+													JOIN escola esc  (NOLOCK) ON ls.cd_unidade_educacao = esc.cd_escola
+													JOIN turma_escola te (NOLOCK) ON te.cd_escola = esc.cd_escola	
+													join cargo c on c.cd_cargo = cbc.cd_cargo 	
+													WHERE  (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE()) 
+													       and  te.an_letivo = @anoLetivo and esc.cd_escola = @codigoEscola  	 
+												           and  ls.dt_fim is null and ls.dt_cancelamento is null ");
+                query.AppendLine(escolaCieja ? @" and cbc.cd_cargo = 0 " : @" and cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoATE,@secretarioEscolar) ");
 
-											
-											        select DISTINCT  
-				    									vcbc.cd_cargo_base_servidor
-											        into #tempProfessorresReadaptados
-												    from laudo_medico lm 
-												    inner join v_cargo_base_cotic vcbc on lm.cd_cargo_base_servidor = vcbc.cd_cargo_base_servidor
-												    inner join cargo c on vcbc.cd_cargo =  c.cd_cargo 
-												    where lm.cd_tipo_laudo in('R','T','D') 
-												    and c.dc_cargo like '%Professor%';
+                query.AppendLine(@"),tempCargosBaseFuncionarios_Fixos_cp_ad_diretor_sup as -- 1.Cargos base Fixos
+									(	
+										select * from tempCargosBaseFuncionarios_Fixos_todos 
+										where cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoATE,@secretarioEscolar) 
+									),
+									tempCargosBaseFuncionarios_Fixos_adaptados as -- 1.Cargos base Fixos - adaptados - era uma variável, transformado em tabela
+									(	
+										select t.* 
+										from tempCargosBaseFuncionarios_Fixos_todos	t
+										join tempProfessorresReadaptados tpr on tpr.cd_cargo_base_servidor = t.cd_cargo 
+									),
+									tempCargosBaseFuncionarios_Fixos as
+									(
+										select * from tempCargosBaseFuncionarios_Fixos_cp_ad_diretor_sup
+										union 
+										select * from tempCargosBaseFuncionarios_Fixos_adaptados
+									),");
+                
+                query.AppendLine(@"tempCargosSobrepostosFuncionarios_Fixos_base as --2. Cargos sobrepostos fixos todos
+									(
+									SELECT distinct
+											css.cd_cargo_base_servidor,
+											cbc.cd_servidor,
+											css.cd_cargo,
+											te.an_letivo ,
+											esc.cd_escola,
+											CASE
+												WHEN css.cd_cargo = @cargoSupervisor THEN 2
+												WHEN css.cd_cargo = @cargoDiretor THEN 3
+												WHEN css.cd_cargo = @cargoAD THEN 4
+												WHEN css.cd_cargo = @cargoCP THEN 5
+												WHEN css.cd_cargo = @secretarioEscolar THEN 6	
+												WHEN css.cd_cargo = @cargoATE THEN 8
+												WHEN (select count(*) from tempProfessorresReadaptados where cd_cargo_base_servidor in(css.cd_cargo))>0 then 9
+											END AS prioridade
+										FROM v_servidor_cotic serv (NOLOCK)
+										JOIN v_cargo_base_cotic cbc (NOLOCK) ON serv.cd_servidor = cbc.cd_servidor    
+										JOIN cargo_sobreposto_servidor css (NOLOCK) ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
+										JOIN escola esc (NOLOCK) ON css.cd_unidade_local_servico = esc.cd_escola
+										JOIN turma_escola te (NOLOCK) ON te.cd_escola = esc.cd_escola
+										WHERE (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) 
+											  and te.an_letivo = @anoLetivo and esc.cd_escola = @codigoEscola  ");
+                query.AppendLine(escolaCieja ? @" and css.cd_cargo = 0 " : @" and css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoATE,@secretarioEscolar) ");
 
+                query.AppendLine(@"),tempCargosSobrepostosFuncionarios_Fixos_cp_ad_diretor_sup as --2. Cargos sobrepostos fixos cp_ad_diretor_sup
+									(
+										select * from tempCargosSobrepostosFuncionarios_Fixos_base 
+										where cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoATE,@secretarioEscolar) 
+									),
+									tempCargosSobrepostosFuncionarios_Fixos_readaptados as--2. Cargos sobrepostos fixos readaptados
+									(
+										select t.* 
+										from tempCargosSobrepostosFuncionarios_Fixos_base	t
+										join tempProfessorresReadaptados tpr on tpr.cd_cargo_base_servidor = t.cd_cargo
+									),
+									tempCargosSobrepostosFuncionarios_Fixos as
+									(
+										select * from tempCargosSobrepostosFuncionarios_Fixos_cp_ad_diretor_sup
+										union 
+										select * from tempCargosSobrepostosFuncionarios_Fixos_readaptados
+									),");
 
-													set @ProfessorresReadaptados = (SELECT convert(varchar,cd_cargo_base_servidor) + ',' FROM #tempProfessorresReadaptados FOR XML PATH(''))
+                query.AppendLine(@"tempCargosFuncionarios_Fixos as  -- 3. União das tabelas de cargo fixo
+									(
+										SELECT	*
+										FROM
+											(SELECT cd_cargo_base_servidor,cd_servidor,cd_cargo,an_letivo,cd_escola,prioridade FROM tempCargosSobrepostosFuncionarios_Fixos) AS sobrepostos
+										UNION
+											(SELECT cd_cargo_base_servidor,cd_servidor,cd_cargo,an_letivo,cd_escola,prioridade FROM tempCargosBaseFuncionarios_Fixos
+												WHERE NOT cd_cargo_base_servidor IN (SELECT DISTINCT cd_cargo_base_servidor FROM tempCargosSobrepostosFuncionarios_Fixos)) 
+									), ");
 
-												-- 1.Cargos base Fixos
-												IF OBJECT_ID('tempdb..#tempCargosBaseFuncionarios_Fixos') IS NOT NULL
-													DROP TABLE #tempCargosBaseFuncionarios_Fixos;
-												SELECT
-													cbc.cd_cargo_base_servidor,
-													cbc.cd_servidor,
-													cbc.cd_cargo,
-													te.an_letivo ,
-													esc.cd_escola,
-													facs.cd_tipo_funcao as funcao,
-													CASE
-														WHEN cbc.cd_cargo = @cargoSupervisorTecnico433 OR cbc.cd_cargo = @cargoSupervisorTecnico434 THEN 1
-														WHEN cbc.cd_cargo = @cargoSupervisor THEN 2
-														WHEN cbc.cd_cargo = @cargoDiretor THEN 3
-														WHEN cbc.cd_cargo = @cargoAD THEN 4
-														WHEN cbc.cd_cargo = @cargoCP THEN 5
-														WHEN cbc.cd_cargo = @cargoATE THEN 8
-														WHEN (select count(*) from #tempProfessorresReadaptados where cd_cargo_base_servidor in(cbc.cd_cargo))>0 then 9
-													END AS prioridade
-												INTO #tempCargosBaseFuncionarios_Fixos
-												FROM
-													v_cargo_base_cotic cbc (NOLOCK)
-												INNER JOIN
-													funcao_atividade_cargo_servidor facs (NOLOCK)
-													ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
-												INNER JOIN
-													lotacao_servidor ls (NOLOCK)
-													ON ls.cd_cargo_base_servidor = cbc.cd_cargo_base_servidor
-												INNER JOIN
-													escola esc  (NOLOCK)
-													ON ls.cd_unidade_educacao = esc.cd_escola
-												INNER JOIN
-													turma_escola te (NOLOCK)
-													ON te.cd_escola = esc.cd_escola	
-												WHERE  (dt_fim_nomeacao IS NULL OR dt_fim_nomeacao > GETDATE()) and  
-												 te.an_letivo = @anoLetivo and esc.cd_escola = @codigoEscola and  ");
-                query.AppendLine(escolaCieja ? @" cbc.cd_cargo = 0 " : @" cbc.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE,(SELECT @ProfessorresReadaptados as ProfessorresReadaptados)) ");
-
-                query.AppendLine(@"-- 2. Cargos sobrepostos fixos
-									IF OBJECT_ID('tempdb..#tempCargosSobrepostosFuncionarios_Fixos') IS NOT NULL
-										DROP TABLE #tempCargosSobrepostosFuncionarios_Fixos;
-									SELECT
-										css.cd_cargo_base_servidor,
-										cbc.cd_servidor,
-										css.cd_cargo,
-										te.an_letivo ,
-										esc.cd_escola,
-										facs.cd_tipo_funcao as funcao,
-										CASE
-											WHEN css.cd_cargo = @cargoSupervisorTecnico433 OR css.cd_cargo = @cargoSupervisorTecnico434 THEN 1
-											WHEN css.cd_cargo = @cargoSupervisor THEN 2
-											WHEN css.cd_cargo = @cargoDiretor THEN 3
-											WHEN css.cd_cargo = @cargoAD THEN 4
-											WHEN css.cd_cargo = @cargoCP THEN 5
-											WHEN css.cd_cargo = @cargoATE THEN 8
-											WHEN (select count(*) from #tempProfessorresReadaptados where cd_cargo_base_servidor in(css.cd_cargo))>0 then 9
-										END AS prioridade
-								INTO #tempCargosSobrepostosFuncionarios_Fixos
-									FROM
-										v_servidor_cotic serv (NOLOCK)
-									INNER JOIN
-										v_cargo_base_cotic cbc (NOLOCK)
-										ON serv.cd_servidor = cbc.cd_servidor
-								   INNER JOIN
-										funcao_atividade_cargo_servidor facs (NOLOCK)
-										ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
-									INNER JOIN
-										cargo_sobreposto_servidor css (NOLOCK)
-										ON cbc.cd_cargo_base_servidor = css.cd_cargo_base_servidor
-									INNER JOIN
-										escola esc (NOLOCK)
-										ON css.cd_unidade_local_servico = esc.cd_escola
-									INNER JOIN
-										turma_escola te (NOLOCK)
-										ON te.cd_escola = esc.cd_escola
-									WHERE (css.dt_fim_cargo_sobreposto IS NULL OR css.dt_fim_cargo_sobreposto > GETDATE()) and 
-										te.an_letivo = @anoLetivo and esc.cd_escola = @codigoEscola and  ");
-                query.AppendLine(escolaCieja ? @" css.cd_cargo = 0 " : @" css.cd_cargo IN (@cargoCP, @cargoAD, @cargoDiretor, @cargoSupervisor, @cargoSupervisorTecnico433, @cargoSupervisorTecnico434, @cargoATE,(SELECT @ProfessorresReadaptados as ProfessorresReadaptados)) ");
-
-                query.AppendLine(@" -- 3. União das tabelas de cargo fixo
-						IF OBJECT_ID('tempdb..#tempCargosFuncionarios_Fixos') IS NOT NULL
-							DROP TABLE #tempCargosFuncionarios_Fixos;
-
-						SELECT
-							*
-						INTO #tempCargosFuncionarios_Fixos
-						FROM
-							(SELECT * FROM #tempCargosSobrepostosFuncionarios_Fixos) AS sobrepostos
-						UNION
-							(SELECT * FROM #tempCargosBaseFuncionarios_Fixos
-								WHERE NOT cd_cargo_base_servidor IN (SELECT DISTINCT cd_cargo_base_servidor FROM #tempCargosSobrepostosFuncionarios_Fixos)); ");
-
-
-
-                query.AppendLine(@"      
-                        -- 4. Funções específicas ativas
-						IF OBJECT_ID('tempdb..#tempProfessores_PAP_PAEE_CIEJA') IS NOT NULL
-							DROP TABLE #tempProfessores_PAP_PAEE_CIEJA;
-						SELECT
-							cbc.cd_cargo_base_servidor,
-							cbc.cd_servidor,
-							cbc.cd_cargo,
-							te.an_letivo ,
-							esc.cd_escola,
-							facs.cd_tipo_funcao as funcao,
-							10  prioridade
-						INTO #tempProfessores_PAP_PAEE_CIEJA
-						FROM
-							v_cargo_base_cotic cbc (NOLOCK)
-						INNER JOIN
-							funcao_atividade_cargo_servidor facs (NOLOCK)
-							ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
-						INNER JOIN
-							escola esc (NOLOCK)
-							ON facs.cd_unidade_local_servico = esc.cd_escola
-						INNER JOIN
-							turma_escola te (NOLOCK)
-							ON te.cd_escola = esc.cd_escola
-						WHERE  dt_fim_nomeacao IS NULL
-					    AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE()) 
-                             and esc.cd_escola = @codigoEscola and te.an_letivo  = @anoLetivo
-				       and facs.cd_tipo_funcao IN (@tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD) ");
+                query.AppendLine(@" tempProfessores_PAP_PAEE_CIEJA as -- 4. Funções específicas ativas
+									(
+										SELECT distinct 
+											cbc.cd_cargo_base_servidor,
+											cbc.cd_servidor,
+											cbc.cd_cargo,
+											te.an_letivo ,
+											esc.cd_escola,
+											10  prioridade
+										FROM
+											v_cargo_base_cotic cbc (NOLOCK)
+										INNER JOIN
+											funcao_atividade_cargo_servidor facs (NOLOCK)
+											ON cbc.cd_cargo_base_servidor = facs.cd_cargo_base_servidor
+										INNER JOIN
+											escola esc (NOLOCK)
+											ON facs.cd_unidade_local_servico = esc.cd_escola
+										INNER JOIN
+											turma_escola te (NOLOCK)
+											ON te.cd_escola = esc.cd_escola
+										WHERE  dt_fim_nomeacao IS NULL
+										AND (facs.dt_fim_funcao_atividade IS NULL OR facs.dt_fim_funcao_atividade > GETDATE()) and 
+											esc.cd_escola = @codigoEscola and te.an_letivo  = @anoLetivo
+										    and facs.cd_tipo_funcao IN (@tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD) 
+									), ");
 
 
 
-                query.AppendLine(@"-- 5. União das tabelas de cargo fixo e função
-						IF OBJECT_ID('tempdb..#tempCargosFuncionarios') IS NOT NULL
-							DROP TABLE #tempCargosFuncionarios;
-						SELECT
-							*
-						INTO #tempCargosFuncionarios
-						FROM
-							(SELECT * FROM #tempCargosFuncionarios_Fixos) AS fixos
-						UNION
-							(SELECT * FROM #tempProfessores_PAP_PAEE_CIEJA);
-
-						-- 6. Ajustar prioridade para funcionários com mais de um cargo
-						IF OBJECT_ID('tempdb..#tempFuncionariosCargoPrioridade') IS NOT NULL
-							DROP TABLE #tempFuncionariosCargoPrioridade;
-						SELECT
-							cd_servidor,
-							MIN(prioridade) AS prioridade,
-							an_letivo,
-							cd_escola,
-							funcao
-						INTO #tempFuncionariosCargoPrioridade
-						FROM
-							#tempCargosFuncionarios
-						GROUP BY
-							cd_servidor,an_letivo,cd_escola,funcao;
-
-						IF OBJECT_ID('tempdb..#tempCargosFuncionariosRemovendoDuplicados') IS NOT NULL
-							DROP TABLE #tempCargosFuncionariosRemovendoDuplicados;
-						SELECT
-							DISTINCT
-							t2.cd_cargo,
-							t1.cd_servidor,
-						    t1.an_letivo,
-							t1.cd_escola,
-						    t2.funcao
-						INTO #tempCargosFuncionariosRemovendoDuplicados
-						FROM
-							#tempFuncionariosCargoPrioridade t1
-						CROSS APPLY
-						(
-							SELECT TOP 1 * FROM #tempCargosFuncionarios temp WHERE temp.cd_servidor = t1.cd_servidor AND temp.prioridade = t1.prioridade
-						) AS t2; 
-
-						IF OBJECT_ID('tempdb..#tempCargosFuncionariosRemovendoDuplicadosFinal') IS NOT NULL
-							DROP TABLE #tempCargosFuncionariosRemovendoDuplicadosFinal;
-						SELECT
-							*
-						INTO #tempCargosFuncionariosRemovendoDuplicadosFinal
-						FROM
-							#tempCargosFuncionariosRemovendoDuplicados
-						ORDER BY cd_servidor 
-						
-			            SELECT
-			                COALESCE(serv.nm_social,serv.nm_pessoa) as NomeCompleto,
-							serv.cd_registro_funcional AS Rf,
-							serv.cd_cpf_pessoa as Cpf,
-							c.dc_cargo  AS Cargo,
-							c.cd_cargo as CodCargo,
-							funcao
-						FROM
-							v_servidor_cotic serv (NOLOCK)
-						INNER JOIN
-							#tempCargosFuncionariosRemovendoDuplicadosFinal temp
-							ON temp.cd_servidor = serv.cd_servidor
-						inner join cargo c on temp.cd_cargo = c.cd_cargo
-						WHERE temp.an_letivo = @anoLetivo 
-						and temp.cd_escola = @codigoEscola ");
+                query.AppendLine(@"tempCargosFuncionarios as -- 5. União das tabelas de cargo fixo e função
+									(
+										SELECT	*
+										FROM
+											(SELECT * FROM tempCargosFuncionarios_Fixos) AS fixos
+										UNION
+											(SELECT * FROM tempProfessores_PAP_PAEE_CIEJA)
+									),
+									tempFuncionariosCargoPrioridade as -- 6. Ajustar prioridade para funcionários com mais de um cargo
+									(	SELECT distinct 
+											cd_servidor,
+											MIN(prioridade) AS prioridade,
+											an_letivo,
+											cd_escola
+										FROM
+											tempCargosFuncionarios
+										GROUP BY
+											cd_servidor,an_letivo,cd_escola
+									),
+									tempCargosFuncionariosRemovendoDuplicados as 
+									(
+										SELECT
+											DISTINCT
+											t2.cd_cargo,
+											t1.cd_servidor,
+										    t1.an_letivo,
+											t1.cd_escola
+										FROM
+											tempFuncionariosCargoPrioridade t1
+										CROSS APPLY
+										(
+											SELECT TOP 1 * FROM tempCargosFuncionarios temp WHERE temp.cd_servidor = t1.cd_servidor AND temp.prioridade = t1.prioridade
+										) AS t2
+									),
+									tempCargosFuncionariosRemovendoDuplicadosFinal as 
+									(
+										SELECT distinct *
+										FROM tempCargosFuncionariosRemovendoDuplicados
+									)
+									SELECT DISTINCT
+									    COALESCE(serv.nm_social,serv.nm_pessoa) as NomeCompleto,
+										serv.cd_registro_funcional AS Rf,
+										serv.cd_cpf_pessoa as Cpf,
+										c.dc_cargo  AS Cargo,
+										c.cd_cargo as CodCargo
+									FROM v_servidor_cotic serv (NOLOCK)
+									JOIN tempCargosFuncionariosRemovendoDuplicadosFinal temp ON temp.cd_servidor = serv.cd_servidor
+									join cargo c on temp.cd_cargo = c.cd_cargo
+									WHERE temp.an_letivo = @anoLetivo  
+									and temp.cd_escola = @codigoEscola ");
                 if (escolaCieja)
                     query.AppendLine(@" and temp.funcao in(@tipoFuncaoCIEJAASSISTPED,@tipoFuncaoCIEJAASSISTCOORD,@tipoFuncaoCIEJACOORD)  ");
 
+                query.AppendLine(@" order by COALESCE(serv.nm_social,serv.nm_pessoa) ");
+
                 using var conn = ObterConexao();
 
-                var retorno = await conn.QueryAsync<FuncionarioSgaDto>(query.ToString(), new { anoLetivo, codigoEscola });
+                var retorno = await conn.QueryAsync<FuncionarioDto>(query.ToString(), new { anoLetivo, codigoEscola });
 
                 return retorno;
             }

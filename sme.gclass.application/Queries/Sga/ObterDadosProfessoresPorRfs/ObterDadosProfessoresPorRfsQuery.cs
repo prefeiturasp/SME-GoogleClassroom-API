@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterDadosProfessoresPorRfs
 {
-    public class ObterDadosProfessoresPorRfsQuery : IRequest<IEnumerable<DadosProfessorEolSgaDto>>
+    public class ObterDadosProfessoresPorRfsQuery : IRequest<IEnumerable<DadosProfessorEolDto>>
     {
         public string[] Rfs { get; set; }
 

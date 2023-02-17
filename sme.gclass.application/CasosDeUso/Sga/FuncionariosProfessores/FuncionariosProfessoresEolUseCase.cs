@@ -20,20 +20,21 @@ using SME.GoogleClassroom.Infra.Enumeradores;
 
 namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 {
-    public class FuncionariosProfessoresEolSgaUseCase : IFuncionariosProfessoresEolSgaUseCase
+    public class FuncionariosProfessoresEolUseCase : IFuncionariosProfessoresEolUseCase
     {
         private readonly IMediator mediator;
+        private const string SUPERVISOR = "SUPERVISOR"; 
 
-        public FuncionariosProfessoresEolSgaUseCase(IMediator mediator)
+        public FuncionariosProfessoresEolUseCase(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<ProfessoresFuncionariosSgaDto> Executar(int anoLetivo, string codigoEscola)
+        public async Task<ProfessoresFuncionariosDto> Executar(int anoLetivo, string codigoEscola)
         {
             var tiposEscolasParceirasLiceu = new List<int>() {11, 12, 32, 33};
 
-            IEnumerable<FuncionarioSgaDto> funcionario;
+            IEnumerable<FuncionarioDto> funcionario;
             var tipoEscola = await mediator.Send(new ObterTipoDaEscolaQuery(codigoEscola));
 
             var escolaCieja = tipoEscola == (int) TipoEscola.Cieja;
@@ -42,70 +43,95 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             if (!ehFuncionarioExterno)
                 funcionario = await mediator.Send(new ObterFuncionarioEolPorUeAnoLetivoQuery(codigoEscola, anoLetivo, escolaCieja));
             else
-                funcionario = await mediator.Send(new ObterFuncionarioExternoEolSgaPorUeAnoLetivoQuery(codigoEscola, anoLetivo));
+                funcionario = await mediator.Send(new ObterFuncionarioExternoEolPorUeAnoLetivoQuery(codigoEscola, anoLetivo));
 
             var rfsProfessoresCjSgp = (await mediator.Send(new ObterProfessorCjSgpQuery(anoLetivo, codigoEscola))).ToList();
+            
+            var rfsSupervisoresSgp = (await mediator.Send(new ObterAtribuicaoResponsaveisSgpQuery((int)TipoResponsavelAtribuicao.SupervisorEscolar,codigoEscola))).ToList();
+            
             var listaTurmas = (await mediator.Send(new ObterTurmasPorUeAnoLetivoQuery(codigoEscola, anoLetivo))).ToList();
 
-            return await MapearRetorno(funcionario.ToList(), listaTurmas, ehFuncionarioExterno, rfsProfessoresCjSgp,escolaCieja);
+            return await MapearRetorno(funcionario.ToList(), listaTurmas, ehFuncionarioExterno, rfsProfessoresCjSgp,escolaCieja,rfsSupervisoresSgp);
         }
 
-        private async Task<ProfessoresFuncionariosSgaDto> MapearRetorno(List<FuncionarioSgaDto> funcionarioSgaDtos, List<TurmaComponentesDto> listaTurmas, bool ehFuncionarioExterno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp, bool escolaCieja)
+        private async Task<ProfessoresFuncionariosDto> MapearRetorno(List<FuncionarioDto> funcionarioDtos, List<TurmaComponentesDto> listaTurmas, bool ehFuncionarioExterno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp, bool escolaCieja, List<ResponsaveisSgpDto> responsaveisSgp)
         {
-            var retorno = new ProfessoresFuncionariosSgaDto();
+            var retorno = new ProfessoresFuncionariosDto();
 
-            var listaPerfis = ehFuncionarioExterno || escolaCieja ? funcionarioSgaDtos.Select(x => x.Funcao).Distinct().ToArray() : funcionarioSgaDtos.Select(x => int.Parse(x.CodCargo)).Distinct().ToArray();
+            var listaPerfis = ehFuncionarioExterno || escolaCieja ? funcionarioDtos.Select(x => x.Funcao).Distinct().ToArray() : funcionarioDtos.Select(x => int.Parse(x.CodCargo)).Distinct().ToArray();
 
             var obterListaDePerfils = listaPerfis.Length >0 ? (await mediator.Send(new ObterPerfilFuncionarioQuery(listaPerfis, ehFuncionarioExterno))).ToList() 
-                                                                                           : new List<PerfilFuncionarioSgaDto>();
+                                                                                           : new List<PerfilFuncionarioDto>();
 
-            MapearFuncionarios(funcionarioSgaDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno, escolaCieja);
+            MapearFuncionarios(funcionarioDtos, retorno, obterListaDePerfils.ToList(), ehFuncionarioExterno, escolaCieja, responsaveisSgp);
 
             await MapearTurmas(listaTurmas, retorno, rfsProfessoresCjSgp);
 
             return retorno;
         }
 
-        private async Task MapearTurmas(List<TurmaComponentesDto> listaTurmas, ProfessoresFuncionariosSgaDto retorno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
+        private async Task<List<DadosProfessorEolDto>> ObterListaRegistroFuncional(List<TurmaComponentesDto> listaTurmas)
         {
-            var modalidades = new List<ModalidadeEolSgaDto>();
+            var professoresEol   = new List<DadosProfessorEolDto>();
+            var listaModalidades = listaTurmas.Select(x => (Modalidade) x.Modalidade).ToList().Distinct();
+            var listaTurmaComponentes = listaTurmas.Where(x => listaModalidades.Contains((Modalidade) x.Modalidade)).ToList();
+            var listaComponentes = new List<ComponenteTurmaDto>();
+            listaTurmaComponentes?.ForEach(x => listaComponentes?.AddRange(x.Componentes));
+            var listaRegistroFuncional = listaComponentes?.Select(x => x.RegistroFuncional).Where(r => r != null).Distinct().ToArray();
+            if (listaRegistroFuncional.Any())
+                professoresEol = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(listaRegistroFuncional))).ToList();
 
+            return professoresEol;
+        }
+
+        private async Task<List<DadosProfessorEolDto>> ObterListaRegistroProfessorCj(List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
+        {
+            var professoresCj = new List<DadosProfessorEolDto>();
+            var listaProfessoresCjSgp = rfsProfessoresCjSgp.Select(x => x.ProfessorRf).Distinct().ToArray();
+            if (listaProfessoresCjSgp.Any())
+                professoresCj = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(listaProfessoresCjSgp))).ToList();
+            
+            return professoresCj;
+        }
+        private async Task MapearTurmas(List<TurmaComponentesDto> listaTurmas, ProfessoresFuncionariosDto retorno, List<ProfessorCjSgpDto> rfsProfessoresCjSgp)
+        {
+            var modalidades = new List<ModalidadeEolDto>();
 
             var listaModalidades = listaTurmas.Select(x => (Modalidade) x.Modalidade).ToList().Distinct();
 
+             var professoresEol   = await ObterListaRegistroFuncional(listaTurmas);
+             var professoresCj = await ObterListaRegistroProfessorCj(rfsProfessoresCjSgp);
+            
             foreach (var modalidade in listaModalidades)
             {
                 var turmas = new List<TurmaEolGsaDto>();
                 foreach (var turma in listaTurmas.Where(x => x.Modalidade == (int) modalidade))
                 {
                     var modalidadeTurma = (Modalidade) turma.Modalidade;
-                    var componentes = new List<ComponeteCurricularEolSgaDto>();
-
+                    var componentes = new List<ComponeteCurricularEolDto>();
 
                     foreach (var componente in turma.Componentes)
                     {
-                        var listaProfessoresEol = new List<DadosProfessorEolSgaDto>();
-                        var listaProfessoresCj = new List<DadosProfessorEolSgaDto>();
+                        var listaProfessoresEol = new List<DadosProfessorEolDto>();
+                        var listaProfessoresCj = new List<DadosProfessorEolDto>();
 
                         var rfProfessoresEol = (turma.Componentes.Where(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigo).Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
 
-                        string codigoComponente = componente.ComponenteCurricularCodigo.ToString();
+                        var codigoComponente = componente.ComponenteCurricularCodigo.ToString();
                         
                         var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma && x.Disciplinas.ToList().Contains(codigoComponente)).Select(s => s.ProfessorRf)).Distinct()).ToList();
 
                         if (rfProfessoresEol.Any())
-                            listaProfessoresEol = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfProfessoresEol.ToArray()))).ToList();
+                            listaProfessoresEol = professoresEol?.Where(r => rfProfessoresEol.Contains(r.Rf)).ToList();
 
                         if (rfCjTurma.Any())
-                            listaProfessoresCj = (await mediator.Send(new ObterDadosProfessoresPorRfsQuery(rfCjTurma.ToArray()))).ToList();
+                            listaProfessoresCj = professoresCj?.Where(x => rfCjTurma.Contains(x.Rf)).ToList() ;
 
-
-
-                        var professores = new List<ProfessorEolSgaDto>();
+                        var professores = new List<ProfessorEolDto>();
 
                         foreach (var professor in listaProfessoresEol)
                         {
-                            professores.Add(new ProfessorEolSgaDto
+                            professores.Add(new ProfessorEolDto
                             {
                                 Cpf = professor.Cpf,
                                 NomeCompleto = professor.NomeCompleto,
@@ -116,7 +142,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 
                         foreach (var professor in listaProfessoresCj)
                         {
-                            professores.Add(new ProfessorEolSgaDto
+                            professores.Add(new ProfessorEolDto
                             {
                                 Cpf = professor.Cpf,
                                 NomeCompleto = professor.NomeCompleto,
@@ -125,8 +151,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                             });
                         }
 
-                        var rfProfessor = componente.RegistroFuncional;
-                        componentes.Add(new ComponeteCurricularEolSgaDto
+                        componentes.Add(new ComponeteCurricularEolDto
                         {
                             Descricao = componente.NomeComponenteCurricular,
                             ComponenteCodigo = componente.ComponenteCurricularCodigo,
@@ -146,7 +171,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                     });
                 }
 
-                modalidades.Add(new ModalidadeEolSgaDto
+                modalidades.Add(new ModalidadeEolDto
                 {
                     NomeModalidade = modalidade.Name(),
                     IdModalidade = (int)modalidade,
@@ -158,13 +183,13 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
             retorno.Modalidades = modalidades;
         }
 
-        private void MapearFuncionarios(IEnumerable<FuncionarioSgaDto> funcionarioSgaDtos, ProfessoresFuncionariosSgaDto retorno, List<PerfilFuncionarioSgaDto> perfilFuncionarioSgaDtos, bool ehFuncionarioExterno,bool escolaCieja)
+        private void MapearFuncionarios(IEnumerable<FuncionarioDto> funcionarioDtos, ProfessoresFuncionariosDto retorno, List<PerfilFuncionarioDto> perfilFuncionarioDtos, bool ehFuncionarioExterno,bool escolaCieja, List<ResponsaveisSgpDto> responsaveisSgp)
         {
-            var funcionarios = new List<FuncionarioEolSgaDto>();
-            foreach (var funcionario in funcionarioSgaDtos)
+            var funcionarios = new List<FuncionarioEolDto>();
+            foreach (var funcionario in funcionarioDtos)
             {
-                string perfil = escolaCieja ? ObterDescricaoPerfilCieja(funcionario.Funcao) : ObterDescricaoPerfil(perfilFuncionarioSgaDtos, ehFuncionarioExterno,funcionario);
-                funcionarios.Add(new FuncionarioEolSgaDto
+                string perfil = escolaCieja ? ObterDescricaoPerfilCieja(funcionario.Funcao) : ObterDescricaoPerfil(perfilFuncionarioDtos, ehFuncionarioExterno,funcionario);
+                funcionarios.Add(new FuncionarioEolDto
                 {
                     NomeCompleto = funcionario.NomeCompleto,
                     Rf = funcionario.Rf,
@@ -173,16 +198,27 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                 });
             }
 
+            foreach (var responsaveis in responsaveisSgp)
+            {
+                funcionarios.Add(new FuncionarioEolDto
+                {
+                    NomeCompleto = responsaveis.NomeResponsavel,
+                    Rf = responsaveis.CodigoRF,
+                    Perfil = SUPERVISOR
+                });
+            }
+
             retorno.Funcionarios = funcionarios;
         }
 
-        private static string ObterDescricaoPerfil(List<PerfilFuncionarioSgaDto> perfilFuncionarioSgaDtos, bool ehFuncionarioExterno, FuncionarioSgaDto funcionario)
+        private static string ObterDescricaoPerfil(List<PerfilFuncionarioDto> perfilFuncionarioDtos, bool ehFuncionarioExterno, FuncionarioDto funcionario)
         {
-            return perfilFuncionarioSgaDtos.Any() ? ehFuncionarioExterno 
-                                                  ? perfilFuncionarioSgaDtos?.FirstOrDefault(x => x.Codigo == funcionario.Funcao)?.Perfil 
-                                                  : perfilFuncionarioSgaDtos?.FirstOrDefault(x => x.Codigo == int.Parse(funcionario.CodCargo))?.Perfil 
+            return perfilFuncionarioDtos.Any() ? ehFuncionarioExterno 
+                                                  ? perfilFuncionarioDtos?.FirstOrDefault(x => x.Codigo == funcionario.Funcao)?.Perfil 
+                                                  : perfilFuncionarioDtos?.FirstOrDefault(x => x.Codigo == int.Parse(funcionario.CodCargo))?.Perfil 
                                                   : string.Empty;
         }
+
 
         private static string ObterDescricaoPerfilCieja(int funcao)
         {

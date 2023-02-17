@@ -18,6 +18,6 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCurso(string turmaId, DateTime dataInicio, DateTime dataFim);
         Task<IEnumerable<long>> ObterCodigosProfessoresInativosPorAnoLetivo(int anoLetivo, DateTime dataReferencia, string rf);
         Task<PaginacaoResultadoDto<RemoverAtribuicaoProfessorCursoEolDto>> ObterProfessoresParaRemoverCursoPaginado(string turmaId, DateTime dataInicio, DateTime dataFim, Paginacao paginacao);
-        Task<IEnumerable<DadosProfessorEolSgaDto>> ObterDadosDoProfessorPorRfs(string[] rfs);
+        Task<IEnumerable<DadosProfessorEolDto>> ObterDadosDoProfessorPorRfs(string[] rfs);
     }
 }

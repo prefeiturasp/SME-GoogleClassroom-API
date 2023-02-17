@@ -5,7 +5,7 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterPerfilUsuario
 {
-    public class ObterPerfilFuncionarioQuery : IRequest<IEnumerable<PerfilFuncionarioSgaDto>>
+    public class ObterPerfilFuncionarioQuery : IRequest<IEnumerable<PerfilFuncionarioDto>>
     {
         public ObterPerfilFuncionarioQuery(int[] codigosFuncao , bool ehFuncionarioExterno)
         {

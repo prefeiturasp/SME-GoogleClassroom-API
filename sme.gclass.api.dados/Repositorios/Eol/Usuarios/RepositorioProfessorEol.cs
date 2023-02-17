@@ -725,7 +725,7 @@ namespace SME.GoogleClassroom.Dados
 
 		}
 
-        public async Task<IEnumerable<DadosProfessorEolSgaDto>> ObterDadosDoProfessorPorRfs(string[] rfs)
+        public async Task<IEnumerable<DadosProfessorEolDto>> ObterDadosDoProfessorPorRfs(string[] rfs)
         {
 			try
 			{
@@ -736,7 +736,7 @@ namespace SME.GoogleClassroom.Dados
 											from v_servidor_cotic 
 											where cd_registro_funcional in ({string.Join(',', rfs)}) ");
                 using var conn = ObterConexao();
-                return await conn.QueryAsync<DadosProfessorEolSgaDto>(query.ToString());
+                return await conn.QueryAsync<DadosProfessorEolDto>(query.ToString());
             }
 			catch (Exception ex)
 			{

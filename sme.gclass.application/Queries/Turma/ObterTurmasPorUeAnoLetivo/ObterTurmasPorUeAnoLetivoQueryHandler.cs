@@ -60,33 +60,51 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 
                  if (territoriosBanco != null && territoriosBanco.Any())
                  {
-                    var territorios = territoriosBanco.GroupBy(c => new { c.CodigoTerritorioSaber, c.CodigoExperienciaPedagogica, c.DataInicio });
+                    var componentesTurma = turma.Componentes.Where(componente => componentesTerritorioApiEol.
+                        Any(componenteEol => componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo)).ToList();
 
-                    var componentesTurma = turma.Componentes.Where(componente =>
-                                                            componentesTerritorioApiEol.Any(componenteEol =>
-                                                                                    componenteEol.IdComponenteCurricular == componente.ComponenteCurricularCodigo)).ToList();
-                    foreach (var componenteTurma in
-                                componentesTurma)
-                    {
-                        turma.Componentes.RemoveAll(componente => 
-                                                             componente.ComponenteCurricularCodigo == componenteTurma.ComponenteCurricularCodigo
-                                                             && componente.RegistroFuncional == componenteTurma.RegistroFuncional);
-                        
-                        foreach (var componenteTerritorio in territorios)
+                    var componentesTerritorio = from componenteTurma in componentesTurma
+                        join territorioBanco in territoriosBanco on componenteTurma.ComponenteCurricularCodigo equals territorioBanco.CodigoComponenteCurricular
+                        select new ComponenteTerritorioTurmaDto()
                         {
-                            var codigoComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterCodigoComponenteCurricular(turma.CodigoTurma.ToString());
-                            if (!turma.Componentes.Any(componente =>
-                                                             componente.ComponenteCurricularCodigo == codigoComponenteCurricular
-                                                             && componente.RegistroFuncional == componenteTurma.RegistroFuncional))
-                                turma.Componentes.Add(new ComponenteTurmaDto()
+                            ComponenteCurricularCodigo = territorioBanco.ObterCodigoComponenteCurricular(turma.CodigoTurma.ToString()),
+                            ComponenteCurricularCodigoUnico = territorioBanco.ObterCodigoComponenteCurricularComComponente(turma.CodigoTurma.ToString(), componenteTurma.ComponenteCurricularCodigo),
+                            ComponenteCurricularCodigoEol = componenteTurma.ComponenteCurricularCodigo,
+                            DataDisponibizacao = componenteTurma.DataDisponibizacao,
+                            RegistroFuncional = componenteTurma.RegistroFuncional,
+                            NomeComponenteCurricular = territorioBanco.ObterDescricaoComponenteCurricular()
+                        };
+
+                    var turmaComponentesTerritorio = new List<ComponenteTerritorioTurmaDto>();
+                    
+                    foreach (var componente in componentesTerritorio)
+                    {
+                        turma.Componentes.RemoveAll(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigoEol
+                                                                            && c.RegistroFuncional == componente.RegistroFuncional);
+                        
+                        if (!turmaComponentesTerritorio.Any(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigo && c.RegistroFuncional == componente.RegistroFuncional))
+                        {
+                            turmaComponentesTerritorio.Add(new ComponenteTerritorioTurmaDto()
                             {
-                                ComponenteCurricularCodigo = codigoComponenteCurricular,
-                                NomeComponenteCurricular = componenteTerritorio.FirstOrDefault().ObterDescricaoComponenteCurricular(),
-                                RegistroFuncional = componenteTurma.RegistroFuncional,
-                                DataDisponibizacao = componenteTurma.DataDisponibizacao,
+                                ComponenteCurricularCodigo = componente.ComponenteCurricularCodigo,
+                                ComponenteCurricularCodigoUnico = componente.ComponenteCurricularCodigoUnico,
+                                NomeComponenteCurricular = $"{componente.ComponenteCurricularCodigoUnico} - {componente.NomeComponenteCurricular}",
+                                RegistroFuncional = componente.RegistroFuncional,
+                                DataDisponibizacao = componente.DataDisponibizacao,
                             });
                         }
-                    }                      
+                    }
+
+                    if (turmaComponentesTerritorio.Any())
+                    {
+                        turma.Componentes.AddRange(turmaComponentesTerritorio.Select(s=> new ComponenteTurmaDto()
+                        {
+                            ComponenteCurricularCodigo = s.ComponenteCurricularCodigoUnico,
+                            NomeComponenteCurricular = s.NomeComponenteCurricular,
+                            DataDisponibizacao = s.DataDisponibizacao,
+                            RegistroFuncional = s.RegistroFuncional
+                        }));
+                    }
                  }
              }
              return turmasComponentes;
