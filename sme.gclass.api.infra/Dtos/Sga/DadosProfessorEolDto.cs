@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SME.GoogleClassroom.Infra.Dtos.Sga
 {
-    public class DadosProfessorEolSgaDto
+    public class DadosProfessorEolDto
     {
         public string NomeCompleto { get; set; }
         public string Rf { get; set; }

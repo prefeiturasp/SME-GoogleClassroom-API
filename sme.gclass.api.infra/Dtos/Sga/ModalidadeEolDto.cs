@@ -2,7 +2,7 @@
 
 namespace SME.GoogleClassroom.Infra.Dtos.Gsa
 {
-    public class ModalidadeEolSgaDto
+    public class ModalidadeEolDto
     {
         public int IdModalidade { get; set; }
         public string SiglaModalidade { get; set; }

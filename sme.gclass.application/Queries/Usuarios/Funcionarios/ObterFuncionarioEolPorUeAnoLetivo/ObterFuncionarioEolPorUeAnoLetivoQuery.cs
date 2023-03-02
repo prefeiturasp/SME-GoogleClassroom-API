@@ -6,7 +6,7 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Usuarios.Funcionarios.ObterFuncionarioEolPorUeAnoLetivo
 {
-    public class ObterFuncionarioEolPorUeAnoLetivoQuery : IRequest<IEnumerable<FuncionarioSgaDto>>
+    public class ObterFuncionarioEolPorUeAnoLetivoQuery : IRequest<IEnumerable<FuncionarioDto>>
     {
         public ObterFuncionarioEolPorUeAnoLetivoQuery(string codigoEscola, int anoLetivo,bool escolaEhCieja = false)
         {

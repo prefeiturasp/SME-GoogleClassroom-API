@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterDadosProfessoresPorRfs
 {
-    public class ObterDadosProfessoresPorRfsQueryHandler : IRequestHandler<ObterDadosProfessoresPorRfsQuery, IEnumerable<DadosProfessorEolSgaDto>>
+    public class ObterDadosProfessoresPorRfsQueryHandler : IRequestHandler<ObterDadosProfessoresPorRfsQuery, IEnumerable<DadosProfessorEolDto>>
     {
         private readonly IRepositorioProfessorEol repositorio;
 
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterDadosProfessoresPorRfs
             this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
         }
 
-        public async Task<IEnumerable<DadosProfessorEolSgaDto>> Handle(ObterDadosProfessoresPorRfsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DadosProfessorEolDto>> Handle(ObterDadosProfessoresPorRfsQuery request, CancellationToken cancellationToken)
         {
             return await repositorio.ObterDadosDoProfessorPorRfs(request.Rfs);
         }

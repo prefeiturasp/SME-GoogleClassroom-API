@@ -27,7 +27,8 @@ namespace SME.GoogleClassroom.Dados.Escola
                        INNER JOIN v_cadastro_unidade_educacao vcue ON esc.cd_escola = vcue.cd_unidade_educacao
                        INNER JOIN tipo_escola te ON esc.tp_escola = te.tp_escola
                        INNER JOIN v_cadastro_unidade_educacao dre ON dre.cd_unidade_educacao = vcue.cd_unidade_administrativa_referencia
-                       where esc.tp_escola in({string.Join(',', tiposEscola)})";
+                       INNER JOIN unidade_administrativa ua on ua.cd_unidade_administrativa = dre.cd_unidade_educacao
+                       where ua.tp_unidade_administrativa = 24 AND esc.tp_escola in({string.Join(',', tiposEscola)})";
 
             if (!string.IsNullOrEmpty(codigoDre)) 
                 query += " AND dre.cd_unidade_educacao = @codigoDre";
