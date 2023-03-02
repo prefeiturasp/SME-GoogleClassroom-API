@@ -115,9 +115,9 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                         var listaProfessoresEol = new List<DadosProfessorEolDto>();
                         var listaProfessoresCj = new List<DadosProfessorEolDto>();
 
-                        var rfProfessoresEol = (turma.Componentes.Where(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigo).Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
+                        var rfProfessoresEol = (turma.Componentes.Where(c => c.ComponenteCurricularCodigoUnico == componente.ComponenteCurricularCodigoUnico).Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
 
-                        var codigoComponente = componente.ComponenteCurricularCodigo.ToString();
+                        var codigoComponente = componente.ComponenteCurricularCodigoUnico;
                         
                         var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma && x.Disciplinas.ToList().Contains(codigoComponente)).Select(s => s.ProfessorRf)).Distinct()).ToList();
 
@@ -154,7 +154,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                         componentes.Add(new ComponeteCurricularEolDto
                         {
                             Descricao = componente.NomeComponenteCurricular,
-                            ComponenteCodigo = componente.ComponenteCurricularCodigo,
+                            ComponenteCodigo = componente.ComponenteCurricularCodigoUnico,
                             Professores = professores
                         });
                     }

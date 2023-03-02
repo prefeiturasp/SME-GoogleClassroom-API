@@ -99,7 +99,8 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
                     {
                         turma.Componentes.AddRange(turmaComponentesTerritorio.Select(s=> new ComponenteTurmaDto()
                         {
-                            ComponenteCurricularCodigo = s.ComponenteCurricularCodigoUnico,
+                            ComponenteCurricularCodigo = s.ComponenteCurricularCodigo,
+                            ComponenteCurricularCodigoUnico = s.ComponenteCurricularCodigoUnico,
                             NomeComponenteCurricular = s.NomeComponenteCurricular,
                             DataDisponibizacao = s.DataDisponibizacao,
                             RegistroFuncional = s.RegistroFuncional

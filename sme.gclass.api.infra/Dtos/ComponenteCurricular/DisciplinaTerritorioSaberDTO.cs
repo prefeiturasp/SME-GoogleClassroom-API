@@ -16,9 +16,9 @@ namespace SME.Pedagogico.Interface.DTO.RetornoQueryDTO
             return Convert.ToInt64($"{codigoTurma}{CodigoTerritorioSaber}{CodigoExperienciaPedagogica}{DataInicio:MMdd}");
         }
         
-        public long ObterCodigoComponenteCurricularComComponente(string codigoTurma, long componente)
+        public string ObterCodigoComponenteCurricularComComponente(string codigoTurma, long componente)
         {
-            return Convert.ToInt64($"{codigoTurma}{CodigoTerritorioSaber}{CodigoExperienciaPedagogica}{DataInicio:MMdd}{componente}");
+            return $"{codigoTurma}{CodigoTerritorioSaber}{CodigoExperienciaPedagogica}{DataInicio:MMdd}{componente}";
         }
 
         public string ObterDescricaoComponenteCurricular()

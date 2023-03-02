@@ -9,7 +9,7 @@ namespace SME.GoogleClassroom.Infra
     {
         public string NomeComponenteCurricular { get; set; }
         public long ComponenteCurricularCodigo { get; set; }
-        public long ComponenteCurricularCodigoUnico { get; set; }
+        public string ComponenteCurricularCodigoUnico { get; set; }
         public string RegistroFuncional { get; set; }
         public DateTime? DataDisponibizacao { get; set; }
         public long ComponenteCurricularCodigoEol { get; set; }
