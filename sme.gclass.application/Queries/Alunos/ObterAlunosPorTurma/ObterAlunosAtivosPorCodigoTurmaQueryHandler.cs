@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
             CancellationToken cancellationToken)
         {
             var retornoElastic = await repositorioElasticSearch.ObterAlunosAtivosNaTurmaAsync((int)request.CodigoTurma, DateTime.Today);
-            return retornoElastic?.Select(aluno => new AlunoEolSimplificadoDto { Codigo = aluno.CodigoAluno, DataNascimento = aluno.DataNascimento, Nome = aluno.NomeAluno });
+            return retornoElastic?.Select(aluno => new AlunoEolSimplificadoDto { Codigo = aluno.CodigoAluno, DataNascimento = aluno.DataNascimento, Nome = aluno.NomeSocialAluno ?? aluno.NomeAluno });
         }
     }
 }
