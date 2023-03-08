@@ -1128,7 +1128,8 @@ namespace SME.GoogleClassroom.Dados
 											cbc.cd_cargo,
 											te.an_letivo ,
 											esc.cd_escola,
-											10  prioridade
+											10  prioridade,
+											facs.cd_tipo_funcao funcao
 										FROM
 											v_cargo_base_cotic cbc (NOLOCK)
 										INNER JOIN
@@ -1150,7 +1151,7 @@ namespace SME.GoogleClassroom.Dados
 
                 query.AppendLine(@"tempCargosFuncionarios as -- 5. União das tabelas de cargo fixo e função
 									(
-										SELECT	*
+										SELECT	* , 0 as funcao
 										FROM
 											(SELECT * FROM tempCargosFuncionarios_Fixos) AS fixos
 										UNION
@@ -1161,11 +1162,12 @@ namespace SME.GoogleClassroom.Dados
 											cd_servidor,
 											MIN(prioridade) AS prioridade,
 											an_letivo,
-											cd_escola
+											cd_escola,
+											funcao
 										FROM
 											tempCargosFuncionarios
 										GROUP BY
-											cd_servidor,an_letivo,cd_escola
+											cd_servidor,an_letivo,cd_escola,funcao
 									),
 									tempCargosFuncionariosRemovendoDuplicados as 
 									(
@@ -1174,7 +1176,8 @@ namespace SME.GoogleClassroom.Dados
 											t2.cd_cargo,
 											t1.cd_servidor,
 										    t1.an_letivo,
-											t1.cd_escola
+											t1.cd_escola,
+											t2.funcao
 										FROM
 											tempFuncionariosCargoPrioridade t1
 										CROSS APPLY
@@ -1192,14 +1195,13 @@ namespace SME.GoogleClassroom.Dados
 										serv.cd_registro_funcional AS Rf,
 										serv.cd_cpf_pessoa as Cpf,
 										c.dc_cargo  AS Cargo,
-										c.cd_cargo as CodCargo
+										c.cd_cargo as CodCargo,
+										temp.funcao
 									FROM v_servidor_cotic serv (NOLOCK)
 									JOIN tempCargosFuncionariosRemovendoDuplicadosFinal temp ON temp.cd_servidor = serv.cd_servidor
 									join cargo c on temp.cd_cargo = c.cd_cargo
 									WHERE temp.an_letivo = @anoLetivo  
 									and temp.cd_escola = @codigoEscola ");
-                if (escolaCieja)
-                    query.AppendLine(@" and temp.funcao in(@tipoFuncaoCIEJAASSISTPED,@tipoFuncaoCIEJAASSISTCOORD,@tipoFuncaoCIEJACOORD)  ");
 
                 query.AppendLine(@" order by COALESCE(serv.nm_social,serv.nm_pessoa) ");
 

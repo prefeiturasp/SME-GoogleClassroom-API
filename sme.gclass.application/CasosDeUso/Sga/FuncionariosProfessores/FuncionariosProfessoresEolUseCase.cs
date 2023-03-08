@@ -185,30 +185,30 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 
         private void MapearFuncionarios(IEnumerable<FuncionarioDto> funcionarioDtos, ProfessoresFuncionariosDto retorno, List<PerfilFuncionarioDto> perfilFuncionarioDtos, bool ehFuncionarioExterno,bool escolaCieja, List<ResponsaveisSgpDto> responsaveisSgp)
         {
-            var funcionarios = new List<FuncionarioEolDto>();
-            foreach (var funcionario in funcionarioDtos)
-            {
-                string perfil = escolaCieja ? ObterDescricaoPerfilCieja(funcionario.Funcao) : ObterDescricaoPerfil(perfilFuncionarioDtos, ehFuncionarioExterno,funcionario);
-                funcionarios.Add(new FuncionarioEolDto
-                {
-                    NomeCompleto = funcionario.NomeCompleto,
-                    Rf = funcionario.Rf,
-                    Cpf = funcionario.Cpf,
-                    Perfil = perfil
-                });
-            }
+           var funcionarios = new List<FuncionarioEolDto>();
+           foreach (var funcionario in funcionarioDtos)
+           {
+               var perfil = escolaCieja ? ObterDescricaoPerfilCieja(funcionario.Funcao) : ObterDescricaoPerfil(perfilFuncionarioDtos, ehFuncionarioExterno,funcionario);
+               funcionarios.Add(new FuncionarioEolDto
+               {
+                   NomeCompleto = funcionario.NomeCompleto,
+                   Rf = funcionario.Rf,
+                   Cpf = funcionario.Cpf,
+                   Perfil = perfil
+               });
+           }
 
-            foreach (var responsaveis in responsaveisSgp)
-            {
-                funcionarios.Add(new FuncionarioEolDto
-                {
-                    NomeCompleto = responsaveis.NomeResponsavel,
-                    Rf = responsaveis.CodigoRF,
-                    Perfil = SUPERVISOR
-                });
-            }
+           foreach (var responsaveis in responsaveisSgp)
+           {
+               funcionarios.Add(new FuncionarioEolDto
+               {
+                   NomeCompleto = responsaveis.NomeResponsavel,
+                   Rf = responsaveis.CodigoRF,
+                   Perfil = SUPERVISOR
+               });
+           }
 
-            retorno.Funcionarios = funcionarios;
+           retorno.Funcionarios = funcionarios;
         }
 
         private static string ObterDescricaoPerfil(List<PerfilFuncionarioDto> perfilFuncionarioDtos, bool ehFuncionarioExterno, FuncionarioDto funcionario)
