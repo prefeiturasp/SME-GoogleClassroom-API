@@ -196,18 +196,18 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 
         private async Task MapearFuncionarios(IEnumerable<FuncionarioDto> funcionarioDtos, ProfessoresFuncionariosDto retorno, List<PerfilFuncionarioDto> perfilFuncionarioDtos, bool ehFuncionarioExterno,bool escolaCieja, List<ResponsaveisSgpDto> responsaveisSgp)
         {
-            var funcionarios = new List<FuncionarioEolDto>();
-            foreach (var funcionario in funcionarioDtos)
-            {
-                string perfil = escolaCieja ? ObterDescricaoPerfilCieja(funcionario.Funcao) : ObterDescricaoPerfil(perfilFuncionarioDtos, ehFuncionarioExterno,funcionario);
-                funcionarios.Add(new FuncionarioEolDto
-                {
-                    NomeCompleto = funcionario.NomeCompleto,
-                    Rf = funcionario.Rf,
-                    Cpf = funcionario.Cpf,
-                    Perfil = perfil
-                });
-            }
+           var funcionarios = new List<FuncionarioEolDto>();
+           foreach (var funcionario in funcionarioDtos)
+           {
+               var perfil = escolaCieja ? ObterDescricaoPerfilCieja(funcionario.Funcao) : ObterDescricaoPerfil(perfilFuncionarioDtos, ehFuncionarioExterno,funcionario);
+               funcionarios.Add(new FuncionarioEolDto
+               {
+                   NomeCompleto = funcionario.NomeCompleto,
+                   Rf = funcionario.Rf,
+                   Cpf = funcionario.Cpf,
+                   Perfil = perfil
+               });
+           }
 
            var supervidoresResponsaveis = await ObterListaRegistroSupervisor(responsaveisSgp);
            foreach (var responsaveis in supervidoresResponsaveis)
@@ -221,7 +221,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
                });
            }
 
-            retorno.Funcionarios = funcionarios;
+           retorno.Funcionarios = funcionarios;
         }
 
         private static string ObterDescricaoPerfil(List<PerfilFuncionarioDto> perfilFuncionarioDtos, bool ehFuncionarioExterno, FuncionarioDto funcionario)
