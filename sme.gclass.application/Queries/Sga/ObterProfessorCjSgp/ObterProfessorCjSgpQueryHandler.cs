@@ -24,7 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Sga.ObterProfessorCjSgp
 
             var httpClient = httpClientFactory.CreateClient("servicoSgp");
             var resposta = await httpClient.GetAsync($"v1/atribuicoes/cjs/integracoes/escola/{request.CodigoEscola}/anoLetivo/{request.AnoLetivo}", cancellationToken);
-            if (resposta.IsSuccessStatusCode)
+            if (resposta.IsSuccessStatusCode && resposta.StatusCode != System.Net.HttpStatusCode.NoContent)
             {
                 var json = await resposta.Content.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(json))

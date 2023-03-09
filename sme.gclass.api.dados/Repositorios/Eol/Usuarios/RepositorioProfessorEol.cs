@@ -734,7 +734,22 @@ namespace SME.GoogleClassroom.Dados
 												coalesce(nm_social,nm_pessoa) as NomeCompleto,
 												cd_cpf_pessoa as Cpf
 											from v_servidor_cotic 
-											where cd_registro_funcional in ({string.Join(',', rfs)}) ");
+											where cd_registro_funcional in ({string.Join(',', rfs)}) 
+											UNION ALL
+											select distinct p.cd_cpf_pessoa as Rf,
+												case 
+													when p.nm_social = '' or p.nm_social IS NULL then p.nm_pessoa else p.nm_social
+												end NomeCompleto, 
+												p.cd_cpf_pessoa as cpf
+											from
+												contrato_externo ce
+											inner join funcao_funcionario_externo ffe on ce.cd_tipo_funcao_funcionario_externo = ffe.cd_tipo_funcao_funcionario_externo
+											inner join pessoa p on ce.cd_pessoa = p.cd_pessoa
+											inner join funcao_externo fe on fe.cd_funcao_externo = ffe.cd_funcao_externo 
+											where ce.cd_motivo_desligamento_externo is null 
+												AND ce.dt_cancelamento is null     
+												and fe.in_permissao_atribuicao_aula = 'S'
+											    AND p.cd_cpf_pessoa in ({string.Join(',', rfs.Select(rf => $"'{rf}'"))})");
                 using var conn = ObterConexao();
                 return await conn.QueryAsync<DadosProfessorEolDto>(query.ToString());
             }
