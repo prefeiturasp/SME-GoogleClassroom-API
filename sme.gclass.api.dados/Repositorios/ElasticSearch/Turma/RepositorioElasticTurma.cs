@@ -84,9 +84,17 @@ namespace SME.GoogleClassroom.Dados
             if (listagemTurmas == null)
                 return default;
 
+            RemoverRegistrosComDataDisponibilizacao(listagemTurmas);
+
             ExecuteFiltroComponentePorRf(ehProfessor, codigoRf, listagemTurmas);
 
             return listagemTurmas;
+        }
+
+        private void RemoverRegistrosComDataDisponibilizacao(IEnumerable<TurmaComponentesDto> listagemTurmas)
+        {
+            foreach (var turma in listagemTurmas)
+                turma.Componentes = turma.Componentes.Where(componente => componente.DataDisponibizacao == null).ToList();
         }
 
         private void ExecuteFiltroComponentePorRf(bool ehProfessor, string codigoRf, IEnumerable<TurmaComponentesDto> lista)
@@ -96,7 +104,7 @@ namespace SME.GoogleClassroom.Dados
 
             foreach (var turma in lista)
             {
-                turma.Componentes = turma.Componentes.ToList().FindAll(componente => componente.RegistroFuncional == codigoRf);
+                turma.Componentes = turma.Componentes.ToList().FindAll(componente => componente.RegistroFuncional == codigoRf && componente.DataDisponibizacao == null);
             }
         }
 
