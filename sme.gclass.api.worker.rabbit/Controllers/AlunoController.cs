@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -227,8 +228,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(IReadOnlyList<AlunoEolSimplificadoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterAlunosAtivosPorTurma([FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
-                                                                   [FromRoute] FiltroObterAlunosAtivosDto filtro) => Ok(await obterAlunosAtivosUseCase.Executar(filtro));
+        public async Task<IActionResult> ObterAlunosAtivosPorTurma(
+            [FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
+            [FromRoute] FiltroObterAlunosAtivosDto filtro)
+        {
+            //RaphaelDias. Invoca o Garbage Collector forçando que passe no Gen2 para remover o que foi direto pra lá. O processo é feito com blocking para garantir que execute
+            //Isso é feito antes do return pq vai pegar o lixo das outras requisições, não dessa.
+            GC.Collect(2, GCCollectionMode.Forced, blocking:true);
+            
+            return Ok(await obterAlunosAtivosUseCase.Executar(filtro));
+        }
 
     }
 }
