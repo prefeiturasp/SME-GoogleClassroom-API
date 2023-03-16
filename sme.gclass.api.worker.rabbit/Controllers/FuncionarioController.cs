@@ -271,12 +271,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(ProfessoresFuncionariosDto), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        [LimparLixo]
         public async Task<IActionResult> ObterProfessoresEFuncionarios(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolUseCase useCase)
         {
-            //RaphaelDias. Invoca o Garbage Collector forçando que passe no Gen2 para remover o que foi direto pra lá. O processo é feito com blocking para garantir que execute
-            //Isso é feito antes do return pq vai pegar o lixo das outras requisições, não dessa.
-            GC.Collect(2, GCCollectionMode.Forced, blocking:true);
-            
             return Ok(await useCase.Executar(anoLetivo,codigoEscola));
         }
     }

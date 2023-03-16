@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(IReadOnlyList<EscolaDTO>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        [LimparLixo]
         public async Task<IActionResult> ObterEscolas(
                                             [FromServices] IObterEscolasUseCase obterEscolasUseCase,
                                             [FromQuery] FiltroObterEscolasDto filtro)
