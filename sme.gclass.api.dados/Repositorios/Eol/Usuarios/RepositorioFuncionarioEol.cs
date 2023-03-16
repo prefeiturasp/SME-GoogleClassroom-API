@@ -1005,6 +1005,8 @@ namespace SME.GoogleClassroom.Dados
 												DECLARE @cargoSupervisor AS INT = 3352;
 												DECLARE @cargoATE AS INT = 4906;
 												DECLARE @secretarioEscolar AS INT = 3182;
+												DECLARE @secretarioEscolar AS INT = 3182;
+												DECLARE @secretarioEscolar AS INT = 3182;
 
 												--Funções específicas ativas
 												DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
@@ -1207,7 +1209,7 @@ namespace SME.GoogleClassroom.Dados
 
                 using var conn = ObterConexao();
 
-                var retorno = await conn.QueryAsync<FuncionarioDto>(query.ToString(), new { anoLetivo, codigoEscola });
+                var retorno = await conn.QueryAsync<FuncionarioDto>(query.ToString(), new { anoLetivo, codigoEscola = new DbString { Value = codigoEscola, Length = 6, IsFixedLength = true, IsAnsi = true } });
 
                 return retorno;
             }
