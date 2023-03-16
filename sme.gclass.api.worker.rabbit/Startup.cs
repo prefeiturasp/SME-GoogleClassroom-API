@@ -48,10 +48,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             services.AddHttpContextAccessor();
             ConfiguraVariaveisAmbiente(services);
 
-            services.AddApplicationInsightsTelemetry(Configuration);
+
 
             RegistraDependencias.Registrar(services, Configuration);
-            
+
             RegistrarHttpClients(services, Configuration);
 
             services.AddRabbit(RabbitOptions);
@@ -200,10 +200,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         private void ConfiguraTelemetria(IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
-            var clientTelemetry = serviceProvider.GetService<TelemetryClient>();
 
             var telemetriaOptions = new TelemetriaOptions();
             Configuration.GetSection(TelemetriaOptions.Secao).Bind(telemetriaOptions, c => c.BindNonPublicProperties = true);
+
+            if (telemetriaOptions.ApplicationInsights)
+            {
+                services.AddApplicationInsightsTelemetry(Configuration);
+            }
+
+            var clientTelemetry = serviceProvider.GetService<TelemetryClient>();
 
             var servicoTelemetria = new ServicoTelemetria(clientTelemetry, telemetriaOptions);
             DapperExtensionMethods.Init(servicoTelemetria);

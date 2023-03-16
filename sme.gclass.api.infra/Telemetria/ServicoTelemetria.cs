@@ -17,6 +17,11 @@ namespace SME.GoogleClassroom.Infra
             this.telemetriaOptions = telemetriaOptions ?? throw new ArgumentNullException(nameof(telemetriaOptions));
         }
 
+        public ServicoTelemetria(TelemetriaOptions telemetriaOptions)
+        {
+            this.telemetriaOptions = telemetriaOptions ?? throw new ArgumentNullException(nameof(telemetriaOptions));
+        }
+
         public async Task<dynamic> RegistrarComRetornoAsync<T>(Func<Task<object>> acao, string acaoNome, string telemetriaNome, string telemetriaValor, string parametros = "")
         {
             DateTime inicioOperacao = default;
@@ -53,6 +58,8 @@ namespace SME.GoogleClassroom.Infra
                 insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
             }
 
+            acao = null;
+            temporizador = null;
             return result;
         }
 
@@ -92,6 +99,8 @@ namespace SME.GoogleClassroom.Infra
                 insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
             }
 
+            acao = null;
+            temporizador = null;
             return result;
         }
 
@@ -126,6 +135,9 @@ namespace SME.GoogleClassroom.Infra
                 temporizador.Stop();
                 insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
             }
+
+            acao = null;
+            temporizador = null;
         }
 
         public async Task RegistrarAsync(Func<Task> acao, string acaoNome, string telemetriaNome, string telemetriaValor, string parametros = "")
@@ -160,6 +172,9 @@ namespace SME.GoogleClassroom.Infra
                 temporizador.Stop();
                 insightsClient?.TrackDependency(acaoNome, telemetriaNome, telemetriaValor, inicioOperacao, temporizador.Elapsed, true);
             }
+
+            acao = null;
+            temporizador = null;
         }
     }
 }

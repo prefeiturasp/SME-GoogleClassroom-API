@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -270,6 +271,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(ProfessoresFuncionariosDto), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        [LimparLixo]
         public async Task<IActionResult> ObterProfessoresEFuncionarios(string codigoEscola,int anoLetivo, [FromServices] IFuncionariosProfessoresEolUseCase useCase)
         {
             return Ok(await useCase.Executar(anoLetivo,codigoEscola));
