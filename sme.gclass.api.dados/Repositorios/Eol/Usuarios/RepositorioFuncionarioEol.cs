@@ -1005,8 +1005,6 @@ namespace SME.GoogleClassroom.Dados
 												DECLARE @cargoSupervisor AS INT = 3352;
 												DECLARE @cargoATE AS INT = 4906;
 												DECLARE @secretarioEscolar AS INT = 3182;
-												DECLARE @secretarioEscolar AS INT = 3182;
-												DECLARE @secretarioEscolar AS INT = 3182;
 
 												--Funções específicas ativas
 												DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
