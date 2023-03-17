@@ -228,7 +228,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(IReadOnlyList<AlunoEolSimplificadoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        //[LimparLixo]
+        [LimparLixo]
         public async Task<IActionResult> ObterAlunosAtivosPorTurma(
             [FromServices] IObterAlunosAtivosUseCase obterAlunosAtivosUseCase,
             [FromRoute] FiltroObterAlunosAtivosDto filtro)
