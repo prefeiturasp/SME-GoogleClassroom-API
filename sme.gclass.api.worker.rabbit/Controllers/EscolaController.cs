@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(IReadOnlyList<EscolaDTO>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        [LimparLixo]
+        //[LimparLixo]
         public async Task<IActionResult> ObterEscolas(
                                             [FromServices] IObterEscolasUseCase obterEscolasUseCase,
                                             [FromQuery] FiltroObterEscolasDto filtro)
