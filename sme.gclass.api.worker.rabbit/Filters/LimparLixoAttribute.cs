@@ -11,7 +11,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Filters
         {
             //RaphaelDias. Invoca o Garbage Collector forçando que passe no Gen2 para remover o que foi direto pra lá. O processo é feito com blocking para garantir que execute
             //Isso é feito antes do return pq vai pegar o lixo das outras requisições, não dessa.
-            GC.Collect(2, GCCollectionMode.Forced, blocking:true);
+            var executar = new Random().Next(0, 10);
+            if (executar == 1)
+                GC.Collect(2, GCCollectionMode.Forced, blocking: true);
 
             await next();
         }
