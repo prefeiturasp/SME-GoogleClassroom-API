@@ -734,7 +734,7 @@ namespace SME.GoogleClassroom.Dados
 												coalesce(nm_social,nm_pessoa) as NomeCompleto,
 												cd_cpf_pessoa as Cpf
 											from v_servidor_cotic 
-											where cd_registro_funcional in ({string.Join(',', rfs)}) 
+											where cd_registro_funcional in @codigosRf
 											UNION ALL
 											select distinct p.cd_cpf_pessoa as Rf,
 												case 
@@ -749,9 +749,14 @@ namespace SME.GoogleClassroom.Dados
 											where ce.cd_motivo_desligamento_externo is null 
 												AND ce.dt_cancelamento is null     
 												and fe.in_permissao_atribuicao_aula = 'S'
-											    AND p.cd_cpf_pessoa in ({string.Join(',', rfs.Select(rf => $"'{rf}'"))})");
+											    AND p.cd_cpf_pessoa in @cpfs ");
                 using var conn = ObterConexao();
-                return await conn.QueryAsync<DadosProfessorEolDto>(query.ToString());
+                return await conn.QueryAsync<DadosProfessorEolDto>(query.ToString()
+																, new 
+																{ 
+																	codigosRf = rfs.Select(rf => new DbString { Value = rf, Length = 7, IsFixedLength = true, IsAnsi = true }),
+																	cpfs = rfs.Select(cpf => new DbString { Value = cpf, Length = 11, IsFixedLength = true, IsAnsi = true })
+																});
             }
 			catch (Exception ex)
 			{
