@@ -21,18 +21,9 @@ namespace SME.GoogleClassroom.Dados
 
 		public async Task<IEnumerable<ComponenteCurricularEol>> ObterDisciplinasAsync()
 		{
-            var query = @"SELECT ccp.Id,
-                            cc.IdComponenteCurricular, 
-                            cc.EhCompartilhada, 
-                            cc.EhRegencia, 
-                            cc.PermiteRegistroFrequencia, 
-                            cc.PermiteLancamentoDeNota,
-                            cc.EhTerritorio,
-                            cc.EhBaseNacional,
-                            cc.IdGrupoMatriz,
-                            cc.Descricao,
-                            ccp.idcomponentecurricularpai,
-                            ccp.vigencia
+            var query = @"SELECT 
+                            cc.IdComponenteCurricular,                             
+                            cc.EhTerritorio
                      FROM ComponenteCurricular cc
                         LEFT JOIN componentecurricularpai ccp on cc.idcomponentecurricular = ccp.idcomponentecurricular";
 
