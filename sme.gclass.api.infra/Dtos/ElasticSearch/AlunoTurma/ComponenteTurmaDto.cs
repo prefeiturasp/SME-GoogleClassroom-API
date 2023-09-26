@@ -12,14 +12,10 @@ namespace SME.GoogleClassroom.Infra
         [Text(Name = "NomeComponenteCurricular")]
         public string NomeComponenteCurricular { get; set; }
         [Number(Name = "ComponenteCurricularCodigo")]
-        public long ComponenteCurricularCodigo { get { return componenteCurricularCodigo; } 
-                                                 set { componenteCurricularCodigo = value;
-                                                       ComponenteCurricularCodigoUnico = value.ToString();}}
+        public long ComponenteCurricularCodigo { get; set; }
         [Text(Name = "RegistroFuncional")]
         public string RegistroFuncional { get; set; }
         [Date(Name = "DataDisponibizacao", Format = "MMddyyyy")]
         public DateTime? DataDisponibizacao { get; set; }
-        [Ignore]
-        public string ComponenteCurricularCodigoUnico { get; set; }
-}
+    }
 }
