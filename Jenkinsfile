@@ -3,6 +3,7 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
+      namespace = "${env.branchname == 'development' ? 'googleclass-dev' : env.branchname == 'homolog' ? 'googleclass-hom' : env.branchname == 'homolog-r2' ? 'googleclass-hom2' : 'sme-googleclass' }"
     }
   
     agent {
@@ -67,7 +68,7 @@ pipeline {
                     }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                         sh('cp $config '+"$home"+'/.kube/config')
-                        sh 'kubectl -n sme-googleclass rollout restart deploy'
+                        sh 'kubectl -n ${namespace} rollout restart deploy'
                         sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }
@@ -108,7 +109,7 @@ def sendTelegram(message) {
 def getKubeconf(branchName) {
     if("main".equals(branchName)) { return "config_prd"; }
     else if ("master".equals(branchName)) { return "config_prd"; }
-    else if ("homolog".equals(branchName)) { return "config_hom"; }
-    else if ("release".equals(branchName)) { return "config_hom"; }
-    else if ("development".equals(branchName)) { return "config_dev"; }
+    else if ("homolog".equals(branchName)) { return "config_release"; }
+    else if ("release".equals(branchName)) { return "config_release"; }
+    else if ("development".equals(branchName)) { return "config_release; }
 }
