@@ -51,6 +51,7 @@ pipeline {
             }
           }	 
           steps {
+            checkout scm
             script {
               imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/gca-api"
               dockerImage1 = docker.build(imagename1, "-f sme.gclass.api.worker.rabbit/Dockerfile .")
