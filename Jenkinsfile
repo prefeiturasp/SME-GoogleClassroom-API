@@ -44,8 +44,14 @@ pipeline {
         }        
 
         stage('Build') {
-          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } } 
+          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } }
+	  agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }	 
           steps {
+            checkout scm
             script {
               imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/gca-api"
               dockerImage1 = docker.build(imagename1, "-f sme.gclass.api.worker.rabbit/Dockerfile .")
@@ -59,7 +65,12 @@ pipeline {
         }
 	    
         stage('Deploy'){
-            when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'homolog';  } }        
+            when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'homolog';  } }
+            agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }        
             steps {
                 script{
                     if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
@@ -78,7 +89,11 @@ pipeline {
         }
 
       stage('Flyway') {
-        agent { label 'master' }
+        agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }
         when { anyOf {  branch 'master'; branch 'main'; branch 'development';  } }
         steps{
           withCredentials([string(credentialsId: "flyway_gclass_${branchname}", variable: 'url')]) {
