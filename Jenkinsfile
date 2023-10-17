@@ -6,9 +6,11 @@ pipeline {
       namespace = "${env.branchname == 'development' ? 'googleclass-dev' : env.branchname == 'homolog' ? 'googleclass-hom' : env.branchname == 'homolog-r2' ? 'googleclass-hom2' : 'sme-googleclass' }"
     }
   
-    agent {
-      node { label 'dotnet5-gca-rc' }
-    }
+    agent { kubernetes { 
+              label 'dotnet5-gca-rc'
+              defaultContainer 'dotnet5-gca-rc'
+            }
+          }
 
     options {
       buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20'))
