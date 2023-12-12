@@ -128,7 +128,7 @@ namespace SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores
 
                         var rfProfessoresEol = (turma.Componentes.Where(c => c.ComponenteCurricularCodigo == componente.ComponenteCurricularCodigo).Select(c => c.RegistroFuncional).Where(w => w != null).Distinct()).ToList();
                        
-                        var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma && x.Disciplinas.ToList().Contains(componente.ComponenteCurricularCodigo.ToString())).Select(s => s.ProfessorRf)).Distinct()).ToList();
+                        var rfCjTurma = ((rfsProfessoresCjSgp.Where(x => int.Parse(x.TurmaId) == turma.CodigoTurma && x.DisciplinasId.Contains(componente.ComponenteCurricularCodigo)).Select(s => s.ProfessorRf)).Distinct()).ToList();
 
                         if (rfProfessoresEol.Any())
                             listaProfessoresEol = professoresEol?.Where(r => rfProfessoresEol.Contains(r.Rf)).ToList();
