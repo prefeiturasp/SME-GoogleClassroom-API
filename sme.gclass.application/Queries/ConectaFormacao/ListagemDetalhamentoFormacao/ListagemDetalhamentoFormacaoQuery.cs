@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.Ano)
                 .NotEmpty()
                 .GreaterThan(0)
-                .WithMessage("O ano da turma deve ser informado para a listagem de detalhamento de formações.");
+                .WithMessage("O ano da realização da proposta deve ser informado para a listagem de detalhamento de formações.");
         }
     }
 }
