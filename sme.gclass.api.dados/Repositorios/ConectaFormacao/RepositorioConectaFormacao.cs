@@ -50,8 +50,7 @@ namespace SME.GoogleClassroom.Dados
                            where not pt.excluido    
                              and not ap.excluido
                              and p.situacao = @SituacaoPublicada
- and p.id = 241
-                             --and EXTRACT(YEAR FROM p.data_realizacao_inicio) >= @ano";
+                             and EXTRACT(YEAR FROM p.data_realizacao_inicio) >= @ano";
         
             using (var conn = ObterConexao())
             {
