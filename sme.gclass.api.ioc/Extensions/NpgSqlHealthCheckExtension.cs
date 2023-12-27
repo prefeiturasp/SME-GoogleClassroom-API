@@ -15,6 +15,11 @@ namespace SME.GoogleClassroom.IoC
         {
             return AddPostgres(builder, configuration.GetConnectionString("ApiEolConnection"), "Postgres_ApiEol");
         }
+        
+        public static IHealthChecksBuilder AddPostgresConectaFormacao(this IHealthChecksBuilder builder, IConfiguration configuration)
+        {
+            return AddPostgres(builder, configuration.GetConnectionString("ConectaFormacaoConnection"), "Postgres_ConectaFormacao");
+        }
 
         private static IHealthChecksBuilder AddPostgres(IHealthChecksBuilder builder, string connectionString, string nome)
         {
