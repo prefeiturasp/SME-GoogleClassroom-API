@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>> ListagemFormacoesPorAno(int ano)
         {
-            var query = @" select pt.id as codigoFormacao,
+            var query = @" select p.id as codigoFormacao,
                                   p.nome_formacao as nomeFormacao,
                                   p.data_realizacao_inicio as dataRealizacaoInicio,
                                   p.data_realizacao_fim as dataRealizacaoFim,
@@ -56,17 +56,18 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<CodigoNomeTurmaProfessoresDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes)
+        public async Task<IEnumerable<CodigoFormacaoCodigoNomeTurmaProfessoresDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes)
         {
             var query = @"    select pt.id as codigoTurma,
-  		                             pt.nome as nomeTurma
+  		                             pt.nome as nomeTurma,
+  		                             pt.proposta_id as codigoFormacao
                               from proposta_turma pt 
                               where not pt.excluido    
-                                and pt.id = any(@codigosDasFormacoes)";
+                                and pt.proposta_id = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<CodigoNomeTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<CodigoFormacaoCodigoNomeTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
             }
         }
 
@@ -76,10 +77,11 @@ namespace SME.GoogleClassroom.Dados
                                   regente.registro_funcional as rf,
 		                          regente.nome_regente as nome
                            from proposta_turma pt 
-                             join proposta_regente regente on regente.proposta_id = pt.proposta_id
+                              join proposta_regente_turma prt on prt.turma_id = pt.id 
+                              join proposta_regente regente on regente.id = prt.proposta_regente_id 
                            where not pt.excluido
                              and not regente.excluido
-                             and pt.id = any(@codigosDasFormacoes)";
+                             and pt.proposta_id = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
             {
@@ -94,10 +96,11 @@ namespace SME.GoogleClassroom.Dados
 		                         tutor.nome_tutor as nome,
 		                         true as tutor
                           from proposta_turma pt 
-                            join proposta_tutor tutor on tutor.proposta_id = pt.proposta_id
+                            join proposta_tutor_turma ptt on ptt.turma_id = pt.id 
+                            join proposta_tutor tutor on tutor.id = ptt.proposta_tutor_id                            
                           where not pt.excluido
                             and not tutor.excluido
-                            and pt.id  = any(@codigosDasFormacoes)";
+                            and pt.proposta_id  = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
             {

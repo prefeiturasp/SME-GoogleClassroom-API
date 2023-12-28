@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Dados
     {
         Task<IEnumerable<InscricaoConfirmadaDTO>> ListagemInscricoesConfirmadas(long codigoDaTurma);
         Task<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>> ListagemFormacoesPorAno(int ano);
-        Task<IEnumerable<CodigoNomeTurmaProfessoresDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes);
+        Task<IEnumerable<CodigoFormacaoCodigoNomeTurmaProfessoresDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes);
         Task<IEnumerable<ProfessorCodigoTurmaRfCpfNomeEmailTutorDTO>> ListagemProfessoresRegentesPorCodigosFormacoes(long[] codigosDasFormacoes);
         Task<IEnumerable<ProfessorCodigoTurmaRfCpfNomeEmailTutorDTO>> ListagemProfessoresTutoresPorCodigosFormacoes(long[] codigosDasFormacoes);
     }

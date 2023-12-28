@@ -31,7 +31,7 @@ namespace SME.GoogleClassroom.Aplicacao
             if (formacoes.NaoPossuiElementos())
                 return default;
 
-            var codigosDasTurmas = formacoes.Select(s => s.CodigoFormacao).ToArray();
+            var codigosDasTurmas = formacoes.Select(s => s.CodigoFormacao).Distinct().ToArray();
 
             var turmas = await repositorioConectaFormacao.ListagemTurmasPorCodigosFormacoes(codigosDasTurmas);
             
@@ -50,12 +50,12 @@ namespace SME.GoogleClassroom.Aplicacao
                 Coordenadoria = f.Coordenadoria,
                 DataRealizacaoInicio = f.DataRealizacaoInicio,
                 DataRealizacaoFim = f.DataRealizacaoFim,
-                Turmas = turmas.Where(w=> w.CodigoTurma == f.CodigoFormacao)
+                Turmas = turmas.Where(w=> w.CodigoFormacao == f.CodigoFormacao)
                     .Select(t => new CodigoNomeTurmaProfessoresDTO()
                     {
                         CodigoTurma = t.CodigoTurma,
                         NomeTurma = t.NomeTurma,
-                        Professores = professoresRegentesTutores.Where(p=> p.CodigoTurma == f.CodigoFormacao)
+                        Professores = professoresRegentesTutores.Where(p=> p.CodigoTurma == t.CodigoTurma)
                             .Select(s => new ProfessorRfCpfNomeEmailTutorDTO()
                         {
                             Rf = s.Rf,
