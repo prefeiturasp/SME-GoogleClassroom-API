@@ -21,6 +21,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             RuleFor(x => x.CodigoDaTurma)
                 .NotEmpty()
+                .GreaterThan(0)
                 .WithMessage("O código da turma deve ser informado para a listagem de inscrições confirmadas.");
         }
     }
