@@ -19,7 +19,9 @@ namespace SME.GoogleClassroom.Dados
             var query = @" select   u.login codigoRf,
                                     u.cpf,
                                     u.nome,
-                                    u.email
+                                    u.email,
+                                    coalesce(funcao_dre_codigo, cargo_dre_codigo) dreCodigo,
+                                    coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo
                                     from inscricao i 
                                     join proposta_turma pt on i.proposta_turma_id = pt.id 
                                     join usuario u on u.id = i.usuario_id 

@@ -30,10 +30,26 @@ namespace SME.GoogleClassroom.Dados
 
 			return await conn.QueryAsync<DreDto>(query, new { codigoDre }, commandTimeout: 180);
         }
+        
+        public async Task<IEnumerable<DreDto>> ObterDresPorCodigos(string[] codigosDre)
+        {
+	        using var conn = ObterConexao();
+
+	        var query = $@" SELECT v_cadastro_unidade_educacao.cd_unidade_educacao Codigo, 
+								v_cadastro_unidade_educacao.nm_unidade_educacao Nome,
+								v_cadastro_unidade_educacao.nm_exibicao_unidade Sigla
+						FROM v_cadastro_unidade_educacao (NOLOCK)
+						JOIN unidade_administrativa (NOLOCK) ON v_cadastro_unidade_educacao.cd_unidade_educacao = unidade_administrativa.cd_unidade_administrativa
+						WHERE tp_unidade_administrativa = 24 
+							and v_cadastro_unidade_educacao.cd_unidade_educacao in @codigosDre
+						ORDER BY nm_unidade_educacao";
+
+	        return await conn.QueryAsync<DreDto>(query, new { codigosDre }, commandTimeout: 180);
+        }
 
         private string IncluirCodigoDre(string codigoDre)
         {
-			return !string.IsNullOrEmpty(codigoDre) ? " and v_cadastro_unidade_educacao.cd_unidade_educacao = @codigoDre " : string.Empty;
+			return !string.IsNullOrEmpty(codigoDre) ? "  " : string.Empty;
         }
 
         public async Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurma(int anoLetivo, long turmaId, DateTime dataInicio, DateTime dataFim, ParametrosCargaInicialDto parametrosCargaInicialDto)
