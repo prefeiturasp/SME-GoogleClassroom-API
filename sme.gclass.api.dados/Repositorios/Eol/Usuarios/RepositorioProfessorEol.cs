@@ -764,5 +764,19 @@ namespace SME.GoogleClassroom.Dados
 				throw ex;
 			}
         }
+
+        public async Task<IEnumerable<ProfessorCpfNomeRfEol>> ObterCpfNomeCompletoPorRegistroFuncional(string[] rfs)
+        {
+	        var query = new StringBuilder(@"select distinct cd_registro_funcional as Rf,
+											       coalesce(nm_social,nm_pessoa) as Nome,
+												   cd_cpf_pessoa as Cpf
+									        from v_servidor_cotic (nolock)
+									        where cd_registro_funcional in @codigosRf ");
+	        
+	        using var conn = ObterConexao();
+	        
+	        return await conn.QueryAsync<ProfessorCpfNomeRfEol>(query.ToString(), 
+		        new { codigosRf = rfs.Select(rf => new DbString { Value = rf, Length = 7, IsFixedLength = true, IsAnsi = true }) });
+        }
     }
 }

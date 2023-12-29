@@ -84,6 +84,9 @@ namespace SME.GoogleClassroom.IoC
             //Elastic e BD SGA
             services.TryAddScoped<IRepositorioElasticTurma, RepositorioElasticTurma>();
             services.TryAddScoped<IRepositorioComponenteCurricularEol, RepositorioComponenteCurricularEol>();
+            
+            //Conecta formação
+            services.TryAddScoped<IRepositorioConectaFormacao, RepositorioConectaFormacao>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -334,6 +337,10 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IIncluirAlunoCelpGoogleUseCase, IncluirAlunoCelpGoogleUseCase>();
             services.TryAddScoped<IIncluirAlunoCursoCelpGoogleUseCase, IncluirAlunoCursoCelpGoogleUseCase>();
             services.TryAddScoped<ITratarAlunosCursoUsuarioRemovidoCelpUseCase, TratarAlunosCursoUsuarioRemovidoCelpUseCase>();
+            
+            //Conecta formação
+            services.TryAddScoped<IListagemInscricoesConfirmadasUseCase, ListagemInscricoesConfirmadasUseCase>();
+            services.TryAddScoped<IListagemDetalhamentoFormacaoUseCase, ListagemDetalhamentoFormacaoUseCase>();
         }
     }
 }

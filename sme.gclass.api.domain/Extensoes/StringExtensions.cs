@@ -25,5 +25,10 @@
             strResultado = strResultado.Replace("\\s+", " ");
             return strResultado;
         }
+        
+        public static bool EstaPreenchido(this string str)
+        {
+            return !string.IsNullOrEmpty(str);
+        }
     }
 }
