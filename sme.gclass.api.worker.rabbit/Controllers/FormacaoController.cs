@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Formações
     /// </summary>
     [ApiController]
-    // [ChaveIntegracaoGoogleClassroomApi]
+    [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/formacao")]
     public class FormacaoController : Controller
     {
