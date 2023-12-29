@@ -7,5 +7,6 @@ namespace SME.GoogleClassroom.Dados
     public interface IRepositorioDreEol
     {
         Task<IEnumerable<DreDto>> ObterDres(string codigoDre);
+        Task<IEnumerable<DreDto>> ObterDresPorCodigos(string[] codigosDre);
     }
 }
