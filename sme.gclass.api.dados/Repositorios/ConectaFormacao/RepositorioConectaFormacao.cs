@@ -41,7 +41,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>> ListagemFormacoesPorAno(int ano)
         {
-            var query = @" select p.id as codigoFormacao,
+            var query = @" select distinct p.id as codigoFormacao,
                                   p.nome_formacao as nomeFormacao,
                                   p.data_realizacao_inicio as dataRealizacaoInicio,
                                   p.data_realizacao_fim as dataRealizacaoFim,
