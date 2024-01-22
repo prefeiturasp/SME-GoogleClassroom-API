@@ -13,14 +13,13 @@ namespace SME.GoogleClassroom.Dados
         public RepositorioUsuarioGsa(ConnectionStrings connectionStrings)
             : base(connectionStrings)
         {
-
         }
 
         public async Task<bool> ExistePorIdAsync(string usuarioId)
         {
             var query = @"SELECT exists(SELECT 1 from public.usuarios_gsa where id = @usuarioId limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QuerySingleOrDefaultAsync<bool>(query, new { usuarioId }));
+            return (await conn.QuerySingleOrDefaultAsync<bool>(query, new {usuarioId}));
         }
 
         public async Task<int> ValidarUsuariosExistentesUsuariosComparativosAsync()
@@ -73,7 +72,7 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = multi.Read<UsuarioGsa>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -151,11 +150,26 @@ namespace SME.GoogleClassroom.Dados
                           from usuarios u
                           join usuarios_gsa uc on u.google_classroom_id = uc.id
                           where u.id = any(@usuariosCodigo)
-                          and u.usuario_tipo = @usuarioTipo"; 
+                          and u.usuario_tipo = @usuarioTipo";
 
             using var conn = ObterConexao();
-            
-            return (await conn.QueryAsync<UsuarioGsaDto>(query, new { usuariosCodigo, usuarioTipo }));
+
+            return (await conn.QueryAsync<UsuarioGsaDto>(query, new {usuariosCodigo, usuarioTipo}));
+        }
+
+        public async Task<IEnumerable<UsuarioGsaDto>> ObterUsuarioPorIds(long[] ids)
+        {
+            var query = @"select 
+	                            id,
+	                            usuario_tipo as UsuarioTipo,
+	                            cpf ,
+	                            nome ,
+	                            email,
+	                            organization_path as OrganizationPath
+                            from usuarios u
+                            where id = any(@ids) ";
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<UsuarioGsaDto>(query, new {ids});
         }
     }
 }

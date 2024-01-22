@@ -1,4 +1,5 @@
 ﻿using System;
+using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Infra
 {
@@ -14,5 +15,6 @@ namespace SME.GoogleClassroom.Infra
         public bool UltimoItemDaFila { get; set; }
         public long Indice { get; set; } //de 'usuario'
         public string MensagemErro { get; set; }
+        public UsuarioTipo UsuarioTipo { get; set; }
     }
 }

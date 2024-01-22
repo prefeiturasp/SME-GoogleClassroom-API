@@ -132,11 +132,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         
         /// <summary>
         /// Insere ou atualiza e-mail do usuário
+        /// </summary>
         /// <response code="200">Atualização ou inclusão do e-mail ocorreu com sucesso.</response>
         [HttpPost("realizar/carga/email")]
         public async Task<IActionResult> AtualizarInserirEmailUsuario([FromBody] InserirAtualizarEmailDTO dto, [FromServices] IAtualizarEmailUsuarioUseCase useCase)
         {
-            return Ok(useCase.Executar(dto));
+            await useCase.Executar(dto);
+            return Ok();
         }
     }
 }
