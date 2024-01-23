@@ -341,12 +341,12 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId)
+        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId,bool existeGoogle = true)
         {
             const string insertQuery = @"insert into public.usuarios
-                                        (id, cpf, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao, google_classroom_id)
+                                        (id, cpf, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao, google_classroom_id,existe_google)
                                         values
-                                        (@id, @cpf, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao, @googleClassroomId)
+                                        (@id, @cpf, @nome, @email, @tipo, @organizationPath, @dataInclusao, @dataAtualizacao, @googleClassroomId,@existeGoogle)
                                         RETURNING indice";
 
             var parametros = new
@@ -359,7 +359,8 @@ namespace SME.GoogleClassroom.Dados
                 organizationPath,
                 dataInclusao,
                 dataAtualizacao,
-                googleClassroomId
+                googleClassroomId,
+                existeGoogle
             };
 
             using var conn = ObterConexao();

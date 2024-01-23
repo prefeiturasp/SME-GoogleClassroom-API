@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> ExisteProfessorPorRf(long rf);
 
-        Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId);
+        Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId,bool existeGoogle = true);
 
         Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] codigosEol);
 
