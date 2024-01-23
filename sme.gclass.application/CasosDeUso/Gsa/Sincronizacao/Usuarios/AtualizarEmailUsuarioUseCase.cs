@@ -28,11 +28,13 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task AtualizarUsuarios(IEnumerable<UsuarioEmailDto> usuarios)
         {
-            //AtualizarUsuarioCommand
+            foreach (var usuario in usuarios)
+                await mediator.Send(new AtualizarUsuarioCommand(usuario.Id,usuario.Nome,usuario.Cpf,usuario.Email,usuario.UsuarioTipo));
         }
         private async Task InserirUsuarios(IEnumerable<UsuarioEmailDto> usuarios)
         {
-            //AtualizarUsuarioCommand
+            foreach (var usuario in usuarios)
+                await mediator.Send(new IncluirUsuarioCommand(usuario.Id,usuario.Cpf,usuario.Nome,usuario.Nome));
         }
     }
 }
