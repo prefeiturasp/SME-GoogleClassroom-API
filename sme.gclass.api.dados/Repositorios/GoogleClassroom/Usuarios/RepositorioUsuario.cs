@@ -523,27 +523,46 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
-        public async Task<int> AtualizarAsync(long id, string nome, string organizationPath, string cpf = null, string email = null, int usuarioTipo = 0)
+        public async Task<int> AtualizarAsync(long id, string nome, string organizationPath)
         {
             var sql = new StringBuilder();
             sql.AppendLine(@" update public.usuarios");
             sql.AppendLine(@"              set");
-            sql.AppendLine(@"                 nome = @nome, ");
-            if (cpf.NaoEhNulo())
-                sql.AppendLine(@"                 cpf = @cpf,");
-            if (usuarioTipo.MaiorQueZero())
-                sql.AppendLine(@"                 usuario_tipo = @usuarioTipo,");
-            if (email.NaoEhNulo())
-                sql.AppendLine(@"                 email = @email,");
-            sql.AppendLine(@"                 organization_path = @organizationPath");
-            sql.AppendLine(@"              where");
-            sql.AppendLine(@"                 indice = @id");
+            sql.AppendLine(@"                 nome = @nome ");
+            if(organizationPath.NaoEhNulo())
+                sql.AppendLine(@"  ,organization_path = @organizationPath ");
+            sql.AppendLine(@"     where ");
+            sql.AppendLine(@"     indice = @id");
 
             var parametros = new
             {
                 id,
                 nome,
-                organizationPath,
+                organizationPath
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(sql.ToString(), parametros);
+        }
+        public async Task<int> AtualizarUsuarioPorId(long id, string nome, string cpf, string email, int usuarioTipo)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine(@" update public.usuarios");
+            sql.AppendLine(@"              set");
+            sql.AppendLine(@"                 nome = @nome ");
+            if (cpf.NaoEhNulo())
+                sql.AppendLine(@"                 ,cpf = @cpf ");
+            if (usuarioTipo.MaiorQueZero())
+                sql.AppendLine(@"                 ,usuario_tipo = @usuarioTipo");
+            if (email.NaoEhNulo())
+                sql.AppendLine(@"                 ,email = @email ");
+            sql.AppendLine(@"              where ");
+            sql.AppendLine(@"                 id = @id");
+
+            var parametros = new
+            {
+                id,
+                nome,
                 cpf,
                 email,
                 usuarioTipo
