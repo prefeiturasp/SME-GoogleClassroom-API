@@ -28,7 +28,6 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage("O nome do usuário deve ser informado para a atualização.");
-
             RuleFor(x => x.OrganizationPath)
                 .NotEmpty()
                 .WithMessage("A unidade organizacional do usuário deve ser informado para a atualização.");

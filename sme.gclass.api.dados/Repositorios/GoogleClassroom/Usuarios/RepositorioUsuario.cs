@@ -67,7 +67,7 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = alunos.Read<AlunoGoogle>();
             retorno.TotalRegistros = alunos.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -76,14 +76,14 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where id = @codigo and usuario_tipo = @usuarioTipo limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryAsync<bool>(query, new { codigo, usuarioTipo = UsuarioTipo.Aluno })).FirstOrDefault();
+            return (await conn.QueryAsync<bool>(query, new {codigo, usuarioTipo = UsuarioTipo.Aluno})).FirstOrDefault();
         }
 
         public async Task<bool> ExisteEmailUsuarioPorTipo(string email, UsuarioTipo usuarioTipo, long id)
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where email = @email and usuario_tipo = @usuarioTipo and id <> @id limit 1)";
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<bool>(query, new { email, usuarioTipo, id });
+            return await conn.QueryFirstOrDefaultAsync<bool>(query, new {email, usuarioTipo, id});
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioGoogle>> ObterFuncionariosAsync(Paginacao paginacao, long? rf, string email)
@@ -137,7 +137,7 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = funcionarios.Read<FuncionarioGoogle>();
             retorno.TotalRegistros = funcionarios.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -194,7 +194,7 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = professores.Read<ProfessorGoogle>();
             retorno.TotalRegistros = professores.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -217,13 +217,13 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rfs,
-                tipos =  new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+                tipos = new[] {(short) UsuarioTipo.Professor, (short) UsuarioTipo.Funcionario}
             };
 
             using var conn = ObterConexao();
             return await conn.QueryAsync<FuncionarioGoogle>(query, parametros);
         }
-        
+
         public async Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorEmail(string email)
         {
             var query = @"SELECT
@@ -242,7 +242,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 email,
-                tipos =  new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+                tipos = new[] {(short) UsuarioTipo.Professor, (short) UsuarioTipo.Funcionario}
             };
 
             using var conn = ObterConexao();
@@ -279,7 +279,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 rfs,
-                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+                tipos = new[] {(short) UsuarioTipo.Professor, (short) UsuarioTipo.Funcionario}
             };
 
             using var conn = ObterConexao();
@@ -315,7 +315,7 @@ namespace SME.GoogleClassroom.Dados
                 paginacao.QuantidadeRegistrosIgnorados,
                 paginacao.QuantidadeRegistros,
                 rfs,
-                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+                tipos = new[] {(short) UsuarioTipo.Professor, (short) UsuarioTipo.Funcionario}
             };
 
             using var conn = ObterConexao();
@@ -324,7 +324,7 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = professores.Read<ProfessorGoogle>();
             retorno.TotalRegistros = professores.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -429,7 +429,7 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = professores.Read<AlunoGoogle>();
             retorno.TotalRegistros = professores.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
@@ -452,7 +452,7 @@ namespace SME.GoogleClassroom.Dados
             var parametros = new
             {
                 email,
-                tipos = new[] { (short)UsuarioTipo.Professor, (short)UsuarioTipo.Funcionario }
+                tipos = new[] {(short) UsuarioTipo.Professor, (short) UsuarioTipo.Funcionario}
             };
 
             using var conn = ObterConexao();
@@ -463,7 +463,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where cpf = @cpf and usuario_tipo = @usuarioTipo limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryAsync<bool>(query, new { cpf, usuarioTipo = UsuarioTipo.FuncionarioIndireto })).FirstOrDefault();
+            return (await conn.QueryAsync<bool>(query, new {cpf, usuarioTipo = UsuarioTipo.FuncionarioIndireto})).FirstOrDefault();
         }
 
         public async Task<PaginacaoResultadoDto<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretoAsync(Paginacao paginacao, string cpf, string email)
@@ -518,18 +518,21 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = funcionarios.Read<FuncionarioIndiretoGoogle>();
             retorno.TotalRegistros = funcionarios.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
 
         public async Task<int> AtualizarAsync(long id, string nome, string organizationPath)
         {
-            const string updateQuery = @"update public.usuarios
-                                         set
-                                            nome = @nome, organization_path = @organizationPath
-                                         where
-                                            indice = @id";
+            var sql = new StringBuilder();
+            sql.AppendLine(@" update public.usuarios");
+            sql.AppendLine(@"              set");
+            sql.AppendLine(@"                 nome = @nome ");
+            if(organizationPath.NaoEhNulo())
+                sql.AppendLine(@"  ,organization_path = @organizationPath ");
+            sql.AppendLine(@"     where ");
+            sql.AppendLine(@"     indice = @id");
 
             var parametros = new
             {
@@ -539,7 +542,34 @@ namespace SME.GoogleClassroom.Dados
             };
 
             using var conn = ObterConexao();
-            return await conn.ExecuteAsync(updateQuery, parametros);
+            return await conn.ExecuteAsync(sql.ToString(), parametros);
+        }
+        public async Task<int> AtualizarUsuarioPorId(long id, string nome, string cpf, string email, int usuarioTipo)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine(@" update public.usuarios");
+            sql.AppendLine(@"              set");
+            sql.AppendLine(@"                 nome = @nome ");
+            if (cpf.NaoEhNulo())
+                sql.AppendLine(@"                 ,cpf = @cpf ");
+            if (usuarioTipo.MaiorQueZero())
+                sql.AppendLine(@"                 ,usuario_tipo = @usuarioTipo");
+            if (email.NaoEhNulo())
+                sql.AppendLine(@"                 ,email = @email ");
+            sql.AppendLine(@"              where ");
+            sql.AppendLine(@"                 id = @id");
+
+            var parametros = new
+            {
+                id,
+                nome,
+                cpf,
+                email,
+                usuarioTipo
+            };
+
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(sql.ToString(), parametros);
         }
 
         public async Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId)
@@ -610,7 +640,7 @@ namespace SME.GoogleClassroom.Dados
             var retorno = new PaginacaoResultadoDto<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
             retorno.Items = usuarios.Read<UsuarioParaAtualizacaoGoogleClassroomIdDto>();
             retorno.TotalRegistros = usuarios.ReadFirst<int>();
-            retorno.TotalPaginas = realizarPaginacao ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : default;
+            retorno.TotalPaginas = realizarPaginacao ? (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros) : default;
 
             return retorno;
         }
@@ -627,7 +657,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"SELECT exists(SELECT 1 from usuarios where google_classroom_id = @googleClassroomId limit 1)";
             using var conn = ObterConexao();
-            return (await conn.QueryAsync<bool>(query, new { googleClassroomId })).FirstOrDefault();
+            return (await conn.QueryAsync<bool>(query, new {googleClassroomId})).FirstOrDefault();
         }
 
         public async Task<IEnumerable<long>> ObterTurmasComCursoAlunoCadastrado(int anoLetivo, long? turmaId)
@@ -640,13 +670,13 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine(" and c.turma_id = @turmaId");
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<long>(query.ToString(), new { anoLetivo, turmaId });
+            return await conn.QueryAsync<long>(query.ToString(), new {anoLetivo, turmaId});
         }
 
         public async Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId)
         {
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new { googleClassroomId });
+            return await conn.QueryFirstOrDefaultAsync<long>("select indice from usuarios where google_classroom_id = @googleClassroomId", new {googleClassroomId});
         }
 
         public async Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId)
@@ -664,8 +694,9 @@ namespace SME.GoogleClassroom.Dados
                            where u.google_classroom_id = @classroomId";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { classroomId });
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new {classroomId});
         }
+
         public async Task<IEnumerable<UsuarioGoogleDto>> ObteUsuariosPorClassroomIdsAsync(IEnumerable<string> classroomIds)
         {
             var query = @"select u.indice,
@@ -681,8 +712,9 @@ namespace SME.GoogleClassroom.Dados
                            where u.google_classroom_id = ANY(@classroomIds)";
 
             using var conn = ObterConexao();
-            return await conn.QueryAsync<UsuarioGoogleDto>(query, new { classroomIds });
+            return await conn.QueryAsync<UsuarioGoogleDto>(query, new {classroomIds});
         }
+
         public async Task<bool> AtualizarUnidadeOrganizacionalAsync(long id, string estruturaOrganizacional)
         {
             const string updateQuery = @"update public.usuarios
@@ -743,7 +775,7 @@ namespace SME.GoogleClassroom.Dados
                                 and cu.curso_id = @cursoId;";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new { usuarioRF, cursoId });
+            return await conn.QueryFirstOrDefaultAsync<FuncionarioCurso>(query, new {usuarioRF, cursoId});
         }
 
 
@@ -796,7 +828,7 @@ namespace SME.GoogleClassroom.Dados
                            where u.email = @email";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { email });
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new {email});
         }
 
         public async Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo)
@@ -816,7 +848,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
-            return await conn.QueryFirstAsync<UsuarioGoogleDto>(query, new { Codigos = usuarioCodigo });
+            return await conn.QueryFirstAsync<UsuarioGoogleDto>(query, new {Codigos = usuarioCodigo});
         }
     }
 }
