@@ -131,7 +131,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         }
         
         /// <summary>
-        /// Insere ou atualiza e-mail do usuário
+        /// Inserir ou atualizar o e-mail do usuário
         /// </summary>
         /// <response code="200">Atualização ou inclusão do e-mail ocorreu com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a operação.</response>
