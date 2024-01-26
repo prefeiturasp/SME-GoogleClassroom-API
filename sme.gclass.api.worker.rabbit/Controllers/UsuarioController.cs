@@ -129,5 +129,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             await useCase.Executar();
             return Ok();
         }
+        
+        /// <summary>
+        /// Inserir ou atualizar o e-mail do usuário
+        /// </summary>
+        /// <response code="200">Atualização ou inclusão do e-mail ocorreu com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a operação.</response>
+        /// <response code="601">Houve uma falha de validação durante a operação.</response>
+        [HttpPost("realizar/carga/email")]
+        public async Task<IActionResult> AtualizarInserirEmailUsuario([FromBody] InserirAtualizarEmailDTO dto, [FromServices] IAtualizarEmailUsuarioUseCase useCase)
+        {
+            await useCase.Executar(dto);
+            return Ok();
+        }
     }
 }

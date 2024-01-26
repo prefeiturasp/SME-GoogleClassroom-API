@@ -19,6 +19,7 @@ namespace SME.GoogleClassroom.Dados
         Task<PaginacaoResultadoDto<ProfessorGoogle>> ObterProfessoresAsync(Paginacao paginacao, long? rf, string email);
 
         Task<int> AtualizarAsync(long id, string nome, string organizationPath);
+        Task<int> AtualizarEmailUsuario(long? id, string nome, string? cpf, string email, int usuarioTipo);
         Task<UsuarioGoogleDto> ObterUsuarioPorEmail(string email);
         Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId);
         Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo);
@@ -39,7 +40,7 @@ namespace SME.GoogleClassroom.Dados
 
         Task<bool> ExisteProfessorPorRf(long rf);
 
-        Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId);
+        Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId,bool existeGoogle = true);
 
         Task<IEnumerable<AlunoGoogle>> ObterAlunosPorCodigos(long[] codigosEol);
 
@@ -63,5 +64,7 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<UsuarioGoogleDto>> ObteUsuariosPorClassroomIdsAsync(IEnumerable<string> classroomIds);
 
         Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorEmail(string requestEmail);
+        Task<bool> ExisteUsuarioPorCpfETipo(string cpf, int tipoUsuario);
+        Task<bool> ExisteUsuarioPorIdETipo(long id, int tipoUsuario);
     }
 }

@@ -1,0 +1,6669 @@
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8175861, 
+ 3,'acassiafaria.8175861@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ACASSIA REGINA NASCIMENTO MEDEIROS DE FARIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6186211, 
+ 3,'adilsonsimoes.6186211@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADILSON SANTANA SIMOES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6954413, 
+ 3,'adrianadias.6954413@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA ALEXANDRE DIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7283199, 
+ 3,'adrianacaliman.7283199@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA BONIFACIO CALIMAN'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7101597, 
+ 3,'adrianalopes.7101597@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA DA SILVA LOPES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7955227, 
+ 3,'adrianasilva.7955227@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA FERNANDES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7955227, 
+ 3,'adriana.silva.7955227@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Adriana Fernandes da Silva'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8103518, 
+ 3,'adrianaide.8103518@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA IDE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7793821, 
+ 3,'adrianarocha.7793821@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA PEREIRA ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8358290, 
+ 3,'adrianamorgado.8358290@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Adriana Santos Morgado'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7327889, 
+ 3,'adrianacaetano.7327889@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA SOUSA DE QUEIROZ CAETANO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6860362, 
+ 3,'adriananepomuceno.6860362@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ADRIANA TAKAHAMA NEPOMUCENO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8285519, 
+ 3,'agnespinheiro.8285519@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AGNES DOS SANTOS PINHEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7758456, 
+ 3,'agneshanashiro.7758456@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AGNES HANASHIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8017662, 
+ 3,'albertodelmonds.8017662@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALBERTO MAFFEI DELMONDS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7249144, 
+ 3,'albinofilho.7249144@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALBINO SILVA MOREIRA FILHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7160933, 
+ 3,'alcionesilveira.7160933@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALCIONE SILVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6693458, 
+ 3,'alessandraamaral.6693458@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALESSANDRA DOS SANTOS AMARAL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8958807, 
+ 3,'alessandrabraga.8958807@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALESSANDRA MAYARA BRAGA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6339301, 
+ 3,'alessandrarosa.6339301@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALESSANDRA PEREIRA ROSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7772645, 
+ 3,'alexlima.7772645@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALEX BENJAMIM DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179020, 
+ 3,'alexfonseca.9179020@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALEX WILSON DA SILVA FONSECA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6741002, 
+ 3,'alexandrearaujo.6741002@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALEXANDRE OLIVEIRA DE ARAUJO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8502358, 
+ 3,'alexandresantos.8502358@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALEXANDRE RODRIGUES DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8244588, 
+ 3,'alinegirio.8244588@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALINE DIAS GIRIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161627, 
+ 3,'alinesantos.9161627@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ALINE LOPES DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8422079, 
+ 3,'allanmoura.8422079@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Allan Cavalcanti de Moura '),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7753543, 
+ 3,'amandarodrigues.7753543@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AMANDA BIANCHI LEONARDO RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7359039, 
+ 3,'amandarodrigues.7359039@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AMANDA FERREIRA RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9204491, 
+ 3,'amandapencal.9204491@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AMANDA FRANCISCA RODRIGUES PENCAL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8419311, 
+ 3,'amandafusco.8419311@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AMANDA FUSCO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7712693, 
+ 3,'anaterra.7712693@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA BEATRIZ BIZZARRO TERRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7562071, 
+ 3,'anasantos.7562071@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Ana Bárbara Santos'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7979142, 
+ 3,'anaacquesta.7979142@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA CAROLINA ENCISO DE SA ACQUESTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8235007, 
+ 3,'anacarvalho.8235007@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA CAROLINA LIMA CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7569530, 
+ 3,'anacambraia.7569530@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA FLAVIA MIRANDA CAMBRAIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8426333, 
+ 3,'anamaia.8426333@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA HELENA BRANCO MAIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7252668, 
+ 3,'anamuner.7252668@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA KARLA CHAVES MUNER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7471734, 
+ 3,'analima.7471734@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA LUCIA FERREIRA DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8080275, 
+ 3,'anacatelani.8080275@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA LUISA PATRICIO CAMPOS DE OLIVEIRA LENK CATELANI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 747173, 
+ 3,'anaflima.747173@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Ana Lúcia Ferreira de Lima'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8195901, 
+ 3,'anaalcantara.8195901@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA MARIA DE LUCA FERNANDES DE ALCANTARA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 1325671, 
+ 3,'anasantos.1325671@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA MARIA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7223811, 
+ 3,'anamonasterios.7223811@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA MARIA POMARINO MONASTERIOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 1370898, 
+ 3,'anamoreno.1370898@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA MARIA SPREAFICO MORENO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8273227, 
+ 3,'anacassulino.8273227@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA PAULA CASSULINO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179101, 
+ 3,'anacirilo.9179101@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA PAULA CIRILO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7432313, 
+ 3,'anacardoso.7432313@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA PAULA COPELLI CARDOSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7772513, 
+ 3,'anastrumillo.7772513@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA PAULA FIGUEIREDO MARQUES STRUMILLO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7712651, 
+ 3,'anaandrade.7712651@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA PAULA NASCIMENTO DE ANDRADE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8117128, 
+ 3,'analameda.8117128@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANA PAULA NICOLI LAMEDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8193576, 
+ 3,'anagibim.8193576@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Ana Paula Pereira Gomes'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8359229, 
+ 3,'anandagrinkraut.8359229@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANANDA GRINKRAUT'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6481205, 
+ 3,'andersonsilva.6481205@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDERSON PEREIRA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8422028, 
+ 3,'andremoreira.8422028@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDRE DE PINA MOREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6566677, 
+ 3,'andreaaraujo.6566677@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA CAETANO DE ARAUJO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7441754, 
+ 3,'andreaoliveira.7441754@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA DOS SANTOS OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8116482, 
+ 3,'andreateixeira.8116482@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA MARIANA NUNES DA COSTA TEIXEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7336365, 
+ 3,'andreacasanova.7336365@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA REGINA DE CARVALHO CASANOVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8078475, 
+ 3,'andreamaciel.8078475@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA REGINA MACIEL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6966454, 
+ 3,'andrearibeiro.6966454@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA ROSCHEL RIBEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8130523, 
+ 3,'andreamarques.8130523@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA TAVARES MARQUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8112533, 
+ 3,'andreacatalani.8112533@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREA WANG CATALANI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6342434, 
+ 3,'andreiasouza.6342434@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREIA BARBOSA RIBEIRO DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8278415, 
+ 3,'andreiagarofalo.8278415@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDREIA RODRIGUES GAROFALO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8393648, 
+ 3,'andressacarvalho.8393648@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANDRESSA DA SILVA CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7929790, 
+ 3,'andrezareis.7929790@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Andreza Brigando dos Reis'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7804857, 
+ 3,'andreiasouza.7804857@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Andréia Fernandes de Souza'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8968551, 
+ 3,'angelasilva.8968551@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANGELA ANTONIA SANTOS SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6081991, 
+ 3,'angelacarvalho.6081991@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANGELA AQUINO DE CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8105197, 
+ 3,'angelicaamato.8105197@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANGELICA APARECIDA TAVARES D AMATO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8026327, 
+ 3,'angelicadadario.8026327@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANGELICA DADARIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7720742, 
+ 3,'angelicapelaez.7720742@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANGELICA ISIDORO COSTA PELAEZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7222971, 
+ 3,'anitafelice.7222971@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANITA CLEIDE DE FELICE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8104085, 
+ 3,'annasantos.8104085@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANNA CAROLINA SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7418078, 
+ 3,'annacastro.7418078@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANNA LUISA DE CASTRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8084513, 
+ 3,'annasantine.8084513@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANNA PAOLA BRAGA SANTINE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8109885, 
+ 3,'antonellapinto.8109885@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANTONELLA ZOGBI GOMES PINTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8588040, 
+ 3,'antoniarocha.8588040@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANTONIA GERALDA DE ARAUJO ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9245201, 
+ 3,'antonioguedes.9245201@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANTONIO CAMILO NOGUEIRA GUEDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5047676, 
+ 3,'antoniocampos.5047676@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ANTONIO CARLOS PRESTES CAMPOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8015902, 
+ 3,'aparecidojunior.8015902@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('APARECIDO SUTERO DA SILVA JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8271305, 
+ 3,'arletemoraes.8271305@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ARLETE RODRIGUES MORAES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6057390, 
+ 3,'arliedjasantos.6057390@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ARLIEDJA GOMES DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8035431, 
+ 3,'aurenyrochael.8035431@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AURENY CRISTINA PEREIRA SILVA ROCHAEL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7922655, 
+ 3,'avelinemuner.7922655@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('AVELINE ROCHA MUNER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9178996, 
+ 3,'barbarasilva.9178996@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BARBARA SANCHES ROLIM DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9128981, 
+ 3,'beatrizluiz.9128981@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BEATRIZ CRISTINA DOS SANTOS LUIZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8811695, 
+ 3,'beatrizsilva.8811695@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BEATRIZ DE JESUS SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8954623, 
+ 3,'biancavalle.8954623@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BIANCA ORTOLAN DIAS DO VALLE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7299800, 
+ 3,'brazfilho.7299800@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRAZ GOMES DA SILVA FILHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9154698, 
+ 3,'brenookamura.9154698@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRENO LYOGI OKAMURA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8136432, 
+ 3,'brigitrodrigues.8136432@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRIGIT MARIA DOS PASSOS RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8019568, 
+ 3,'brunamachado.8019568@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Bruna Acioli Silva Machado'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8361665, 
+ 3,'brunaaltino.8361665@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRUNA MEIRA ALTINO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161511, 
+ 3,'brunasilva.9161511@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRUNA VEGA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179038, 
+ 3,'brunnaviana.9179038@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRUNNA GOMES VIANA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8024154, 
+ 3,'brunobarros.8024154@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Bruno Carvalho da Silva Barros'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7970099, 
+ 3,'brunoferreira.7970099@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRUNO DE SOUZA RODRIGUES FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8905754, 
+ 3,'brunocorreia.8905754@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('BRUNO LOPES CORREIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8030405, 
+ 3,'caiofernandes.8030405@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Caio Marques Fernandes'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8927553, 
+ 3,'camilasilva.8927553@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAMILA RAMOS DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7228287, 
+ 3,'camilaramos.7228287@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Camila Ramos Franco de Souza'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7228287, 
+ 3,'camilasouza.7228287@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAMILA RAMOS FRANCO DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8198144, 
+ 3,'camilalisboa.8198144@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAMILA SANTO LISBOA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8415510, 
+ 3,'carinafonseca.8415510@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARINA JAKITAS FONSECA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161431, 
+ 3,'carinalima.9161431@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARINA WEISHAUPT VIEIRA LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8148546, 
+ 3,'carlacunha.8148546@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLA DUARTE DA LUZ CUNHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6937497, 
+ 3,'carlabrichese.6937497@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLA MARIA BRICHESE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5561728, 
+ 3,'carlafreitas.5561728@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLA REGINA FERREIRA DE FREITAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7703929, 
+ 3,'carlabrito.7703929@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLA SIMONE DE ALMEIDA BRITO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7971966, 
+ 3,'carlafragoso.7971966@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLA VANESSA MARTINELI FRAGOSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9262083, 
+ 3,'carlosfachini.9262083@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLOS ALBERTO FACHINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7248369, 
+ 3,'carloslima.7248369@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLOS ALBERTO MENDES DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9266381, 
+ 3,'carlosalves.9266381@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLOS ANTONIO ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7493614, 
+ 3,'carlosteixeira.7493614@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CARLOS AUGUSTO TEIXEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7779259, 
+ 3,'carolinamendonca.7779259@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLINA BASTOS MENDONCA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161589, 
+ 3,'carolinary.9161589@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLINA FIDALGO DEL RY'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7706359, 
+ 3,'carolinapendloski.7706359@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLINA PENDLOSKI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8122393, 
+ 3,'carolinadias.8122393@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLINA SOUSA COELHO DIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274002, 
+ 3,'carolineloreto.8274002@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLINE GOODMAN LORETO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8095337, 
+ 3,'carolinnesilva.8095337@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLINNE MENDES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9266399, 
+ 3,'carollinemacedo.9266399@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CAROLLINE DE SOUZA MACEDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7521634, 
+ 3,'cassianacominato.7521634@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CASSIANA PAULA COMINATO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5805988, 
+ 3,'ceilasouza.5805988@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CEILA MARCONDES DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6104291, 
+ 3,'celiagostinelli.6104291@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CELI APARECIDA AGOSTINELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9200681, 
+ 3,'celiacarneiro.9200681@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CELIA AFONSO CARNEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5579708, 
+ 3,'celianogueira.5579708@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CELIA REGINA NOGUEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9191356, 
+ 3,'celsosantoro.9191356@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CELSO AGUILERA SANTORO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5378389, 
+ 3,'christinasilva.5378389@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CHRISTINA ALEXANDRA TELLES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8110468, 
+ 3,'christinegolin.8110468@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CHRISTINE KOCHI GOLIN'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8387389, 
+ 3,'cibelesantos.8387389@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CIBELE AGNES CRUZ DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161368, 
+ 3,'ciliriasantos.9161368@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CILIRIA SOARES ALVES DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9129065, 
+ 3,'cinthiacastro.9129065@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CINTHIA FRANCISCA SCHULTZ DE CASTRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8162174, 
+ 3,'cinthiayabuta.8162174@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CINTHIA YUMI YABUTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7721854, 
+ 3,'cintiakamura.7721854@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CINTIA MITSUE KAMURA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7993790, 
+ 3,'cintiaalves.7993790@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CINTIA PAES DOS SANTOS ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9163786, 
+ 3,'clarissahirao.9163786@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLARISSA EMI HIRAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9123334, 
+ 3,'claudetesilva.9123334@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDETE BARCELOS DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8107017, 
+ 3,'claudiaboato.8107017@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIA CARVALHO MALTESE BOATO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7746717, 
+ 3,'claudiamacedo.7746717@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIA LOPES MACEDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7933827, 
+ 3,'claudiagirotto.7933827@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIA MARIA APPUGLIESE GIROTTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8512523, 
+ 3,'claudiaqueiroz.8512523@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIA MONTEIRO QUEIROZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7762666, 
+ 3,'claudiamistreli.7762666@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIA REGINA MISTRELI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5721458, 
+ 3,'claudiosantos.5721458@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7347791, 
+ 3,'claudiomaroja.7347791@sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Claudio Maroja'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7347791, 
+ 3,'claudiomaroja.7347791@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAUDIO MAROJA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7205830, 
+ 3,'claudiobispo.7205830@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Claudio Santana Bispo'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8956481, 
+ 3,'claytoncorreia.8956481@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLAYTON TEODORO CORREIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8926786, 
+ 3,'clebersonpereira.8926786@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLEBERSON DA SILVA PEREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8021368, 
+ 3,'clednacosta.8021368@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Cledna Sandra Nascimento Costa Medeiros'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7308418, 
+ 3,'cleideoliveira.7308418@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLEIDE DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7234660, 
+ 3,'cleubergoncalves.7234660@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLEUBER GONCALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7075227, 
+ 3,'cloviscarvalho.7075227@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CLOVIS SANTOS DE CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8205078, 
+ 3,'cristianeendo.8205078@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTIANE AKEMI CONTRERAS ENDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7765207, 
+ 3,'cristianetanikawa.7765207@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTIANE ERIKA TANIKAWA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7371764, 
+ 3,'cristianesilva.7371764@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTIANE FERREIRA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8106479, 
+ 3,'cristianeteixeira.8106479@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTIANE LOPES TEIXEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7811756, 
+ 3,'cristianesilva.7811756@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTIANE PAIVA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6187102, 
+ 3,'cristianesantos.6187102@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTIANE SEVERO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8115257, 
+ 3,'cristinamorais.8115257@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTINA MORAIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8049980, 
+ 3,'cristobalgarcia.8049980@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('CRISTOBAL ROBERTO AFONSO GARCIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8162913, 
+ 3,'danielamenezes.8162913@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELA ALVES MENEZES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7773315, 
+ 3,'danielamartins.7773315@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELA BITENCOURT MARTINS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8042853, 
+ 3,'danielamello.8042853@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELA DUELIS DE MELLO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8090670, 
+ 3,'danielaesposito.8090670@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Daniela Espósito'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8125015, 
+ 3,'danielaalmeida.8125015@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELA GOMES DE ALMEIDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8112908, 
+ 3,'danielachicon.8112908@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELA PEREIRA CHICON'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9245197, 
+ 3,'danielasilva.9245197@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELA SALU MATEUS DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8775281, 
+ 3,'danielelisboa.8775281@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANIELE MACHADO LISBOA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8905703, 
+ 3,'daniloleite.8905703@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DANILO COSTA NUNES ANDRADE LEITE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6079865, 
+ 3,'deborahtalhaferro.6079865@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DEBORAH CRISTINA TORRES TALHAFERRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7557892, 
+ 3,'deisecassiano.7557892@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Deise Alves Cassiano'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7557892, 
+ 3,'deisemachado.7557892@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DEISE ALVES CASSIANO MACHADO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6583121, 
+ 3,'delmasilva.6583121@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DELMA APARECIDA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5239095, 
+ 3,'denisemari.5239095@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DENISE MARI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7249055, 
+ 3,'deniselima.7249055@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DENISE OLIVEIRA LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7794894, 
+ 3,'denisesilva.7794894@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DENISE RAFAELA SAES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274223, 
+ 3,'diegofarias.8274223@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DIEGO FERREIRA DE FARIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5886732, 
+ 3,'dilmanascimento.5886732@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DILMA MARIA DO NASCIMENTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179119, 
+ 3,'dolorespereira.9179119@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DOLORES MILARE PEREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7831609, 
+ 3,'douglascastro.7831609@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DOUGLAS DE CASTRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8090050, 
+ 3,'douglascoelho.8090050@edu.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Douglas Maris Antunes Coelho'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8090050, 
+ 3,'douglascoelho.8090050@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Douglas Maris Antunes Coelho'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8578362, 
+ 3,'douglascosta.8578362@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('DOUGLAS NATANAEL NASCIMENTO DA COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7289863, 
+ 3,'edemilsonsantos.7289863@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDEMILSON BARBOSA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6448470, 
+ 3,'edevaldosantos.6448470@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDEVALDO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6811515, 
+ 3,'edileuzasilva.6811515@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDILEUZA DA CONCEICAO SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7746822, 
+ 3,'edinilsonoliveira.7746822@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDINILSON PATROCINIO DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6866263, 
+ 3,'edmildesoares.6866263@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDMILDE DE JESUS SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7525729, 
+ 3,'edmilsoncruz.7525729@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDMILSON JOSE DA CRUZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8049297, 
+ 3,'edmilsonsantos.8049297@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDMILSON SILVA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8387613, 
+ 3,'edneiaalcantara.8387613@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDNEIA MACHADO DE ALCANTARA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8094411, 
+ 3,'eduardosilva.8094411@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDUARDO MURAKAMI DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8083436, 
+ 3,'eduardopereira.8083436@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EDUARDO PEREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179071, 
+ 3,'elainefolster.9179071@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELAINE CRISTINA LIMA FOLSTER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5081378, 
+ 3,'elainealves.5081378@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELAINE FELISBERTO MENDES ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7544090, 
+ 3,'elainesoares.7544090@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELAINE MARCONDES SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6845070, 
+ 3,'eleniceroda.6845070@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELENICE DE CARVALHO RODA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7930232, 
+ 3,'eleonoramattoso.7930232@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELEONORA CORDEIRO MATTOSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7786808, 
+ 3,'eleusamartins.7786808@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELEUSA GERMANO MARTINS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9154647, 
+ 3,'elianasilva.9154647@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIANA CRISTINA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8115249, 
+ 3,'elianazaccarelli.8115249@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIANA MENEGON ZACCARELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5676568, 
+ 3,'elianeliberatori.5676568@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIANE CRISTINA LIBERATORI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7330286, 
+ 3,'eliasalves.7330286@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIAS TERTO ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6568891, 
+ 3,'elietecarminhotto.6568891@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIETE CARMINHOTTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7450214, 
+ 3,'elisandravieira.7450214@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELISANDRA FELIX VIEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274304, 
+ 3,'elizamurakoshi.8274304@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIZA OLIVEIRA MURAKOSHI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8095728, 
+ 3,'elizabetepinto.8095728@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIZABETE BEATRIZ PINTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7790031, 
+ 3,'elizabethribeiro.7790031@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELIZABETH DE PAULA RIBEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179011, 
+ 3,'ellenoliveira.9179011@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELLEN VIEIRA DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7538260, 
+ 3,'ellissilva.7538260@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Ellis Mara Barbosa Elias Marta e Silva'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7407939, 
+ 3,'eloisadallmann.7407939@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELOISA MARA GIORGINA CORDEIRO BASSO DALLMANN'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5662991, 
+ 3,'eltoncardozo.5662991@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELTON LUCIO CARDOZO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6223702, 
+ 3,'elzalima.6223702@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ELZA MARIA LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7370725, 
+ 3,'emelimelo.7370725@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('EMELI APARECIDA DE FATIMA DOS SANTOS MELO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7531966, 
+ 3,'ericeufrausino.7531966@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ERIC MOREIRA EUFRAUSINO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6043437, 
+ 3,'erikagasparini.6043437@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ERIKA FERRAZ GASPARINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7482418, 
+ 3,'estelaribeiro.7482418@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ESTELA FERNANDES ALIENDE RIBEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9147691, 
+ 3,'ethoregiacomin.9147691@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ETHORE BELLATO GIACOMIN'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9187502, 
+ 3,'fabianapaulo.9187502@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FABIANA CRISTINA TORRES DE PAULO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9154701, 
+ 3,'fabiocosta.9154701@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FABIO LORUSSO RIBEIRO COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7926961, 
+ 3,'fabiolasimoes.7926961@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FABIOLA CAUS SIMOES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7491778, 
+ 3,'fabriciofigueiredo.7491778@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FABRICIO EDUARDO DOS SANTOS FIGUEIREDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5559855, 
+ 3,'fatimabonifacio.5559855@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FATIMA BONIFACIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6753744, 
+ 3,'fatimaabrao.6753744@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FATIMA CRISTINA ABRAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5565570, 
+ 3,'fatimadavanco.5565570@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FATIMA DE LOURDES AMPUERO DAVANCO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7819374, 
+ 3,'fatimaoliveira.7819374@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FATIMA MARIA DOS SANTOS DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8573051, 
+ 3,'felipefonseca.8573051@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Felipe Zuculin'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6741274, 
+ 3,'fernandasilva.6741274@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA ALVES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8117705, 
+ 3,'fernandafernandes.8117705@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA APARECIDA MARQUES FERNANDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8570345, 
+ 3,'fernandanascimento.8570345@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA BARBOSA DO NASCIMENTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274011, 
+ 3,'fernandachagas.8274011@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA BORGES DO NASCIMENTO CHAGAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8020205, 
+ 3,'fernandamartin.8020205@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA DEMITRIO MARTIN'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7704593, 
+ 3,'fernandapacelli.7704593@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA GOMES PACELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8107807, 
+ 3,'fernandamenezes.8107807@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA LOURENCO DE MENEZES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9157514, 
+ 3,'fernandacruz.9157514@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA OLIVEIRA DA CRUZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8901945, 
+ 3,'fernandaluz.8901945@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA SANTANA LUZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8160597, 
+ 3,'fernandacapasso.8160597@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDA SOBRAL CAPASSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7947054, 
+ 3,'fernandoprado.7947054@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDO DE ALMEIDA PRADO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8872627, 
+ 3,'fernandogouveia.8872627@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDO MARTINS GOUVEIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8839239, 
+ 3,'fernandonovaes.8839239@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FERNANDO PADULA NOVAES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7753551, 
+ 3,'flaviaamador.7753551@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FLAVIA ALBUQUERQUE E SILVA AMADOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179054, 
+ 3,'flaviacorrea.9179054@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FLAVIA COSTA CORREA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8002819, 
+ 3,'flaviaarcas.8002819@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FLAVIA DOS SANTOS ARCAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8381461, 
+ 3,'franciannevasiunas.8381461@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FRANCIANNE ALINE OLIVEIRA BARROS DE SOUZA VASIUNAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7738579, 
+ 3,'francieliguerra.7738579@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FRANCIELI ARAUJO GUERRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7509014, 
+ 3,'franciscojunior.7509014@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FRANCISCO BEZERRA DA SILVA JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6663079, 
+ 3,'franciscomico.6663079@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FRANCISCO EUGENIO DE MICO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9158570, 
+ 3,'frankitinoce.9158570@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('FRANK ITINOCE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7772866, 
+ 3,'gabrielaguimenti.7772866@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GABRIELA GUIMENTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8894205, 
+ 3,'gabriellaoliveira.8894205@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GABRIELLA FERREIRA LOPES DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9178988, 
+ 3,'geisasilva.9178988@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GEISA MARINA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7884940, 
+ 3,'genisantos.7884940@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GENI DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6083714, 
+ 3,'geraldosilva.6083714@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GERALDO LUIZ FERREIRA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8015724, 
+ 3,'gersonoliveira.8015724@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GERSON ALVES DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8195269, 
+ 3,'gilciabezerra.8195269@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GILCIA MARIA SALOMON BEZERRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8427496, 
+ 3,'gildosantos.8427496@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GILDO JOSE DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5096537, 
+ 3,'gilvansouza.5096537@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GILVAN ALVES DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5384231, 
+ 3,'ginaabenza.5384231@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GINA LAIS ABENZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7737165, 
+ 3,'giovannaoliveira.7737165@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Giovanna  Gueller Oliveira'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7748922, 
+ 3,'giovannaserra.7748922@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GIOVANNA LUISI SERRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7124872, 
+ 3,'giseleguimaraes.7124872@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GISELE DA SILVA GUIMARAES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8086044, 
+ 3,'giselepereira.8086044@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GISELE DE CASTRO PEREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9187464, 
+ 3,'gislainebrito.9187464@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GISLAINE DA SILVA BRITO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8373639, 
+ 3,'gizeleaquino.8373639@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GIZELE CERQUEIRA DE AQUINO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7252587, 
+ 3,'gladisbarbosa.7252587l@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Gladis Cassapian Barbosa'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8089795, 
+ 3,'glauciaburckler.8089795@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GLAUCIA CRISTINE SILVA BURCKLER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7751567, 
+ 3,'glauciaalencar.7751567@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GLAUCIA RODRIGUES ALVES DE ALENCAR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7773234, 
+ 3,'gleidissaat.7773234@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GLEIDIS MALERMAN SAAT'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6549390, 
+ 3,'gloriagallagher.6549390@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GLORIA BINAGHI GALLAGHER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7376022, 
+ 3,'grazielasilva.7376022@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GRAZIELA BURRINI SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8890331, 
+ 3,'guilhermeventurim.8890331@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GUILHERME AVELINO VENTURIM'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6666507, 
+ 3,'guilhermepagni.6666507@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GUILHERME CASSIMIRO PAGNI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7800461, 
+ 3,'guilhermecarvalho.7800461@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Guilherme Cunha de Carvalho'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9123342, 
+ 3,'guilhermefranco.9123342@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('GUILHERME MOYSES FRANCO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8212210, 
+ 3,'hednabenjamim.8212210@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HEDNA LADY RIBEIRO FIGUEREDO BENJAMIM'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7754817, 
+ 3,'helenaferreira.7754817@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HELENA MARIA NOVARETTI FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7348622, 
+ 3,'helgakooro.7348622@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HELGA KOORO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6858015, 
+ 3,'heloisagomes.6858015@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HELOISA CICONELLO RODRIGUES GOMES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8286311, 
+ 3,'heloisascattini.8286311@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HELOISA TEVES SCATTINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7884834, 
+ 3,'hermanyroberto.7884834@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HERMANY DE SOUZA ROBERTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9251162, 
+ 3,'hevertongios.9251162@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HEVERTON MAESTRE GIOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7551231, 
+ 3,'hildapacheco.7551231@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('HILDA MITIKO IUAMOTO PACHECO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6123147, 
+ 3,'humbertojesus.6123147@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Humberto Luis de  Jesus'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161449, 
+ 3,'iansimoes.9161449@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('IAN TAIRA SIMOES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9262075, 
+ 3,'ingredsilva.9262075@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('INGRED DE SOUZA ROCHA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6739482, 
+ 3,'iransousa.6739482@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('IRAN DA CUNHA SOUSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8015953, 
+ 3,'isaacsantana.8015953@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ISAAC DA SILVA SANTANA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 1314921, 
+ 3,'isabelbittencourt.1314921@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ISABEL CRISTINA GUANAES BITTENCOURT'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8982112, 
+ 3,'isabelagalvao.8982112@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ISABELA DE ALMEIDA GALVAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8244987, 
+ 3,'isabellaneri.8244987@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ISABELLA DE OLIVEIRA NERI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161457, 
+ 3,'isabellabarros.9161457@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ISABELLA SOARES DE SOUZA BARROS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8106495, 
+ 3,'isabellecruz.8106495@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ISABELLE PINHEIRO DIAS DA CRUZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5405629, 
+ 3,'ivanamorgani.5405629@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('IVANA CRISTINA MORGANI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6764720, 
+ 3,'ivanivinhais.6764720@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('IVANI FERREIRA MOURA VINHAIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6666337, 
+ 3,'jacquelinesantos.6666337@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JACQUELINE APARECIDA MAIA TRIPOLI DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6581412, 
+ 3,'jairsantos.6581412@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JAIR FONSECA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9111701, 
+ 3,'janainabarbosa.9111701@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JANAINA FERREIRA BARBOSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6773346, 
+ 3,'janemunhoz.6773346@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JANE MUNHOZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7733241, 
+ 3,'jaquelinemorais.7733241@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JAQUELINE DOS SANTOS MORAIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8113009, 
+ 3,'jessicarocha.8113009@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JESSICA GIARLETTA LOMAS DE OLIVEIRA ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8785571, 
+ 3,'jessicadrumond.8785571@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JESSICA PRISCILA GOMES DRUMOND'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8589313, 
+ 3,'jiovanramos.8589313@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JIOVAN VITALINO RAMOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5996678, 
+ 3,'jocelizeminoi.5996678@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOCELI PEREIRA LOPES ZEMINOI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6483399, 
+ 3,'jonassena.6483399@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JONAS ALVES DE SENA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5669430, 
+ 3,'jorgeapolinario.5669430@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JORGE HENRIQUE APOLINARIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6960545, 
+ 3,'joseneto.6960545@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOSE ALVES FERREIRA NETO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7810946, 
+ 3,'josesales.7810946@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOSE BELARMINO DE SALES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8021791, 
+ 3,'josejunior.8021791@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOSE CARLOS SUCI JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6757251, 
+ 3,'josesoares.6757251@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOSE MEDEIROS SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7495277, 
+ 3,'joseianegotardi.7495277@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOSEIANE ALVAREZ DOS SANTOS GOTARDI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6495826, 
+ 3,'josiassoares.6495826@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOSIAS RODRIGUES SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8192020, 
+ 3,'josejunior.8192020@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('José Ari de Oliveira  Junior'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7332122, 
+ 3,'josefilho.7332122@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('José Lopes Moreira Filho'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7285388, 
+ 3,'joselima.7285388@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('José Roberto de Campos Lima'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6989454, 
+ 3,'jovinosantos.6989454@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JOVINO SOARES PEREIRA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7868685, 
+ 3,'joaojunior.7868685@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('João Rosalvo da Silva Junior'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7220189, 
+ 3,'jucaragontarczik.7220189@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JUCARA INGLEZ RIBEIRO GONTARCZIK'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8461040, 
+ 3,'jucicleidegomes.8461040@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JUCICLEIDE DA CONCEICAO GOMES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8124850, 
+ 3,'jucileiavicente.8124850@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JUCILEIA ALVES PEREIRA VICENTE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8206252, 
+ 3,'jucilenesilva.8206252@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Jucilene Alves Gomes da Silva'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8272867, 
+ 3,'juliaflorido.8272867@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIA MERCEDES PEREZ FLORIDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8117063, 
+ 3,'julianacouri.8117063@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA FIACADORI COURI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8130205, 
+ 3,'julianademay.8130205@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA LEMOS DEMAY'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8890315, 
+ 3,'julianasilva.8890315@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA MARIA MAZZETI SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8533474, 
+ 3,'julianasigahi.8533474@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA MIEKO ODANI SIGAHI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8433143, 
+ 3,'julianaminucelli.8433143@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA MINUCELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8467145, 
+ 3,'julianasilva.8467145@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA MOREIRA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8449805, 
+ 3,'julianafabri.8449805@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA NAJADOS HOFFMANN FABRI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8245151, 
+ 3,'julianalopes.8245151@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA NICOA NEGREIROS LOPES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8279934, 
+ 3,'julianafigueiredo.8279934@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA OLIVEIRA FIGUEIREDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8282854, 
+ 3,'julianapastorelli.8282854@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA TOLEDO PASTORELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9123351, 
+ 3,'julianasoares.9123351@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIANA TOSTES SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8907218, 
+ 3,'juliolima.8907218@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JULIO RICARDO COSTA DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6318517, 
+ 3,'juraciconceicao.6318517@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JURACI SANTIAGO DA CONCEICAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7904908, 
+ 3,'jussarasouza.7904908@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('JUSSARA BRITO DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8193916, 
+ 3,'kaligianelima.8193916@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KALIGIANE DORGELMA FELIX DA SILVA LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9219188, 
+ 3,'kamilagranzotto.9219188@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KAMILA GRANZOTTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274134, 
+ 3,'kamilanaressi.8274134@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KAMILA MOREIRA NARESSI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8228779, 
+ 3,'kamilarodrigues.8228779@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KAMILA RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161503, 
+ 3,'karinaandrade.9161503@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KARINA GAMA DOS SANTOS DE ANDRADE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8055564, 
+ 3,'karlamaestrini.8055564@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KARLA APARECIDA MAESTRINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7951221, 
+ 3,'karlaqueiroz.7951221@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KARLA DE OLIVEIRA QUEIROZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274291, 
+ 3,'karlacook.8274291@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KARLA EVELYN COOK'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7208057, 
+ 3,'karolinecampos.7208057@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KAROLINE DA SILVA CAMPOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8090742, 
+ 3,'katiasouza.8090742@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Katia Aparecida de Castro Souza '),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7765291, 
+ 3,'katiaromanelli.7765291@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KATIA IARED SEBASTIAO ROMANELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6882854, 
+ 3,'katiacavalcanti.6882854@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KATIA REGINA CAVALCANTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6751369, 
+ 3,'katialima.6751369@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KATIA SANCHES BIZARRO DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6922741, 
+ 3,'katianesimone.6922741@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KATIANE COSTA PAIVA SIMONE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8225575, 
+ 3,'kauanconceicao.8225575@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KAUAN ESPOSITO DA CONCEICAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7341482, 
+ 3,'kelicorreia.7341482@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Keli Cristina Correia'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7206917, 
+ 3,'kellneves.7206917@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KELL SILENE SILVA NEVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8023107, 
+ 3,'kellyortega.8023107@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KELLY CRISTINA BATISTA ORTEGA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7496362, 
+ 3,'kellysilva.7496362@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KELLY CRISTINA FERREIRA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7832699, 
+ 3,'kellypaula.7832699@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KELLY CRISTINA LEME MEIRELES DE PAULA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7722061, 
+ 3,'kellypantaleao.7722061@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KELLY CRISTINA PANTALEAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8769605, 
+ 3,'kellysilveira.8769605@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('KELLY CRISTINA SILVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8053332, 
+ 3,'laisrocha.8053332@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LAIS DE SOUSA ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8002436, 
+ 3,'laisferreira.8002436@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LAIS LOPES ROBLES ALVES FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7705620, 
+ 3,'larissafraga.7705620@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LARISSA DE GOUVEIA FRAGA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274231, 
+ 3,'larissaneves.8274231@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LARISSA SANTOS DAS NEVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8872619, 
+ 3,'laudinasalomao.8872619@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LAUDINA DE ANDRADE SALOMAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6973256, 
+ 3,'lazarofilho.6973256@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LAZARO NAPOLEAO INACIO FILHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8894221, 
+ 3,'leandrocarvalho.8894221@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LEANDRO DANIEL SANTOS CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8832773, 
+ 3,'leandrosantos.8832773@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LEANDRO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7929561, 
+ 3,'leandromessias.7929561@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Leandro dos Santos Messias'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7323875, 
+ 3,'leandromolina.7323875@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LEANDRO GOMES MOLINA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8233926, 
+ 3,'leandrosaca.8233926@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LEANDRO YUDI SACA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6816720, 
+ 3,'leilaernesto.6816720@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LEILA OLIVEIRA ERNESTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7945272, 
+ 3,'leilanecarvalho.7945272@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LEILANE MARIA DA COSTA CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8110484, 
+ 3,'leticiaandrade.8110484@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LETICIA DE ALMEIDA ANDRADE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179062, 
+ 3,'leticiasaito.9179062@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LETICIA TIEMI SAITO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9149872, 
+ 3,'leticiasalum.9149872@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LETICIA ZAMPRONIO SALUM'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 3155901, 
+ 3,'liciniaudvary.3155901@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LICINIA MARIA UDVARY'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 1366491, 
+ 3,'lidiaval.1366491@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LIDIA MARIA BORGES DO VAL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7780648, 
+ 3,'liegesilva.7780648@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LIEGE NIGRO DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9245227, 
+ 3,'liegenrodrigues.9245227@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LIEGEN CLEMMYL RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6806988, 
+ 3,'ligiaguerra.6806988@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LIGIA ALVES DE LIMA GUERRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8356491, 
+ 3,'ligiareis.8356491@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LIGIA CARDOSO DOS REIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7917031, 
+ 3,'lilianferro.7917031@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LILIAN GRANATO DE SALLES FERRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7366388, 
+ 3,'lilianparisi.7366388@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LILIAN MACIEL DA SILVA PARISI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7999950, 
+ 3,'lilianmatos.7999950@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LILIAN MEIBACH BRANDOLES DE MATOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179097, 
+ 3,'lilianetaniguchi.9179097@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LILIANE SUSANA NOGUEIRA QUINOMES TANIGUCHI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161520, 
+ 3,'lindseysilva.9161520@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LINDSEY DE FARIA CID REZENDE DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8178721, 
+ 3,'liviaesperanca.8178721@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LIVIA DA CRUZ ESPERANCA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7298587, 
+ 3,'liviavieira.7298587@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Livia Ledier'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8982091, 
+ 3,'louisehublard.8982091@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LOUISE VON FRUHAUF HUBLARD'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8113653, 
+ 3,'luanasilva.8113653@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUANA BARBOZA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9128921, 
+ 3,'luanasilva.9128921@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUANA IKEMOTO DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7405839, 
+ 3,'luannasousa.7405839@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUANNA CAETANO MACIEL DE SOUSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8358940, 
+ 3,'lucassilva.8358940@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCAS AMBROZIO LOPES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7276974, 
+ 3,'lucianaarantes.7276974@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Luciana Arantes Crescente do Nascimento'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8461511, 
+ 3,'lucianasouza.8461511@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANA CARDOSO DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7958625, 
+ 3,'lucianaoliveira.7958625@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANA CASTELANI CASIMIRO OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7988966, 
+ 3,'lucianaferreira.7988966@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANA FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7716559, 
+ 3,'lucianafandinho.7716559@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANA HELENA FANDINHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8197890, 
+ 3,'lucianasantos.8197890@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Luciana Maria de Barros Novello Santos'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8011052, 
+ 3,'lucianaamato.8011052@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANA RODRIGUES AMATO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8121303, 
+ 3,'lucianaferreira.8121303@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANA XAVIER FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6390331, 
+ 3,'lucianetonhato.6390331@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANE DE LOURDES CAPUTO TONHATO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7515243, 
+ 3,'lucianogirotto.7515243@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCIANO GUIDORZZI GIROTTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8036080, 
+ 3,'lucienecioffi.8036080@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Luciene Aparecida Grisolio Cioffi'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6843531, 
+ 3,'lucineidearabi.6843531@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUCINEIDE MARIA ACAUA ARABI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8104441, 
+ 3,'ludmillaeler.8104441@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUDMILLA MOREIRA ELER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161767, 
+ 3,'luisasilva.9161767@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUISA IVANA ALMEIDA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8010838, 
+ 3,'luizgasperetti.8010838@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUIZ AUGUSTO DE LUCCA GASPERETTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7226446, 
+ 3,'luizfaria.7226446@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUIZ CARLOS FARIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9162721, 
+ 3,'luizjunior.9162721@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUIZ GUSTAVO ZANATTA JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7257651, 
+ 3,'luizito.7257651@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUIZ MASSAYUKI SAMPAIO ITO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5917344, 
+ 3,'luizcarneiro.5917344@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUIZ PAULO CARNEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7761775, 
+ 3,'luzinetegois.7761775@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('LUZINETE COSTA GOIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8107840, 
+ 3,'mairacurti.8107840@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MAIRA LADEIA RODRIGUES CURTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8275467, 
+ 3,'mairasilva.8275467@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MAIRA TEODORO DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7491883, 
+ 3,'maldeboas.7491883@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MALDE MARIA VILAS BOAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6762867, 
+ 3,'marcelpinezi.6762867@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCEL PINEZI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8979456, 
+ 3,'marcellima.8979456@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCEL VILLEMOR JOFILY DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161333, 
+ 3,'marcelasantos.9161333@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCELA TARDIOLI DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8175519, 
+ 3,'marcellamiranda.8175519@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCELLA MULLER MIRANDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8464057, 
+ 3,'marcelleandrade.8464057@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCELLE MARQUES DE ANDRADE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7245343, 
+ 3,'marcelooliveira.7245343@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCELO BARBOSA DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6440797, 
+ 3,'marcelosantos.6440797@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCELO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8831025, 
+ 3,'marceloalves.8831025@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCELO GOMES ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6983065, 
+ 3,'marcelorodrigues.6983065@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Marcelo Rivelino Rodrigues'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7764871, 
+ 3,'marciaoliveira.7764871@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA ANDREA BONIFACIO DA COSTA OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6013651, 
+ 3,'marciashimoda.6013651@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA BATISTA NOGUEIRA SHIMODA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7171722, 
+ 3,'marciaaraujo.7171722@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA DA SILVA ARAUJO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7536577, 
+ 3,'marciaferreira.7536577@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5780454, 
+ 3,'marciamatsushita.5780454@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA HELENA MATSUSHITA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6874592, 
+ 3,'marciabasso.6874592@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA LANDI BASSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7407360, 
+ 3,'marciamendes.7407360@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIA MENDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8142513, 
+ 3,'marciellesilva.8142513@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIELLE JUDAS FERREIRA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8485062, 
+ 3,'marciopadua.8485062@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCIO RODRIGUES DE PADUA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7212585, 
+ 3,'marcoherreira.7212585@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCO ANTONIO HERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6691030, 
+ 3,'marcopereira.6691030@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCO ANTONIO PEREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6003486, 
+ 3,'marcoandrade.6003486@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCO ANTONIO RIBEIRO DE ANDRADE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7562713, 
+ 3,'marcosborghi.7562713@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCOS EVANGELISTA BORGHI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8890340, 
+ 3,'marcospinto.8890340@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCOS GUILHERME MOREIRA PINTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7509235, 
+ 3,'marcoshamada.7509235@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCOS HAMADA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9123661, 
+ 3,'marcosoliveira.9123661@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARCOS VINICIUS DE JESUS OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7537859, 
+ 3,'marivarela.7537859@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARI CELI VIANA VARELA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9149163, 
+ 3,'mariafernandes.9149163@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA AMELIA KUHLMANN FERNANDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6518010, 
+ 3,'mariaherrera.6518010@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA ANTONIA HERRERA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7525176, 
+ 3,'mariaigreja.7525176@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA APARECIDA FAVA IGREJA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5868106, 
+ 3,'mariaoluwatuyi.5868106@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA APARECIDA GAUDENCIO OLUWATUYI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9255729, 
+ 3,'mariafreitas.9255729@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA CAROLINA GODINHO DE FREITAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5676959, 
+ 3,'mariapupo.5676959@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA CECILIA BORGES PUPO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9199934, 
+ 3,'mariacatalani.9199934@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA CECILIA TOLEDO CATALANI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8028044, 
+ 3,'mariasilva.8028044@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA CLAUDIA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6162517, 
+ 3,'mariasilva.6162517@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA CRISTINA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5908892, 
+ 3,'mariacavalheiro.5908892@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA DE FATIMA DE BRUM CAVALHEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6803709, 
+ 3,'mariasilva.6803709@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA DE LOURDES SOARES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7105410, 
+ 3,'mariasoares.7105410@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA DIRCELY SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 3027732, 
+ 3,'mariaoliveira.3027732@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA ESTELA QUEIROZ DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7765304, 
+ 3,'mariacristofoletti.7765304@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA FERNANDA CRISTOFOLETTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9164685, 
+ 3,'mariajesus.9164685@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA GERUSENEIDE SILVA DE JESUS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8008809, 
+ 3,'marialucatelli.8008809@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA HELENA LUCATELLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7496061, 
+ 3,'mariasilva.7496061@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA IRANILDA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7289472, 
+ 3,'mariaferranda.7289472@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA LUCIA ADELAIDE RUBIM DE MORAES FERRANDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 3169901, 
+ 3,'mariacardoso.3169901@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA LUISA ASSIS CARDOSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7763875, 
+ 3,'mariabenez.7763875@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA PAULA BENEZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161341, 
+ 3,'mariasantos.9161341@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA PAULA HONORATO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9127119, 
+ 3,'mariamenezes.9127119@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIA SILVA MENEZES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161678, 
+ 3,'marianacardoso.9161678@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA DE OLIVEIRA CARDOSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8279578, 
+ 3,'marianaoliveira.8279578@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA GALVES MARQUES DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8416397, 
+ 3,'marianabonfim.8416397@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA MOI BONFIM'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274606, 
+ 3,'marianacasseb.8274606@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA OTANI CASSEB'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8018316, 
+ 3,'marianasoares.8018316@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA PAULINO SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8238545, 
+ 3,'marianavaladares.8238545@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA PORFIRIO SIQUEIRA VALADARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8799636, 
+ 3,'marianalima.8799636@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA SANTOS DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8246068, 
+ 3,'marianacamisa.8246068@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA SILVA DE ALMEIDA CAMISA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8115231, 
+ 3,'marianao.8115231@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANA SIMOES FERREIRA DO O'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8284440, 
+ 3,'mariangelasantos.8284440@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIANGELA PACHECO ROCHA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8207461, 
+ 3,'mariannesilva.8207461@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Marianne Silva'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161643, 
+ 3,'marielemoraes.9161643@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIELE CORAL DE MORAES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7865864, 
+ 3,'marileidesilva.7865864@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARILEIDE SANTANA LIMA E SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6603980, 
+ 3,'marilucimoreira.6603980@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARILUCI IRIA DE SOUZA MOREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8282862, 
+ 3,'marinabene.8282862@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARINA DE CAMPOS GONZAGA BENE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6955819, 
+ 3,'marineusasilva.6955819@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Marineusa Medeiros da Silva'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9126082, 
+ 3,'marisacosta.9126082@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARISA NITTOLO COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7753578, 
+ 3,'marissolbloisi.7753578@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARISSOL FRANCO BLOISI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8450277, 
+ 3,'maritatunes.8450277@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARITA RONAY MATOS TUNES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 1186116, 
+ 3,'marizakubo.1186116@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARIZA LEIKO KUBO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6757529, 
+ 3,'marlicardoso.6757529@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MARLI DA CONCEICAO VIDIGAL CARDOSO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8972877, 
+ 3,'mateuscunha.8972877@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MATEUS DO CARMO CUNHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7233507, 
+ 3,'matildecampanha.7233507@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MATILDE APARECIDA DA SILVA FRANCO CAMPANHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7961979, 
+ 3,'mayradias.7961979@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MAYRA BARROS DIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8077622, 
+ 3,'mayravidal.8077622@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MAYRA REGINA VIDAL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6759009, 
+ 3,'meiredavid.6759009@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MEIRE CRISTINA DAVID'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9187499, 
+ 3,'melaniemarcos.9187499@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MELANIE MICHIKO GUNJI MARCOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7934581, 
+ 3,'melinarodolpho.7934581@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Melina Rodolpho'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161775, 
+ 3,'merielijesus.9161775@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MERIELI NERI COSTA DE JESUS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7825633, 
+ 3,'michelemoraes.7825633@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MICHELE FERREIRA TENORIO DE MORAES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8115214, 
+ 3,'michellecastro.8115214@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MICHELLE ALESSANDRA DE CASTRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8390886, 
+ 3,'milenefreire.8390886@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MILENE TEODORO FREIRE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161473, 
+ 3,'mirenaberer.9161473@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MIRENA BOKLIS BERER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7756763, 
+ 3,'mirianishibashi.7756763@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MIRIAN MATSUMOTO ISHIBASHI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7270585, 
+ 3,'monicaoliveira.7270585@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MONICA BUENO DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7769831, 
+ 3,'monicatobias.7769831@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MONICA CARDIAL TOBIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7376065, 
+ 3,'monicatang.7376065@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MONICA CARVALHO TANG'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8285551, 
+ 3,'monicacruz.8285551@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MONICA CORDEIRO NOGUEIRA DA CRUZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6809235, 
+ 3,'monicaprado.6809235@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MONICA DE OLIVEIRA PRADO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8175128, 
+ 3,'monicaido.8175128@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MONICA IDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6945341, 
+ 3,'morganadias.6945341@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MORGANA ALEXANDRE DIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6668917, 
+ 3,'mozartjunior.6668917@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('MOZART VITALINO JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7722141, 
+ 3,'nancisoueid.7722141@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NANCI DE OLIVEIRA SOUEID'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8273014, 
+ 3,'nataliasimanovishi.8273014@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NATALIA DE OLIVEIRA SIMANOVISHI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8201366, 
+ 3,'nataliaassis.8201366@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NATALIA GOES ASSIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8038732, 
+ 3,'nataliaalves.8038732@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NATALIA SILVA ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8896810, 
+ 3,'natashamesquita.8896810@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NATASHA GUIMARAES DE MESQUITA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8399387, 
+ 3,'nathaliaoliveira.8399387@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NATHALIA SOARES DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8031754, 
+ 3,'nathashasantos.8031754@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NATHASHA ABRAHAO VILANOVA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161571, 
+ 3,'nelainesantos.9161571@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NELAINE CARDOSO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7230702, 
+ 3,'nelsijesus.7230702@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NELSI MARIA DE JESUS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7331011, 
+ 3,'nelsonguilhamati.7331011@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NELSON RICARDO MATOS GUILHAMATI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5312299, 
+ 3,'nilzasouza.5312299@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('NILZA ROSA DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8816247, 
+ 3,'oliviasilva.8816247@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('OLIVIA TAKEUCHI E SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8868824, 
+ 3,'omarneto.8868824@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('OMAR CASSIM NETO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8171211, 
+ 3,'oneziocristovao.8171211@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ONEZIO CRISTOVAO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5866634, 
+ 3,'osvaldomarcondes.5866634@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('OSVALDO BRAGA MARCONDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8367027, 
+ 3,'patriciasilva.8367027@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA BENICIO DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8285543, 
+ 3,'patriciagalletta.8285543@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA DE ALMEIDA LEITE GALLETTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8448094, 
+ 3,'patriciaoliveira.8448094@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7368640, 
+ 3,'patriciabonfim.7368640@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA DE PONTES SIQUEIRA BONFIM'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6016669, 
+ 3,'patriciacampoy.6016669@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA DOMINGUEZ LEME CAMPOY'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9202854, 
+ 3,'patriciasilva.9202854@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA LUCENA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6201601, 
+ 3,'patriciarede.6201601@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA MARTINS DA SILVA REDE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161597, 
+ 3,'patriciaoliveira.9161597@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA PANDOVAN DOS SANTOS DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7448996, 
+ 3,'patriciaduarte.7448996@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA ROZO DUARTE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7945299, 
+ 3,'patriciapellicciotti.7945299@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA SCHATZ PELLICCIOTTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7507704, 
+ 3,'patriciasilva.7507704@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PATRICIA SIMOES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8018839, 
+ 3,'paulasilva.8018839@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Paula Costa Veira Da Silva'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7965460, 
+ 3,'paulaguimaraes.7965460@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PAULA DE CARVALHO GUIMARAES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9179046, 
+ 3,'paulagarcia.9179046@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PAULA SIMOES GARCIA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8028907, 
+ 3,'paulosantos.8028907@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PAULO HENRIQUE CARDOSO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9163859, 
+ 3,'paulooliveira.9163859@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PAULO MACHADO DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6005446, 
+ 3,'paulocaramma.6005446@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PAULO SALVADOR CARAMMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8513481, 
+ 3,'paulotorres.8513481@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PAULO VICTOR GRANGEIRO LUCENA TORRES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9149929, 
+ 3,'pedrocoelho.9149929@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PEDRO LEITE COELHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8415811, 
+ 3,'priscilaleandro.8415811@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PRISCILA DA SILVA LEANDRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7907770, 
+ 3,'priscilavieira.7907770@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Priscila de Oliveira Vieira'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7945302, 
+ 3,'priscilaaraujo.7945302@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PRISCILA LEONARDI DOS SANTOS ARAUJO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7877722, 
+ 3,'priscillabicudo.7877722@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PRISCILLA BARBARA ALVES BICUDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7447370, 
+ 3,'priscillatanaka.7447370@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('PRISCILLA KONOMI TANAKA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7524919, 
+ 3,'rafaelortega.7524919@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAFAEL BATISTA ORTEGA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8462259, 
+ 3,'rafaelfitipaldi.8462259@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAFAEL FERNANDO DA SILVA SANTOS FITIPALDI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8148937, 
+ 3,'rafaelamatos.8148937@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAFAELA BOTELHO LOPES DE MATOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7722001, 
+ 3,'rafaeladiedrich.7722001@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAFAELA DE MELO DIEDRICH'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8239100, 
+ 3,'rafaellasantos.8239100@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAFAELLA TORRES SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7949766, 
+ 3,'raquelrodrigues.7949766@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAQUEL RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8545022, 
+ 3,'ravicampos.8545022@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RAVI BRAZ DE CAMPOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8241996, 
+ 3,'regianesilva.8241996@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGIANE ALVES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7121458, 
+ 3,'regianepaulino.7121458@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGIANE PAULINO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9111590, 
+ 3,'regilanerocha.9111590@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGILANE PAULINO DA ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5531365, 
+ 3,'reginaoliveira.5531365@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGINA CELI DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6686338, 
+ 3,'reginagavassa.6686338@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGINA CELIA FORTUNA BROTI GAVASSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161635, 
+ 3,'reginamachado.9161635@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGINA PEREIRA DE OLIVEIRA MACHADO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8219141, 
+ 3,'regivanealmeida.8219141@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('REGIVANE SILVA ALMEIDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8451478, 
+ 3,'renatavieira.8451478@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA ALMEIDA VIEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7907338, 
+ 3,'renatalellis.7907338@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA DE OLIVEIRA LELLIS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161295, 
+ 3,'renataalves.9161295@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA FERREIRA ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8247064, 
+ 3,'renataoliveira.8247064@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA GARRIDO AZEVEDO DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8105219, 
+ 3,'renataleite.8105219@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA GONCALVES LEITE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8110263, 
+ 3,'renatanunes.8110263@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA MACIEL NUNES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9187472, 
+ 3,'renatagatti.9187472@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA MALEH GATTI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6764410, 
+ 3,'renatamonaco.6764410@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA MONACO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8173605, 
+ 3,'renatarosa.8173605@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATA VIDICA MARQUES DA ROSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8457531, 
+ 3,'renatobalhe.8457531@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATO BALHE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8206937, 
+ 3,'renatosantos.8206937@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATO GIL CARNEIRO DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8425191, 
+ 3,'renatorios.8425191@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Renato Gondim Rios'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6918697, 
+ 3,'renatojunior.6918697@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATO OTTO ORTLEPP JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7844085, 
+ 3,'renatorodrigues.7844085@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATO RANZINI RODRIGUES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6683134, 
+ 3,'renatovieira.6683134@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RENATO VIEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8434018, 
+ 3,'ricardosena.8434018@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RICARDO DOS ANJOS SENA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7487282, 
+ 3,'ricardoalmeida.7487282@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RICARDO PERES DE ALMEIDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6809472, 
+ 3,'ritaaguiar.6809472@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RITA DE CASSIA ESTEVES DE AGUIAR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7790783, 
+ 3,'rivamoreira.7790783@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RIVA CAETANO DE SOUZA SILVEIRA DENYS MOREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8172056, 
+ 3,'robertagasparini.8172056@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROBERTA COVRE GASPARINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7800045, 
+ 3,'robertasilva.7800045@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROBERTA CRISTINA TORRES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7496338, 
+ 3,'robertoribeiro.7496338@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROBERTO CARLOS RIBEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9123849, 
+ 3,'robertobueno.9123849@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROBERTO HERREIRA BUENO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7531206, 
+ 3,'robsonprofenzano.7531206@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROBSON MAIDA PROFENZANO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8090394, 
+ 3,'rodolfolopes.8090394@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RODOLFO TADEU LOPES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7248849, 
+ 3,'rodrigaseravalli.7248849@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RODRIGA APARECIDA THEODORO DA SILVA SERAVALLI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8979898, 
+ 3,'rodrigometzner.8979898@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RODRIGO JAIR MORANDI METZNER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6744184, 
+ 3,'rogeriocosta.6744184@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROGERIO COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7905904, 
+ 3,'rogerioferreira.7905904@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROGERIO MARCELO FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7563370, 
+ 3,'romulofernandes.7563370@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROMULO ARAUJO FERNANDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6941583, 
+ 3,'ronaldosilveira.6941583@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RONALDO JOSE DA SILVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 4662997, 
+ 3,'rosasilva.4662997@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSA DE JESUS SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5727979, 
+ 3,'rosanalima.5727979@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSANA APARECIDA MOREIRA DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6753761, 
+ 3,'rosangelasantos.6753761@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSANGELA MARIA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7296045, 
+ 3,'rosangelasilva.7296045@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSANGELA RODRIGUES DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7255667, 
+ 3,'roselicabral.7255667@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSELI DE BRITO CABRAL'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7327625, 
+ 3,'roselipereira.7327625@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSELI DO CARMO PEREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5810426, 
+ 3,'roselicarvalho.5810426@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSELI MARCELLI SANTOS DE CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6770011, 
+ 3,'roseliberkovits.6770011@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSELI ZAMPIROLLI BERKOVITS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5602505, 
+ 3,'roseneidesantana.5602505@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSENEIDE DE JESUS SANTANA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7766041, 
+ 3,'rosimeirecosta.7766041@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ROSIMEIRE MINGUTA COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9163794, 
+ 3,'rubenssouza.9163794@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RUBENS FEITOSA DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7768915, 
+ 3,'ruthmatsumoto.7768915@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('RUTH LOBATO TEIXEIRA MATSUMOTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161716, 
+ 3,'sabrinapimenta.9161716@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SABRINA PESSONI PIMENTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8111073, 
+ 3,'samaraleite.8111073@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SAMARA MANZANO BREDA LEITE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8782971, 
+ 3,'samiaalves.8782971@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SAMIA ROCHA ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7944136, 
+ 3,'samirmustapha.7944136@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Samir Ahmad dos Santos Mustapha'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8080461, 
+ 3,'samiralopes.8080461@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Samira Novo Lopes '),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7312245, 
+ 3,'sandrasilva.7312245@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SANDRA LEIA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5034388, 
+ 3,'sandrascagliarini.5034388@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SANDRA MARIA SCAGLIARINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7975821, 
+ 3,'sandrarodrigues.7975821@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Sandra Salavandro Rodrigues'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6869998, 
+ 3,'sandrosantos.6869998@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SANDRO ALEX GARCES DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8211663, 
+ 3,'sandysoares.8211663@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SANDY VIEIRA SOARES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5365627, 
+ 3,'sebastiaojunior.5365627@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SEBASTIAO PLACERES JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6120156, 
+ 3,'selmasilva.6120156@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SELMA APARECIDA SOUZA DA SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8194157, 
+ 3,'selmasantos.8194157@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SELMA LUCIA DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8196991, 
+ 3,'shirleimonteiro.8196991@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Shirlei Nadaluti Monteiro'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7307705, 
+ 3,'shirleyfileto.7307705@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SHIRLEY COSTA DE OLIVEIRA FILETO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7743734, 
+ 3,'shirleysantos.7743734@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Shirley da Silva Santos'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6752284, 
+ 3,'shirleysilva.6752284@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SHIRLEY REGINA DOS SANTOS SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6771572, 
+ 3,'shirleydiniz.6771572@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SHIRLEY RODRIGUES DINIZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8119538, 
+ 3,'silvanasouza.8119538@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVANA DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6737790, 
+ 3,'silvanariguengo.6737790@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVANA MOURA RIGUENGO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7350724, 
+ 3,'silviasabara.7350724@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVIA HELENA DA SILVA SABARA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6809197, 
+ 3,'silviaparada.6809197@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVIA REGINA GONZAGA DE OLIVEIRA PARADA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7768346, 
+ 3,'silviacanavese.7768346@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVIA SINICIATO CANAVESE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8534128, 
+ 3,'silviojunior.8534128@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVIO APARECIDO DE VASCONCELOS JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7368607, 
+ 3,'silviomicaela.7368607@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SILVIO MICAELA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8502480, 
+ 3,'simonehungaro.8502480@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Simone de Oliveira Húngaro'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6955801, 
+ 3,'simonerocha.6955801@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SIMONE DOS SANTOS ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8152381, 
+ 3,'simonesantos.8152381@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SIMONE GARRIDO DE SOUZA SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6770509, 
+ 3,'simonebiussi.6770509@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SIMONE KETI STEFANELLI BIUSSI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7511591, 
+ 3,'simonekamei.7511591@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SIMONE MEGUMI KAMEI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8372624, 
+ 3,'simonemascarenhas.8372624@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SIMONE PORFIRIO MASCARENHAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8218391, 
+ 3,'sirleniuenojo.8218391@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SIRLENI BATISTA UENOJO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6669239, 
+ 3,'solangesena.6669239@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SOLANGE COSTA DE SENA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7485166, 
+ 3,'solangecorregio.7485166@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SOLANGE CRISTINA CORREGIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161686, 
+ 3,'stefaniebueno.9161686@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('STEFANIE MATTOSO PEREIRA BUENO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8984549, 
+ 3,'stellamimessi.8984549@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('STELLA CURIATI MIMESSI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8280401, 
+ 3,'stellazarantonello.8280401@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('STELLA FONTES RAMOS ZARANTONELLO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8198306, 
+ 3,'stephaniealmeida.8198306@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('STEPHANIE LOUISE MARIN DE ALMEIDA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6751971, 
+ 3,'suelimondini.6751971@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SUELI APARECIDA DE PAULA MONDINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7449887, 
+ 3,'suelilima.7449887@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SUELI DE LIMA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7243022, 
+ 3,'suelifunari.7243022@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SUELI FUNARI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5208092, 
+ 3,'suelymandari.5208092@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SUELY MANDARI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7946775, 
+ 3,'susenfranzini.7946775@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SUSEN COVRE FRANZINI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9129146, 
+ 3,'suzanaoliveira.9129146@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SUZANA SOUZA OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5250668, 
+ 3,'sylvetecorrea.5250668@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('SYLVETE MEDEIROS CORREA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8249164, 
+ 3,'taisheineck.8249164@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TAIS MOTA ESTEVES HEINECK'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7840381, 
+ 3,'taizeoliveira.7840381@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TAIZE GROTTO DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8804699, 
+ 3,'talesgryga.8804699@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TALES CAPDEVILA GRYGA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8283753, 
+ 3,'talitasilva.8283753@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TALITA ALVES SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8026131, 
+ 3,'talitamatos.8026131@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TALITA CARNEIRO DE MATOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161309, 
+ 3,'talitabarreto.9161309@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TALITA LEMOS NEVES BARRETO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8101728, 
+ 3,'talitaleme.8101728@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TALITA SILVA DIAS LEME'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7917821, 
+ 3,'talitaroberto.7917821@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TALITA VIEIRA ROBERTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8906840, 
+ 3,'tamiresrocha.8906840@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TAMIRES SANTIAGO DE SOUZA ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9199942, 
+ 3,'tamirisallebrandt.9199942@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TAMIRIS ALLEBRANDT'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7756143, 
+ 3,'taniamedeiros.7756143@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TANIA APARECIDA FEITOSA MEDEIROS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5397341, 
+ 3,'taniapadua.5397341@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TANIA NARDI DE PADUA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6865623, 
+ 3,'taniagolzio.6865623@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TANIA REGINA GOLZIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7831072, 
+ 3,'taniarocha.7831072@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TANIA SANGER ROCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8419914, 
+ 3,'tarcisiofilgueiras.8419914@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TARCISIO LINHARES FILGUEIRAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6235867, 
+ 3,'tarcisomarcolino.6235867@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TARCISO CORREIA MARCOLINO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161392, 
+ 3,'tassianesudbrack.9161392@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TASSIANE DE PAULA SUDBRACK'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7287160, 
+ 3,'tathianamartinez.7287160@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATHIANA AUGUSTA RODRIGUES LOURENCO MARTINEZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7363371, 
+ 3,'tatianaalcantara.7363371@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA ANDOLFATO DE ALCANTARA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7493886, 
+ 3,'tatianamilanez.7493886@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA APARECIDA MILANEZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7906650, 
+ 3,'tatianafonseca.7906650@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA DO NASCIMENTO FONSECA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8022691, 
+ 3,'tatianacosta.8022691@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA FERREIRA COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8389322, 
+ 3,'tatianachaves.8389322@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA NUNES GALLI CHAVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7727798, 
+ 3,'tatianaitokazu.7727798@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA SETSUE ITOKAZU'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8209383, 
+ 3,'tatianacosta.8209383@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANA SILVA COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7523637, 
+ 3,'tatianealves.7523637@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANE ALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8020523, 
+ 3,'tatianelopes.8020523@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANE APARECIDA LOPES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7714513, 
+ 3,'tatianesantos.7714513@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TATIANE MARION SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7979495, 
+ 3,'taynagoiabeira.7979495@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TAYNA MOURA SIMOES GOIABEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7982453, 
+ 3,'telmaribeiro.7982453@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TELMA MARIA RIBEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5841186, 
+ 3,'teresaferreira.5841186@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TERESA CRISTINA DOS SANTOS FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9111450, 
+ 3,'thailasilva.9111450@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAILA VALERIA CARVALHO SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7763425, 
+ 3,'thaismartins.7763425@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS BLASIO MARTINS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8405361, 
+ 3,'thaisaraujo.8405361@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS CRISTINA ALVES DE ARAUJO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8242119, 
+ 3,'thaisheer.8242119@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS DA CRUZ HEER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9115986, 
+ 3,'thaisavelar.9115986@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS DE OLIVEIRA SANTOS AVELAR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9187481, 
+ 3,'thaisnazareth.9187481@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS DOS SANTOS NAZARETH'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7707151, 
+ 3,'thaissilva.7707151@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS FERNANDES SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8274444, 
+ 3,'thaisrogerio.8274444@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THAIS MARTINS ROGERIO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8786721, 
+ 3,'thalitaborges.8786721@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THALITA CRISTINA BORGES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8410470, 
+ 3,'thiagosantos.8410470@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THIAGO DE OLIVEIRA SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7918534, 
+ 3,'thiagobrito.7918534@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THIAGO FABIANO BRITO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7906943, 
+ 3,'thiagocosta.7906943@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THIAGO FERNANDO FERREIRA COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8492077, 
+ 3,'thiagopacheco.8492077@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THIAGO PACHECO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8208077, 
+ 3,'thiagosouza.8208077@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('THIAGO PEREIRA SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8161682, 
+ 3,'thiagosouza.8161682@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Thiago Souza Fijos'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8418942, 
+ 3,'tiemikerr.8418942@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Tiemi Kerr'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6928081, 
+ 3,'tirzasantos.6928081@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('TIRZA SIMOES SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9176349, 
+ 3,'ualacemachado.9176349@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('UALACE ABADE MACHADO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6754198, 
+ 3,'uelintonseixas.6754198@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('UELINTON DE SEIXAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8085269, 
+ 3,'valdimirpinheiro.8085269@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VALDIMIR COELHO PINHEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7405863, 
+ 3,'valdirenefloriano.7405863@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VALDIRENE PIRES FLORIANO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7467702, 
+ 3,'valdoilasouza.7467702@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VALDOILA BEZERRA DE SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8110387, 
+ 3,'valeriafreitas.8110387@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VALERIA ROMA DE FREITAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8182116, 
+ 3,'valeriacasemiro.8182116@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VALERIA TORRES CASEMIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6784275, 
+ 3,'vanderlaniafigueiredo.6784275@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANDERLANIA PEREIRA DE ANDRADE FIGUEIREDO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7331215, 
+ 3,'vandreiaoliveira.7331215@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANDREIA CRISTIAN DE OLIVEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8114633, 
+ 3,'vanessanogueira.8114633@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANESSA APARECIDA NOGUEIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161651, 
+ 3,'vanessadias.9161651@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANESSA ARAUJO DIAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8796114, 
+ 3,'vanessacarvalho.8796114@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANESSA CONDE CARVALHO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8158401, 
+ 3,'vanessacosta.8158401@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANESSA DA COSTA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7507241, 
+ 3,'vanessalameira.7507241@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Vanessa Eroico Lameira'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7978791, 
+ 3,'vanessaszczerbowski.7978791@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VANESSA PEREIRA DE ARAUJO SZCZERBOWSKI'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7779208, 
+ 3,'veraalba.7779208@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VERA BEATRIZ DE ALMEIDA ALBA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7368844, 
+ 3,'verapastore.7368844@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VERA LENY SILVA PASTORE'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7789238, 
+ 3,'veronicaaguiar.7789238@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VERONICA BOMFIM DE AGUIAR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161708, 
+ 3,'victoriagimenez.9161708@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VICTORIA SANCHES PEREIRA GIMENEZ'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7768664, 
+ 3,'vilmagalhego.7768664@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VILMA APARECIDA GALHEGO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8282811, 
+ 3,'vilmaferreira.8282811@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VILMA FERREIRA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8862958, 
+ 3,'viniciussouza.8862958@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VINICIUS AUGUSTO DO PRADO MELLO SOUZA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7980302, 
+ 3,'viniciusdellanava.7980302@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VINICIUS ROLIM DELLANAVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8106461, 
+ 3,'vitornascimento.8106461@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VITOR DE MATTOS NASCIMENTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6506828, 
+ 3,'vivianepinto.6506828@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VIVIANE APARECIDA RODRIGUES PINTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8285713, 
+ 3,'vivianeperucha.8285713@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VIVIANE FERRI ROSS PERUCHA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8961387, 
+ 3,'vivianebrito.8961387@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VIVIANE MARIA DA ROCHA BRITO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7807741, 
+ 3,'vivianeboas.7807741@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VIVIANE RIBEIRO VILAS BOAS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7240431, 
+ 3,'vivianerolim.7240431@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VIVIANE ROLIM'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7371705, 
+ 3,'vladimirbarbosa.7371705@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('VLADIMIR MANDELLI BARBOSA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9255699, 
+ 3,'wagnerxavier.9255699@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WAGNER EMIDIO XAVIER'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7806507, 
+ 3,'waleskamarcondes.7806507@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WALESKA BIANCA MARCONDES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 9161376, 
+ 3,'walkiriaisidoro.9161376@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WALKIRIA APARECIDA ISIDORO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8416711, 
+ 3,'waynegoncalves.8416711@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WAYNE TEIXEIRA GONCALVES'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7405413, 
+ 3,'welingtonsilva.7405413@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WELINGTON MATIAS DOS SANTOS SILVA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7348053, 
+ 3,'wellingtonalencar.7348053@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WELLINGTON DE OLIVEIRA ALENCAR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6782906, 
+ 3,'wendelcarmo.6782906@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Wendel di Paola do Carmo'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7938501, 
+ 3,'werlensantos.7938501@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WERLEN MORAIS DOS SANTOS'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8224111, 
+ 3,'wiliansaraujo.8224111@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('Wilians de Araujo'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8820163, 
+ 3,'willianfurlan.8820163@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WILLIAN GABELON FURLAN'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7922329, 
+ 3,'wilsonjunior.7922329@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WILSON DE CARVALHO JUNIOR'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8972915, 
+ 3,'wilsonpailo.8972915@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('WILSON NOEL PAILO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 7365462, 
+ 3,'yedabento.7365462@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('YEDA PEIXINHO BENTO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 8410631, 
+ 3,'yolandasalgueiro.8410631@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('YOLANDA OLIVEIRA SALGUEIRO'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 6684823, 
+ 3,'zeliapessoa.6684823@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ZELIA JORGE PESSOA'),
+ null, NULL, true
+  ); 
+
+INSERT INTO public.usuarios 
+(id, usuario_tipo, email, organization_path, data_inclusao, data_atualizacao, nome, cpf, google_classroom_id, existe_google) 
+ VALUES(
+ 5810876, 
+ 3,'zenilsonsouza.5810876@edu.sme.prefeitura.sp.gov.br', '/funcionarios', now()
+ , NULL, upper('ZENILSON JOSE DE SOUZA'),
+ null, NULL, true
+  ); 
+

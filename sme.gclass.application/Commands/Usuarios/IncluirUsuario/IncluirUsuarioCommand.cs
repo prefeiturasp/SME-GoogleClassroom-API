@@ -7,6 +7,17 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class IncluirUsuarioCommand : IRequest<long>
     {
+        public IncluirUsuarioCommand(long? id, string cpf, string nome, string email)
+        {
+            Id = id;
+            Cpf = cpf;
+            Nome = nome;
+            Email = email;
+            Tipo = UsuarioTipo.Funcionario;
+            DataInclusao = DateTime.Now;
+            OrganizationPath = "/funcionarios";
+        }
+
         public long? Id { get; set; }
         public string Cpf { get; set; }
         public string Nome { get; set; }

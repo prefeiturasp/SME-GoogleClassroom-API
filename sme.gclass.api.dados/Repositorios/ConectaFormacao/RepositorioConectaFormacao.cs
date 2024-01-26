@@ -23,11 +23,13 @@ namespace SME.GoogleClassroom.Dados
                                     coalesce(funcao_dre_codigo, cargo_dre_codigo) dreCodigo,
                                     coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo
                                     from inscricao i 
-                                    join proposta_turma pt on i.proposta_turma_id = pt.id 
+                                    join proposta_turma pt on i.proposta_turma_id = pt.id
+                                    join proposta p on p.id = pt.proposta_id 
                                     join usuario u on u.id = i.usuario_id 
                                     where not u.excluido
                                         and not pt.excluido
                                         and not i.excluido
+                                        and p.integrar_no_sga = true
                                         and i.situacao = @SituacaoPublicada
                                         and i.proposta_turma_id = @codigoDaTurma";
         
@@ -39,7 +41,7 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>> ListagemFormacoesPorAno(int ano)
         {
-            var query = @" select p.id as codigoFormacao,
+            var query = @" select distinct p.id as codigoFormacao,
                                   p.nome_formacao as nomeFormacao,
                                   p.data_realizacao_inicio as dataRealizacaoInicio,
                                   p.data_realizacao_fim as dataRealizacaoFim,
@@ -50,6 +52,7 @@ namespace SME.GoogleClassroom.Dados
                            where not pt.excluido    
                              and not ap.excluido
                              and p.situacao = @SituacaoPublicada
+                             and p.integrar_no_sga = true
                              and EXTRACT(YEAR FROM p.data_realizacao_inicio) >= @ano";
         
             using (var conn = ObterConexao())
