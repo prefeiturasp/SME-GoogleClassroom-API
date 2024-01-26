@@ -17,6 +17,6 @@ namespace SME.GoogleClassroom.Dados
 
         Task LimparAsync();
         Task<IEnumerable<UsuarioGsaDto>> ObterUsuariosPorCodigos(long[] usuariosCodigo, int usuarioTipo);
-        Task<IEnumerable<UsuarioGsaDto>> ObterUsuarioPorIds(long[] ids);
+        Task<IEnumerable<UsuarioGsaDto>> ObterUsuarioPorIds(long?[] ids);
     }
 }

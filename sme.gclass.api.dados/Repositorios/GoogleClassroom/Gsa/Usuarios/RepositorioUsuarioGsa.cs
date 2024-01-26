@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dominio.SME.CDEP.Dominio.Extensions;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -157,8 +158,10 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<UsuarioGsaDto>(query, new {usuariosCodigo, usuarioTipo}));
         }
 
-        public async Task<IEnumerable<UsuarioGsaDto>> ObterUsuarioPorIds(long[] ids)
+        public async Task<IEnumerable<UsuarioGsaDto>> ObterUsuarioPorIds(long?[] ids)
         {
+            if (!ids.PossuiElementos())
+                return new List<UsuarioGsaDto>();
             var query = @"select 
 	                            id,
 	                            usuario_tipo as UsuarioTipo,

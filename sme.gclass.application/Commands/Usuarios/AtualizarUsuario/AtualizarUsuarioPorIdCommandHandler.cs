@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Handle(AtualizarUsuarioPorIdCommand request, CancellationToken cancellationToken)
         {
-            return await repositorioUsuario.AtualizarUsuarioPorId(request.Id,request.Nome,request.Cpf,request.Email,request.UsuarioTipo) > 0;
+            return await repositorioUsuario.AtualizarEmailUsuario(request.Id,request.Nome,request.Cpf,request.Email,request.UsuarioTipo) > 0;
         }
         
     }

@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿#nullable enable
+using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -341,7 +342,7 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, parametros)).FirstOrDefault();
         }
 
-        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId,bool existeGoogle = true)
+        public async Task<long> SalvarAsync(long? id, string cpf, string nome, string email, UsuarioTipo tipo, string organizationPath, DateTime dataInclusao, DateTime? dataAtualizacao, string googleClassroomId, bool existeGoogle = true)
         {
             const string insertQuery = @"insert into public.usuarios
                                         (id, cpf, nome, email, usuario_tipo, organization_path, data_inclusao, data_atualizacao, google_classroom_id,existe_google)
@@ -467,6 +468,18 @@ namespace SME.GoogleClassroom.Dados
             return (await conn.QueryAsync<bool>(query, new {cpf, usuarioTipo = UsuarioTipo.FuncionarioIndireto})).FirstOrDefault();
         }
 
+        public async Task<bool> ExisteUsuarioPorIdETipo(long id , int tipoUsuario)
+        {
+            var query = "SELECT exists(SELECT 1 from usuarios where id = @id and usuario_tipo = @tipoUsuario limit 1)";
+            using var conn = ObterConexao();
+            return (await conn.QueryAsync<bool>(query, new {id, tipoUsuario})).FirstOrDefault();
+        }
+        public async Task<bool> ExisteUsuarioPorCpfETipo(string cpf , int tipoUsuario)
+        {
+            var query = "SELECT exists(SELECT 1 from usuarios where cpf = @cpf and usuario_tipo = @tipoUsuario limit 1)";
+            using var conn = ObterConexao();
+            return (await conn.QueryAsync<bool>(query, new {cpf, tipoUsuario})).FirstOrDefault();
+        }
         public async Task<PaginacaoResultadoDto<FuncionarioIndiretoGoogle>> ObterFuncionariosIndiretoAsync(Paginacao paginacao, string cpf, string email)
         {
             var query = new StringBuilder(@"SELECT
@@ -530,7 +543,7 @@ namespace SME.GoogleClassroom.Dados
             sql.AppendLine(@" update public.usuarios");
             sql.AppendLine(@"              set");
             sql.AppendLine(@"                 nome = @nome ");
-            if(organizationPath.NaoEhNulo())
+            if (organizationPath.NaoEhNulo())
                 sql.AppendLine(@"  ,organization_path = @organizationPath ");
             sql.AppendLine(@"     where ");
             sql.AppendLine(@"     indice = @id");
@@ -545,20 +558,15 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.ExecuteAsync(sql.ToString(), parametros);
         }
-        public async Task<int> AtualizarUsuarioPorId(long id, string nome, string cpf, string email, int usuarioTipo)
+
+        public async Task<int> AtualizarEmailUsuario(long? id, string nome, string? cpf, string email, int usuarioTipo)
         {
             var sql = new StringBuilder();
-            sql.AppendLine(@" update public.usuarios");
-            sql.AppendLine(@"              set");
-            sql.AppendLine(@"                 nome = @nome ");
+            sql.AppendLine(@"update public.usuarios");
+            sql.AppendLine(@" set nome = @nome ,email = @email");
             if (cpf.NaoEhNulo())
-                sql.AppendLine(@"                 ,cpf = @cpf ");
-            if (usuarioTipo.MaiorQueZero())
-                sql.AppendLine(@"                 ,usuario_tipo = @usuarioTipo");
-            if (email.NaoEhNulo())
-                sql.AppendLine(@"                 ,email = @email ");
-            sql.AppendLine(@"              where ");
-            sql.AppendLine(@"                 id = @id");
+                sql.AppendLine(@" ,cpf = @cpf");
+            sql.AppendLine(id.NaoEhNulo() ? @" where id = @id and usuario_tipo = @usuarioTipo" : @" where cpf = @cpf and usuario_tipo = @usuarioTipo");
 
             var parametros = new
             {
