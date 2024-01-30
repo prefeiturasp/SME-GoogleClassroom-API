@@ -24,6 +24,9 @@ namespace SME.GoogleClassroom.Dominio.Enumerados
         MOVA = 8,
 
         [Display(Name = "ETEC", ShortName = "ETEC")]
-        ETEC = 9
+        ETEC = 9,
+
+        [Display(Name = "CELP", ShortName = "CELP")]
+        CELP = 10
     }
 }
