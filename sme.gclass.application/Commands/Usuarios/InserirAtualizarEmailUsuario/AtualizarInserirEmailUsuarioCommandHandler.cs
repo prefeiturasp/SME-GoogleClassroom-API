@@ -5,6 +5,7 @@ using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Usuarios;
 using SME.GoogleClassroom.Aplicacao.Queries.Usuarios.ExisteUsuarioPorCpfTipo;
 using SME.GoogleClassroom.Aplicacao.Queries.Usuarios.ExisteUsuarioPorIdTipo;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -12,6 +13,7 @@ namespace SME.GoogleClassroom.Aplicacao
     public class AtualizarInserirEmailUsuarioCommandHandler : IRequestHandler<AtualizarInserirEmailUsuarioCommand, bool>
     {
         private readonly IMediator mediator;
+        private const string ORGANIZATION = "/funcionarios";
 
         public AtualizarInserirEmailUsuarioCommandHandler(IMediator mediator)
         {
@@ -21,12 +23,14 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Handle(AtualizarInserirEmailUsuarioCommand request, CancellationToken cancellationToken)
         {
             var usuario = request.Usuario;
-            bool usuarioExiste;
+            var usuarioExiste = false;
  
             if (usuario.UsuarioExterno())
                 usuarioExiste = await mediator.Send(new ExisteUsuarioPorCpfTipoQuery(usuario.Cpf,(int)usuario.Tipo));
-            else 
-                usuarioExiste = await mediator.Send(new ExisteUsuarioPorIdTipoQuery((long)usuario.Id,(int)usuario.Tipo));
+            else if (usuario.Id != null)
+                    usuarioExiste = await mediator.Send(new ExisteUsuarioPorIdTipoQuery((long) usuario.Id, (int) usuario.Tipo));
+
+
             if (usuarioExiste)
                 await AtualizarUsuario(usuario);
             else
@@ -40,6 +44,6 @@ namespace SME.GoogleClassroom.Aplicacao
         
         
         private async Task InserirUsuario(UsuarioEmailDto usuario)
-            => await mediator.Send(new IncluirUsuarioCommand(usuario.Id, usuario.Cpf, usuario.Nome, usuario.Email));
+            => await mediator.Send(new IncluirUsuarioCommand(usuario.Id, usuario.Cpf, usuario.Nome, usuario.Email,usuario.Tipo,ORGANIZATION));
     }
 }
