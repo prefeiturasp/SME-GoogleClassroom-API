@@ -1,16 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Gsa;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using SME.GoogleClassroom.Aplicacao.Interfaces.Sga.FuncionariosProfessores;
-using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -37,7 +32,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("turma/{codigoDaTurma}/inscricoes")]
-        [ProducesResponseType(typeof(InscricaoConfirmadaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<InscricaoConfirmadaDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemInscricoesConfirmadasPorTurma(
@@ -62,7 +57,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("detalhes/ano/{ano}")]
-        [ProducesResponseType(typeof(InscricaoConfirmadaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemDetalhamentoFormacaoPorAno(

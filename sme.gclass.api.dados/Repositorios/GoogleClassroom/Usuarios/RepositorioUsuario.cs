@@ -840,7 +840,7 @@ namespace SME.GoogleClassroom.Dados
             return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new {email});
         }
 
-        public async Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo)
+        public async Task<IEnumerable<UsuarioGoogleDto>> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo, int[] tipos = null)
         {
             var query = @"select u.indice,
                                  u.id,
@@ -855,9 +855,12 @@ namespace SME.GoogleClassroom.Dados
                             FROM usuarios u
                            where id = any(@Codigos)";
 
+            if (tipos.Any())
+                query += " and u.usuario_tipo = any(@tipos)";
+
             using var conn = ObterConexao();
 
-            return await conn.QueryFirstAsync<UsuarioGoogleDto>(query, new {Codigos = usuarioCodigo});
+            return await conn.QueryAsync<UsuarioGoogleDto>(query, new {Codigos = usuarioCodigo, tipos });
         }
     }
 }
