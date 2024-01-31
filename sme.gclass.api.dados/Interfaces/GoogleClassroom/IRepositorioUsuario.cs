@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Dados
         Task<int> AtualizarEmailUsuario(long? id, string nome, string? cpf, string email, int usuarioTipo);
         Task<UsuarioGoogleDto> ObterUsuarioPorEmail(string email);
         Task<long> ObterIndicePorGoogleClassroomId(string googleClassroomId);
-        Task<UsuarioGoogleDto> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo);
+        Task<IEnumerable<UsuarioGoogleDto>> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo, int[] tipos = null);
         Task<UsuarioGoogleDto> ObteUsuarioPorClassroomId(string classroomId);
         Task<int> AtualizarUsuarioGoogleClassroomIdAsync(long usuarioId, string googleClassroomId);
 
