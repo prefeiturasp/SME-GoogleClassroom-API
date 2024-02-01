@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
+using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>> Executar(int ano)
+        public async Task<IEnumerable<FormacaoDetalhaDTO>> Executar(int ano)
         {
             return await mediator.Send(new ListagemDetalhamentoFormacaoQuery(ano));
         }
