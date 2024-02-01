@@ -1,11 +1,11 @@
-﻿namespace SME.GoogleClassroom.Infra.Dtos.Gsa
+﻿namespace SME.GoogleClassroom.Infra.Dtos.ConectaFormacao
 {
-    public class ProfessorRfCpfNomeEmailTutorDTO
+    public class FormacaoTurmaProfessoresDTO
     {
+        public long CodigoTurma { get; set; }
         public string Rf { get; set; }
         public string Cpf { get; set; }
         public string Nome { get; set; }
-        public string Email { get; set; }
         public bool Tutor { get; set; }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
-using SME.GoogleClassroom.Infra.Dtos.Gsa;
+using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ListagemDetalhamentoFormacaoQuery : IRequest<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>>
+    public class ListagemDetalhamentoFormacaoQuery : IRequest<IEnumerable<FormacaoDetalhaDTO>>
     {
         public int Ano { get; set; }
 

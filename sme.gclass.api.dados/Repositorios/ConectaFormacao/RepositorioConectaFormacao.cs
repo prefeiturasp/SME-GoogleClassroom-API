@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
 using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Dados
@@ -19,6 +20,7 @@ namespace SME.GoogleClassroom.Dados
             var query = @" select   u.login codigoRf,
                                     u.cpf,
                                     u.nome,
+                                    u.email,
                                     coalesce(funcao_dre_codigo, cargo_dre_codigo) dreCodigo,
                                     coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo
                                     from inscricao i 
@@ -38,44 +40,49 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>> ListagemFormacoesPorAno(int ano)
+        public async Task<IEnumerable<FormacaoDTO>> ListagemFormacoesPorAno(int ano)
         {
-            var query = @" select distinct p.id as codigoFormacao,
-                                  p.nome_formacao as nomeFormacao,
-                                  p.data_realizacao_inicio as dataRealizacaoInicio,
-                                  p.data_realizacao_fim as dataRealizacaoFim,
-                                  ap.nome as coordenadoria
-                           from proposta_turma pt 
-                             join proposta p on p.id = pt.proposta_id 
-                             join area_promotora ap on ap.id = p.area_promotora_id
-                           where not pt.excluido    
-                             and not ap.excluido
-                             and p.situacao = @SituacaoPublicada
-                             and p.integrar_no_sga = true
-                             and EXTRACT(YEAR FROM p.data_realizacao_inicio) >= @ano";
+            var query = @"
+                            select
+	                            p.id as codigo,
+	                            p.nome_formacao as nome,
+	                            ap.id as codigoAreaPromotora,
+	                            ap.nome as nomeAreaPromotora,
+	                            extract(year from p.data_realizacao_inicio) as ano
+                            from
+	                            proposta p
+                            inner join area_promotora ap on
+	                            ap.id = p.area_promotora_id
+	                            and not ap.excluido
+                            where
+	                            not p.excluido
+	                            and p.situacao = @SituacaoPublicada
+	                            and p.integrar_no_sga = true
+	                            and p.data_realizacao_fim <= current_date
+	                            and extract(year from p.data_realizacao_inicio) >= @ano";
         
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>(query, new { ano,SituacaoPublicada });
+                return await conn.QueryAsync<FormacaoDTO>(query, new { ano, SituacaoPublicada });
             }
         }
 
-        public async Task<IEnumerable<CodigoFormacaoCodigoNomeTurmaProfessoresDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes)
+        public async Task<IEnumerable<FormacaoTurmaDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes)
         {
-            var query = @"    select pt.id as codigoTurma,
-  		                             pt.nome as nomeTurma,
-  		                             pt.proposta_id as codigoFormacao
+            var query = @"    select pt.proposta_id as codigoFormacao,
+                                     pt.id as codigo,
+  		                             pt.nome as nome
                               from proposta_turma pt 
                               where not pt.excluido    
                                 and pt.proposta_id = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<CodigoFormacaoCodigoNomeTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<FormacaoTurmaDTO>(query, new { codigosDasFormacoes });
             }
         }
 
-        public async Task<IEnumerable<ProfessorCodigoTurmaRfCpfNomeEmailTutorDTO>> ListagemProfessoresRegentesPorCodigosFormacoes(long[] codigosDasFormacoes)
+        public async Task<IEnumerable<FormacaoTurmaProfessoresDTO>> ListagemProfessoresRegentesPorCodigosFormacoes(long[] codigosDasFormacoes)
         {
             var query = @" select pt.id as codigoTurma,
                                   regente.registro_funcional as rf,
@@ -89,11 +96,11 @@ namespace SME.GoogleClassroom.Dados
         
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<ProfessorCodigoTurmaRfCpfNomeEmailTutorDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
             }
         }
 
-        public async Task<IEnumerable<ProfessorCodigoTurmaRfCpfNomeEmailTutorDTO>> ListagemProfessoresTutoresPorCodigosFormacoes(long[] codigosDasFormacoes)
+        public async Task<IEnumerable<FormacaoTurmaProfessoresDTO>> ListagemProfessoresTutoresPorCodigosFormacoes(long[] codigosDasFormacoes)
         {
             var query = @"select pt.id as codigoTurma,
                                  tutor.registro_funcional as rf,
@@ -104,11 +111,11 @@ namespace SME.GoogleClassroom.Dados
                             join proposta_tutor tutor on tutor.id = ptt.proposta_tutor_id                            
                           where not pt.excluido
                             and not tutor.excluido
-                            and pt.proposta_id  = any(@codigosDasFormacoes)";
+                            and pt.proposta_id = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<ProfessorCodigoTurmaRfCpfNomeEmailTutorDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
             }
         }
     }

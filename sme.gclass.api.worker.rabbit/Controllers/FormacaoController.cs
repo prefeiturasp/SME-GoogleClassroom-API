@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
 using SME.GoogleClassroom.Infra.Dtos.Gsa;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("detalhes/ano/{ano}")]
-        [ProducesResponseType(typeof(IEnumerable<FormacaoCodigoNomeDataRealizacaoCoordenadoriaTurmasDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<FormacaoDetalhaDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemDetalhamentoFormacaoPorAno(
