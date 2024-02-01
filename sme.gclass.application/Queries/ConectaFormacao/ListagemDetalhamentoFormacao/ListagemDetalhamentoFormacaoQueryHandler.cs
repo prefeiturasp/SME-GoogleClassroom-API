@@ -17,11 +17,13 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         private readonly IRepositorioConectaFormacao repositorioConectaFormacao;
         private readonly IRepositorioProfessorEol repositorioProfessorEol;
+        private readonly IRepositorioUsuario repositorioUsuario;
 
-        public ListagemDetalhamentoFormacaoQueryHandler(IRepositorioConectaFormacao repositorioConectaFormacao, IRepositorioProfessorEol repositorioProfessorEol)
+        public ListagemDetalhamentoFormacaoQueryHandler(IRepositorioConectaFormacao repositorioConectaFormacao, IRepositorioProfessorEol repositorioProfessorEol, IRepositorioUsuario repositorioUsuario)
         {
             this.repositorioConectaFormacao = repositorioConectaFormacao ?? throw new ArgumentNullException(nameof(repositorioConectaFormacao));
             this.repositorioProfessorEol = repositorioProfessorEol ?? throw new ArgumentNullException(nameof(repositorioProfessorEol));
+            this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
         }
 
         public async Task<IEnumerable<FormacaoDetalhaDTO>> Handle(ListagemDetalhamentoFormacaoQuery request, CancellationToken cancellationToken)
@@ -39,7 +41,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var professoresRegentesTutores = professoresRegentes.Union(professoresTutores);
 
-            var cpfsDosProfessores = await repositorioProfessorEol.ObterCpfNomeCompletoPorRegistroFuncional(professoresRegentesTutores.Select(s => s.Rf).ToArray());
+            var cpfsDosProfessores = await repositorioProfessorEol.ObterCpfNomeCompletoPorRegistroFuncional(professoresRegentesTutores.Select(s => s.Rf).Distinct().ToArray());
+            var usuariosProfessores = await repositorioUsuario.ObterUsuariosGooglePorCodigos(professoresRegentesTutores.Select(t => long.Parse(t.Rf)).Distinct().ToArray(), new[] { 2, 3 });
 
             var retorno = new List<FormacaoDetalhaDTO>();
             foreach (var formacao in formacoes)
@@ -61,7 +64,7 @@ namespace SME.GoogleClassroom.Aplicacao
                             Rf = s.Rf,
                             Cpf = s.Cpf.EstaPreenchido() ? s.Cpf : cpfsDosProfessores?.FirstOrDefault(c => c.Rf.Equals(s.Rf))?.Cpf,
                             Nome = s.Nome,
-                            //Email = s.Email,
+                            Email = usuariosProfessores.FirstOrDefault(t => t.Id == s.Rf)?.Email,
                             Tutor = s.Tutor
                         });
 
