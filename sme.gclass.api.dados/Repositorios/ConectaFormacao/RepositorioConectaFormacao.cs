@@ -58,8 +58,8 @@ namespace SME.GoogleClassroom.Dados
 	                            not p.excluido
 	                            and p.situacao = @SituacaoPublicada
 	                            and p.integrar_no_sga = true
-	                            and p.data_realizacao_fim <= current_date
-	                            and extract(year from p.data_realizacao_inicio) >= @ano";
+	                            and p.data_realizacao_fim >= current_date
+	                            and extract(year from p.data_realizacao_inicio) = @ano";
         
             using (var conn = ObterConexao())
             {
