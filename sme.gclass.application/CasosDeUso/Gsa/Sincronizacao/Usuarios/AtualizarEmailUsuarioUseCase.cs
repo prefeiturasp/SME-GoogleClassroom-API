@@ -38,11 +38,11 @@ namespace SME.GoogleClassroom.Aplicacao
             var tiposQueDevemTerId = new List<UsuarioTipo>() { UsuarioTipo.Aluno,UsuarioTipo.Professor, UsuarioTipo.Funcionario };
             var tiposQueDevemTerCpf = new List<UsuarioTipo>() { UsuarioTipo.FuncionarioIndireto };
 
-            var qtdUsuarioQueDevemTerCpfMasEstaoSem = filtro.Usuarios.Count(x => x.Cpf.EhNulo() && tiposQueDevemTerCpf.Contains(x.Tipo));
+            var qtdUsuarioQueDevemTerCpfMasEstaoSem = filtro.Usuarios.Count(x => x.Cpf.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerCpf.Contains(x.Tipo));
             if (qtdUsuarioQueDevemTerCpfMasEstaoSem.MaiorQueZero())
                 erros.Add($"Todos usuários do tipo 4 devem ter Id");
 
-            var qtdUsuarioQueDevemTerIdMasEstaoSem = filtro.Usuarios.Count(x => x.Id.EhNulo() && tiposQueDevemTerId.Contains(x.Tipo));
+            var qtdUsuarioQueDevemTerIdMasEstaoSem = filtro.Usuarios.Count(x => x.Id.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerId.Contains(x.Tipo));
             if (qtdUsuarioQueDevemTerIdMasEstaoSem.MaiorQueZero())
                 erros.Add($"Todos usuários  dos tipos 1, 2, 3 devem ter Id");
 
