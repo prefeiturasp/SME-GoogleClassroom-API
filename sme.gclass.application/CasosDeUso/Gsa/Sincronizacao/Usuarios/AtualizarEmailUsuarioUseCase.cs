@@ -40,11 +40,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var qtdUsuarioQueDevemTerCpfMasEstaoSem = filtro.Usuarios.Count(x => x.Cpf.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerCpf.Contains(x.Tipo));
             if (qtdUsuarioQueDevemTerCpfMasEstaoSem.MaiorQueZero())
-                erros.Add($"Todos usuários do tipo 4 devem ter Id");
+                erros.Add($"Todos usuários do tipo 4 devem ter CPF e E-mail");
 
             var qtdUsuarioQueDevemTerIdMasEstaoSem = filtro.Usuarios.Count(x => x.Id.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerId.Contains(x.Tipo));
             if (qtdUsuarioQueDevemTerIdMasEstaoSem.MaiorQueZero())
-                erros.Add($"Todos usuários  dos tipos 1, 2, 3 devem ter Id");
+                erros.Add($"Todos usuários  dos tipos 1, 2, 3 devem ter Id e E-mail");
 
             var cpfsInvalidosOuSemId = filtro.Usuarios.Where(x => (x.Cpf.EhNulo() || x.Cpf?.Length < 11) && (x.Id.EhNulo() || x.Id.IgualZero()));
             foreach (var erro in cpfsInvalidosOuSemId)
