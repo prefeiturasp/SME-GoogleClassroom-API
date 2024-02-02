@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces.Eol;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Dominio.SME.CDEP.Dominio.Extensions;
 using SME.GoogleClassroom.Infra.Dtos.Gsa;
 using System;
@@ -37,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var uesEol = await repositorioEscolaEol.ObterUesPorCodigos(inscricoesConecta.Select(s => s.UeCodigo).ToArray());
 
-            var usuariosCursistas = await repositorioUsuario.ObterUsuariosGooglePorCodigos(inscricoesConecta.Select(t => long.Parse(t.CodigoRf)).Distinct().ToArray(), new[] { 2, 3 });
+            var usuariosCursistas = await repositorioUsuario.ObterUsuariosGooglePorCodigos(inscricoesConecta.Select(t => long.Parse(t.CodigoRf)).Distinct().ToArray(), new[] { (int)UsuarioTipo.Professor, (int)UsuarioTipo.Funcionario });
             foreach (var inscricao in inscricoesConecta)
             {
                 var dre = dresEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.DreCodigo));
