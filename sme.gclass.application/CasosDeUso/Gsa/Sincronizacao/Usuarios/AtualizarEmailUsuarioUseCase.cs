@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Elasticsearch.Net;
 using MediatR;
 using Nest;
 using SME.GoogleClassroom.Aplicacao.Interfaces.CasosDeUso.Usuarios;
@@ -33,6 +34,17 @@ namespace SME.GoogleClassroom.Aplicacao
         private static void ValidarSePossuirErros(InserirAtualizarEmailDTO filtro)
         {
             var erros = new List<string>();
+
+            var tiposQueDevemTerId = new List<UsuarioTipo>() { UsuarioTipo.Aluno,UsuarioTipo.Professor, UsuarioTipo.Funcionario };
+            var tiposQueDevemTerCpf = new List<UsuarioTipo>() { UsuarioTipo.FuncionarioIndireto };
+
+            var qtdUsuarioQueDevemTerCpfMasEstaoSem = filtro.Usuarios.Count(x => x.Cpf.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerCpf.Contains(x.Tipo));
+            if (qtdUsuarioQueDevemTerCpfMasEstaoSem.MaiorQueZero())
+                erros.Add($"Todos usuários do tipo 4 devem ter CPF e E-mail");
+
+            var qtdUsuarioQueDevemTerIdMasEstaoSem = filtro.Usuarios.Count(x => x.Id.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerId.Contains(x.Tipo));
+            if (qtdUsuarioQueDevemTerIdMasEstaoSem.MaiorQueZero())
+                erros.Add($"Todos usuários  dos tipos 1, 2, 3 devem ter Id e E-mail");
 
             var cpfsInvalidosOuSemId = filtro.Usuarios.Where(x => (x.Cpf.EhNulo() || x.Cpf?.Length < 11) && (x.Id.EhNulo() || x.Id.IgualZero()));
             foreach (var erro in cpfsInvalidosOuSemId)
