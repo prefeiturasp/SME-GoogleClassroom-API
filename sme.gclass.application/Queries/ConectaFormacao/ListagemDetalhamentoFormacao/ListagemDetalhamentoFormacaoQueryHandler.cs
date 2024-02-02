@@ -44,7 +44,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var rfs = professoresRegentesTutores.Where(t => !string.IsNullOrEmpty(t.Rf)).Select(t => t.Rf).Distinct().ToArray();
 
             var cpfsDosProfessores = await repositorioProfessorEol.ObterCpfNomeCompletoPorRegistroFuncional(rfs);
-            var usuariosProfessores = await repositorioUsuario.ObterUsuariosGooglePorCodigos(rfs.Select(t => long.Parse(t)).ToArray(), new[] { 2, 3 });
+            var usuariosProfessores = await repositorioUsuario.ObterUsuariosGooglePorCodigos(rfs.Select(t => long.Parse(t)).ToArray(), new[] { (int)UsuarioTipo.Professor, (int)UsuarioTipo.Funcionario });
 
             var retorno = new List<FormacaoDetalhaDTO>();
             foreach (var formacao in formacoes)
