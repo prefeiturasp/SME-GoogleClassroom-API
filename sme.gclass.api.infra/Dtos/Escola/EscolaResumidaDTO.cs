@@ -10,5 +10,7 @@ namespace SME.GoogleClassroom.Infra
         public string SiglaTipoEscola { get; set; }
 
         public string NomeEscola => Nome.EstaPreenchido() ? $"{SiglaTipoEscola}-{Nome}" : string.Empty;
+        public string DreCodigo { get; set; }
+        public string DreSigla { get; set; }
     }
 }
