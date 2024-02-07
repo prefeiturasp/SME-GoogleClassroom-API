@@ -34,9 +34,13 @@ namespace SME.GoogleClassroom.Aplicacao
         private  void ValidarSePossuirErros(InserirAtualizarEmailDTO filtro)
         {
             var erros = new List<string>();
+            
+            var cpfsInvalidosOuSemId = filtro.Usuarios.Where(x => (x.Cpf.EhNulo() || x.Cpf?.Length < 11) && (x.Id.EhNulo() || x.Id.IgualZero()));
+            foreach (var erro in cpfsInvalidosOuSemId)
+                erros.Add($"Informe um CPF ou Id válido para o usuário {erro.Nome} ");
 
-
-            var listaDeCpfs = filtro.Usuarios.Select(x => new { x.Cpf, x.Nome });
+            
+            var listaDeCpfs = filtro.Usuarios.Where(x => x.Cpf.NaoEhNulo()).Select(x => new { x.Cpf, x.Nome });
 
             foreach (var e in listaDeCpfs)
             {
@@ -56,11 +60,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var qtdUsuarioQueDevemTerIdMasEstaoSem = filtro.Usuarios.Count(x => x.Id.EhNulo() || x.Email.EhNulo() && tiposQueDevemTerId.Contains(x.Tipo));
             if (qtdUsuarioQueDevemTerIdMasEstaoSem.MaiorQueZero())
                 erros.Add($"Todos usuários  dos tipos 1, 2, 3 devem ter Id e E-mail");
-
-            var cpfsInvalidosOuSemId = filtro.Usuarios.Where(x => (x.Cpf.EhNulo() || x.Cpf?.Length < 11) && (x.Id.EhNulo() || x.Id.IgualZero()));
-            foreach (var erro in cpfsInvalidosOuSemId)
-                erros.Add($"Informe um CPF ou Id válido para o usuário {erro.Nome} ");
-
+            
             var emailsInvalidos = filtro.Usuarios.Where(x => !x.Email.Contains(DOMINIO_EMAIL) || x.Email.EhNulo());
             foreach (var erro in emailsInvalidos)
                 erros.Add($"Informe o E-mail valido para usuário {erro.Nome} ");
