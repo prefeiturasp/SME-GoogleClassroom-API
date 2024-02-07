@@ -40,7 +40,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 erros.Add($"Informe um CPF ou Id válido para o usuário {erro.Nome} ");
 
             
-            var listaDeCpfs = filtro.Usuarios.Where(x => x.Cpf.NaoEhNulo()).Select(x => new { x.Cpf, x.Nome });
+            var listaDeCpfs = filtro.Usuarios.Where(x => !string.IsNullOrEmpty(x.Cpf)).Select(x => new { x.Cpf, x.Nome });
 
             foreach (var e in listaDeCpfs)
             {
