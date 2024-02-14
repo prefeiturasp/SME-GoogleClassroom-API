@@ -19,5 +19,6 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<long>> ObterAlunosCodigosInativosPorAnoLetivoETurmaCelp(int requestAnoLetivo, long requestTurmaId);
 
         Task<IEnumerable<AlunoNaTurmaDTO>> ObterAlunosAtivosPorTurmaCodigo(long turmaCodigo);
+        Task<bool> VerificarSeExisteAlunoPorCpfOuRA(long raAluno, string? cpf);
     }
 }

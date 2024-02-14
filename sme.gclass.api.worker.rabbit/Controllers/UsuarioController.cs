@@ -13,7 +13,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Usuários
     /// </summary>
     [ApiController]
-    [ChaveIntegracaoGoogleClassroomApi]
+    //[ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/usuarios")]
     public class UsuarioController : Controller
     {

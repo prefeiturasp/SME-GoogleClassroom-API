@@ -1019,5 +1019,21 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
             return await conn.QueryAsync<AlunoNaTurmaDTO>(query.ToString(), parametros);
         }
+
+		public async Task<bool> VerificarSeExisteAlunoPorCpfOuRA(long raAluno, string? cpf)
+		{
+            var sql = new StringBuilder();
+            sql.AppendLine(@"SELECT CASE WHEN EXISTS (");
+            sql.AppendLine(@"	select * from aluno a ");
+            sql.AppendLine(@"	where a.cd_aluno = @raAluno ");
+			if (!string.IsNullOrEmpty(cpf))
+               sql.AppendLine(@"	or a.cd_cpf_aluno = @cpf ");
+            sql.AppendLine(@")");
+            sql.AppendLine(@"THEN CAST(1 AS BIT)");
+            sql.AppendLine(@"ELSE CAST(0 AS BIT) END ");
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<bool>(sql.ToString(), new { raAluno, cpf });
+        }
 	}
 }

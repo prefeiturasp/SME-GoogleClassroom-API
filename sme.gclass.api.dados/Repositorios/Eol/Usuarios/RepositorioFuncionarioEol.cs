@@ -1216,5 +1216,21 @@ namespace SME.GoogleClassroom.Dados
                 throw ex;
             }
         }
+
+		public async Task<bool> VerificarSeFuncionarioExistePorRfouCpf(string rf, string? cpf)
+		{
+            var sql = new StringBuilder();
+            sql.AppendLine(@"SELECT CASE WHEN EXISTS (");
+            sql.AppendLine(@"select * from v_servidor_cotic vsc  ");
+            sql.AppendLine(@"where vsc.cd_registro_funcional = @rf ");
+			if(!string.IsNullOrEmpty(cpf))
+				sql.AppendLine(@"or vsc.cd_cpf_pessoa = @cpf ");
+            sql.AppendLine(@")");
+            sql.AppendLine(@"THEN CAST(1 AS BIT)");
+            sql.AppendLine(@"ELSE CAST(0 AS BIT) END");
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<bool>(sql.ToString(), new { rf, cpf });
+        }
     }
 }
