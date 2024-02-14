@@ -28,14 +28,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (usuario.EhAluno())
             {
-                var alunoExiste = await mediator.Send(new VerificarSeExisteAlunoPorCfpOuRaQuery((long)usuario.Id ,usuario.Cpf));
+                var alunoExiste = await mediator.Send(new VerificarSeExisteAlunoPorCfpOuRaQuery((long)usuario.Id));
                 if(!alunoExiste)
                     throw new NegocioException($"O Aluno {usuario.Nome} não existe na base de Alunos do EOL");
             }
 
             if (usuario.EhFuncionario())
             {
-                var existe = await mediator.Send(new VerificarSeFuncionarioExistePorRfouCpfQuery(usuario.Id.ToString(), usuario.Cpf));
+                var existe = await mediator.Send(new VerificarSeFuncionarioExistePorRfouCpfQuery(usuario.Id.ToString()));
                 if (!existe)
                     throw new NegocioException($"O usuário {usuario.Nome} não existe na base de servidores do EOL");
             }

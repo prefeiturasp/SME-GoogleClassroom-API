@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
         private readonly IRepositorioAlunoEol repositorioAlunoEol;
         public async Task<bool> Handle(VerificarSeExisteAlunoPorCfpOuRaQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioAlunoEol.VerificarSeExisteAlunoPorCpfOuRA(request.RaAluno,request.Cpf);
+            return await repositorioAlunoEol.VerificarSeExisteAlunoPorCpfOuRA(request.RaAluno);
         }
     }
 }

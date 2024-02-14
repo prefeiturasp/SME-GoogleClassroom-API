@@ -5,14 +5,12 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
 {
     public class VerificarSeFuncionarioExistePorRfouCpfQuery : IRequest<bool>
     {
-        public VerificarSeFuncionarioExistePorRfouCpfQuery(string rF, string cpf)
+        public VerificarSeFuncionarioExistePorRfouCpfQuery(string rF)
         {
             RF = rF;
-            Cpf = cpf;
         }
         public string RF { get; set; }
 
-        public string? Cpf { get; set; }
     }
 
     public class VerificarSeFuncionarioExistePorRfouCpfQueryValidator : AbstractValidator<VerificarSeFuncionarioExistePorRfouCpfQuery>

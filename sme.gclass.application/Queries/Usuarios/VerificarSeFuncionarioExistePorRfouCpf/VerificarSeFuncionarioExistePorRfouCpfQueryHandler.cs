@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
         }
         public async Task<bool> Handle(VerificarSeFuncionarioExistePorRfouCpfQuery request, CancellationToken cancellationToken)
         {
-            return await repositorioFuncionarioEol.VerificarSeFuncionarioExistePorRfouCpf(request.RF,request.Cpf);
+            return await repositorioFuncionarioEol.VerificarSeFuncionarioExistePorRfouCpf(request.RF);
         }
 
     }

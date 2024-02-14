@@ -10,11 +10,9 @@ namespace SME.GoogleClassroom.Aplicacao.Queries
     {
         public long RaAluno { get; set; }
 
-        public string? Cpf { get; set; }
-        public VerificarSeExisteAlunoPorCfpOuRaQuery(long raAluno, string cpf)
+        public VerificarSeExisteAlunoPorCfpOuRaQuery(long raAluno)
         {
             RaAluno = raAluno;
-            Cpf = cpf;
         }
     }
 

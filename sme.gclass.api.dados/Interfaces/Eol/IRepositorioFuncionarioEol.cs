@@ -21,6 +21,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<IEnumerable<FuncionarioDto>> ObterFuncionariosExternosSga(int anoLetivo, string codigoEscola);
         Task<IEnumerable<PerfilFuncionarioDto>> ObterPerfilFuncionarioExternoPorFuncao(int[] codigosFuncao);
         Task<IEnumerable<PerfilFuncionarioDto>> ObterPerfilFuncionarioPorFuncao(int[] codigosFuncao);
-        Task<bool> VerificarSeFuncionarioExistePorRfouCpf(string rf, string? cpf);
+        Task<bool> VerificarSeFuncionarioExistePorRfouCpf(string rf);
     }
 }
