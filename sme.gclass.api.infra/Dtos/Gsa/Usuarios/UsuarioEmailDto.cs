@@ -14,5 +14,15 @@ namespace SME.GoogleClassroom.Infra
         {
             return Id.EhNulo() && Cpf.NaoEhNulo();
         }
+
+        public bool EhAluno()
+        {
+            return Tipo == UsuarioTipo.Aluno;
+        }
+
+        public bool EhFuncionario()
+        {
+            return (Tipo == UsuarioTipo.Professor) || (Tipo == UsuarioTipo.Funcionario);
+        }
     }
 }
