@@ -64,7 +64,9 @@ namespace SME.GoogleClassroom.Dados.Escola
             var query = $@" SELECT 
 	                                vcue.cd_unidade_educacao as Codigo,		                        
                                     RTRIM(LTRIM(te.sg_tp_escola)) SiglaTipoEscola,         
-			                        RTRIM(LTRIM(vcue.nm_unidade_educacao)) Nome         
+			                        RTRIM(LTRIM(vcue.nm_unidade_educacao)) Nome,
+			                          vcue.cd_unidade_administrativa_referencia as DreCodigo,
+			                        dre.nm_exibicao_unidade DreSigla       
                             FROM
                                  escola esc
                            INNER JOIN v_cadastro_unidade_educacao vcue ON esc.cd_escola = vcue.cd_unidade_educacao

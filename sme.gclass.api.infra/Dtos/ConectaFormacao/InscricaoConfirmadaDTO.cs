@@ -8,5 +8,8 @@
         public string Email { get; set; }
         public string DreCodigo { get; set; }
         public string UeCodigo { get; set; }
+        public string DreNome { get; set; }
+        public string UeNome { get; set; }
+        public bool EhUsuarioCustistaUeParceira { get; set; }
     }
 }

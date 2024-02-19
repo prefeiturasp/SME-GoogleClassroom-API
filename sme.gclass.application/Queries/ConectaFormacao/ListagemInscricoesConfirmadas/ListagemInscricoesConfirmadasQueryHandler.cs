@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -33,25 +34,33 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (inscricoesConecta.NaoPossuiElementos())
                 return default;
+            
+            var usuariosCursistasUeParceiras = Enumerable.Empty<UsuarioGoogleDto>();
 
-            var dresEol = await repositorioDreEol.ObterDresPorCodigos(inscricoesConecta.Select(s => s.DreCodigo).ToArray());
+            if (inscricoesConecta.Any(a=> a.EhUsuarioCustistaUeParceira))
+                usuariosCursistasUeParceiras = await repositorioUsuario.ObterUsuariosGooglePorCodigos(inscricoesConecta.Select(t => long.Parse(t.Cpf)).Distinct().ToArray(), new[] { (int)UsuarioTipo.FuncionarioIndireto });
+                
+            var dresEol = await repositorioDreEol.ObterDresPorCodigos(inscricoesConecta.Select(s => s.DreCodigo).Distinct().ToArray());
 
-            var uesEol = await repositorioEscolaEol.ObterUesPorCodigos(inscricoesConecta.Select(s => s.UeCodigo).ToArray());
+            var uesEol = await repositorioEscolaEol.ObterUesPorCodigos(inscricoesConecta.Select(s => s.UeCodigo).Distinct().ToArray());
 
             var usuariosCursistas = await repositorioUsuario.ObterUsuariosGooglePorCodigos(inscricoesConecta.Select(t => long.Parse(t.CodigoRf)).Distinct().ToArray(), new[] { (int)UsuarioTipo.Professor, (int)UsuarioTipo.Funcionario });
             foreach (var inscricao in inscricoesConecta)
             {
-                var dre = dresEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.DreCodigo));
                 var ue = uesEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.UeCodigo));
-
-                inscricao.DreCodigo = dre.Sigla;
-                inscricao.UeCodigo = ue.NomeEscola;
+                
+                var dre = inscricao.EhUsuarioCustistaUeParceira 
+                    ? new DreDto() { Codigo = ue.DreCodigo, Sigla = ue.DreSigla }
+                    : dresEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.DreCodigo));
+                
 
                 // Se o cursista esta lotado na DRE
-                if (inscricao.DreCodigo == inscricao.UeCodigo)
-                    inscricao.UeCodigo = dre.Nome;
+                inscricao.UeNome = inscricao.DreCodigo == inscricao.UeCodigo ? dre.Nome : ue.NomeEscola;
+                inscricao.DreNome = dre.Sigla;
 
-                inscricao.Email = usuariosCursistas.Where(w => w.Id == inscricao.CodigoRf).FirstOrDefault()?.Email;
+                inscricao.Email = inscricao.EhUsuarioCustistaUeParceira 
+                    ? usuariosCursistasUeParceiras.FirstOrDefault(f=> f.Id.Equals(inscricao.Cpf))?.Email 
+                    : usuariosCursistas.FirstOrDefault(w => w.Id == inscricao.CodigoRf)?.Email;
             }
 
             return inscricoesConecta;
