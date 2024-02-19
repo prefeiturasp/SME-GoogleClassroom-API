@@ -5,7 +5,7 @@ using SME.GoogleClassroom.Infra.Dtos.Gsa;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ListagemInscricoesConfirmadasQuery : IRequest<IEnumerable<InscricaoConfirmadaDTO>>
+    public class ListagemInscricoesConfirmadasQuery : IRequest<IEnumerable<InscricaoRetornoDTO>>
     {
         public long CodigoDaTurma { get; set; }
 

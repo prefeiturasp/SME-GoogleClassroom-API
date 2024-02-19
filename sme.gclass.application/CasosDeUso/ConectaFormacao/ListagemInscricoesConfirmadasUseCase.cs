@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<IEnumerable<InscricaoConfirmadaDTO>> Executar(long codigoDaTurma)
+        public async Task<IEnumerable<InscricaoRetornoDTO>> Executar(long codigoDaTurma)
         {
             return await mediator.Send(new ListagemInscricoesConfirmadasQuery(codigoDaTurma));
         }
