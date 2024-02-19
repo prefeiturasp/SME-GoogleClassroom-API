@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IListagemInscricoesConfirmadasUseCase
     {
-        Task<IEnumerable<InscricaoConfirmadaDTO>> Executar(long codigoDaTurma);
+        Task<IEnumerable<InscricaoRetornoDTO>> Executar(long codigoDaTurma);
     }
 }

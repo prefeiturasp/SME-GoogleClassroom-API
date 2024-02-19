@@ -13,7 +13,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ListagemInscricoesConfirmadasQueryHandler : IRequestHandler<ListagemInscricoesConfirmadasQuery, IEnumerable<InscricaoConfirmadaDTO>>
+    public class ListagemInscricoesConfirmadasQueryHandler : IRequestHandler<ListagemInscricoesConfirmadasQuery, IEnumerable<InscricaoRetornoDTO>>
     {
         private readonly IRepositorioConectaFormacao repositorioConectaFormacao;
         private readonly IRepositorioDreEol repositorioDreEol;
@@ -28,7 +28,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
         }
 
-        public async Task<IEnumerable<InscricaoConfirmadaDTO>> Handle(ListagemInscricoesConfirmadasQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<InscricaoRetornoDTO>> Handle(ListagemInscricoesConfirmadasQuery request, CancellationToken cancellationToken)
         {
             var inscricoesConecta = await repositorioConectaFormacao.ListagemInscricoesConfirmadas(request.CodigoDaTurma);
 
@@ -45,6 +45,8 @@ namespace SME.GoogleClassroom.Aplicacao
             var uesEol = await repositorioEscolaEol.ObterUesPorCodigos(inscricoesConecta.Select(s => s.UeCodigo).Distinct().ToArray());
 
             var usuariosCursistas = await repositorioUsuario.ObterUsuariosGooglePorCodigos(inscricoesConecta.Select(t => long.Parse(t.CodigoRf)).Distinct().ToArray(), new[] { (int)UsuarioTipo.Professor, (int)UsuarioTipo.Funcionario });
+
+            var retorno = new List<InscricaoRetornoDTO>();
             foreach (var inscricao in inscricoesConecta)
             {
                 var ue = uesEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.UeCodigo));
@@ -52,18 +54,29 @@ namespace SME.GoogleClassroom.Aplicacao
                 var dre = inscricao.EhUsuarioCustistaUeParceira 
                     ? new DreDto() { Codigo = ue.DreCodigo, Sigla = ue.DreSigla }
                     : dresEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.DreCodigo));
-                
 
                 // Se o cursista esta lotado na DRE
                 inscricao.UeNome = inscricao.DreCodigo == inscricao.UeCodigo ? dre.Nome : ue.NomeEscola;
                 inscricao.DreNome = dre.Sigla;
 
-                inscricao.Email = inscricao.EhUsuarioCustistaUeParceira 
-                    ? usuariosCursistasUeParceiras.FirstOrDefault(f=> f.Id.Equals(inscricao.Cpf))?.Email 
+                inscricao.Email = inscricao.EhUsuarioCustistaUeParceira
+                    ? usuariosCursistasUeParceiras.FirstOrDefault(f => f.Id.Equals(inscricao.Cpf))?.Email
                     : usuariosCursistas.FirstOrDefault(w => w.Id == inscricao.CodigoRf)?.Email;
+
+                retorno.Add(new InscricaoRetornoDTO
+                {
+                    CodigoRf = inscricao.CodigoRf,
+                    Cpf = inscricao.Cpf,
+                    Nome = inscricao.Nome,
+                    DreCodigo = inscricao.DreCodigo,
+                    DreNome = inscricao.DreNome,
+                    Email = inscricao.Email,
+                    UeCodigo = inscricao.UeCodigo,
+                    UeNome = inscricao.UeNome
+                });
             }
 
-            return inscricoesConecta;
+            return retorno;
         }
     }
 }
