@@ -56,5 +56,27 @@ namespace SME.GoogleClassroom.Dados.Escola
                 codigoEscola
             });
         }
+        
+        public async Task<IEnumerable<EscolaResumidaDTO>> ObterUesPorCodigos(string[] codigosUe)
+        {
+            using var conn = ObterConexao();
+
+            var query = $@" SELECT 
+	                                vcue.cd_unidade_educacao as Codigo,		                        
+                                    RTRIM(LTRIM(te.sg_tp_escola)) SiglaTipoEscola,         
+			                        RTRIM(LTRIM(vcue.nm_unidade_educacao)) Nome,
+			                          vcue.cd_unidade_administrativa_referencia as DreCodigo,
+			                        dre.nm_exibicao_unidade DreSigla       
+                            FROM
+                                 escola esc
+                           INNER JOIN v_cadastro_unidade_educacao vcue ON esc.cd_escola = vcue.cd_unidade_educacao
+                           INNER JOIN tipo_escola te ON esc.tp_escola = te.tp_escola
+                           INNER JOIN v_cadastro_unidade_educacao dre ON dre.cd_unidade_educacao = vcue.cd_unidade_administrativa_referencia
+                           INNER JOIN unidade_administrativa ua on ua.cd_unidade_administrativa = dre.cd_unidade_educacao
+                           where ua.tp_unidade_administrativa = 24
+                                 and vcue.cd_unidade_educacao in @codigosUe";
+
+            return await conn.QueryAsync<EscolaResumidaDTO>(query, new { codigosUe }, commandTimeout: 180);
+        }
     }
 }
