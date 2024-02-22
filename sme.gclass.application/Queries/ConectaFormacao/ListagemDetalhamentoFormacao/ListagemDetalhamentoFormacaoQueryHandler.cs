@@ -1,6 +1,4 @@
-﻿
-
-using MediatR;
+﻿using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Dominio.SME.CDEP.Dominio.Extensions;
@@ -28,7 +26,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<FormacaoDetalhaDTO>> Handle(ListagemDetalhamentoFormacaoQuery request, CancellationToken cancellationToken)
         {
-            var formacoes = await repositorioConectaFormacao.ListagemFormacoesPorAno(request.Ano);
+            var formacoes = await repositorioConectaFormacao.ListagemFormacoesPorAno(request.Ano, request.AreaPromotoraId);
 
             if (formacoes.NaoPossuiElementos())
                 return default;
@@ -45,6 +43,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var cpfsDosProfessores = await repositorioProfessorEol.ObterCpfNomeCompletoPorRegistroFuncional(rfs);
             var usuariosProfessores = await repositorioUsuario.ObterUsuariosGooglePorCodigos(rfs.Select(t => long.Parse(t)).ToArray(), new[] { (int)UsuarioTipo.Professor, (int)UsuarioTipo.Funcionario });
+
+            var usuariosProfessoresPorCpf = Enumerable.Empty<UsuarioGoogleDto>();
+            var cpfs = professoresRegentesTutores.Where(t => !string.IsNullOrEmpty(t.Cpf)).Select(t => t.Cpf).Distinct().ToArray();
+            if(cpfs.PossuiElementos())
+                usuariosProfessoresPorCpf = await repositorioUsuario.ObterUsuariosGooglePorCpfs(cpfs, new[] { (int)UsuarioTipo.FuncionarioIndireto });
 
             var retorno = new List<FormacaoDetalhaDTO>();
             foreach (var formacao in formacoes)
@@ -66,7 +69,9 @@ namespace SME.GoogleClassroom.Aplicacao
                             Rf = s.Rf,
                             Cpf = s.Cpf.EstaPreenchido() ? s.Cpf : cpfsDosProfessores?.FirstOrDefault(c => c.Rf.Equals(s.Rf))?.Cpf,
                             Nome = s.Nome,
-                            Email = usuariosProfessores.FirstOrDefault(t => t.Id == s.Rf)?.Email,
+                            Email = s.Rf.EstaPreenchido() ? 
+                                usuariosProfessores.FirstOrDefault(t => t.Id == s.Rf)?.Email : 
+                                usuariosProfessoresPorCpf.FirstOrDefault(f => f.Cpf == s.Cpf)?.Email,
                             Tutor = s.Tutor
                         });
 

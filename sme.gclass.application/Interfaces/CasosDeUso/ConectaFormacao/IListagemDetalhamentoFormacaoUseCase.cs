@@ -6,6 +6,6 @@ namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IListagemDetalhamentoFormacaoUseCase
     {
-        Task<IEnumerable<FormacaoDetalhaDTO>> Executar(int ano);
+        Task<IEnumerable<FormacaoDetalhaDTO>> Executar(int ano, long? areaPromotoraId);
     }
 }

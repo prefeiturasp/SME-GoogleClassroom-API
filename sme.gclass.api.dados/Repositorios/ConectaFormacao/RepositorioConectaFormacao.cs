@@ -41,7 +41,7 @@ namespace SME.GoogleClassroom.Dados
             }
         }
 
-        public async Task<IEnumerable<FormacaoDTO>> ListagemFormacoesPorAno(int ano)
+        public async Task<IEnumerable<FormacaoDTO>> ListagemFormacoesPorAno(int ano, long? areaPromotoraId)
         {
             var query = @"
                             select
@@ -61,10 +61,13 @@ namespace SME.GoogleClassroom.Dados
 	                            and p.integrar_no_sga = true
 	                            and p.data_realizacao_fim >= current_date
 	                            and extract(year from p.data_realizacao_inicio) = @ano";
-        
+
+            if (areaPromotoraId.HasValue)
+                query += " p.area_promotora_id = @areaPromotoraId ";
+
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<FormacaoDTO>(query, new { ano, SituacaoPublicada });
+                return await conn.QueryAsync<FormacaoDTO>(query, new { ano, SituacaoPublicada, areaPromotoraId });
             }
         }
 
@@ -87,7 +90,8 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @" select pt.id as codigoTurma,
                                   regente.registro_funcional as rf,
-		                          regente.nome_regente as nome
+		                          regente.nome_regente as nome,
+                                  regente.cpf  
                            from proposta_turma pt 
                               join proposta_regente_turma prt on prt.turma_id = pt.id 
                               join proposta_regente regente on regente.id = prt.proposta_regente_id 
@@ -106,6 +110,7 @@ namespace SME.GoogleClassroom.Dados
             var query = @"select pt.id as codigoTurma,
                                  tutor.registro_funcional as rf,
 		                         tutor.nome_tutor as nome,
+                                 tutor.cpf,
 		                         true as tutor
                           from proposta_turma pt 
                             join proposta_tutor_turma ptt on ptt.turma_id = pt.id 
@@ -117,6 +122,18 @@ namespace SME.GoogleClassroom.Dados
             using (var conn = ObterConexao())
             {
                 return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
+            }
+        }
+
+        public async Task<IEnumerable<AreaPromotoraDTO>> ListagemAreaPromotora()
+        {
+            var query = @"select id as CodigoIE, nome as NomeIE
+                          from area_promotora
+                          where not excluido";
+
+            using (var conn = ObterConexao())
+            {
+                return await conn.QueryAsync<AreaPromotoraDTO>(query);
             }
         }
     }
