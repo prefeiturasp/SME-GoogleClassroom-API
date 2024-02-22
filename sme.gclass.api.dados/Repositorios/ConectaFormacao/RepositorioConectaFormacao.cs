@@ -89,10 +89,9 @@ namespace SME.GoogleClassroom.Dados
                                   regente.registro_funcional as rf,
 		                          regente.nome_regente as nome
                            from proposta_turma pt 
-                              join proposta_regente_turma prt on prt.turma_id = pt.id 
-                              join proposta_regente regente on regente.id = prt.proposta_regente_id 
+                              join proposta_regente_turma prt on prt.turma_id = pt.id and not prt.excluido
+                              join proposta_regente regente on regente.id = prt.proposta_regente_id and not regente.excluido
                            where not pt.excluido
-                             and not regente.excluido
                              and pt.proposta_id = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
@@ -108,10 +107,9 @@ namespace SME.GoogleClassroom.Dados
 		                         tutor.nome_tutor as nome,
 		                         true as tutor
                           from proposta_turma pt 
-                            join proposta_tutor_turma ptt on ptt.turma_id = pt.id 
-                            join proposta_tutor tutor on tutor.id = ptt.proposta_tutor_id                            
+                            join proposta_tutor_turma ptt on ptt.turma_id = pt.id and not ptt.excluido
+                            join proposta_tutor tutor on tutor.id = ptt.proposta_tutor_id and not tutor.excluido
                           where not pt.excluido
-                            and not tutor.excluido
                             and pt.proposta_id = any(@codigosDasFormacoes)";
         
             using (var conn = ObterConexao())
