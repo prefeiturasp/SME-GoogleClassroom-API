@@ -21,9 +21,9 @@ namespace SME.GoogleClassroom.Dados
                                     u.cpf,
                                     u.nome,
                                     u.email,
-                                    coalesce(funcao_dre_codigo, cargo_dre_codigo) dreCodigo,
-                                    coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo,
-                                    (u.situacao_cadastro = 2) EhUsuarioCustistaUeParceira
+                                    coalesce(funcao_dre_codigo, cargo_dre_codigo, u.codigo_eol_unidade) dreCodigo,
+                                    coalesce(funcao_ue_codigo, cargo_ue_codigo, u.codigo_eol_unidade) ueCodigo,
+                                    (u.tipo = 2) EhUsuarioCustistaUeParceira
                                     from inscricao i 
                                     join proposta_turma pt on i.proposta_turma_id = pt.id
                                     join proposta p on p.id = pt.proposta_id 
