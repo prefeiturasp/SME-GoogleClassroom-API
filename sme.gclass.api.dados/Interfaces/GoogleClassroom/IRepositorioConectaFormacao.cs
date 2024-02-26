@@ -8,9 +8,10 @@ namespace SME.GoogleClassroom.Dados
     public interface IRepositorioConectaFormacao
     {
         Task<IEnumerable<InscricaoConfirmadaDTO>> ListagemInscricoesConfirmadas(long codigoDaTurma);
-        Task<IEnumerable<FormacaoDTO>> ListagemFormacoesPorAno(int ano);
+        Task<IEnumerable<FormacaoDTO>> ListagemFormacoesPorAno(int ano, long? areaPromotoraId);
         Task<IEnumerable<FormacaoTurmaDTO>> ListagemTurmasPorCodigosFormacoes(long[] codigosDasFormacoes);
         Task<IEnumerable<FormacaoTurmaProfessoresDTO>> ListagemProfessoresRegentesPorCodigosFormacoes(long[] codigosDasFormacoes);
         Task<IEnumerable<FormacaoTurmaProfessoresDTO>> ListagemProfessoresTutoresPorCodigosFormacoes(long[] codigosDasFormacoes);
+        Task<IEnumerable<AreaPromotoraDTO>> ListagemAreaPromotora();
     }
 }

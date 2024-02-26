@@ -8,10 +8,12 @@ namespace SME.GoogleClassroom.Aplicacao
     public class ListagemDetalhamentoFormacaoQuery : IRequest<IEnumerable<FormacaoDetalhaDTO>>
     {
         public int Ano { get; set; }
+        public long? AreaPromotoraId { get; set; }
 
-        public ListagemDetalhamentoFormacaoQuery(int ano)
+        public ListagemDetalhamentoFormacaoQuery(int ano, long? areaPromotoraId)
         {
             Ano = ano;
+            AreaPromotoraId = areaPromotoraId;
         }
     }
 

@@ -66,5 +66,6 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<FuncionarioGoogle>> ObterFuncionariosPorEmail(string requestEmail);
         Task<bool> ExisteUsuarioPorCpfETipo(string cpf, int tipoUsuario);
         Task<bool> ExisteUsuarioPorIdETipo(long id, int tipoUsuario);
+        Task<IEnumerable<UsuarioGoogleDto>> ObterUsuariosGooglePorCpfs(string[] cpfs, int[] tipos = null);
     }
 }
