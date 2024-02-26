@@ -63,7 +63,7 @@ namespace SME.GoogleClassroom.Dados
 	                            and extract(year from p.data_realizacao_inicio) = @ano";
 
             if (areaPromotoraId.HasValue)
-                query += " p.area_promotora_id = @areaPromotoraId ";
+                query += " and p.area_promotora_id = @areaPromotoraId ";
 
             using (var conn = ObterConexao())
             {
