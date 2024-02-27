@@ -3,7 +3,7 @@ using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Infra
 {
-    public struct EscolaResumidaDTO
+    public class EscolaResumidaDTO
     {
         public string Codigo { get; set; }
         public string Nome { get; set; }

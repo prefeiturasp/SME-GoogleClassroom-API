@@ -10,6 +10,7 @@ using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Escola;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dados.Interfaces.Eol;
+using SME.GoogleClassroom.Dados.Repositorios.Eol.Unidade;
 using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
 
@@ -59,6 +60,7 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IRepositorioUsuarioInativo, RepositorioUsuarioInativo>();
             services.TryAddScoped<IRepositorioEscolaEol, RepositorioEscolaEol>();
             services.TryAddScoped<IRepositorioParametrosEol, RepositorioParametrosEol>();
+            services.TryAddScoped<IRepositorioUnidade, RepositorioUnidade>();
 
             // Carga Inicial
             services.TryAddScoped<IRepositorioCargaInicial, RepositorioCargaInicial>();
