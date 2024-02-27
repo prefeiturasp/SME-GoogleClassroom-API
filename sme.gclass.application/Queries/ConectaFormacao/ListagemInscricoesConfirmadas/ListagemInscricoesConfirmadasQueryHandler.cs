@@ -38,7 +38,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var usuariosCursistasUeParceiras = Enumerable.Empty<UsuarioGoogleDto>();
 
             if (inscricoesConecta.Any(a=> a.EhUsuarioCustistaUeParceira))
-                usuariosCursistasUeParceiras = await repositorioUsuario.ObterUsuariosGooglePorCodigos(inscricoesConecta.Select(t => long.Parse(t.Cpf)).Distinct().ToArray(), new[] { (int)UsuarioTipo.FuncionarioIndireto });
+                usuariosCursistasUeParceiras = await repositorioUsuario.ObterUsuariosGooglePorCpfs(inscricoesConecta.Select(t => t.Cpf).Distinct().ToArray(), new[] { (int)UsuarioTipo.FuncionarioIndireto });
                 
             var dresEol = await repositorioDreEol.ObterDresPorCodigos(inscricoesConecta.Select(s => s.DreCodigo).Distinct().ToArray());
 

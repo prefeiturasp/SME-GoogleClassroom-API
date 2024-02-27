@@ -342,6 +342,7 @@ namespace SME.GoogleClassroom.IoC
             //Conecta formação
             services.TryAddScoped<IListagemInscricoesConfirmadasUseCase, ListagemInscricoesConfirmadasUseCase>();
             services.TryAddScoped<IListagemDetalhamentoFormacaoUseCase, ListagemDetalhamentoFormacaoUseCase>();
+            services.TryAddScoped<IListagemDeAreaPromotoraUseCase, ListagemDeAreaPromotoraUseCase>();
         }
     }
 }
