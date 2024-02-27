@@ -862,5 +862,28 @@ namespace SME.GoogleClassroom.Dados
 
             return await conn.QueryAsync<UsuarioGoogleDto>(query, new {Codigos = usuarioCodigo, tipos });
         }
+
+        public async Task<IEnumerable<UsuarioGoogleDto>> ObterUsuariosGooglePorCpfs(string[] cpfs, int[] tipos = null)
+        {
+            var query = @"select u.indice,
+                                 u.id,
+                                 u.cpf,
+                                 u.usuario_tipo as usuariotipo,
+                                 u.email,
+                                 u.nome,
+                                 u.organization_path as organizationpath,
+                                 u.data_inclusao as datainclusao,
+                                 u.data_atualizacao as dataatualizacao,
+                                 u.google_classroom_id as GoogleClassroomId
+                            FROM usuarios u
+                           where cpf = any(@cpfs)";
+
+            if (tipos.Any())
+                query += " and u.usuario_tipo = any(@tipos)";
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryAsync<UsuarioGoogleDto>(query, new { cpfs, tipos });
+        }
     }
 }

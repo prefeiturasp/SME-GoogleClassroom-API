@@ -15,9 +15,9 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<IEnumerable<FormacaoDetalhaDTO>> Executar(int ano)
+        public async Task<IEnumerable<FormacaoDetalhaDTO>> Executar(int ano, long? areaPromotoraId)
         {
-            return await mediator.Send(new ListagemDetalhamentoFormacaoQuery(ano));
+            return await mediator.Send(new ListagemDetalhamentoFormacaoQuery(ano, areaPromotoraId));
         }
     }
 }

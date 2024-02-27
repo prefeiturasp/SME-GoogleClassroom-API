@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
@@ -50,7 +51,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         ///
         ///     GET
         ///     {
-        ///        "ano": 2023
+        ///        "ano": 2024
         ///     }
         ///
         /// </remarks>
@@ -63,9 +64,26 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemDetalhamentoFormacaoPorAno(
             [FromRoute] int ano,
+            [FromQuery] long? codigoIE,
             [FromServices] IListagemDetalhamentoFormacaoUseCase listagemDetalhamentoFormacaoUseCase)
         {
-            return Ok(await listagemDetalhamentoFormacaoUseCase.Executar(ano));
+            return Ok(await listagemDetalhamentoFormacaoUseCase.Executar(ano, codigoIE));
+        }
+
+        /// <summary>
+        /// Retorna as instituições de ensino.
+        /// </summary>
+        /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
+        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        [HttpGet("instituicao-ensino")]
+        [ProducesResponseType(typeof(IEnumerable<AreaPromotoraDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
+        public async Task<IActionResult> ListagemAreaPromotora(
+            [FromServices] IListagemDeAreaPromotoraUseCase listagemDeAreaPromotoraUseCase)
+        {
+            return Ok(await listagemDeAreaPromotoraUseCase.Executar());
         }
     }
 }
