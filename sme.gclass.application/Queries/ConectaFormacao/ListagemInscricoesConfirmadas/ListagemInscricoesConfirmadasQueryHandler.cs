@@ -38,10 +38,14 @@ namespace SME.GoogleClassroom.Aplicacao
             if (inscricoesConecta.NaoPossuiElementos())
                 return default;
 
-            var codigoDres = inscricoesConecta.Select(s => s.DreCodigo).Distinct().ToArray();
+            var codigoDres = inscricoesConecta
+                .Where(t => !string.IsNullOrEmpty(t.DreCodigo))
+                .Select(s => s.DreCodigo).Distinct().ToArray();
             var dresEol = await repositorioDreEol.ObterDresPorCodigos(codigoDres);
 
-            var codigoUes = inscricoesConecta.Select(s => s.UeCodigo).Distinct().ToArray();
+            var codigoUes = inscricoesConecta
+                .Where(t => !string.IsNullOrEmpty(t.UeCodigo))
+                .Select(s => s.UeCodigo).Distinct().ToArray();
             var uesEol = await repositorioEscolaEol.ObterUesPorCodigos(codigoUes);
 
             var unidadesEol = await repositorioUnidade.ObterUnidadesPorCodigos(codigoDres);
