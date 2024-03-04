@@ -6,11 +6,11 @@ using SME.GoogleClassroom.Dominio.SME.CDEP.Dominio.Extensions;
 using SME.GoogleClassroom.Infra.Dtos.Gsa;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using SME.GoogleClassroom.Infra;
-using SME.GoogleClassroom.Infra.Dtos.Gsa.FormacaoCidade;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -21,14 +21,22 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IRepositorioEscolaEol repositorioEscolaEol;
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IRepositorioUnidade repositorioUnidade;
+        private readonly IMediator mediator;
 
-        public ListagemInscricoesConfirmadasQueryHandler(IRepositorioConectaFormacao repositorioConectaFormacao, IRepositorioDreEol repositorioDreEol, IRepositorioEscolaEol repositorioEscolaEol, IRepositorioUsuario repositorioUsuario, IRepositorioUnidade repositorioUnidade)
+        public ListagemInscricoesConfirmadasQueryHandler(
+            IRepositorioConectaFormacao repositorioConectaFormacao, 
+            IRepositorioDreEol repositorioDreEol, 
+            IRepositorioEscolaEol repositorioEscolaEol, 
+            IRepositorioUsuario repositorioUsuario, 
+            IRepositorioUnidade repositorioUnidade, 
+            IMediator mediator)
         {
             this.repositorioConectaFormacao = repositorioConectaFormacao ?? throw new ArgumentNullException(nameof(repositorioConectaFormacao));
             this.repositorioDreEol = repositorioDreEol ?? throw new ArgumentNullException(nameof(repositorioDreEol));
             this.repositorioEscolaEol = repositorioEscolaEol ?? throw new ArgumentNullException(nameof(repositorioEscolaEol));
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.repositorioUnidade = repositorioUnidade ?? throw new ArgumentNullException(nameof(repositorioUnidade));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<IEnumerable<InscricaoRetornoDTO>> Handle(ListagemInscricoesConfirmadasQuery request, CancellationToken cancellationToken)
@@ -86,9 +94,13 @@ namespace SME.GoogleClassroom.Aplicacao
                     inscricao.UeNome = unidade?.Nome;
                 }
 
-                inscricao.Email = inscricao.EhUsuarioCustistaUeParceira ?
+                var email = inscricao.EhUsuarioCustistaUeParceira ? 
                     usuariosCursistasUeParceiras.FirstOrDefault(f => f.Id.Equals(inscricao.Cpf))?.Email :
-                    usuariosCursistas.FirstOrDefault(w => w.Id == inscricao.CodigoRf)?.Email;
+                    usuariosCursistas.FirstOrDefault(f => f.Id.Equals(inscricao.CodigoRf))?.Email;
+
+                inscricao.Email = !string.IsNullOrEmpty(email) ? 
+                    email : 
+                    await mediator.Send(new GerarEmailFuncionarioCommand(inscricao.Nome, inscricao.CodigoRf, inscricao.Cpf, inscricao.EhUsuarioCustistaUeParceira), cancellationToken);
 
                 retorno.Add(new InscricaoRetornoDTO
                 {
