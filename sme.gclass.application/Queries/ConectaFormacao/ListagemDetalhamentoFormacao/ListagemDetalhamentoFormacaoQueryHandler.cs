@@ -16,12 +16,18 @@ namespace SME.GoogleClassroom.Aplicacao
         private readonly IRepositorioConectaFormacao repositorioConectaFormacao;
         private readonly IRepositorioProfessorEol repositorioProfessorEol;
         private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IMediator mediator;
 
-        public ListagemDetalhamentoFormacaoQueryHandler(IRepositorioConectaFormacao repositorioConectaFormacao, IRepositorioProfessorEol repositorioProfessorEol, IRepositorioUsuario repositorioUsuario)
+        public ListagemDetalhamentoFormacaoQueryHandler(
+            IRepositorioConectaFormacao repositorioConectaFormacao,
+            IRepositorioProfessorEol repositorioProfessorEol,
+            IRepositorioUsuario repositorioUsuario,
+            IMediator mediator)
         {
             this.repositorioConectaFormacao = repositorioConectaFormacao ?? throw new ArgumentNullException(nameof(repositorioConectaFormacao));
             this.repositorioProfessorEol = repositorioProfessorEol ?? throw new ArgumentNullException(nameof(repositorioProfessorEol));
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<IEnumerable<FormacaoDetalhaDTO>> Handle(ListagemDetalhamentoFormacaoQuery request, CancellationToken cancellationToken)
@@ -46,7 +52,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var usuariosProfessoresPorCpf = Enumerable.Empty<UsuarioGoogleDto>();
             var cpfs = professoresRegentesTutores.Where(t => !string.IsNullOrEmpty(t.Cpf)).Select(t => t.Cpf).Distinct().ToArray();
-            if(cpfs.PossuiElementos())
+            if (cpfs.PossuiElementos())
                 usuariosProfessoresPorCpf = await repositorioUsuario.ObterUsuariosGooglePorCpfs(cpfs, new[] { (int)UsuarioTipo.FuncionarioIndireto });
 
             var retorno = new List<FormacaoDetalhaDTO>();
@@ -63,17 +69,27 @@ namespace SME.GoogleClassroom.Aplicacao
                 var turmasFormacao = turmas.Where(w => w.CodigoFormacao == formacao.Codigo);
                 foreach (var turma in turmasFormacao)
                 {
-                    var professoresTurma = professoresRegentesTutores.Where(p => p.CodigoTurma == turma.Codigo)
-                        .Select(s => new FormacaoDetalhaTurmaProfessoresDTO()
+                    var professoresTurma = new List<FormacaoDetalhaTurmaProfessoresDTO>();
+                    foreach (var professorTurma in professoresRegentesTutores.Where(p => p.CodigoTurma == turma.Codigo))
+                    {
+                        var cpf = professorTurma.Cpf.EstaPreenchido() ? professorTurma.Cpf : cpfsDosProfessores?.FirstOrDefault(c => c.Rf.Equals(professorTurma.Rf))?.Cpf;
+
+                        var email = professorTurma.Rf.EstaPreenchido() ?
+                                usuariosProfessores.FirstOrDefault(t => t.Id == professorTurma.Rf)?.Email :
+                                usuariosProfessoresPorCpf.FirstOrDefault(f => f.Cpf == professorTurma.Cpf)?.Email;
+
+                        email = !string.IsNullOrEmpty(email) ? email :
+                            await mediator.Send(new GerarEmailFuncionarioCommand(professorTurma.Nome, professorTurma.Rf, cpf, !string.IsNullOrEmpty(cpf)), cancellationToken);
+
+                        professoresTurma.Add(new FormacaoDetalhaTurmaProfessoresDTO()
                         {
-                            Rf = s.Rf,
-                            Cpf = s.Cpf.EstaPreenchido() ? s.Cpf : cpfsDosProfessores?.FirstOrDefault(c => c.Rf.Equals(s.Rf))?.Cpf,
-                            Nome = s.Nome,
-                            Email = s.Rf.EstaPreenchido() ? 
-                                usuariosProfessores.FirstOrDefault(t => t.Id == s.Rf)?.Email : 
-                                usuariosProfessoresPorCpf.FirstOrDefault(f => f.Cpf == s.Cpf)?.Email,
-                            Tutor = s.Tutor
+                            Rf = professorTurma.Rf,
+                            Cpf = cpf,
+                            Nome = professorTurma.Nome,
+                            Email = email,
+                            Tutor = professorTurma.Tutor
                         });
+                    }
 
                     formacaoDetalhada.AdicionarTurma(turma.Codigo, turma.Nome, professoresTurma);
                 }
