@@ -11,5 +11,8 @@
         public string DreNome { get; set; }
         public string UeNome { get; set; }
         public bool EhUsuarioCustistaUeParceira { get; set; }
+        public string CodigoCargo { get; set; }
+        public string DescricaoCargo { get; set; }
+        public int? TipoVinculo { get; set; }
     }
 }
