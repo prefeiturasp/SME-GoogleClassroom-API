@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
@@ -9,7 +10,7 @@ namespace SME.GoogleClassroom.Dados
     public class RepositorioConectaFormacao : RepositorioConectaFormacaoBase, IRepositorioConectaFormacao
     {
         private const int SituacaoPublicada = 1;
-        
+
         public RepositorioConectaFormacao(ConnectionStrings connectionStrings)
             : base(connectionStrings)
         {
@@ -20,7 +21,7 @@ namespace SME.GoogleClassroom.Dados
             var query = @" select   u.login codigoRf,
                                     u.cpf,
                                     u.nome,
-                                    u.email,
+                                    u.email_educacional as email,
                                     coalesce(funcao_dre_codigo, cargo_dre_codigo, u.codigo_eol_unidade) dreCodigo,
                                     coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo,
                                     (u.tipo = 2) EhUsuarioCustistaUeParceira
@@ -34,7 +35,7 @@ namespace SME.GoogleClassroom.Dados
                                         and p.integrar_no_sga = true
                                         and i.situacao = @SituacaoPublicada
                                         and i.proposta_turma_id = @codigoDaTurma";
-        
+
             using (var conn = ObterConexao())
             {
                 return await conn.QueryAsync<InscricaoConfirmadaDTO>(query, new {codigoDaTurma, SituacaoPublicada});
@@ -67,7 +68,7 @@ namespace SME.GoogleClassroom.Dados
 
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<FormacaoDTO>(query, new { ano, SituacaoPublicada, areaPromotoraId });
+                return await conn.QueryAsync<FormacaoDTO>(query, new {ano, SituacaoPublicada, areaPromotoraId});
             }
         }
 
@@ -79,10 +80,10 @@ namespace SME.GoogleClassroom.Dados
                               from proposta_turma pt 
                               where not pt.excluido    
                                 and pt.proposta_id = any(@codigosDasFormacoes)";
-        
+
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<FormacaoTurmaDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<FormacaoTurmaDTO>(query, new {codigosDasFormacoes});
             }
         }
 
@@ -97,10 +98,10 @@ namespace SME.GoogleClassroom.Dados
                               join proposta_regente regente on regente.id = prt.proposta_regente_id and not regente.excluido
                            where not pt.excluido
                              and pt.proposta_id = any(@codigosDasFormacoes)";
-        
+
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new {codigosDasFormacoes});
             }
         }
 
@@ -116,10 +117,10 @@ namespace SME.GoogleClassroom.Dados
                             join proposta_tutor tutor on tutor.id = ptt.proposta_tutor_id and not tutor.excluido
                           where not pt.excluido
                             and pt.proposta_id = any(@codigosDasFormacoes)";
-        
+
             using (var conn = ObterConexao())
             {
-                return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new { codigosDasFormacoes });
+                return await conn.QueryAsync<FormacaoTurmaProfessoresDTO>(query, new {codigosDasFormacoes});
             }
         }
 
