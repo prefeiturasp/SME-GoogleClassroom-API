@@ -34,7 +34,7 @@ namespace SME.GoogleClassroom.Dados
                                         and not i.excluido
                                         and p.integrar_no_sga = true
                                         and i.situacao = @SituacaoPublicada
-                                        and i.proposta_turma_id = @codigoDaTurma";
+                                        and i.proposta_turma_id = @codigoDaTurma ";
 
             using (var conn = ObterConexao())
             {

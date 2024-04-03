@@ -58,16 +58,6 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var unidadesEol = await repositorioUnidade.ObterUnidadesPorCodigos(codigoDres);
 
-            var codigoRfs = inscricoesConecta.Select(t => long.Parse(t.CodigoRf)).Distinct().ToArray();
-            var usuariosCursistas = await repositorioUsuario.ObterUsuariosGooglePorCodigos(codigoRfs, new[] { (int)UsuarioTipo.Professor, (int)UsuarioTipo.Funcionario });
-
-            var usuariosCursistasUeParceiras = Enumerable.Empty<UsuarioGoogleDto>();
-            if (inscricoesConecta.Any(a => a.EhUsuarioCustistaUeParceira))
-            {
-                var cursistasCpfs = inscricoesConecta.Select(t => long.Parse(t.Cpf)).Distinct().ToArray();
-                usuariosCursistasUeParceiras = await repositorioUsuario.ObterUsuariosGooglePorCodigos(cursistasCpfs, new[] { (int)UsuarioTipo.FuncionarioIndireto });
-            }
-
             var retorno = new List<InscricaoRetornoDTO>();
             foreach (var inscricao in inscricoesConecta)
             {
@@ -94,12 +84,8 @@ namespace SME.GoogleClassroom.Aplicacao
                     inscricao.UeNome = unidade?.Nome;
                 }
 
-                var email = inscricao.EhUsuarioCustistaUeParceira ? 
-                    usuariosCursistasUeParceiras.FirstOrDefault(f => f.Id.Equals(inscricao.Cpf))?.Email :
-                    usuariosCursistas.FirstOrDefault(f => f.Id.Equals(inscricao.CodigoRf))?.Email;
-
-                inscricao.Email = !string.IsNullOrEmpty(email) ? 
-                    email : 
+                inscricao.Email = !string.IsNullOrEmpty(inscricao.Email) ? 
+                    inscricao.Email : 
                     await mediator.Send(new GerarEmailFuncionarioCommand(inscricao.Nome, inscricao.CodigoRf, inscricao.Cpf, inscricao.EhUsuarioCustistaUeParceira), cancellationToken);
 
                 retorno.Add(new InscricaoRetornoDTO
