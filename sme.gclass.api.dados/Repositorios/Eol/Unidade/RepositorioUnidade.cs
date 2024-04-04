@@ -19,8 +19,8 @@ namespace SME.GoogleClassroom.Dados.Repositorios.Eol.Unidade
             var query = $@" SELECT vcue.cd_unidade_educacao Codigo, 
 	                               vcue.nm_unidade_educacao Nome
                             FROM v_cadastro_unidade_educacao vcue (NOLOCK)
-                            INNER JOIN unidade_administrativa ua on ua.cd_unidade_administrativa = vcue.cd_unidade_educacao
-                            WHERE ua.tp_unidade_administrativa <> 24 and vcue.cd_unidade_educacao in @codigos";
+                            left JOIN unidade_administrativa ua on ua.cd_unidade_administrativa = vcue.cd_unidade_educacao and ua.tp_unidade_administrativa <> 24
+                            WHERE vcue.cd_unidade_educacao in @codigos";
 
             return await conn.QueryAsync<UnidadeDto>(query, new { codigos }, commandTimeout: 180);
         }
