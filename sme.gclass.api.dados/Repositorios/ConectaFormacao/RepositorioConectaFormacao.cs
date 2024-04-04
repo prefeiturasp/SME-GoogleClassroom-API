@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Dados
                                     u.nome,
                                     u.email_educacional as email,
                                     coalesce(funcao_dre_codigo, cargo_dre_codigo, u.codigo_eol_unidade) dreCodigo,
-                                    coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo,
+                                    coalesce(funcao_ue_codigo,cargo_ue_codigo,u.codigo_eol_unidade) ueCodigo ,
                                     (u.tipo = 2) EhUsuarioCustistaUeParceira
                                     from inscricao i 
                                     join proposta_turma pt on i.proposta_turma_id = pt.id
