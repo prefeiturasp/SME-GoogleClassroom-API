@@ -83,7 +83,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                         professoresTurma.Add(new FormacaoDetalhaTurmaProfessoresDTO()
                         {
-                            Rf = professorTurma.Rf,
+                            Rf = professorTurma.Rf.NaoEhNulo() ? professorTurma.Rf : cpf,
                             Cpf = cpf,
                             Nome = professorTurma.Nome,
                             Email = email,
