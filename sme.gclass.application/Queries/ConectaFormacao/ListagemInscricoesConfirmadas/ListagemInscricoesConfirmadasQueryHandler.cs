@@ -90,7 +90,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 retorno.Add(new InscricaoRetornoDTO
                 {
-                    CodigoRf = inscricao.CodigoRf.NaoEhNulo() ? inscricao.CodigoRf : inscricao.Cpf,
+                    CodigoRf = inscricao.CodigoRf,
                     Cpf = inscricao.Cpf,
                     Nome = inscricao.Nome,
                     DreCodigo = inscricao.DreCodigo,
