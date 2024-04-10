@@ -17,29 +17,24 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<InscricaoConfirmadaDTO>> ListagemInscricoesConfirmadas(long codigoDaTurma)
         {
-            var query = @" select u.login codigoRf,
-                                  u.cpf,
-                                  u.nome,
-                                  u.email_educacional as email,
-                                  coalesce(funcao_dre_codigo, cargo_dre_codigo, u.codigo_eol_unidade) dreCodigo,
-                                  coalesce(funcao_ue_codigo, cargo_ue_codigo) ueCodigo,
-                                  (u.tipo = 2) EhUsuarioCustistaUeParceira,
-                                  coalesce(i.funcao_codigo, i.cargo_codigo) as codigoCargo,
-                                  coalesce(cff.nome, cfc.nome) as descricaoCargo,
-                                  i.tipo_vinculo as tipoVinculo
-                                  from inscricao i 
-                                  join proposta_turma pt on i.proposta_turma_id = pt.id
-                                  join proposta p on p.id = pt.proposta_id 
-                                  join usuario u on u.id = i.usuario_id
-                                  left join cargo_funcao cfc on cfc.id = i.cargo_id
-                                  left join cargo_funcao cff on cff.id = i.funcao_id
-                                  where not u.excluido
-                                      and not pt.excluido
-                                      and not i.excluido
-                                      and p.integrar_no_sga = true
-                                      and i.situacao = @SituacaoPublicada
-                                      and i.proposta_turma_id = @codigoDaTurma";
-        
+            var query = @" select   u.login codigoRf,
+                                    u.cpf,
+                                    u.nome,
+                                    u.email_educacional as email,
+                                    coalesce(funcao_dre_codigo, cargo_dre_codigo, u.codigo_eol_unidade) dreCodigo,
+                                    coalesce(funcao_ue_codigo,cargo_ue_codigo,u.codigo_eol_unidade) ueCodigo ,
+                                    (u.tipo = 2) EhUsuarioCustistaUeParceira
+                                    from inscricao i 
+                                    join proposta_turma pt on i.proposta_turma_id = pt.id
+                                    join proposta p on p.id = pt.proposta_id 
+                                    join usuario u on u.id = i.usuario_id 
+                                    where not u.excluido
+                                        and not pt.excluido
+                                        and not i.excluido
+                                        and p.integrar_no_sga = true
+                                        and i.situacao = @SituacaoPublicada
+                                        and i.proposta_turma_id = @codigoDaTurma";
+
             using (var conn = ObterConexao())
             {
                 return await conn.QueryAsync<InscricaoConfirmadaDTO>(query, new {codigoDaTurma, SituacaoPublicada});
