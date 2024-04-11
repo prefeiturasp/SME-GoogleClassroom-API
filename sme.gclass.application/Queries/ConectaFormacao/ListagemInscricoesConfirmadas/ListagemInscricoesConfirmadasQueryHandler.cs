@@ -97,7 +97,10 @@ namespace SME.GoogleClassroom.Aplicacao
                     DreNome = inscricao.DreNome,
                     Email = inscricao.Email,
                     UeCodigo = inscricao.UeCodigo,
-                    UeNome = inscricao.UeNome
+                    UeNome = inscricao.UeNome,
+                    CodigoCargo = inscricao.CodigoCargo,
+                    DescricaoCargo = inscricao.DescricaoCargo,
+                    TipoVinculo = inscricao.TipoVinculo
                 });
             }
 
