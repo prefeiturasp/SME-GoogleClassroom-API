@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Nest;
 using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
