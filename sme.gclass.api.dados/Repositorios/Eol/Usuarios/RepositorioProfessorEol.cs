@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Nest;
 using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -767,16 +768,18 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<ProfessorCpfNomeRfEol>> ObterCpfNomeCompletoPorRegistroFuncional(string[] rfs)
         {
-	        var query = new StringBuilder(@"select distinct cd_registro_funcional as Rf,
+            string idsRfs = string.Join(",", rfs);
+            var query = new StringBuilder(@$"select distinct cd_registro_funcional as Rf,
 											       coalesce(nm_social,nm_pessoa) as Nome,
 												   cd_cpf_pessoa as Cpf
 									        from v_servidor_cotic (nolock)
-									        where cd_registro_funcional in @codigosRf ");
+									        where cd_registro_funcional in ({idsRfs}) ");
 	        
 	        using var conn = ObterConexao();
-	        
-	        return await conn.QueryAsync<ProfessorCpfNomeRfEol>(query.ToString(), 
-		        new { codigosRf = rfs.Select(rf => new DbString { Value = rf, Length = 7, IsFixedLength = true, IsAnsi = true }) });
+
+           
+
+            return await conn.QueryAsync<ProfessorCpfNomeRfEol>(query.ToString());
         }
     }
 }
