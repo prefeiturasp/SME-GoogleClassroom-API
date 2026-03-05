@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Dominio.Extensoes;
 using SME.GoogleClassroom.Dominio.SME.CDEP.Dominio.Extensions;
 using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
 using System;
@@ -59,16 +60,10 @@ namespace SME.GoogleClassroom.Aplicacao
             foreach (var formacao in formacoes)
             {
 
-                if (formacao.CodigoAreaPromotora == 1)
-                {
-                    formacao.CodigoAreaPromotora = 1;
-                    formacao.NomeAreaPromotora = "COPED - Núcleo de Formação";
-                }                    
-                else
-                {
-                    formacao.CodigoAreaPromotora = 41;
-                    formacao.NomeAreaPromotora = "EMFORPEF";
-                }
+                if (formacao.CodigoAreaPromotora != (long)AreaPromotoraTipo.CopedNucleoFormacao)
+                    formacao.CodigoAreaPromotora = (long)AreaPromotoraTipo.Emforpef;
+
+                formacao.NomeAreaPromotora = ((AreaPromotoraTipo)formacao.CodigoAreaPromotora).Name();
 
                 var formacaoDetalhada = new FormacaoDetalhaDTO(
                         formacao.CodigoAreaPromotora.ToString(),
