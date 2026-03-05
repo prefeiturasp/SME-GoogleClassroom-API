@@ -58,13 +58,25 @@ namespace SME.GoogleClassroom.Aplicacao
             var retorno = new List<FormacaoDetalhaDTO>();
             foreach (var formacao in formacoes)
             {
+
+                if (formacao.CodigoAreaPromotora == 1)
+                {
+                    formacao.CodigoAreaPromotora = 1;
+                    formacao.NomeAreaPromotora = "COPED - Núcleo de Formação";
+                }                    
+                else
+                {
+                    formacao.CodigoAreaPromotora = 41;
+                    formacao.NomeAreaPromotora = "EMFORPEF";
+                }
+
                 var formacaoDetalhada = new FormacaoDetalhaDTO(
-                    formacao.CodigoAreaPromotora.ToString(),
-                    formacao.NomeAreaPromotora,
-                    formacao.Ano.ToString(),
-                    formacao.Codigo.ToString(),
-                    formacao.Nome
-                    );
+                        formacao.CodigoAreaPromotora.ToString(),
+                        formacao.NomeAreaPromotora,
+                        formacao.Ano.ToString(),
+                        formacao.Codigo.ToString(),
+                        formacao.Nome
+                        );
 
                 var turmasFormacao = turmas.Where(w => w.CodigoFormacao == formacao.Codigo);
                 foreach (var turma in turmasFormacao)
