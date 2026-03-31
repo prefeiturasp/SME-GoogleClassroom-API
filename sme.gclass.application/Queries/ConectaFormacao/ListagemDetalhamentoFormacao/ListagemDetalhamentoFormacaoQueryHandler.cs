@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Dominio.Extensoes;
 using SME.GoogleClassroom.Dominio.SME.CDEP.Dominio.Extensions;
 using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
 using System;
@@ -58,13 +59,19 @@ namespace SME.GoogleClassroom.Aplicacao
             var retorno = new List<FormacaoDetalhaDTO>();
             foreach (var formacao in formacoes)
             {
+
+                if (formacao.CodigoAreaPromotora != (long)AreaPromotoraTipo.CopedNucleoFormacao)
+                    formacao.CodigoAreaPromotora = (long)AreaPromotoraTipo.Emforpef;
+
+                formacao.NomeAreaPromotora = ((AreaPromotoraTipo)formacao.CodigoAreaPromotora).Name();
+
                 var formacaoDetalhada = new FormacaoDetalhaDTO(
-                    formacao.CodigoAreaPromotora.ToString(),
-                    formacao.NomeAreaPromotora,
-                    formacao.Ano.ToString(),
-                    formacao.Codigo.ToString(),
-                    formacao.Nome
-                    );
+                        formacao.CodigoAreaPromotora.ToString(),
+                        formacao.NomeAreaPromotora,
+                        formacao.Ano.ToString(),
+                        formacao.Codigo.ToString(),
+                        formacao.Nome
+                        );
 
                 var turmasFormacao = turmas.Where(w => w.CodigoFormacao == formacao.Codigo);
                 foreach (var turma in turmasFormacao)
