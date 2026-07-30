@@ -1,0 +1,1 @@
+update usuarios where id = '9315268' set email = 'josiannevaladares.9315268@edu.sme.prefeitura.sp.gov.br' 
