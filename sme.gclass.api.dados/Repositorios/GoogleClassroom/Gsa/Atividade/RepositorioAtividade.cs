@@ -38,9 +38,9 @@ namespace SME.GoogleClassroom.Dados
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
             retorno.Items = multi.Read<AtividadeGsa>();
             retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = retorno.TotalRegistros > 0
+            retorno.TotalPaginas = retorno.TotalRegistros > 0 && paginacao.QuantidadeRegistros > 0
                 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
-                : 0;
+                : (retorno.TotalRegistros > 0 ? 1 : 0);
 
             return retorno;
         }
@@ -69,11 +69,13 @@ namespace SME.GoogleClassroom.Dados
 
 
             if (cursoId.HasValue)
-                queryCompleta.AppendLine(@"AND A.ID = @cursoId");
+                queryCompleta.AppendLine(@"AND A.curso_gsa_id = @cursoId");
 
             if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
                 queryCompleta.AppendLine(
-                    $" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+                    $" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY; ");
+            else
+                queryCompleta.AppendLine(";");
 
             return queryCompleta.ToString();
         }
