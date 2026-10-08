@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Commands
 {
-    public class GravarNotaGsaCommandHandler : AsyncRequestHandler<GravarNotaGsaCommand>
+    public class GravarNotaGsaCommandHandler : IRequestHandler<GravarNotaGsaCommand>
     {
         private readonly IRepositorioNota repositorioNota;
 
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao.Commands
             this.repositorioNota = repositorioNota ?? throw new ArgumentNullException(nameof(repositorioNota));
         }
 
-        protected async override Task Handle(GravarNotaGsaCommand request, CancellationToken cancellationToken)
+        public async Task Handle(GravarNotaGsaCommand request, CancellationToken cancellationToken)
         {
             var notaGsa = MapearEntidade(
                      request.Id,

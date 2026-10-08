@@ -12,14 +12,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class PublicaFilaRabbitCommandHandler : IRequestHandler<PublicaFilaRabbitCommand, bool>
     {
-        private readonly IModel rabbitChannel;
+        private readonly IConnection connectionRabbit;
 
-        public PublicaFilaRabbitCommandHandler(IModel rabbitChannel)
+        public PublicaFilaRabbitCommandHandler(IConnection connectionRabbit)
         {
-            this.rabbitChannel = rabbitChannel ?? throw new ArgumentNullException(nameof(rabbitChannel));
+            this.connectionRabbit = connectionRabbit ?? throw new ArgumentNullException(nameof(connectionRabbit));
         }
 
-        public Task<bool> Handle(PublicaFilaRabbitCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(PublicaFilaRabbitCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -28,17 +28,27 @@ namespace SME.GoogleClassroom.Aplicacao
                 var mensagemJson = JsonConvert.SerializeObject(mensagem);
                 var body = Encoding.UTF8.GetBytes(mensagemJson);
 
-                var props = rabbitChannel.CreateBasicProperties();
-                props.Persistent = true;
+                await using var canal = await connectionRabbit.CreateChannelAsync(null, cancellationToken);
 
-                rabbitChannel.BasicPublish(ExchangeRabbit.GoogleSync, request.NomeRota, props, body);
+                var props = new BasicProperties
+                {
+                    Persistent = true
+                };
 
-                return Task.FromResult(true);
+                await canal.BasicPublishAsync(
+                    ExchangeRabbit.GoogleSync,
+                    request.NomeRota,
+                    false,
+                    props,
+                    body,
+                    cancellationToken);
+
+                return true;
             }
             catch (Exception ex)
             {
-                return Task.FromResult(false);
-            }        
+                return false;
+            }
         }
     }
 }

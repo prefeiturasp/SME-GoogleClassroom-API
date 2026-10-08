@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ArquivarTurmasExtintasCommandHandler : AsyncRequestHandler<ArquivarTurmasExtintasCommand>
+    public class ArquivarTurmasExtintasCommandHandler : IRequestHandler<ArquivarTurmasExtintasCommand>
     {
         private readonly IMediator mediator;
 
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        protected override async Task Handle(ArquivarTurmasExtintasCommand request, CancellationToken cancellationToken)
+        public async Task Handle(ArquivarTurmasExtintasCommand request, CancellationToken cancellationToken)
         {
             var dataReferencia = request.DataReferencia ?? DateTime.Today;
             var ano = dataReferencia.Year;

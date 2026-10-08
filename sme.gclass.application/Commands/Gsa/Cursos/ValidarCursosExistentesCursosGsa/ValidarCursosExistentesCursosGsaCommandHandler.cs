@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ValidarCursosExistentesCursosGsaCommandHandler : AsyncRequestHandler<ValidarCursosExistentesCursosGsaCommand>
+    public class ValidarCursosExistentesCursosGsaCommandHandler : IRequestHandler<ValidarCursosExistentesCursosGsaCommand>
     {
         private readonly IRepositorioCursoGsa repositorioCursoComparativo;
 
@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoComparativo = repositorioCursoComparativo;
         }
 
-        protected override async Task Handle(ValidarCursosExistentesCursosGsaCommand request, CancellationToken cancellationToken)
+        public async Task Handle(ValidarCursosExistentesCursosGsaCommand request, CancellationToken cancellationToken)
             => await repositorioCursoComparativo.ValidarCursosExistentesCursosComparativosAsync();
     }
 }

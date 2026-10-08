@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.servicoTelemetria = servicoTelemetria ?? throw new System.ArgumentNullException(nameof(servicoTelemetria));
         }
 
-        public Task<bool> Handle(SalvarLogViaRabbitCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(SalvarLogViaRabbitCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -36,17 +36,17 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var body = Encoding.UTF8.GetBytes(mensagem);
 
-                servicoTelemetria.Registrar(() => PublicarMensagem(body), "RabbitMQ", "Salvar Log Via Rabbit", RotasRabbitLog.RotaLogs);
+                await PublicarMensagem(body);
 
-                return Task.FromResult(true);
+                return true;
             }
             catch (System.Exception)
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
-        private void PublicarMensagem(byte[] body)
+        private async Task PublicarMensagem(byte[] body)
         {
             var factory = new ConnectionFactory
             {
@@ -56,15 +56,12 @@ namespace SME.GoogleClassroom.Aplicacao
                 VirtualHost = configuracaoRabbitOptions.VirtualHost
             };
 
-            using (var conexaoRabbit = factory.CreateConnection())
-            {
-                using (IModel _channel = conexaoRabbit.CreateModel())
-                {
-                    var props = _channel.CreateBasicProperties();
+            await using var conexaoRabbit = await factory.CreateConnectionAsync();
+            await using var channel = await conexaoRabbit.CreateChannelAsync();
 
-                    _channel.BasicPublish(ExchangeRabbit.Logs, RotasRabbitLog.RotaLogs, props, body);
-                }
-            }
+            var props = new BasicProperties();
+
+            await channel.BasicPublishAsync(ExchangeRabbit.Logs, RotasRabbitLog.RotaLogs, false, props, body);
         }
     }
     public class LogMensagem

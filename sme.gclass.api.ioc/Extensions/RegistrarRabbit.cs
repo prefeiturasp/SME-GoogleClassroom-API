@@ -9,7 +9,6 @@ namespace SME.GoogleClassroom.IoC
     {
         public static void AddRabbit(this IServiceCollection services, ConfiguracaoRabbitOptions configuracaoRabbitOptions)
         {
-          
             var factory = new ConnectionFactory
             {
                 HostName = configuracaoRabbitOptions.HostName,
@@ -20,10 +19,8 @@ namespace SME.GoogleClassroom.IoC
                 RequestedHeartbeat = TimeSpan.FromSeconds(30)
             };
 
-            var conexaoRabbit = factory.CreateConnection();
-            IModel _channel = conexaoRabbit.CreateModel();
+            var conexaoRabbit = factory.CreateConnectionAsync().GetAwaiter().GetResult();
             services.AddSingleton(conexaoRabbit);
-            services.AddSingleton(_channel);
         }
     }
 }

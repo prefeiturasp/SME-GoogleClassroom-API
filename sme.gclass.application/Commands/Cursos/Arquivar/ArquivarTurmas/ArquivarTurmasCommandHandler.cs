@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ArquivarTurmasCommandHandler : AsyncRequestHandler<ArquivarTurmasCommand>
+    public class ArquivarTurmasCommandHandler : IRequestHandler<ArquivarTurmasCommand>
     {
         private readonly IMediator mediator;
         
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        protected override async Task Handle(ArquivarTurmasCommand request, CancellationToken cancellationToken)
+        public async Task Handle(ArquivarTurmasCommand request, CancellationToken cancellationToken)
         {
             var cursosEol = await mediator.Send(new ObterTurmasConcluidasPorAnoLetivoQuery(request.ParametrosCargaInicialDto, request.AnoLetivo, request.TurmaId));
 

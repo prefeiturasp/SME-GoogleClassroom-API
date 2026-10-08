@@ -9,18 +9,21 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class VerificarSeExistemMensagemNaFilaQueryHandler : IRequestHandler<VerificarSeExistemMensagemNaFilaQuery, bool>
     {
-        private readonly IModel rabbitChannel;
+        private readonly IConnection connectionRabbit;
 
-        public VerificarSeExistemMensagemNaFilaQueryHandler(IModel rabbitChannel)
+        public VerificarSeExistemMensagemNaFilaQueryHandler(IConnection connectionRabbit)
         {
-            this.rabbitChannel = rabbitChannel ?? throw new ArgumentNullException(nameof(rabbitChannel));
+            this.connectionRabbit = connectionRabbit ?? throw new ArgumentNullException(nameof(connectionRabbit));
         }
 
         public async Task<bool> Handle(VerificarSeExistemMensagemNaFilaQuery request, CancellationToken cancellationToken)
         {
-            rabbitChannel.QueueBind(request.RotaFila, ExchangeRabbit.GoogleSync, request.RotaFila);
-            var existemMensagens = rabbitChannel.MessageCount(request.RotaFila) > uint.MinValue;
-            return await Task.FromResult(existemMensagens);
+            await using var canal = await connectionRabbit.CreateChannelAsync(null, cancellationToken);
+
+            await canal.QueueBindAsync(request.RotaFila, ExchangeRabbit.GoogleSync, request.RotaFila, cancellationToken: cancellationToken);
+
+            var quantidade = await canal.MessageCountAsync(request.RotaFila, cancellationToken);
+            return quantidade > uint.MinValue;
         }
     }
 }

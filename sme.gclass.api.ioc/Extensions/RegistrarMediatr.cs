@@ -10,7 +10,7 @@ namespace SME.GoogleClassroom.IoC
         public static void AdicionarMediatr(this IServiceCollection services)
         {
             var assembly = AppDomain.CurrentDomain.Load("SME.GoogleClassroom.Aplicacao");
-            services.AddMediatR(assembly);
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidacoesPipeline<,>));
         }
     }

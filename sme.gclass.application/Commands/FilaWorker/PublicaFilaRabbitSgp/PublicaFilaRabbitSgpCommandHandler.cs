@@ -12,14 +12,14 @@ namespace SME.GoogleClassroom.Aplicacao
 {
     public class PublicaFilaRabbitSgpCommandHandler : IRequestHandler<PublicaFilaRabbitSgpCommand, bool>
     {
-        private readonly IModel rabbitChannel;
+        private readonly IConnection connectionRabbit;
 
-        public PublicaFilaRabbitSgpCommandHandler(IModel rabbitChannel)
+        public PublicaFilaRabbitSgpCommandHandler(IConnection connectionRabbit)
         {
-            this.rabbitChannel = rabbitChannel ?? throw new ArgumentNullException(nameof(rabbitChannel));
+            this.connectionRabbit = connectionRabbit ?? throw new ArgumentNullException(nameof(connectionRabbit));
         }
 
-        public Task<bool> Handle(PublicaFilaRabbitSgpCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(PublicaFilaRabbitSgpCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -31,16 +31,27 @@ namespace SME.GoogleClassroom.Aplicacao
                 });
                 var body = Encoding.UTF8.GetBytes(mensagem);
 
-                var props = rabbitChannel.CreateBasicProperties();
-                props.Persistent = true;
-                rabbitChannel.BasicPublish(ExchangeRabbit.Sgp, request.NomeFila, props, body);
+                await using var canal = await connectionRabbit.CreateChannelAsync(null, cancellationToken);
 
-                return Task.FromResult(true);
+                var props = new BasicProperties
+                {
+                    Persistent = true
+                };
+
+                await canal.BasicPublishAsync(
+                    ExchangeRabbit.Sgp,
+                    request.NomeFila,
+                    false,
+                    props,
+                    body,
+                    cancellationToken);
+
+                return true;
             }
             catch (Exception ex)
             {
-                return Task.FromResult(false);
-            }        
+                return false;
+            }
         }
     }
 }

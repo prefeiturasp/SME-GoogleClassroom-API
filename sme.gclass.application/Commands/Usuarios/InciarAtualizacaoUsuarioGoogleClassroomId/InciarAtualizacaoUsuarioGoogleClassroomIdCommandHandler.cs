@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class InciarAtualizacaoUsuarioGoogleClassroomIdCommandHandler : AsyncRequestHandler<InciarAtualizacaoUsuarioGoogleClassroomIdCommand>
+    public class InciarAtualizacaoUsuarioGoogleClassroomIdCommandHandler : IRequestHandler<InciarAtualizacaoUsuarioGoogleClassroomIdCommand>
     {
         private readonly IRepositorioUsuario repositorioUsuario;
 
@@ -14,7 +14,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioUsuario = repositorioUsuario;
         }
 
-        protected override async Task Handle(InciarAtualizacaoUsuarioGoogleClassroomIdCommand request, CancellationToken cancellationToken)
+        public async Task Handle(InciarAtualizacaoUsuarioGoogleClassroomIdCommand request, CancellationToken cancellationToken)
             => await repositorioUsuario.InciarAtualizacaoUsuarioGoogleClassroomIdAsync();
     }
 }

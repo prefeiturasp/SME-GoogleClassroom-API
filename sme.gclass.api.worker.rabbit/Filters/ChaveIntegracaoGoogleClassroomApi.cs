@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Filters
 {
@@ -13,10 +15,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var chaveApi = Environment.GetEnvironmentVariable(ChaveIntegracaoEnvironmentVariableName);
+            var configuration = context.HttpContext.RequestServices.GetService<IConfiguration>();
+            var chaveApi = configuration?[ChaveIntegracaoEnvironmentVariableName] ??
+                           Environment.GetEnvironmentVariable(ChaveIntegracaoEnvironmentVariableName);
 
             if (!context.HttpContext.Request.Headers.TryGetValue(ChaveIntegracaoHeader, out var chaveRecebida) ||
-                !chaveRecebida.Equals(chaveApi))
+                !string.Equals(chaveRecebida.ToString(), chaveApi, StringComparison.Ordinal))
             {
                 context.Result = new UnauthorizedResult();
                 return;

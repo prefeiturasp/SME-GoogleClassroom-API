@@ -196,6 +196,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             return Ok();
         }
 
+        /// <summary>
         /// Retorna os funcionarios que perderam a atribuição em turmas para remover o vinculo no GSA
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>

@@ -17,11 +17,11 @@ namespace SME.GoogleClassroom.Aplicacao
             this.validadores = validadores ?? throw new System.ArgumentNullException(nameof(validadores));
         }
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (validadores.Any())
             {
-                var context = new ValidationContext<object>(request);
+                var context = new ValidationContext<TRequest>(request);
 
                 var erros = validadores
                     .Select(v => v.Validate(context))
@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     .Where(f => f != null)
                     .ToList();
 
-                if (erros != null && erros.Any())
+                if (erros.Any())
                 {
                     throw new ValidacaoException(erros);
                 }

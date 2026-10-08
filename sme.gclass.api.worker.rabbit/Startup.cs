@@ -1,6 +1,4 @@
-﻿using Elastic.Apm.AspNetCore;
-using Elastic.Apm.DiagnosticSource;
-using Elastic.Apm.SqlClient;
+﻿using Elastic.Apm.NetCoreAll;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.ApplicationInsights;
@@ -146,9 +144,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseElasticApm(Configuration,
-                new SqlClientDiagnosticSubscriber(),
-                new HttpDiagnosticsSubscriber());
+            app.UseAllElasticApm(Configuration);
 
             if (env.IsDevelopment())
             {

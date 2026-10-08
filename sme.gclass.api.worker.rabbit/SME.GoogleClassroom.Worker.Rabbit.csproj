@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>187877ae-af63-4bac-9b63-a523da80e8f3</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
@@ -14,21 +14,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.11" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
-    <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.20.0" />
-    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.20.0" />
-    <PackageReference Include="Elastic.Apm.SqlClient" Version="1.20.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.31" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-    <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="prometheus-net" Version="4.1.1" />
-    <PackageReference Include="prometheus-net.AspNetCore" Version="4.1.1" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
-    <PackageReference Include="Sentry" Version="3.0.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
+    <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.35.0" />
+    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.35.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.31" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+    <PackageReference Include="Moq" Version="4.21.0" />
+    <PackageReference Include="prometheus-net" Version="8.2.1" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.2.2" />
+    <PackageReference Include="Sentry" Version="6.12.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
   </ItemGroup>
 
   <ItemGroup>

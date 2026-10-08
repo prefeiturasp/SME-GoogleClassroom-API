@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,23 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.Elasticsearch" Version="2.2.2" />
-    <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.20.0" />
-    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.20.0" />
-    <PackageReference Include="Elastic.Apm.SqlClient" Version="1.20.0" />
-    <PackageReference Include="Elasticsearch.Net" Version="7.6.0" />
-    <PackageReference Include="FluentValidation" Version="9.5.0" />
-    <PackageReference Include="Google.Apis.Core" Version="1.50.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Elasticsearch" Version="8.0.1" />
+    <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.35.0" />
+    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.35.0" />
+    <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
+    <PackageReference Include="NEST" Version="7.17.5" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Google.Apis.Core" Version="1.77.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="3.1.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="NEST" Version="7.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="prometheus-net" Version="4.1.1" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
-    <PackageReference Include="Sentry" Version="3.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="prometheus-net" Version="8.2.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.2.2" />
+    <PackageReference Include="Sentry" Version="6.12.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class LimparTabelasGsaCommandHandler : AsyncRequestHandler<LimparTabelasGsaCommand>
+    public class LimparTabelasGsaCommandHandler : IRequestHandler<LimparTabelasGsaCommand>
     {
         private readonly IRepositorioUsuarioGsa repositorioUsuarioGsa;
         private readonly IRepositorioCursoGsa repositorioCursoGsa;
@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioUsuarioCursoGsa = repositorioUsuarioCursoGsa;
         }
 
-        protected override async Task Handle(LimparTabelasGsaCommand request, CancellationToken cancellationToken)
+        public async Task Handle(LimparTabelasGsaCommand request, CancellationToken cancellationToken)
         {
             if (!request.UsuariosGsa && !request.CursosGsa)
                 return;

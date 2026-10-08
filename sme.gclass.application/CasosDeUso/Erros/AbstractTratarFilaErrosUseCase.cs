@@ -45,23 +45,20 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task TratarMensagens(string fila, ConnectionFactory factory)
         {
-            using (var conexaoRabbit = factory.CreateConnection())
+            await using var conexaoRabbit = await factory.CreateConnectionAsync();
+            await using var channel = await conexaoRabbit.CreateChannelAsync();
+
+            while (true)
             {
-                using (IModel _channel = conexaoRabbit.CreateModel())
-                {
-                    while (true)
-                    {
-                        var mensagemFila = _channel.BasicGet(fila, true);
-                        if (mensagemFila == null)
-                            break;
+                var mensagemFila = await channel.BasicGetAsync(fila, true);
+                if (mensagemFila == null)
+                    break;
 
-                        var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
-                        var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
-                        var dto = mensagemRabbit.ObterObjetoMensagem<T>();
+                var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
+                var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
+                var dto = mensagemRabbit.ObterObjetoMensagem<T>();
 
-                        await _mediator.Send(new PublicaFilaRabbitCommand(FilaProcesso, dto));
-                    }
-                }
+                await _mediator.Send(new PublicaFilaRabbitCommand(FilaProcesso, dto));
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class GravarAvisoGsaCommandHandler : AsyncRequestHandler<GravarAvisoGsaCommand>
+    public class GravarAvisoGsaCommandHandler : IRequestHandler<GravarAvisoGsaCommand>
     {
         private readonly IRepositorioAviso repositorioAviso;
         private readonly IMediator mediator;
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        protected override async Task Handle(GravarAvisoGsaCommand request, CancellationToken cancellationToken)
+        public async Task Handle(GravarAvisoGsaCommand request, CancellationToken cancellationToken)
         {
             var avisoGsa = MapearEntidade(request.AvisoDto.Id, request.AvisoDto.Mensagem, request.AvisoDto.UsuarioClassroomId, request.AvisoDto.CursoId, request.AvisoDto.CriadoEm, request.AvisoDto.AlteradoEm);
 

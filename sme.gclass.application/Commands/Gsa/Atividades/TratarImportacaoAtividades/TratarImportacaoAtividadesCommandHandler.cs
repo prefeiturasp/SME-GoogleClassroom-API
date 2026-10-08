@@ -10,7 +10,7 @@ using static SME.GoogleClassroom.Infra.ExtensionMethods;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class TratarImportacaoAtividadesCommandHandler : AsyncRequestHandler<TratarImportacaoAtividadesCommand>
+    public class TratarImportacaoAtividadesCommandHandler : IRequestHandler<TratarImportacaoAtividadesCommand>
     {
         private readonly int quantidadeRegistrosBloco = 100;
         private readonly IMediator mediator;
@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        protected override async Task Handle(TratarImportacaoAtividadesCommand request, CancellationToken cancellationToken)
+        public async Task Handle(TratarImportacaoAtividadesCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Atividades.Any())
