@@ -1,6 +1,8 @@
-﻿using MediatR;
+using Google;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -11,7 +13,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public IniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase(IMediator mediator)
         {
-            this.mediator = mediator;
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(string cursosIds)
@@ -19,7 +21,23 @@ namespace SME.GoogleClassroom.Aplicacao
             try
             {
                 foreach (var curso in cursosIds.Split(","))
-                    await mediator.Send(new ExcluirCursoGoogleCommand(long.Parse(curso)));
+                {
+                    var cursoId = long.Parse(curso);
+                    var excluido = false;
+                    try
+                    {
+                        excluido = await mediator.Send(new ExcluirCursoGoogleCommand(cursoId));
+                    }
+                    catch (GoogleApiException ex) when (ex.HttpStatusCode == HttpStatusCode.NotFound)
+                    {
+                        excluido = true;
+                    }
+
+                    if (excluido)
+                    {
+                        await mediator.Send(new ExcluirCursoGsaCommand(cursoId));
+                    }
+                }
             }
             catch (Exception ex)
             {

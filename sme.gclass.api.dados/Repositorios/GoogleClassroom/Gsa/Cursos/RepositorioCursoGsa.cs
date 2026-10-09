@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -165,6 +165,13 @@ namespace SME.GoogleClassroom.Dados
             const string query = @"DELETE FROM cursos_gsa";
             using var conn = ObterConexao();
             await conn.ExecuteAsync(query);
+        }
+
+        public async Task<bool> ExcluirCursoGsaAsync(long cursoId)
+        {
+            const string query = @"DELETE FROM public.cursos_gsa WHERE id = @cursoId";
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, new { cursoId }) > 0;
         }
 
         public async Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
