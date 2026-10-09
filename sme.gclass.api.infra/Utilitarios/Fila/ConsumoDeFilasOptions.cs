@@ -1,11 +1,11 @@
-﻿namespace SME.GoogleClassroom.Infra
+namespace SME.GoogleClassroom.Infra
 {
     public class ConsumoDeFilasOptions
     {
         public ushort LimiteDeMensagensPorExecucao { get; set; }
         public bool ConsumirFilasSync { get; set; }
         public bool ConsumirFilasDeInclusao { get; set; }
-        public ConsumoDeFilasGsa Gsa { get; set; }
+        public ConsumoDeFilasGsa Gsa { get; set; } = new ConsumoDeFilasGsa();
     }
 
     public class ConsumoDeFilasGsa

@@ -1,4 +1,4 @@
-﻿using Elastic.Apm;
+using Elastic.Apm;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -275,16 +275,20 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var factory = new ConnectionFactory
+            if (conexaoRabbit == null || !conexaoRabbit.IsOpen)
             {
-                HostName = configuracaoRabbitOptions.HostName,
-                UserName = configuracaoRabbitOptions.UserName,
-                Password = configuracaoRabbitOptions.Password,
-                VirtualHost = configuracaoRabbitOptions.Virtualhost,
-                RequestedHeartbeat = TimeSpan.FromSeconds(30),
-            };
+                var factory = new ConnectionFactory
+                {
+                    HostName = configuracaoRabbitOptions.HostName,
+                    UserName = configuracaoRabbitOptions.UserName,
+                    Password = configuracaoRabbitOptions.Password,
+                    VirtualHost = configuracaoRabbitOptions.Virtualhost,
+                    RequestedHeartbeat = TimeSpan.FromSeconds(30),
+                };
 
-            conexaoRabbit = await factory.CreateConnectionAsync(stoppingToken);
+                conexaoRabbit = await factory.CreateConnectionAsync(stoppingToken);
+            }
+
             conexaoRabbit.CallbackExceptionAsync += ConexaoRabbit_CallbackException;
             conexaoRabbit.ConnectionShutdownAsync += ConexaoRabbit_ConnectionShutdown;
 
@@ -456,33 +460,33 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             await ConsumirFilas(consumer, RotasRabbit.FilaGsaGoogleSync);
 
-            if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaCursoGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaCursoCarregar);
 
-            if (consumoDeFilasOptions.Gsa.CargaUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaUsuarioGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaUsuarioCarregar);
 
-            if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaCursoUsuarioGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaCursoUsuarioCarregar);
 
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoGsa)
+            if (consumoDeFilasOptions.Gsa?.ProcessarCursoGsa == true)
             {
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaCursoIncluir,
                     RotasRabbit.FilaGsaCursoValidar);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.ProcessarUsuarioGsa == true)
             {
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaUsuarioIncluir,
                     RotasRabbit.FilaGsaUsuarioValidar);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.ProcessarCursoUsuarioGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaCursoUsuarioIncluir);
 
-            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaMuralAvisosGsa == true)
             {
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaMuralAvisosCarregar,
@@ -490,7 +494,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     RotasRabbit.FilaGsaMuralAvisosTratar);
             }
 
-            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaAtividadesGsa == true)
             {
                 // Atividades
                 await ConsumirFilas(consumer,
