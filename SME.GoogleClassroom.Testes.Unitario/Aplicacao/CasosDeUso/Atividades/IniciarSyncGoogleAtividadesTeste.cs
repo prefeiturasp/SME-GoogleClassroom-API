@@ -111,18 +111,19 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Atividades
                 It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact(DisplayName = "IniciarSyncGoogleAtividadesUseCase - Sobrecarga com parâmetros opcionais deve mapear e publicar")]
-        public async Task IniciarSyncGoogleAtividadesUseCase_SobrecargaParametrosOpcionais_DeveMapearEPublicar()
+        [Fact(DisplayName = "IniciarSyncGoogleAtividadesUseCase - DTO com apenas um parâmetro informado deve mapear e publicar")]
+        public async Task IniciarSyncGoogleAtividadesUseCase_DtoComApenasUmParametro_DeveMapearEPublicar()
         {
             // Arrange
             var useCase = new IniciarSyncGoogleAtividadesUseCase(mediatorMock.Object);
+            var dto = new IniciarSyncGoogleAtividadesDto(cursoId: 777L);
 
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             // Act
-            await useCase.Executar(cursoId: 777L);
+            await useCase.Executar(dto);
 
             // Assert
             mediatorMock.Verify(m => m.Send(

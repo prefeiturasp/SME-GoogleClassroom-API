@@ -19,10 +19,5 @@ namespace SME.GoogleClassroom.Aplicacao
             var filtroCarga = new FiltroCargaAtividadesCursoDto(filtro?.CursoId, filtro?.Pagina, filtro?.TotalPaginas);
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroCarga));
         }
-
-        public async Task Executar(long? cursoId = null, int? pagina = null, int? totalPaginas = null)
-        {
-            await Executar(new IniciarSyncGoogleAtividadesDto(cursoId, pagina, totalPaginas));
-        }
     }
 }
