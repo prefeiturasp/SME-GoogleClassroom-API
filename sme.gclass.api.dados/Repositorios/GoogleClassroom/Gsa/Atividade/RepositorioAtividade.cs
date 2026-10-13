@@ -37,10 +37,9 @@ namespace SME.GoogleClassroom.Dados
 
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
             retorno.Items = multi.Read<AtividadeGsa>();
-            retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = retorno.TotalRegistros > 0
+            retorno.TotalPaginas = retorno.TotalRegistros > 0 && paginacao.QuantidadeRegistros > 0
                 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
-                : 0;
+                : (retorno.TotalRegistros > 0 ? 1 : 0);
 
             return retorno;
         }
@@ -151,6 +150,9 @@ namespace SME.GoogleClassroom.Dados
             DateTime dataFim, long? cursoId, int pagina = 1, int quantidadeRegistrosPagina = 100)
         {
             var totalPaginas = (int?)null;
+            pagina = pagina < 1 ? 1 : pagina;
+            quantidadeRegistrosPagina = quantidadeRegistrosPagina < 1 ? 100 : quantidadeRegistrosPagina;
+            var offset = (pagina - 1) * quantidadeRegistrosPagina;
 
             using (var conn = ObterConexao())
             {
@@ -159,8 +161,9 @@ namespace SME.GoogleClassroom.Dados
                     dataInicio,
                     dataFim,
                     cursoId,
-                    pagina = cursoId.HasValue ? (int?)null : pagina,
-                    quantidadeRegistrosPagina = cursoId.HasValue ? (int?)null : quantidadeRegistrosPagina
+                    pagina,
+                    quantidadeRegistrosPagina,
+                    offset
                 };
 
                 if (pagina == 1 && !cursoId.HasValue)
@@ -171,7 +174,7 @@ namespace SME.GoogleClassroom.Dados
                     totalPaginas = (int)Math.Ceiling((double)totalRegistros / (double)quantidadeRegistrosPagina);
                 }
 
-                return await Task.FromResult((totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros)));
+                return (totalPaginas, await conn.QueryAsync<DadosAvaliacaoDto>(await ObterQueryAtividadePorPeriodo(cursoId), parametros));
             }
         }
 
@@ -204,7 +207,8 @@ namespace SME.GoogleClassroom.Dados
             if (!contagem)
             {
                 sqlQuery.AppendLine("order by a.id");
-                sqlQuery.AppendLine("limit @quantidadeRegistrosPagina offset(@pagina - 1) * @quantidadeRegistrosPagina");
+                if (!cursoId.HasValue)
+                    sqlQuery.AppendLine("limit @quantidadeRegistrosPagina offset @offset");
             }
 
             return await Task.FromResult(sqlQuery.ToString());
