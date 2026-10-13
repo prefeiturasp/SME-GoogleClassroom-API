@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading.Tasks;
@@ -14,10 +14,15 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
+        public async Task Executar(IniciarSyncGoogleAtividadesDto filtro)
+        {
+            var filtroCarga = new FiltroCargaAtividadesCursoDto(filtro?.CursoId, filtro?.Pagina, filtro?.TotalPaginas);
+            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroCarga));
+        }
+
         public async Task Executar(long? cursoId = null, int? pagina = null, int? totalPaginas = null)
         {
-            var filtro = new FiltroCargaAtividadesCursoDto(cursoId, pagina, totalPaginas);
-            await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtro));
+            await Executar(new IniciarSyncGoogleAtividadesDto(cursoId, pagina, totalPaginas));
         }
     }
 }
