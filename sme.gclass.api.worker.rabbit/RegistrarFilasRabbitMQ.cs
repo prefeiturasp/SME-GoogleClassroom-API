@@ -16,6 +16,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 { "x-queue-mode", "lazy" }
             };
 
+            if (consumoDeFilasOptions == null)
+                return;
+
             if (consumoDeFilasOptions.ConsumirFilasSync)
                 await RegistrarFilasSync(canalRabbit);
 
@@ -27,8 +30,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static async Task DeclararEVincularFilas(IChannel canalRabbit, params string[] filas)
         {
+            if (filas == null) return;
+
             foreach (var fila in filas)
             {
+                if (string.IsNullOrWhiteSpace(fila)) continue;
+
                 await canalRabbit.QueueDeclareAsync(fila, true, false, false, argumentos);
                 await canalRabbit.QueueBindAsync(fila, ExchangeRabbit.GoogleSync, fila);
             }
@@ -220,7 +227,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             await DeclararEVincularFilas(canalRabbit,
                 RotasRabbit.FilaGsaGoogleSync,
-                RotasRabbit.FilaGsaCargaInicial);
+                RotasRabbit.FilaGsaCargaInicial,
+                RotasRabbit.FilaGsaAtividadesIncluir,
+                RotasRabbit.FilaGsaAtividadesIncluirErro);
 
             await RegistrarFilasDeCargasGsa(canalRabbit, consumoDeFilasOptions);
             await RegistrarFilasDeProcessamentoGsa(canalRabbit, consumoDeFilasOptions);

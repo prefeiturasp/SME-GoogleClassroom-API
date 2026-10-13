@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var filtro = mensagemRabbit.Mensagem.ToString() != null ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
+            var filtro = !string.IsNullOrWhiteSpace(mensagemRabbit?.Mensagem?.ToString()) ? mensagemRabbit.ObterObjetoMensagem<FiltroCargaInicialDto>() : null;
             var ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AtribuicaoProfessorCursoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
@@ -26,9 +26,11 @@ namespace SME.GoogleClassroom.Aplicacao
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
             var atribuicoesDeCursosProfessores = await mediator.Send(new ObterAtribuicoesDeCursosDosProfessoresQuery(ultimaAtualizacao, paginacao, parametrosCargaInicialDto));
 
-            foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
+            if (atribuicoesDeCursosProfessores?.Items != null)
             {
-                var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId, atribuicaoDeCursoDoProfessor.Modalidade);
+                foreach (var atribuicaoDeCursoDoProfessor in atribuicoesDeCursosProfessores.Items)
+                {
+                    var cursoDoProfessorParaIncluir = new ProfessorCursoEol(atribuicaoDeCursoDoProfessor.Rf, atribuicaoDeCursoDoProfessor.TurmaId, atribuicaoDeCursoDoProfessor.ComponenteCurricularId, atribuicaoDeCursoDoProfessor.Modalidade);
 
                 try
                 {
@@ -38,9 +40,10 @@ namespace SME.GoogleClassroom.Aplicacao
                         await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir));
                     }
                 }
-                catch (Exception ex)
-                {
-                    await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                    catch (Exception ex)
+                    {
+                        await IncluirCursoDoProfessorComErroAsync(cursoDoProfessorParaIncluir, ObterMensagemDeErro(cursoDoProfessorParaIncluir, ex));
+                    }
                 }
             }
 

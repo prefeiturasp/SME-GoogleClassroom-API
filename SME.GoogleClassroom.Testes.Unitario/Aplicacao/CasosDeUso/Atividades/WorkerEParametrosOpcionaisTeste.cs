@@ -214,5 +214,126 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Atividades
                 "100",
                 "200"), Times.Once);
         }
+
+        [Fact(DisplayName = "ImportarAtividadesCursoGsaUseCase - Deve desserializar array de AtividadeGsaDto com sucesso")]
+        public async Task ImportarAtividadesCursoGsaUseCase_ArrayDeAtividades_DeveProcessarComSucesso()
+        {
+            // Arrange
+            var useCase = new ImportarAtividadesCursoGsaUseCase(mediatorMock.Object);
+            var atividades = new[]
+            {
+                new AtividadeGsaDto { Id = 1, Titulo = "Atividade 1", CursoId = 10, CursoCriadoManualmente = true }
+            };
+            var mensagemRabbit = new MensagemRabbit(JsonConvert.SerializeObject(atividades));
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GravarAtividadeGsaCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var resultado = await useCase.Executar(mensagemRabbit);
+
+            // Assert
+            Assert.True(resultado);
+            mediatorMock.Verify(m => m.Send(It.Is<GravarAtividadeGsaCommand>(c => c.AtividadeDto.Id == 1), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "ImportarAtividadesCursoGsaUseCase - Deve desserializar AtividadeGsaDto único vindo de reprocessamento de erro com sucesso")]
+        public async Task ImportarAtividadesCursoGsaUseCase_AtividadeIndividualDeErro_DeveProcessarComSucesso()
+        {
+            // Arrange
+            var useCase = new ImportarAtividadesCursoGsaUseCase(mediatorMock.Object);
+            var atividade = new AtividadeGsaDto { Id = 99, Titulo = "Atividade Erro Individual", CursoId = 20, CursoCriadoManualmente = true };
+            var mensagemRabbit = new MensagemRabbit(JsonConvert.SerializeObject(atividade));
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GravarAtividadeGsaCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var resultado = await useCase.Executar(mensagemRabbit);
+
+            // Assert
+            Assert.True(resultado);
+            mediatorMock.Verify(m => m.Send(It.Is<GravarAtividadeGsaCommand>(c => c.AtividadeDto.Id == 99), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "TrataSyncGoogleCursosDoAlunoUseCase - Mensagem com filtro ou AlunoGoogle nulo não deve lançar NullReferenceException")]
+        public async Task TrataSyncGoogleCursosDoAlunoUseCase_AlunoGoogleNulo_NaoDeveLancarExcecao()
+        {
+            // Arrange
+            var useCase = new TrataSyncGoogleCursosDoAlunoUseCase(mediatorMock.Object);
+            var filtro = new FiltroAlunoCursoDto(); // AlunoGoogle é nulo
+            var mensagemRabbit = new MensagemRabbit(JsonConvert.SerializeObject(filtro));
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<IncluirCursoUsuarioErroCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1L);
+
+            // Act
+            var resultado = await useCase.Executar(mensagemRabbit);
+
+            // Assert
+            Assert.True(resultado);
+            mediatorMock.Verify(m => m.Send(It.IsAny<IncluirCursoUsuarioErroCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "TrataSyncGoogleAtribuicoesDosProfessoresUseCase - Mensagem com corpo vazio não deve lançar exceção")]
+        public async Task TrataSyncGoogleAtribuicoesDosProfessoresUseCase_MensagemVazia_NaoDeveLancarExcecao()
+        {
+            // Arrange
+            var useCase = new TrataSyncGoogleAtribuicoesDosProfessoresUseCase(mediatorMock.Object);
+            var mensagemRabbit = new MensagemRabbit(string.Empty);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<ObterDataUltimaExecucaoPorTipoQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(DateTime.Today.AddDays(-1));
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<ObterParametrosCargaIncialPorAnoQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ParametrosCargaInicialDto(null, null, null, 2026));
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<ObterAtribuicoesDeCursosDosProfessoresQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PaginacaoResultadoDto<AtribuicaoProfessorCursoEol>());
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<AtualizaExecucaoControleCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            // Act
+            var resultado = await useCase.Executar(mensagemRabbit);
+
+            // Assert
+            Assert.True(resultado);
+        }
+
+        [Fact(DisplayName = "RealizarTratamentoAlunoErroUseCase - Mensagem nula ou vazia não deve lançar exceção")]
+        public async Task RealizarTratamentoAlunoErroUseCase_MensagemVazia_NaoDeveLancarExcecao()
+        {
+            // Arrange
+            var useCase = new RealizarTratamentoAlunoErroUseCase(mediatorMock.Object);
+            var mensagemRabbit = new MensagemRabbit(string.Empty);
+
+            // Act
+            var resultado = await useCase.Executar(mensagemRabbit);
+
+            // Assert
+            Assert.True(resultado);
+        }
+
+        [Fact(DisplayName = "RealizarTratamentoCursoErroUseCase - Mensagem nula ou vazia não deve lançar exceção")]
+        public async Task RealizarTratamentoCursoErroUseCase_MensagemVazia_NaoDeveLancarExcecao()
+        {
+            // Arrange
+            var useCase = new RealizarTratamentoCursoErroUseCase(mediatorMock.Object);
+            var mensagemRabbit = new MensagemRabbit(string.Empty);
+
+            // Act
+            var resultado = await useCase.Executar(mensagemRabbit);
+
+            // Assert
+            Assert.True(resultado);
+        }
     }
 }

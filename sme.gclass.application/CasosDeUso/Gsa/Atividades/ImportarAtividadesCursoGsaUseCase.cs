@@ -1,9 +1,11 @@
-﻿using MediatR;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -22,10 +24,28 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível realizar a importação do atividades avaliativas. Mensagem não recebida");
 
-            var atividadesGsa = mensagem.ObterObjetoMensagem<AtividadeGsaDto[]>();
+            IEnumerable<AtividadeGsaDto> atividadesGsa;
+            try
+            {
+                atividadesGsa = mensagem.ObterObjetoMensagem<AtividadeGsaDto[]>();
+            }
+            catch
+            {
+                var atividadeIndividual = mensagem.ObterObjetoMensagem<AtividadeGsaDto>();
+                atividadesGsa = atividadeIndividual != null ? new[] { atividadeIndividual } : Array.Empty<AtividadeGsaDto>();
+            }
+
+            if (atividadesGsa is null)
+            {
+                var atividadeIndividual = mensagem.ObterObjetoMensagem<AtividadeGsaDto>();
+                atividadesGsa = atividadeIndividual != null ? new[] { atividadeIndividual } : Array.Empty<AtividadeGsaDto>();
+            }
 
             foreach (var atividadeGsa in atividadesGsa)
             {
+                if (atividadeGsa is null)
+                    continue;
+
                 try
                 {
                     // Atividades sem descrição devem ser importadadas com o Título
