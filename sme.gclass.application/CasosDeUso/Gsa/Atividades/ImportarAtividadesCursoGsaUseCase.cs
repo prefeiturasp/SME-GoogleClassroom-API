@@ -24,15 +24,14 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagem?.Mensagem is null)
                 throw new NegocioException("Não foi possível realizar a importação do atividades avaliativas. Mensagem não recebida");
 
-            IEnumerable<AtividadeGsaDto> atividadesGsa;
+            IEnumerable<AtividadeGsaDto> atividadesGsa = [];
             try
             {
                 atividadesGsa = mensagem.ObterObjetoMensagem<AtividadeGsaDto[]>();
             }
             catch
             {
-                var atividadeIndividual = mensagem.ObterObjetoMensagem<AtividadeGsaDto>();
-                atividadesGsa = atividadeIndividual != null ? new[] { atividadeIndividual } : Array.Empty<AtividadeGsaDto>();
+                // Ignorar erro de desserialização para array de atividades, pois pode ser uma única atividade
             }
 
             if (atividadesGsa is null)
