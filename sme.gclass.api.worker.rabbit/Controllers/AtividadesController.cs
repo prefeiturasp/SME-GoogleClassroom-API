@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Atividades;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -36,7 +37,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<AtividadeGsa>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AtividadeDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAtividades([FromServices] IObterAtividadesUseCase obterAtividadesUseCase,

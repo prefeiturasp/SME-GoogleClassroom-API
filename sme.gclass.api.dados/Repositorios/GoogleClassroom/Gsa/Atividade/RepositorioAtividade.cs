@@ -21,61 +21,69 @@ namespace SME.GoogleClassroom.Dados
             DateTime dataReferencia, long? cursoId)
         {
             var queryCompleta = new StringBuilder();
-
-            queryCompleta.AppendLine(MontaQueryObterAtividadesPorData(false, paginacao, cursoId));
-            queryCompleta.AppendLine(MontaQueryObterAtividadesPorData(true, paginacao, cursoId));
-
-            var retorno = new PaginacaoResultadoDto<AtividadeGsa>();
-
-            using var conn = ObterConexao();
+            queryCompleta.AppendLine(MontaQueryObterAtividadesPorData(false, cursoId, paginacao));
+            queryCompleta.AppendLine(MontaQueryObterAtividadesPorData(true, cursoId, paginacao));
 
             var parametros = new
             {
                 dataReferencia,
-                cursoId
+                cursoId,
+                registrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
+                quantidadeRegistros = paginacao.QuantidadeRegistros
             };
 
+            using var conn = ObterConexao();
             using var multi = await conn.QueryMultipleAsync(queryCompleta.ToString(), parametros);
-            retorno.Items = multi.Read<AtividadeGsa>();
-            retorno.TotalRegistros = multi.ReadFirst<int>();
-            retorno.TotalPaginas = retorno.TotalRegistros > 0
-                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
-                : 0;
+
+            var retorno = new PaginacaoResultadoDto<AtividadeGsa>
+            {
+                Items = multi.Read<AtividadeGsa>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
+
+            retorno.TotalPaginas = retorno.TotalRegistros == 0 ? 0
+                : paginacao.QuantidadeRegistros == 0 ? 1
+                : (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 
             return retorno;
         }
 
-        private string MontaQueryObterAtividadesPorData(bool ehParaPaginacao, Paginacao paginacao, long? cursoId)
+        private static string MontaQueryObterAtividadesPorData(bool ehParaPaginacao, long? cursoId, Paginacao paginacao)
         {
-            var queryCompleta = new StringBuilder("SELECT ");
+            var query = new StringBuilder("SELECT ");
 
             if (ehParaPaginacao)
-                queryCompleta.AppendLine("count(*)");
+                query.AppendLine("count(*)");
             else
             {
-                queryCompleta.AppendLine(@" A.id AS Id, 
-                                            A.titulo AS Titulo, 
-                                            A.descricao AS Descricao,  
-                                            A.usuario_gsa_id AS UsuarioGsaId,
-                                            A.curso_gsa_id AS CursoGsaId,
-                                            A.data_inclusao AS DataInclusao, 
-                                            A.data_alteracao AS DataAlteracao,
-                                            A.data_entrega as DataEntrega,
-                                            A.nota_maxima as NotaMaxima");
+                query.AppendLine(@" A.id AS Id,
+                            A.titulo AS Titulo,
+                            A.descricao AS Descricao,
+                            A.usuario_gsa_id AS UsuarioGsaId,
+                            A.curso_gsa_id AS CursoGsaId,
+                            A.data_inclusao AS DataInclusao,
+                            A.data_alteracao AS DataAlteracao,
+                            A.data_entrega AS DataEntrega,
+                            A.nota_maxima AS NotaMaxima");
             }
 
-            queryCompleta.AppendLine("FROM atividades A ");
-            queryCompleta.AppendLine("WHERE A.DATA_INCLUSAO = @dataReferencia ");
-
+            query.AppendLine("FROM atividades A");
+            query.AppendLine("WHERE A.data_inclusao = @dataReferencia");
 
             if (cursoId.HasValue)
-                queryCompleta.AppendLine(@"AND A.ID = @cursoId");
+                query.AppendLine("AND A.curso_gsa_id = @cursoId");
 
-            if (paginacao.QuantidadeRegistros > 0 && !ehParaPaginacao)
-                queryCompleta.AppendLine(
-                    $" OFFSET {paginacao.QuantidadeRegistrosIgnorados} ROWS FETCH NEXT {paginacao.QuantidadeRegistros} ROWS ONLY ; ");
+            if (!ehParaPaginacao)
+            {
+                query.AppendLine("ORDER BY A.id");
 
-            return queryCompleta.ToString();
+                if (paginacao.QuantidadeRegistros > 0)
+                    query.AppendLine("OFFSET @registrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY");
+            }
+
+            query.AppendLine(";");
+
+            return query.ToString();
         }
 
         public async Task<long> AlterarAtividade(AtividadeGsa atividadeGsa)

@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public long? CursoId { get; set; }
     }
 
-    public class AtividadesQueryValidator : AbstractValidator<ObterAvisoQuery>
+    public class AtividadesQueryValidator : AbstractValidator<AtividadesQuery>
     {
         public AtividadesQueryValidator()
         {
