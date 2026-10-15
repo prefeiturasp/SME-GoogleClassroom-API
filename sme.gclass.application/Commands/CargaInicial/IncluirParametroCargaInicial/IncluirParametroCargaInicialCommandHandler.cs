@@ -1,12 +1,13 @@
-﻿using System;
+﻿using MediatR;
+using Sentry;
+using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Sentry;
-using SME.GoogleClassroom.Dados.Interfaces;
-using SME.GoogleClassroom.Dominio;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
@@ -24,10 +25,16 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Handle(IncluirParametroCargaInicialCommand request, CancellationToken cancellationToken)
         {
             var parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(request.Ano));
-            if (parametros.AnoLetivo == null)
+            if (parametros?.AnoLetivo == null)
             {
                 parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(request.Ano - 1));
             }
+
+            parametros ??= new ParametrosCargaInicialDto();
+            parametros.TiposUes ??= new List<int>();
+            parametros.Ues ??= new List<long>();
+            parametros.Turmas ??= new List<long>();
+
             var tiposUes = new List<int>();
             var ues = new List<long>();
             var turmas = new List<long>();

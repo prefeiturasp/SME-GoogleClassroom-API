@@ -11,9 +11,9 @@ namespace SME.GoogleClassroom.Infra
             Titulo = titulo;
             Descricao = descricao;
             UsuarioClassroomId = usuarioClassroomId;
-            CriadoEm = (DateTime)criadoEm;
-            AlteradoEm = (DateTime)alteradoEm;
-            DataEntrega = dataEntrega.Value;
+            CriadoEm = Convert.ToDateTime(criadoEm);
+            AlteradoEm = Convert.ToDateTime(alteradoEm);
+            DataEntrega = dataEntrega;
             NotaMaxima = notaMaxima ?? 0;
             CursoCriadoManualmente = cursoCriadoManualmente;
         }

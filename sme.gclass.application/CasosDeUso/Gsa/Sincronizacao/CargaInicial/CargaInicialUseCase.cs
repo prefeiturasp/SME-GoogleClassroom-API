@@ -18,7 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(FiltroCargaInicialDto filtro)
         {
             var inseriu = await mediator.Send(new IncluirParametroCargaInicialCommand(filtro));
-            var replicou = await mediator.Send(new ReplicarParametrosDoSistemaPorAnoCommand(filtro.AnoLetivo));
+            var replicou = await mediator.Send(new ReplicarParametrosDoSistemaPorAnoCommand(filtro.AnoLetivo.Value));
             if (!inseriu || !replicou)
             {
                 return false;
@@ -27,9 +27,9 @@ namespace SME.GoogleClassroom.Aplicacao
             if ((filtro.Ues == null || !filtro.Ues.Any()) && (filtro.Turmas == null || !filtro.Turmas.Any()) &&
                 (filtro.TiposUes == null || !filtro.TiposUes.Any()))
             {
-                var parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(filtro.AnoLetivo));
+                var parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(filtro.AnoLetivo.Value));
                 filtro = new FiltroCargaInicialDto(
-                    parametros.AnoLetivo ?? filtro.AnoLetivo,
+                    parametros.AnoLetivo ?? filtro.AnoLetivo.Value,
                     parametros.TiposUes,
                     parametros.Ues,
                     parametros.Turmas);

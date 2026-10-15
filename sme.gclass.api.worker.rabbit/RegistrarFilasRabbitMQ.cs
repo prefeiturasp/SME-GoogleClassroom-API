@@ -29,8 +29,18 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             foreach (var fila in filas)
             {
-                await canalRabbit.QueueDeclareAsync(fila, true, false, false, argumentos);
-                await canalRabbit.QueueBindAsync(fila, ExchangeRabbit.GoogleSync, fila);
+                await canalRabbit.QueueDeclareAsync(
+                    queue: fila,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null);
+
+                await canalRabbit.QueueBindAsync(
+                    queue: fila,
+                    exchange: ExchangeRabbit.GoogleSync,
+                    routingKey: fila,
+                    arguments: null);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -14,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public IncluirParametroCargaInicialCommand(FiltroCargaInicialDto filtro)
         {
-            Ano = filtro.AnoLetivo;
+            Ano = filtro.AnoLetivo ?? DateTime.Now.Year;
             TiposUes = filtro.TiposUes;
             Ues = filtro.Ues;
             Turmas = filtro.Turmas;

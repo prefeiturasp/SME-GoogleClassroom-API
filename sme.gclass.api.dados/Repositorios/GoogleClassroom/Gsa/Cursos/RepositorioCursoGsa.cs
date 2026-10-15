@@ -169,6 +169,12 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
         {
+            if (pagina < 1)
+                pagina = 1;
+
+            if (quantidadeRegistrosPagina < 1)
+                quantidadeRegistrosPagina = 100;
+
             int qtdeRegistrosIgnorados = quantidadeRegistrosPagina * (pagina - 1);
             int qtdeRegistros = quantidadeRegistrosPagina;
 
@@ -182,6 +188,7 @@ namespace SME.GoogleClassroom.Dados
             if (cursoId.HasValue)
                 sqlQuery.AppendLine("and c.id = @cursoId");
 
+            sqlQuery.AppendLine("order by c.id");
             sqlQuery.AppendLine("offset @qtdeRegistrosIgnorados rows fetch next @qtdeRegistros rows only;");
 
             using (var conn = ObterConexao())

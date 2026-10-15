@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Dtos.Atividades;
+using SME.GoogleClassroom.Infra.Dtos.Gsa.Atividades;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Threading.Tasks;
 
@@ -46,12 +46,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             var retorno = await obterAtividadesUseCase.Executar(filtro);
             return Ok(retorno);
         }
-        
+
         /// <summary>
-        /// Executa o tratamento dos erros de importação de atividades GSA.
-        /// Insere o registro na base GCA e envia para o SGP a vincular com o curso.
+        /// Reprocessa os erros de importação de atividades GSA: lê a fila de erro e republica
+        /// as mensagens na fila de processamento, onde o worker grava na base GCA e envia ao SGP.
         /// </summary>
-        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="200">As mensagens de erro foram reenviadas para processamento.</response>
+        /// <response code="500">Falha ao acessar o RabbitMQ.</response>
         [HttpPost("erros/tratamentos")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
@@ -61,20 +62,33 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 
             return Ok();
         }
-        
+
 
 
         /// <summary>
-        /// Executa manualmente a integração de atividades do GSA.
-        /// Insere o registro na base GCA e envia para o SGP a vincular com a aula.
+        /// Inicia a carga de atividades do Google Sala de Aula (GSA).
         /// </summary>
-        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <remarks>
+        /// Este endpoint apenas publica uma mensagem na fila do RabbitMQ
+        /// <c>googleclass.gsa.atividades.carregar</c> (<c>RotasRabbit.FilaGsaAtividadesCarregar</c>)
+        /// e retorna em seguida. Ele não aguarda o processamento.
+        ///
+        /// A busca das atividades no GSA, a gravação na base GCA e o envio ao SGP
+        /// são feitos depois, em segundo plano, pelo worker que consome essa fila.
+        ///
+        /// Envie <c>{}</c> no corpo para carregar as atividades de todos os cursos.
+        /// </remarks>
+        /// <param name="dto">Filtros opcionais da carga: curso, página inicial e total de páginas.</param>
+        /// <response code="200">Mensagem publicada na fila. A carga será processada em segundo plano.</response>
+        /// <response code="400">Corpo da requisição ausente ou inválido.</response>
+        /// <response code="500">Erro ao publicar a mensagem na fila.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, long? cursoId = null, int? pagina = null, int? totalPaginas = null)
+        public async Task<IActionResult> IniciarSincronizacao([FromBody] IniciarSyncAtividadesDto dto, [FromServices] IIniciarSyncGoogleAtividadesUseCase useCase)
         {
-            await useCase.Executar(cursoId, pagina, totalPaginas);
+            await useCase.Executar(dto.CursoId, dto.Pagina, dto.TotalPaginas);
             return Ok();
         }
     }

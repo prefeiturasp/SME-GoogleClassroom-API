@@ -50,16 +50,35 @@ namespace SME.GoogleClassroom.Aplicacao
 
             while (true)
             {
-                var mensagemFila = await channel.BasicGetAsync(fila, true);
+                // autoAck: false = a mensagem só sai da fila de erro quando confirmarmos
+                var mensagemFila = await channel.BasicGetAsync(fila, autoAck: false);
                 if (mensagemFila == null)
                     break;
 
                 var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
                 var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
-                var dto = mensagemRabbit.ObterObjetoMensagem<T>();
+                var dto = mensagemRabbit?.ObterObjetoMensagem<T>();
 
-                await _mediator.Send(new PublicaFilaRabbitCommand(FilaProcesso, dto));
+                if (dto == null)
+                {
+                    // mensagem vazia ou inválida: descarta
+                    await channel.BasicAckAsync(mensagemFila.DeliveryTag, false);
+                    continue;
+                }
+
+                var publicou = await _mediator.Send(new PublicaFilaRabbitCommand(FilaProcesso, MontarMensagemProcesso(dto)));
+
+                if (publicou)
+                    await channel.BasicAckAsync(mensagemFila.DeliveryTag, false);
+                else
+                {
+                    // falhou: devolve para a fila de erro e para o loop
+                    await channel.BasicNackAsync(mensagemFila.DeliveryTag, false, true);
+                    break;
+                }
             }
         }
+
+        protected virtual object MontarMensagemProcesso(T dto) => dto;
     }
 }

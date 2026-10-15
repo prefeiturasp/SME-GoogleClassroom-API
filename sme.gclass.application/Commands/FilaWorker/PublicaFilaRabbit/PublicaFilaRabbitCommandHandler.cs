@@ -47,6 +47,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
+                SentrySdk.CaptureException(ex);
                 return false;
             }
         }

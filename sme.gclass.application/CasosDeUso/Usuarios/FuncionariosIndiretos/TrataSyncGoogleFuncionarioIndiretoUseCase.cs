@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var filtro = ObterFiltro(mensagem);
-            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo,1,1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioIndiretoAdicionar));
+            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo.Value, 1,1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.FuncionarioIndiretoAdicionar));
 
             var paginacao = new Paginacao(0, 0);
             var funcionariosIndiretosParaIncluirGoogle = await mediator.Send(new ObterFuncionariosIndiretosParaIncluirGoogleQuery(ultimaAtualizacao, paginacao));

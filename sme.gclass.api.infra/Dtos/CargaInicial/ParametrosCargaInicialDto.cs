@@ -28,27 +28,42 @@ namespace SME.GoogleClassroom.Infra
 
         public void AdicionaTiposUe(string tiposUe)
         {
+            if (string.IsNullOrWhiteSpace(tiposUe))
+                return;
+
+            TiposUes ??= new List<int>();
+
             tiposUe
-                .Split(',')
-                .Select(int.Parse)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(tipo => int.Parse(tipo.Trim()))
                 .ToList()
                 .ForEach(tipo => TiposUes.Add(tipo));
         }
 
         public void AdicionaUes(string ues)
         {
+            if (string.IsNullOrWhiteSpace(ues))
+                return;
+
+            Ues ??= new List<long>();
+
             ues
-                .Split(',')
-                .Select(long.Parse)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(ue => long.Parse(ue.Trim()))
                 .ToList()
                 .ForEach(ue => Ues.Add(ue));
         }
 
         public void AdicionaTurmas(string turmas)
         {
+            if (string.IsNullOrWhiteSpace(turmas))
+                return;
+
+            Turmas ??= new List<long>();
+
             turmas
-                .Split(',')
-                .Select(long.Parse)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(turma => long.Parse(turma.Trim()))
                 .ToList()
                 .ForEach(turma => Turmas.Add(turma));
         }

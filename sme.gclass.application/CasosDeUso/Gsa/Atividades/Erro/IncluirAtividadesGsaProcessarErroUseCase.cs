@@ -12,5 +12,6 @@ namespace SME.GoogleClassroom.Aplicacao
             : base(RotasRabbit.FilaGsaAtividadesIncluirErro, RotasRabbit.FilaGsaAtividadesIncluir, configuration, mediator, registry)
         {
         }
+        protected override object MontarMensagemProcesso(AtividadeGsaDto dto) => new[] { dto };
     }
 }
