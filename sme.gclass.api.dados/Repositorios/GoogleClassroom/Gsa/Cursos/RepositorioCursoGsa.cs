@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -169,6 +169,9 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
         {
+            pagina = pagina < 1 ? 1 : pagina;
+            quantidadeRegistrosPagina = quantidadeRegistrosPagina < 1 ? 100 : quantidadeRegistrosPagina;
+
             int qtdeRegistrosIgnorados = quantidadeRegistrosPagina * (pagina - 1);
             int qtdeRegistros = quantidadeRegistrosPagina;
 
