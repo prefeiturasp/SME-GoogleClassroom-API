@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -7,6 +7,7 @@ using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
 using SME.GoogleClassroom.Infra.Dtos.Gsa;
 using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
@@ -31,17 +32,25 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         ///
         /// </remarks>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="204">A consulta foi realizada, mas nenhuma inscrição foi encontrada para a turma.</response>
+        /// <response code="401">A chave de integração fornecida é inválida ou não foi informada.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("turma/{codigoDaTurma}/inscricoes")]
         [ProducesResponseType(typeof(IEnumerable<InscricaoRetornoDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemInscricoesConfirmadasPorTurma(
             [FromRoute] long codigoDaTurma,
             [FromServices] IListagemInscricoesConfirmadasUseCase listagemInscricoesConfirmadasUseCase)
         {
-            return Ok(await listagemInscricoesConfirmadasUseCase.Executar(codigoDaTurma));
+            var retorno = await listagemInscricoesConfirmadasUseCase.Executar(codigoDaTurma);
+            if (retorno != null && retorno.Any())
+                return Ok(retorno);
+
+            return StatusCode(StatusCodes.Status204NoContent);
         }
         
         /// <summary>
