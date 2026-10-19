@@ -56,19 +56,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <summary>
         /// Retorna as informações das formações por ano.
         /// </summary>
-        /// <remarks>
-        ///
-        ///     GET
-        ///     {
-        ///        "ano": 2024
-        ///     }
-        ///
-        /// </remarks>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="204">A consulta foi realizada, mas nenhuma formação foi encontrada.</response>
+        /// <response code="401">A chave de integração fornecida é inválida ou não foi informada.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("detalhes/ano/{ano}")]
         [ProducesResponseType(typeof(IEnumerable<FormacaoDetalhaDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemDetalhamentoFormacaoPorAno(
@@ -76,19 +72,23 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
             [FromQuery] long? codigoIE,
             [FromServices] IListagemDetalhamentoFormacaoUseCase listagemDetalhamentoFormacaoUseCase)
         {
-            return Ok(await listagemDetalhamentoFormacaoUseCase.Executar(ano, codigoIE));
+            var retorno = await listagemDetalhamentoFormacaoUseCase.Executar(ano, codigoIE);
+            if (retorno != null && retorno.Any())
+                return Ok(retorno);
+
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         /// <summary>
-        /// Retorna as instituições de ensino.
+        /// Retorna as áreas promotoras (instituições de ensino).
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="401">A chave de integração fornecida é inválida ou não foi informada.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
-        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("instituicao-ensino")]
         [ProducesResponseType(typeof(IEnumerable<AreaPromotoraDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ListagemAreaPromotora(
             [FromServices] IListagemDeAreaPromotoraUseCase listagemDeAreaPromotoraUseCase)
         {
