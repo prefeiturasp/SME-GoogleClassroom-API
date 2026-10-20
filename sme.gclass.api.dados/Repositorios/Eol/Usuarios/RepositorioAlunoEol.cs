@@ -85,10 +85,10 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
 			const string queryBuscaMatriculas = @"
-								DECLARE @situacaoAtivo AS CHAR = 1;
-								DECLARE @situacaoPendenteRematricula AS CHAR = 6;
-								DECLARE @situacaoRematriculado AS CHAR = 10;
-								DECLARE @situacaoSemContinuidade AS CHAR = 13;
+								DECLARE @situacaoAtivo AS VARCHAR(2) = 1;
+								DECLARE @situacaoPendenteRematricula AS VARCHAR(2) = 6;
+								DECLARE @situacaoRematriculado AS VARCHAR(2) = 10;
+								DECLARE @situacaoSemContinuidade AS VARCHAR(2) = 13;
 
 								DECLARE @situacaoAtivoInt AS INT = 1;
 								DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
@@ -742,10 +742,10 @@ namespace SME.GoogleClassroom.Dados
 		private static StringBuilder QueryBuscaMatriculaRegular(DateTime? dataReferecia, long? codigoEol, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             string query =
-                $@"DECLARE @situacaoAtivo AS CHAR = 1;
-					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
-					DECLARE @situacaoRematriculado AS CHAR = 10;
-					DECLARE @situacaoSemContinuidade AS CHAR = 13;
+                $@"DECLARE @situacaoAtivo AS VARCHAR(2) = 1;
+					DECLARE @situacaoPendenteRematricula AS VARCHAR(2) = 6;
+					DECLARE @situacaoRematriculado AS VARCHAR(2) = 10;
+					DECLARE @situacaoSemContinuidade AS VARCHAR(2) = 13;
 
 					DECLARE @situacaoAtivoInt AS INT = 1;
 					DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
