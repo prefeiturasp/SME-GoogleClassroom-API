@@ -314,10 +314,12 @@ namespace SME.GoogleClassroom.Dados
                             FROM
 	                            #tempProfessoresAtivos
                             ORDER BY
-	                            Rf; ");
+	                            Rf ");
 
 			if (aplicarPaginacao)
-                query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+                query.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY");
+
+            query.AppendLine(";");
 
             query.Append(@"SELECT COUNT(*)
                              FROM #tempProfessoresAtivos;");

@@ -147,6 +147,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = new StringBuilder(@"SELECT
                                                    u.indice,
+                                                   u.id AS Id,
                                                    u.id AS Rf,
                                                    u.nome AS Nome,
                                                    u.email AS Email,
@@ -170,6 +171,8 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine($"AND u.email = @email");
                 queryCount.AppendLine($"AND u.email = @email");
             }
+
+            query.AppendLine(" ORDER BY u.nome, u.id ");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
