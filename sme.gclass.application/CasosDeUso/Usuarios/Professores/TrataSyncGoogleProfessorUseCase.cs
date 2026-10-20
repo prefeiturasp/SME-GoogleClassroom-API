@@ -22,7 +22,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var filtro = ObterParametrosFiltro(mensagem);
-            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await ObterDataUltimaExecucaoAsync();
             var paginacao = new Paginacao(0, 0);
             var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
@@ -44,10 +44,24 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            if (professoresParaIncluirGoogle.TotalRegistros > 1)
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
 
             return true;
+        }
+
+        private async Task<DateTime> ObterDataUltimaExecucaoAsync()
+        {
+            try
+            {
+                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+                return dataUltimaExecucao == DateTime.MinValue
+                    ? new DateTime(DateTime.Today.Year, 1, 1)
+                    : dataUltimaExecucao;
+            }
+            catch (NegocioException)
+            {
+                return new DateTime(DateTime.Today.Year, 1, 1);
+            }
         }
 
         private async Task IncluirProfessorComErroAsync(ProfessorEol professorParaIncluirGoogle, string mensagem)
