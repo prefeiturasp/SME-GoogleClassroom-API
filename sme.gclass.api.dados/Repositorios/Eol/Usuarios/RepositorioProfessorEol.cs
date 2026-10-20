@@ -142,9 +142,7 @@ namespace SME.GoogleClassroom.Dados
 									AND   te.an_letivo = @anoLetivo
 									AND	  serv.cd_registro_funcional = @rf");
 
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			AdicionarFiltrosCargaInicial(query, parametrosCargaInicialDto);
 			query.Append(";");
 
 			query.AppendLine(@"-- 2. Busca os cursos de programa do Professor
@@ -205,9 +203,7 @@ namespace SME.GoogleClassroom.Dados
 									AND   te.an_letivo = @anoLetivo
 									AND   serv.cd_registro_funcional = @rf");
 
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			AdicionarFiltrosCargaInicial(query, parametrosCargaInicialDto);
 			query.Append(";");
 
 			query.AppendLine(@"SELECT
@@ -257,6 +253,24 @@ namespace SME.GoogleClassroom.Dados
             return retorno;
         }
 
+                private static void AdicionarFiltrosCargaInicial(StringBuilder query, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            if (parametrosCargaInicialDto == null)
+                return;
+
+            query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
+
+            if (parametrosCargaInicialDto.Ues.Any() && parametrosCargaInicialDto.Turmas.Any())
+            {
+                query.AppendLine(" AND (te.cd_escola in @Ues OR te.cd_turma_escola in @Turmas) ");
+            }
+            else
+            {
+                query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
+                query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            }
+        }
+
         private static string MontaQueryProfessorParaInclusao(bool aplicarPaginacao, DateTime? dataReferencia, string rf, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
 			var query = new StringBuilder();
@@ -304,9 +318,7 @@ namespace SME.GoogleClassroom.Dados
 										WHERE 1=1
 											{(!string.IsNullOrEmpty(rf) ? $" AND serv.cd_registro_funcional = @rf " : " ")}");
 
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			AdicionarFiltrosCargaInicial(query, parametrosCargaInicialDto);
 			query.AppendLine(";");
 
 			query.AppendLine(@"SELECT
@@ -473,13 +485,8 @@ namespace SME.GoogleClassroom.Dados
                 queryProgramas.AppendLine("AND serv.cd_registro_funcional = @rf ");
             }
 
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-            queryRegulares.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-            
-            queryProgramas.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-            queryProgramas.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-            queryProgramas.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            AdicionarFiltrosCargaInicial(queryRegulares, parametrosCargaInicialDto);
+            AdicionarFiltrosCargaInicial(queryProgramas, parametrosCargaInicialDto);
 
             
             if (turmaId.HasValue)

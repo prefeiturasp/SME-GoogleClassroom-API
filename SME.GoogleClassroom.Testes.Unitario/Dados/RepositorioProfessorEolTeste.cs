@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Infra;
@@ -65,6 +66,62 @@ namespace SME.GoogleClassroom.Testes.Unitario.Dados
             Assert.DoesNotContain("OFFSET", sql);
             Assert.Contains("Rf", sql);
             Assert.Contains(";", sql);
+        }
+
+        [Fact(DisplayName = "Carga inicial com UEs e Turmas registradas separadamente deve utilizar operador OR para evitar bloqueio restritivo")]
+        public void MontaQueryProfessorParaInclusao_ComUesETurmas_DeveUtilizarOperadorOr()
+        {
+            // Arrange
+            var parametrosCargaInicial = new ParametrosCargaInicialDto(
+                tiposUes: new List<int>(),
+                ues: new List<long> { 400535, 400023 },
+                turmas: new List<long> { 1451950, 1451953 },
+                anoLetivo: 2026);
+
+            // Act
+            var sql = ExecutarMontaQuery(false, new DateTime(2026, 1, 1), null, parametrosCargaInicial);
+
+            // Assert
+            Assert.Contains("(te.cd_escola in @Ues OR te.cd_turma_escola in @Turmas)", sql);
+            Assert.DoesNotContain("AND te.cd_escola in @Ues\r\n AND te.cd_turma_escola in @Turmas", sql);
+        }
+
+        [Fact(DisplayName = "Carga inicial com apenas UEs deve aplicar filtro apenas na coluna de escola")]
+        public void MontaQueryProfessorParaInclusao_ComApenasUes_DeveFiltrarPorEscola()
+        {
+            // Arrange
+            var parametrosCargaInicial = new ParametrosCargaInicialDto(
+                tiposUes: new List<int>(),
+                ues: new List<long> { 400535 },
+                turmas: new List<long>(),
+                anoLetivo: 2026);
+
+            // Act
+            var sql = ExecutarMontaQuery(false, new DateTime(2026, 1, 1), null, parametrosCargaInicial);
+
+            // Assert
+            Assert.Contains("te.cd_escola in @Ues", sql);
+            Assert.DoesNotContain("@Turmas", sql);
+            Assert.DoesNotContain("OR te.cd_turma_escola in @Turmas", sql);
+        }
+
+        [Fact(DisplayName = "Carga inicial com apenas Turmas deve aplicar filtro apenas na coluna de turma")]
+        public void MontaQueryProfessorParaInclusao_ComApenasTurmas_DeveFiltrarPorTurma()
+        {
+            // Arrange
+            var parametrosCargaInicial = new ParametrosCargaInicialDto(
+                tiposUes: new List<int>(),
+                ues: new List<long>(),
+                turmas: new List<long> { 1451950 },
+                anoLetivo: 2026);
+
+            // Act
+            var sql = ExecutarMontaQuery(false, new DateTime(2026, 1, 1), null, parametrosCargaInicial);
+
+            // Assert
+            Assert.Contains("te.cd_turma_escola in @Turmas", sql);
+            Assert.DoesNotContain("@Ues", sql);
+            Assert.DoesNotContain("OR te.cd_turma_escola in @Turmas", sql);
         }
     }
 }
