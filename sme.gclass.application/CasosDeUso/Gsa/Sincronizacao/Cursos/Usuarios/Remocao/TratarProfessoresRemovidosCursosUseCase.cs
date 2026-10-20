@@ -1,7 +1,8 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,35 +23,56 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             var dto = mensagemRabbit.ObterObjetoMensagem<FiltroTurmaRemoverCursoUsuarioDto>();
 
-            var professoresASeremRemovidos = await mediator.Send(new ObterProfessoresParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DatasProfessor.DataInicio, dto.DatasProfessor.DataFim)); 
-
-            foreach (var professorASerRemovido in professoresASeremRemovidos)
+            try
             {
-               var professorCurso = await ObterInformacoesDoProfessorECurso(professorASerRemovido);
+                var professoresASeremRemovidos = await mediator.Send(new ObterProfessoresParaRemoverCursoQuery(dto.TurmaId.ToString(), dto.DatasProfessor.DataInicio, dto.DatasProfessor.DataFim)); 
 
-                if (professorCurso.professor == null)
-                    continue;
-
-               var cursoUsuarioRemover = new CursoUsuarioRemoverDto
+                foreach (var professorASerRemovido in professoresASeremRemovidos)
                 {
-                    CursoUsuarioId = professorCurso.cursoUsuarioId,
-                    CursoId = professorCurso.curso.CursoId,
-                    TipoUsuario = (int)UsuarioTipo.Professor,
-                    TipoGsa = (int)UsuarioCursoGsaTipo.Professor,
-                    UsuarioId = professorCurso.professor.Indice, 
-                    UsuarioGsaId = professorCurso.professor.GoogleClassRoomId,
-                };
+                    try
+                    {
+                        var professorCurso = await ObterInformacoesDoProfessorECurso(professorASerRemovido);
 
-                if (ProfessorASerRemovidoEhResponsavelPeloCurso(professorCurso.professor, professorCurso.curso))
-                {
-                    var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(professorCurso.curso.CursoId));
+                        if (professorCurso.professor == null)
+                            continue;
 
-                    var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, professorCurso.professor);
+                        var cursoUsuarioRemover = new CursoUsuarioRemoverDto
+                        {
+                            CursoUsuarioId = professorCurso.cursoUsuarioId,
+                            CursoId = professorCurso.curso.CursoId,
+                            TipoUsuario = (int)UsuarioTipo.Professor,
+                            TipoGsa = (int)UsuarioCursoGsaTipo.Professor,
+                            UsuarioId = professorCurso.professor.Indice, 
+                            UsuarioGsaId = professorCurso.professor.GoogleClassRoomId,
+                        };
 
-                    var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(professorCurso.curso.TurmaId, professorCurso.curso.ComponenteCurricularId, novoResponsavel.GoogleClassroomId, novoResponsavel.Email));
+                        if (ProfessorASerRemovidoEhResponsavelPeloCurso(professorCurso.professor, professorCurso.curso))
+                        {
+                            var funcionariosDoCurso = await mediator.Send(new ObterFuncionariosPorCursoQuery(professorCurso.curso.CursoId));
+
+                            var novoResponsavel = DefinaNovoResponsavelPeloCurso(funcionariosDoCurso, professorCurso.professor);
+
+                            var donoDoCursoAlterado = await mediator.Send(new AtribuirDonoCursoCommand(professorCurso.curso.TurmaId, professorCurso.curso.ComponenteCurricularId, novoResponsavel.GoogleClassroomId, novoResponsavel.Email));
+                            if (!donoDoCursoAlterado)
+                            {
+                                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratarErro, dto));
+                                continue;
+                            }
+                        }
+
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, cursoUsuarioRemover));
+                    }
+                    catch (Exception ex)
+                    {
+                        await mediator.Send(new SalvarLogViaRabbitCommand($"TratarProfessoresRemovidosCursosUseCase - Não foi possível tratar professor {professorASerRemovido.UsuarioRf} para remoção do curso gsa", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
+                        await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratarErro, dto));
+                    }
                 }
-
-                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoSync, cursoUsuarioRemover));
+            }
+            catch (Exception ex)
+            {
+                await mediator.Send(new SalvarLogViaRabbitCommand($"TratarProfessoresRemovidosCursosUseCase - Não foi possível tratar professores removidos curso gsa", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
+                await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoProfessoresTratarErro, dto));
             }
 
             return true;
