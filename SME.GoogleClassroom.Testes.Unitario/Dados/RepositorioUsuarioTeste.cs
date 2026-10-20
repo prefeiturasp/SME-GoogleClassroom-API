@@ -48,5 +48,15 @@ namespace SME.GoogleClassroom.Testes.Unitario.Dados
                 Assert.NotNull(professor.Nome);
             }
         }
+
+        [Fact(DisplayName = "ObterUsuarioPorEmail deve executar consulta deterministica com desambiguacao sem erro SQL")]
+        public async Task ObterUsuarioPorEmail_DeveExecutarConsultaComDesambiguacao()
+        {
+            // Act
+            var resultado = await repositorioUsuario.ObterUsuarioPorEmail("teste.inexistente@edu.sme.prefeitura.sp.gov.br");
+
+            // Assert
+            Assert.Null(resultado);
+        }
     }
 }
