@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -52,7 +52,8 @@ namespace SME.GoogleClassroom.Dados
                                                u.google_classroom_id as GoogleClassroomId 
                                           FROM usuario_inativo ui 
                                           inner join usuarios u on u.indice = ui.usuario_id  
-                                          WHERE ui.usuario_tipo = @usuarioTipo ");
+                                          WHERE ui.usuario_tipo = @usuarioTipo 
+                                          ORDER BY ui.inativado_em DESC, ui.id DESC ");
 
             var queryCount = new StringBuilder("SELECT count(*) from usuario_inativo ui WHERE ui.usuario_tipo = @usuarioTipo ");
 
@@ -77,7 +78,9 @@ namespace SME.GoogleClassroom.Dados
 
             retorno.Items = registros.Read<UsuarioInativoDto>();
             retorno.TotalRegistros = registros.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0
+                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
+                : 1;
 
             return retorno;
         }
