@@ -17,8 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(AtribuirAlunoCursoDto atribuirAlunoCurso)
         {
-            var alunoCursoEol = new AlunoCursoEol(atribuirAlunoCurso.CodigoAluno, atribuirAlunoCurso.TurmaId, atribuirAlunoCurso.ComponenteCurricularId);
-
+            var alunoCursoEol = new AlunoCursoEol(atribuirAlunoCurso.CodigoAluno, atribuirAlunoCurso.TurmaId, atribuirAlunoCurso.ComponenteCurricularId) ?? throw new NegocioException("Não foi possível atribuir o aluno ao curso. O relacionamento não consta na base de dados do EOL.");
             var publicarAlunoCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoCursoIncluir, RotasRabbit.FilaAlunoCursoIncluir, alunoCursoEol));
             if (!publicarAlunoCurso)
             {
