@@ -100,6 +100,7 @@ namespace SME.GoogleClassroom.Dados
 									DROP TABLE #tempAlunosMatriculasRegularesAtivas;
 								SELECT
 									a.cd_aluno,
+                                    a.dt_nascimento_aluno,
 									te.cd_turma_escola
 								INTO #tempAlunosMatriculasRegularesAtivas
 								FROM
@@ -135,6 +136,7 @@ namespace SME.GoogleClassroom.Dados
 								SELECT
 									DISTINCT
 									temp.cd_aluno AS CodigoAluno,
+									temp.dt_nascimento_aluno AS DataNascimento,
 									CASE
 										WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
 									ELSE
@@ -192,6 +194,7 @@ namespace SME.GoogleClassroom.Dados
 									DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 								SELECT
 									a.cd_aluno,
+									a.dt_nascimento_aluno,
 									te.cd_turma_escola
 								INTO #tempAlunosMatriculasProgramaAtivas
 								FROM
@@ -247,6 +250,7 @@ namespace SME.GoogleClassroom.Dados
 								SELECT
 									DISTINCT
 									temp.cd_aluno AS CodigoAluno,
+                                    temp.dt_nascimento_aluno as DataNascimento,
 									pcc.cd_componente_curricular AS ComponenteCurricularId,
 									te.cd_turma_escola TurmaId,
 									te.cd_escola AS UeCodigo
