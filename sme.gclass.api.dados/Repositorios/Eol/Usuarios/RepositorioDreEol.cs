@@ -106,7 +106,7 @@ namespace SME.GoogleClassroom.Dados
 			});
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
+        public async Task<PaginacaoResultadoDto<AlunoRemocaoDto>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {
             using var conn = ObterConexao();
 
@@ -163,8 +163,10 @@ namespace SME.GoogleClassroom.Dados
 			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
 			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 
-			var queryPaginacao = @"order by mte.dt_situacao_aluno desc
-								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+			var queryPaginacao = paginacao.QuantidadeRegistros > 0
+				? @"order by mte.dt_situacao_aluno desc
+				   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;"
+				: @"order by mte.dt_situacao_aluno desc;";
 
             var query = new StringBuilder(querySelectDados);
             query.Append(queryFrom);
@@ -179,12 +181,15 @@ namespace SME.GoogleClassroom.Dados
                     quantidadeRegistrosIgnorados = paginacao.QuantidadeRegistrosIgnorados,
                     anoLetivo,
                     dataReferencia,
-                    turmaId
+                    turmaId,
+                    TiposUes = parametrosCargaInicialDto.TiposUes,
+                    parametrosCargaInicialDto.Ues,
+                    parametrosCargaInicialDto.Turmas
                 }, commandTimeout: 6000);
 
-            var retorno = new PaginacaoResultadoDto<AlunoEol>
+            var retorno = new PaginacaoResultadoDto<AlunoRemocaoDto>
             {
-                Items = multi.Read<AlunoEol>(),
+                Items = multi.Read<AlunoRemocaoDto>(),
                 TotalRegistros = multi.ReadFirst<int>()
             };
 

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> Executar(FiltroObterAlunosQueSeraoRemovidosDto filtro)
+        public async Task<PaginacaoResultadoDto<AlunoRemocaoDto>> Executar(FiltroObterAlunosQueSeraoRemovidosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
