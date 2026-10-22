@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Aplicacao.Queries;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -12,12 +12,11 @@ namespace SME.GoogleClassroom.Aplicacao
         {
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> Executar(FiltroObterAlunosQueSeraoInativadosDto filtro)
+        public async Task<PaginacaoResultadoDto<AlunoInativoDto>> Executar(FiltroObterAlunosQueSeraoInativadosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
             return await mediator.Send(new ObterAlunosQueSeraoInativadosPorAnoLetivoQuery(paginacao, filtro.AnoLetivo, filtro.DataReferencia));
         }
     }
-
 }

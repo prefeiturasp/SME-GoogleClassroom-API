@@ -860,11 +860,11 @@ namespace SME.GoogleClassroom.Dados
                 throw ex;
             }
         }
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
+        public async Task<PaginacaoResultadoDto<AlunoInativoDto>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
         {
             var querySelectDados = @" SELECT 					
 										DISTINCT a.cd_aluno AS Codigo,
-										a.nm_aluno AS NomePessoa,
+										a.nm_aluno AS Nome,
 										a.nm_social_aluno AS NomeSocial,
 										a.dt_nascimento_aluno AS DataNascimento,
 										te.cd_turma_escola AS TurmaId,
@@ -904,8 +904,10 @@ namespace SME.GoogleClassroom.Dados
 											     and m2.cd_situacao_aluno IN(1,6,10,13) )
 										");
 
-            var queryPaginacao = @"order by a.cd_aluno
-								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+            var queryPaginacao = paginacao.QuantidadeRegistros > 0
+                ? @"order by a.cd_aluno
+								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;"
+                : @"order by a.cd_aluno;";
 
             var query = new StringBuilder(querySelectDados);
             query.Append(queryFrom);
@@ -923,9 +925,9 @@ namespace SME.GoogleClassroom.Dados
                     dataReferencia
                 }, commandTimeout: 6000);
 
-            var retorno = new PaginacaoResultadoDto<AlunoEol>
+            var retorno = new PaginacaoResultadoDto<AlunoInativoDto>
             {
-                Items = multi.Read<AlunoEol>(),
+                Items = multi.Read<AlunoInativoDto>(),
                 TotalRegistros = multi.ReadFirst<int>()
             };
 
