@@ -22,8 +22,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ChaveIntegracaoGoogleClassroomApi": "1a5979cc-c6de-4d42-9929-d1dafde341b9"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7001;http://localhost:7000"
