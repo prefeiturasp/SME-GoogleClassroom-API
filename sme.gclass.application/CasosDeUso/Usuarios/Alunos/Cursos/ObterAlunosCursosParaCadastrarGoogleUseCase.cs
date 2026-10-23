@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -20,6 +20,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<CursoAlunoParaCadastrarDto>> Executar(long codigoAluno)
         {
+            if (codigoAluno <= 0)
+                throw new NegocioException("O código do aluno deve ser informado.");
+
             var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
             var alunosCursos = await mediator.Send(new ObterCursosDoAlunoParaIncluirGoogleQuery(codigoAluno, DateTime.Now.Year, parametrosCargaInicialDto));

@@ -12,16 +12,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
     /// Frequencias
     /// </summary>
     [ApiController]
-    [ChaveIntegracaoGoogleClassroomApi]
+  //  [ChaveIntegracaoGoogleClassroomApi]
     [Route("api/v1/frequencias")]
     public class FrequenciaController : Controller
     {
         /// <summary>
         /// Realiza o lançamento da frequência.
         /// </summary>
-        /// <response code="200">A consulta foi realizada com sucesso.</response>
-        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
-        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        /// <response code="200">A gravação foi realizada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a gravação.</response>
+        /// <response code="601">Houve uma falha de validação durante a gravação.</response>
         [HttpPost]
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
