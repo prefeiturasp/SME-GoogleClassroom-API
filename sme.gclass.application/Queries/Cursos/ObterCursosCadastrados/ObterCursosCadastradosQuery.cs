@@ -2,13 +2,15 @@
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosCadastradosQuery : IRequest<PaginacaoResultadoDto<CursoGoogle>>
+    public class ObterCursosCadastradosQuery : IRequest<PaginacaoResultadoDto<CursoGoogleDto>>
     {
-        public ObterCursosCadastradosQuery(Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
+        public ObterCursosCadastradosQuery(int paginaNumero, Paginacao paginacao, long? turmaId, long? componenteCurricularId, long? cursoId, string emailCriador)
         {
+            PaginaNumero = paginaNumero;
             Paginacao = paginacao;
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
@@ -16,6 +18,7 @@ namespace SME.GoogleClassroom.Aplicacao
             EmailCriador = emailCriador;
         }
 
+        public int PaginaNumero { get; set; }
         public Paginacao Paginacao { get; set; }
         public long? TurmaId { get; set; }
         public long? ComponenteCurricularId { get; set; }
@@ -31,9 +34,14 @@ namespace SME.GoogleClassroom.Aplicacao
                 .NotEmpty()
                 .WithMessage("A paginação deve ser informada.");
 
+            RuleFor(x => x.PaginaNumero)
+                .GreaterThan(0)
+                .WithMessage("O número da página deve ser maior que zero.");
+
             RuleFor(x => x.Paginacao.QuantidadeRegistros)
                 .GreaterThan(0)
-                .WithMessage("O número da página e a quantidade de registro devem ser informados.");
+                .When(x => x.Paginacao != null)
+                .WithMessage("A quantidade de registros deve ser maior que zero.");
         }
     }
 }

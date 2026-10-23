@@ -2,11 +2,12 @@
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterGradesAtuaisDeCursosQuery : IRequest<PaginacaoResultadoDto<CursoGoogle>>
+    public class ObterGradesAtuaisDeCursosQuery : IRequest<PaginacaoResultadoDto<CursoGoogleDto>>
     {
         public Paginacao Paginacao { get; set; }
         public DateTime UltimaDataExecucao { get; set; }

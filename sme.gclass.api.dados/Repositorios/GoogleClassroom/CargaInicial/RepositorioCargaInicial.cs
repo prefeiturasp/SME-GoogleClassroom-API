@@ -21,7 +21,7 @@ namespace SME.GoogleClassroom.Dados
                             , tipos_ue as TiposUe                            
                             , Ues
                             , Turmas
-                            , criado_em as CriadoEm
+                            , criado_em as CriadoEm  
                      from public.carga_inicial
                     where ano = @ano";
 

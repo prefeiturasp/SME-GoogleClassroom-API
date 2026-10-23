@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -15,12 +17,29 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<GradeCursoEol>> Executar(FiltroObterGradesDeCursosDto filtro)
+        public async Task<PaginacaoResultadoDto<GradeCursoEolDto>> Executar(FiltroObterGradesDeCursosDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
-            return await mediator.Send(new ObterGradesDeCursosQuery(filtro.DataReferencia, paginacao, filtro.TurmaId, filtro.ComponenteCurricularId, parametrosCargaInicialDto));
+            var parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
+            var grades = await mediator.Send(new ObterGradesDeCursosQuery(filtro.DataReferencia, paginacao, filtro.TurmaId, filtro.ComponenteCurricularId, parametros));
+
+
+            return new PaginacaoResultadoDto<GradeCursoEolDto>
+            {
+                Items = grades.Items.Select(g => new GradeCursoEolDto
+                {
+                    Nome = g.Nome,
+                    Secao = g.Secao,
+                    ComponenteCurricularId = g.ComponenteCurricularId,
+                    TurmaId = g.TurmaId,
+                    UeCodigo = g.UeCodigo,
+                    DataInicioGrade = g.DataInicioGrade,
+                    Email = g.Email
+                }),
+                TotalRegistros = grades.TotalRegistros,
+                TotalPaginas = grades.TotalPaginas
+            };
         }
     }
 }

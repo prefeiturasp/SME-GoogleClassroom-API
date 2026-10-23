@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dados.Help;
 
 namespace SME.GoogleClassroom.Dados
 {
@@ -324,20 +325,18 @@ namespace SME.GoogleClassroom.Dados
 
 			var aplicarPaginacao = paginacao.QuantidadeRegistros > 0;
 			var query = MontaQueryGradesCursosParaInclusao(aplicarPaginacao, turmaId, componenteCurricularId, parametrosCargaInicialDto);
-			var parametros = new
-			{
-				anoLetivo = dataReferencia.Year,
-				dataReferencia = dataReferencia.Date,
-				paginacao.QuantidadeRegistros,
-				paginacao.QuantidadeRegistrosIgnorados,
-				turmaId,
-				componenteCurricularId,
-				parametrosCargaInicialDto.TiposUes,
-				parametrosCargaInicialDto.Ues,
-				parametrosCargaInicialDto.Turmas
-			};
+            var parametros = FiltroCargaInicialSql.ObterParametrosCargaInicial(parametrosCargaInicialDto);
+            parametros.AddDynamicParams(new
+            {
+                anoLetivo = dataReferencia.Year,
+                dataReferencia = dataReferencia.Date,
+                paginacao.QuantidadeRegistros,
+                paginacao.QuantidadeRegistrosIgnorados,
+                turmaId,
+                componenteCurricularId
+            });
 
-			using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
+            using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 300);
 
 			var retorno = new PaginacaoResultadoDto<GradeCursoEol>();
 
@@ -679,8 +678,9 @@ namespace SME.GoogleClassroom.Dados
 		private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
 		{
 			var query = new StringBuilder();
-			query.AppendLine(@"-- 2) Busca os cursos regulares
-							with tempTurmasComponentesRegulares as
+            query.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);
+            query.AppendLine(@"-- 2) Busca os cursos regulares
+							with tempTurmasComponentesRegulares as (
 							SELECT
 								DISTINCT
 								CASE
@@ -776,11 +776,9 @@ namespace SME.GoogleClassroom.Dados
 								AND   serie_turma_grade.dt_inicio >= @dataReferencia
 								AND   (serie_turma_grade.dt_fim IS NULL OR serie_turma_grade.dt_fim >= GETDATE())");
 
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            query.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "esc.tp_escola", "te.cd_escola", "te.cd_turma_escola");
 
-			if (componenteCurricularId.HasValue)
+            if (componenteCurricularId.HasValue)
 			{
 				if (componenteCurricularId.Value == 512)
 				{
@@ -825,7 +823,7 @@ namespace SME.GoogleClassroom.Dados
 								tempTurmasComponentesRegulares t1
 							OUTER APPLY
 								(
-									SELECT TOP 1 Email FROM #tempTurmasComponentesRegularesProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
+									SELECT TOP 1 Email FROM tempTurmasComponentesRegularesProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
 								) AS t2
 
 							-- 3) Busca os cursos de Programa
@@ -879,9 +877,7 @@ namespace SME.GoogleClassroom.Dados
 								AND   tegp.dt_inicio >= @dataReferencia
 								AND   (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())");
 
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			query.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+			query.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "esc.tp_escola", "te.cd_escola", "te.cd_turma_escola");
 
 			if (componenteCurricularId.HasValue)
 			{
@@ -927,87 +923,74 @@ namespace SME.GoogleClassroom.Dados
 								tempTurmasComponentesPrograma t1
 							OUTER APPLY
 								(
-									SELECT TOP 1 Email FROM #tempTurmasComponentesProgramaProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
+									SELECT TOP 1 Email FROM tempTurmasComponentesProgramaProfessores temp WHERE temp.TurmaId = t1.TurmaId AND temp.ComponenteCurricularId = t1.ComponenteCurricularId
 								) AS t2
 
 
-							-- 4) Junta cursos regulares e turmas de programa
-							), tempCursosDre as (
-							SELECT
-								*
-							FROM
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosRegulares temp) AS Regulares
+							-- 4) Junta cursos regulares e de programa e grava em tabela temporária
+							)
+							SELECT Nome, Secao, ComponenteCurricularId, TurmaId, cd_unidade_educacao, DataInicioGrade, Email
+							INTO #tempCursosDre
+							FROM tempCursosRegulares
 							UNION
-								(SELECT temp.Nome, temp.Secao, temp.ComponenteCurricularId, temp.TurmaId, temp.cd_unidade_educacao, temp.DataInicioGrade, temp.Email FROM #tempCursosPrograma temp)
+							SELECT Nome, Secao, ComponenteCurricularId, TurmaId, cd_unidade_educacao, DataInicioGrade, Email
+							FROM tempCursosPrograma;
 
 							-- 4.1) Paginacao
-							), tempCursosDrePaginado as (
 							SELECT *
-							 from tempCursosDre
-							ORDER by 1 ");
+							INTO #tempCursosDrePaginado
+							FROM #tempCursosDre ");
 
-			if (aplicarPaginacao)
-				query.AppendLine(
-					"OFFSET @quantidadeRegistrosIgnorados ROWS  FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-			else query.AppendLine(";");
+            if (aplicarPaginacao)
+                query.AppendLine("ORDER BY Nome, TurmaId, ComponenteCurricularId OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+            else
+                query.AppendLine(";");
 
-			query.AppendLine(
-				@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
-							), tempUEsSemAtribuicao as (
-							SELECT
-								DISTINCT
-								temp.cd_unidade_educacao
-							FROM
-								tempCursosDrePaginado temp
-							WHERE
-								Email IS NULL )
+            query.AppendLine(@"-- 5) Busca os responsáveis das UEs sem atribuição de aula para definir um criador do curso
+					IF EXISTS (SELECT TOP 1 1 FROM #tempCursosDrePaginado WHERE Email IS NULL)
+					BEGIN
+						IF OBJECT_ID('tempdb..#responsaveisUe') IS NOT NULL 
+							DROP TABLE #responsaveisUe;
+						CREATE TABLE #responsaveisUe
+						(
+							CodigoUe varchar(10) NOT NULL,
+							Email varchar(MAX) NULL
+						);
 
-							IF EXISTS (SELECT TOP 1 1 FROM tempUEsSemAtribuicao)
-							BEGIN
-								IF OBJECT_ID('tempdb..#ResponsaveisUe') IS NOT NULL 
-									DROP TABLE #ResponsaveisUe;
-								CREATE TABLE #responsaveisUe
-								(
-									CodigoUe varchar(10) NOT NULL,
-									Email varchar(MAX) NULL
-								);
+						INSERT INTO #responsaveisUe
+						SELECT DISTINCT temp.cd_unidade_educacao, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf) AS Email
+						FROM 
+							(SELECT DISTINCT cd_unidade_educacao FROM #tempCursosDrePaginado WHERE Email IS NULL) temp
+						CROSS APPLY 
+							[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub;
 
-								INSERT INTO #responsaveisUe
-								SELECT DISTINCT temp.cd_unidade_educacao, [dbo].[proc_gerar_email_funcionario](servsub.NomeServidor, servsub.CodigoRf) AS Email
-								FROM 
-									tempUEsSemAtribuicao temp
-								CROSS APPLY 
-									[dbo].[proc_obter_nivel](null, temp.cd_unidade_educacao) servsub;
+						UPDATE t1
+							SET t1.Email = t2.Email
+						FROM
+							#tempCursosDrePaginado t1
+						INNER JOIN
+							#responsaveisUe t2
+							ON t1.cd_unidade_educacao = t2.CodigoUe
+						WHERE
+							t1.Email IS NULL;
+					END;
 
-								UPDATE t1
-									SET t1.Email = t2.Email
-								FROM
-									tempCursosDrePaginado t1
-								INNER JOIN
-									#responsaveisUe t2
-									ON t1.cd_unidade_educacao = t2.CodigoUe
-								WHERE
-									t1.Email IS NULL;
-							END; 
-
-							SELECT
-								temp.Nome,
-								temp.Secao,
-								temp.ComponenteCurricularId,
-								temp.TurmaId,
-								temp.cd_unidade_educacao as UeCodigo,
-								temp.DataInicioGrade,
-								temp.Email
-							FROM
-								tempCursosDrePaginado temp;
+					SELECT
+						temp.Nome,
+						temp.Secao,
+						temp.ComponenteCurricularId,
+						temp.TurmaId,
+						temp.cd_unidade_educacao as UeCodigo,
+						temp.DataInicioGrade,
+						temp.Email
+					FROM
+						#tempCursosDrePaginado temp
+					ORDER BY temp.Nome, temp.TurmaId, temp.ComponenteCurricularId;
 
 					-- Totalizacao
-						SELECT
-							COUNT(*)
-						FROM
-							#tempCursosDre temp;");
+					SELECT COUNT(*) FROM #tempCursosDre;");
 
-			return query.ToString();
+            return query.ToString();
 		}
 
 		private string MontaQueryCursosExtintos(long? turmaId, bool paginacao, bool contador, ParametrosCargaInicialDto parametrosCargaInicialDto)
