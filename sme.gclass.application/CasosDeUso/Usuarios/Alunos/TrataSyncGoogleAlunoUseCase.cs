@@ -43,34 +43,37 @@ namespace SME.GoogleClassroom.Aplicacao
             var alunosEol = await mediator
                 .Send(new ObterAlunosNovosQuery(filtro.Paginacao, ultimaAtualizacao, codigoAlunoFiltro, parametrosCargaInicialDto));
 
-            totalPaginas = alunosEol.TotalPaginas;
+            totalPaginas = alunosEol?.TotalPaginas ?? 0;
 
-            var codigosAlunosEol = alunosEol.Items.Select(a => (long)a.Codigo).ToArray();
-            var alunosCadastrados = await mediator.Send(new ObterAlunosPorCodigosQuery(codigosAlunosEol));
-            var alunosParaInclusao = from aeol in alunosEol.Items
-                                     where !alunosCadastrados.Select(ac => ac.Codigo).Contains(aeol.Codigo)
-                                     select aeol;
+            var codigosAlunosEol = alunosEol?.Items?.Select(a => (long)a.Codigo).ToArray() ?? Array.Empty<long>();
+            if (codigosAlunosEol.Any())
+            {
+                var alunosCadastrados = await mediator.Send(new ObterAlunosPorCodigosQuery(codigosAlunosEol));
+                var alunosParaInclusao = from aeol in alunosEol.Items
+                                         where !alunosCadastrados.Select(ac => ac.Codigo).Contains(aeol.Codigo)
+                                         select aeol;
 
-            alunosParaInclusao
-                .AsParallel()
-                .WithDegreeOfParallelism(10)
-                .ForAll(async alunoParaIncluirGoogleEol =>
-                {
-                    try
+                alunosParaInclusao
+                    .AsParallel()
+                    .WithDegreeOfParallelism(10)
+                    .ForAll(async alunoParaIncluirGoogleEol =>
                     {
-                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, parametrosCargaInicialDto.AnoLetivo, parametrosCargaInicialDto.TiposUes.ToList(), parametrosCargaInicialDto.Ues.ToList(), parametrosCargaInicialDto.Turmas.ToList());
+                        try
+                        {
+                            var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, parametrosCargaInicialDto.AnoLetivo, parametrosCargaInicialDto.TiposUes.ToList(), parametrosCargaInicialDto.Ues.ToList(), parametrosCargaInicialDto.Turmas.ToList());
 
-                        var publicarAluno = await mediator
-                            .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
+                            var publicarAluno = await mediator
+                                .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
 
-                        if (!publicarAluno)
-                            await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
-                    }
-                    catch (Exception ex)
-                    {
-                        await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo, ex));
-                    }
-                });
+                            if (!publicarAluno)
+                                await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo));
+                        }
+                        catch (Exception ex)
+                        {
+                            await IncluirAlunoComErroAsync(alunoParaIncluirGoogleEol, ObterMensagemDeErro(alunoParaIncluirGoogleEol.Codigo, ex));
+                        }
+                    });
+            }
 
             if (codigoAlunoFiltro is null && filtro.Paginacao.Pagina <= totalPaginas)
             {
