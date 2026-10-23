@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
         {
             this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
-        public async Task<PaginacaoResultadoDto<CursoEol>> Executar(FiltroObterCursosIncluirGoogleDto filtro)
+        public async Task<PaginacaoResultadoDto<CursoParaIncluirGoogleDto>> Executar(FiltroObterCursosIncluirGoogleDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 

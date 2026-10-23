@@ -2,13 +2,14 @@
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosIncluirGoogleQueryHandler : IRequestHandler<ObterCursosIncluirGoogleQuery, PaginacaoResultadoDto<CursoEol>>
+    public class ObterCursosIncluirGoogleQueryHandler : IRequestHandler<ObterCursosIncluirGoogleQuery, PaginacaoResultadoDto<CursoParaIncluirGoogleDto>>
     {
 
         private readonly IRepositorioCursoEol repositorioCursoEol;
@@ -18,7 +19,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.repositorioCursoEol = repositorioCursoEol ?? throw new ArgumentNullException(nameof(repositorioCursoEol));
         }
 
-        public async Task<PaginacaoResultadoDto<CursoEol>> Handle(ObterCursosIncluirGoogleQuery request, CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<CursoParaIncluirGoogleDto>> Handle(ObterCursosIncluirGoogleQuery request, CancellationToken cancellationToken)
         {
             var anoLetivo = request.UltimaExecucao?.Year ?? DateTime.Now.Year;
             return await repositorioCursoEol

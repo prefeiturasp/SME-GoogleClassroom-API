@@ -2,11 +2,12 @@
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursosIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<CursoEol>>
+    public class ObterCursosIncluirGoogleQuery : IRequest<PaginacaoResultadoDto<CursoParaIncluirGoogleDto>>
     {
         public ObterCursosIncluirGoogleQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime? ultimaExecucao, Paginacao paginacao, long? componenteCurricularId, long? turmaId)
         {
