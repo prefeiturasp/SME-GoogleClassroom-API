@@ -67,25 +67,25 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
 
             // Assert
             Assert.NotNull(resultado);
-            Assert.Equal(codigoAluno, resultado.CodigoAluno);
-            Assert.NotNull(resultado.Cursos);
+            var listaResultado = resultado.ToList();
+            Assert.Single(listaResultado);
 
-            var lista = resultado.Cursos.ToList();
-            Assert.Equal(2, lista.Count);
+            var aluno = listaResultado[0];
+            Assert.Equal(codigoAluno.ToString(), aluno.CodigoAluno);
+            Assert.NotNull(aluno.Cursos);
+            Assert.Equal(2, aluno.Cursos.Count);
 
-            var primeiro = lista[0];
+            var primeiro = aluno.Cursos[0];
             Assert.Equal(10, primeiro.ComponenteCurricularId);
             Assert.Equal(9001, primeiro.CursoId);
             Assert.Equal(1001, primeiro.TurmaId);
             Assert.Equal("012345", primeiro.UeCodigo);
-            Assert.Equal("Matemática - 5º Ano", primeiro.NomeCurso);
 
-            var segundo = lista[1];
+            var segundo = aluno.Cursos[1];
             Assert.Equal(20, segundo.ComponenteCurricularId);
             Assert.Equal(9002, segundo.CursoId);
             Assert.Equal(1002, segundo.TurmaId);
             Assert.Equal("012345", segundo.UeCodigo);
-            Assert.Equal("Português - 5º Ano", segundo.NomeCurso);
         }
 
         [Fact(DisplayName = "Deve retornar cursos vazio quando aluno não possuir cursos")]
@@ -108,9 +108,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
 
             // Assert
             Assert.NotNull(resultado);
-            Assert.Equal(codigoAluno, resultado.CodigoAluno);
-            Assert.NotNull(resultado.Cursos);
-            Assert.Empty(resultado.Cursos);
+            Assert.Empty(resultado);
         }
     }
 }

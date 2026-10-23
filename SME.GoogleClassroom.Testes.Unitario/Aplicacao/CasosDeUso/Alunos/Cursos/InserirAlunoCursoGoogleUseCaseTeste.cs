@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using Moq;
 using Newtonsoft.Json;
@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir o aluno no curso no Google Classroom.")]
-        private async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
+        public async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
         {
             // Arrange
             var mensagem = new MensagemRabbit(null);
@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento para alunos que ainda não foram inclusos.")]
-        private async Task Valida_Tratamento_De_Aluno_Nao_Incluso_Deve_Retornar_False()
+        public async Task Valida_Tratamento_De_Aluno_Nao_Incluso_Deve_Retornar_False()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
@@ -55,7 +55,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento para cursos que ainda não foram inclusos.")]
-        private async Task Valida_Tratamento_De_Curso_Nao_Incluso_Deve_Retornar_False()
+        public async Task Valida_Tratamento_De_Curso_Nao_Incluso_Deve_Retornar_False()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
@@ -65,7 +65,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             var alunoCursoJson = JsonConvert.SerializeObject(alunoCurso);
@@ -79,17 +79,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento para alunos já inclusos no curso.")]
-        private async Task Valida_Tratamento_De_Aluno_Ja_Incluso_No_Curso_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Aluno_Ja_Incluso_No_Curso_Deve_Retornar_True()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -106,17 +106,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento de duplicidade no Google Classroom.")]
-        private async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -141,17 +141,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral do Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -173,17 +173,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
@@ -205,17 +205,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
         }
 
         [Fact(DisplayName = "Valida a inclusão de um aluno no curso válido.")]
-        private async Task Valida_Inclusao_De_Aluno_No_Curso_Valido_Deve_Retornar_True()
+        public async Task Valida_Inclusao_De_Aluno_No_Curso_Valido_Deve_Retornar_True()
         {
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
 
-            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorEmailNomeQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cursoGoogle);
 
             mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoCursoGoogleQuery>(), It.IsAny<CancellationToken>()))

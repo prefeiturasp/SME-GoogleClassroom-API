@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using Moq;
 using Newtonsoft.Json;
@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
         }
 
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir o funcionário no curso no Google Classroom.")]
-        private async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
+        public async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
         {
             // Arrange
             var mensagem = new MensagemRabbit(null);
@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
         }
 
         [Fact(DisplayName = "Valida o tratamento para funcionários que ainda não foram inclusos.")]
-        private async Task Valida_Tratamento_De_Funcionario_Nao_Incluso_Deve_Retornar_False()
+        public async Task Valida_Tratamento_De_Funcionario_Nao_Incluso_Deve_Retornar_False()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);
@@ -55,7 +55,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
         }
 
         [Fact(DisplayName = "Valida o tratamento para cursos que ainda não foram inclusos.")]
-        private async Task Valida_Tratamento_De_Curso_Nao_Incluso_Deve_Retornar_False()
+        public async Task Valida_Tratamento_De_Curso_Nao_Incluso_Deve_Retornar_False()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);
@@ -79,7 +79,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
         }
 
         [Fact(DisplayName = "Valida o tratamento para funcionários já inclusos no curso.")]
-        private async Task Valida_Tratamento_De_Funcionario_Ja_Incluso_No_Curso_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Funcionario_Ja_Incluso_No_Curso_Deve_Retornar_True()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);
@@ -106,7 +106,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
         }
 
         [Fact(DisplayName = "Valida o tratamento de duplicidade no Google Classroom.")]
-        private async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);
@@ -133,15 +133,12 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             var funcionarioCursoJson = JsonConvert.SerializeObject(funcionarioCurso);
             var mensagem = new MensagemRabbit(funcionarioCursoJson);
 
-            // Act
-            var retorno = await inserirFuncionarioCursoGoogleUseCase.Executar(mensagem);
-
             // Assert
-            Assert.True(retorno);
+            await Assert.ThrowsAsync<GoogleApiException>(() => inserirFuncionarioCursoGoogleUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral do Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);
@@ -168,12 +165,15 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             var funcionarioCursoJson = JsonConvert.SerializeObject(funcionarioCurso);
             var mensagem = new MensagemRabbit(funcionarioCursoJson);
 
+            // Act
+            var retorno = await inserirFuncionarioCursoGoogleUseCase.Executar(mensagem);
+
             // Assert
-            await Assert.ThrowsAsync<GoogleApiException>(() => inserirFuncionarioCursoGoogleUseCase.Executar(mensagem));
+            Assert.True(retorno);
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);
@@ -205,7 +205,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
         }
 
         [Fact(DisplayName = "Valida a inclusão de um funcionário no curso válido.")]
-        private async Task Valida_Inclusao_De_Funcionario_No_Curso_Valido_Deve_Retornar_True()
+        public async Task Valida_Inclusao_De_Funcionario_No_Curso_Valido_Deve_Retornar_True()
         {
             // Arrange
             var funcionarioCurso = new FuncionarioCursoEol(1234567, 1010, 6);

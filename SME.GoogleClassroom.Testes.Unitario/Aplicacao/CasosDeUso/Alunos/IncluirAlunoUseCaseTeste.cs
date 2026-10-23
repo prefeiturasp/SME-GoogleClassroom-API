@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using Moq;
 using Newtonsoft.Json;
@@ -6,6 +6,7 @@ using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,8 +25,14 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             incluirAlunoUseCase = new IncluirAlunoUseCase(mediator.Object, GerarVariaveisGlobais());
         }
 
+        private static MensagemRabbit CriarMensagemRabbit(AlunoEol aluno)
+        {
+            var filtro = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            return new MensagemRabbit(JsonConvert.SerializeObject(filtro));
+        }
+
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir um novo aluno no Google Classroom.")]
-        private async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
+        public async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
         {
             // Arrange
             var mensagem = new MensagemRabbit(null);
@@ -35,21 +42,38 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
         }
 
         [Fact(DisplayName = "Valida o tratamento para alunos já inclusos.")]
-        private async Task Valida_Tratamento_De_Aluno_Ja_Incluso_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Aluno_Ja_Incluso_Deve_Retornar_True()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             alunoComEmailTratado.DefinirEmail(1);
 
+            var alunoJaCadastrado = new AlunoGoogle(1, "José da Silva", "jose.silva@sme.prefeitura.sp.gov.br", "/Alunos")
+            {
+                Indice = 10,
+                GoogleClassroomId = "google-id-existente"
+            };
+
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<AlunoGoogle> { alunoJaCadastrado });
+
+            mediator.Setup(a => a.Send(It.IsAny<AtualizarAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            mediator.Setup(a => a.Send(It.IsAny<AtualizarUsuarioCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<AtualizarUsuarioGoogleClassroomIdCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            var mensagem = CriarMensagemRabbit(aluno);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);
@@ -59,17 +83,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
         }
 
         [Fact(DisplayName = "Valida o tratamento de duplicidade no Google Classroom.")]
-        private async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
 
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<AlunoGoogle>());
+
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
-
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
 
             var googleDuplicidadeException = new GoogleApiException(string.Empty, GoogleApiExceptionMensagens.Erro409EntityAlreadyExists);
             googleDuplicidadeException.HttpStatusCode = HttpStatusCode.Conflict;
@@ -88,8 +112,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var mensagem = CriarMensagemRabbit(aluno);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);
@@ -99,67 +122,65 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral do Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
 
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<AlunoGoogle>());
+
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
-
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
 
             var googleDuplicidadeException = new GoogleApiException(string.Empty, "Erro no Google Classroom.");
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(googleDuplicidadeException);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var mensagem = CriarMensagemRabbit(aluno);
 
             // Assert
             await Assert.ThrowsAsync<GoogleApiException>(() => incluirAlunoUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
 
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<AlunoGoogle>());
+
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
-
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
 
             var excecao = new NullReferenceException("Erro ao se comunicar Google Classroom.");
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(excecao);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var mensagem = CriarMensagemRabbit(aluno);
 
             // Assert
             await Assert.ThrowsAsync<NullReferenceException>(() => incluirAlunoUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida a inclusão de um aluno válido.")]
-        private async Task Valida_Inclusao_De_Aluno_Valido_Deve_Retornar_True()
+        public async Task Valida_Inclusao_De_Aluno_Valido_Deve_Retornar_True()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
 
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<AlunoGoogle>());
+
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
-
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
@@ -170,8 +191,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var mensagem = CriarMensagemRabbit(aluno);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);

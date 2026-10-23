@@ -26,7 +26,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
         }
 
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir um novo professor no Google Classroom.")]
-        private async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
+        public async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
         {
             // Arrange
             var mensagem = new MensagemRabbit(null);
@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
         }
 
         [Fact(DisplayName = "Valida o tratamento para professores já inclusos.")]
-        private async Task Valida_Tratamento_De_Professor_Ja_Incluso_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Professor_Ja_Incluso_Deve_Retornar_True()
         {
             // Arrange
             var professor = new ProfessorEol(123456, "José da Silva", string.Empty, string.Empty);
@@ -55,7 +55,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
         }
 
         [Fact(DisplayName = "Valida o tratamento de duplicidade no Google Classroom.")]
-        private async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
         {
             // Arrange
             var professor = new ProfessorEol(123456, "José da Silva", string.Empty, string.Empty);
@@ -91,7 +91,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral do Google Classroom.")]
-        private async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
+        public async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
         {
             // Arrange
             var professor = new ProfessorEol(123456, "José da Silva", string.Empty, string.Empty);
@@ -112,7 +112,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
         {
             // Arrange
             var professor = new ProfessorEol(123456, "José da Silva", string.Empty, string.Empty);
@@ -133,7 +133,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
         }
 
         [Fact(DisplayName = "Valida a inclusão de um professor válido.")]
-        private async Task Valida_Inclusao_De_Professor_Valido_Deve_Retornar_True()
+        public async Task Valida_Inclusao_De_Professor_Valido_Deve_Retornar_True()
         {
             // Arrange
             var professor = new ProfessorEol(123456, "José da Silva", string.Empty, string.Empty);
