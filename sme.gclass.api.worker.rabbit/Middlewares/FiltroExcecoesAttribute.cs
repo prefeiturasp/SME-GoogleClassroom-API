@@ -23,19 +23,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Middlewares
             switch (context.Exception)
             {
                 case NegocioException negocioException:
-                    await SalvaLog(LogNivel.Negocio, context.Exception.Message, context.Exception.StackTrace);
-                    context.Result = new ResultadoBaseResult(context.Exception.Message, negocioException.StatusCode);
+                    await SalvaLog(LogNivel.Negocio, context?.Exception?.Message, context?.Exception?.StackTrace);
+                    context.Result = new ResultadoBaseResult(context?.Exception?.Message, negocioException?.StatusCode ?? 500);
                     context.ExceptionHandled = true;
                     break;
 
                 case ValidacaoException validacaoException:
-                    await SalvaLog(LogNivel.Negocio, context.Exception.Message, context.Exception.StackTrace);
-                    context.Result = new ResultadoBaseResult(new RetornoBaseDto(validacaoException.Erros));
+                    await SalvaLog(LogNivel.Negocio, context?.Exception?.Message, context?.Exception?.StackTrace);
+                    context.Result = new ResultadoBaseResult(new RetornoBaseDto(validacaoException?.Erros));
                     context.ExceptionHandled = true;
                     break;
 
                 default:
-                    await SalvaLog(LogNivel.Critico, context.Exception.Message, context.Exception.StackTrace);
+                    await SalvaLog(LogNivel.Critico, context?.Exception?.Message, context?.Exception?.StackTrace);
                     context.Result = new ResultadoBaseResult("Ocorreu um erro interno. Favor contatar o suporte.", 500);
                     context.ExceptionHandled = true;
                     break;

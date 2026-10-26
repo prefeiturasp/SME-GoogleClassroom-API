@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSincronizacaoNotasUseCase useCase,
-            [FromQuery] FiltroNotasAtividadesSincronizacaoDto filtro)
+            [FromBody] FiltroNotasAtividadesSincronizacaoDto filtro)
         {
             await useCase.Executar(filtro);
 
