@@ -279,9 +279,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> TratarErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosTratarUseCase useCase)
         {
-            return Ok(await useCase.Executar());
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
         }
-        
+
         /// <summary>
         /// Reprocessar erros ao sincronizar arquivamento de cursos extintos
         /// </summary>
@@ -294,10 +295,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
         {
-            return Ok(await useCase.Executar());
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
         }
-        
-        
+
+
         /// <summary>
         /// Obtem lista de cursos arquivados no Google Sala de Aula
         /// </summary>
@@ -393,7 +395,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, [FromQuery] int? anoLetivo, [FromQuery] long? turmaId = null)
+        public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, int anoLetivo, long? turmaId = null)
         {
             var retorno = await useCase.Executar(anoLetivo, turmaId);
             return Ok(retorno);
