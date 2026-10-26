@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
-using SME.GoogleClassroom.Dominio;
-using System.Collections.Generic;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosDoCursoParaIncluirGoogleQuery : IRequest<IEnumerable<AlunoCursoEol>>
+    public class ObterAlunosDoCursoParaIncluirGoogleQuery : IRequest<IEnumerable<AlunoCursoParaIncluirGoogleDto>>
     {
         public int AnoLetivo { get; set; }
         public long TurmaId { get; set; }

@@ -12,7 +12,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<PaginacaoResultadoDto<CursoParaIncluirGoogleDto>> ObterCursosParaInclusao(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataUltimaExecucao, int anoLetivo, Paginacao paginacao, long? componenteCurricularId, long? turmaId);
         Task<CursoEol> ObterCursoPorIdParaInclusao(long componenteCurricularId, long turmaId, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<IEnumerable<ProfessorCursoEol>> ObterProfessoresDoCursoParaIncluirGoogleAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
-        Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
+        Task<IEnumerable<AlunoCursoParaIncluirGoogleDto>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime ultimaDataExecucao, Paginacao paginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<bool> ExisteTurmaAtivaPorId(long turmaId);

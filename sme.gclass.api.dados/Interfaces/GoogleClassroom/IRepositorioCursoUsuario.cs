@@ -31,8 +31,10 @@ namespace SME.GoogleClassroom.Dados
         Task<IEnumerable<CursoUsuarioRemoverDto>> ObterPorUsuarioIdETurmaId(long usuarioId, long turmaId);
 
         Task<IEnumerable<CursoUsuarioInativarDto>> ObterUsuariosPorIdETurmaId(long usuarioId, long turmaId);
-
+        
         Task<bool> UsuarioEhDonoCurso(long usuarioId, string email);
+
+        Task<IEnumerable<long>> ObterCodigosAlunosSincronizadosNoCursoAsync(long turmaId, long componenteCurricularId);
 
     }
 }

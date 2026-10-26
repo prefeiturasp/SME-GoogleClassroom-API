@@ -247,11 +247,13 @@ namespace SME.GoogleClassroom.Dados
 				});
 		}
 
-		public async Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+		public async Task<IEnumerable<AlunoCursoParaIncluirGoogleDto>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
 		{
-			using var conn = ObterConexao();
+			var sql = new StringBuilder();
 
-			const string query = @"
+            sql.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);
+
+            sql.AppendLine(@"
 				DECLARE @situacaoAtivo AS CHAR = 1;
 				DECLARE @situacaoPendenteRematricula AS CHAR = 6;
 				DECLARE @situacaoRematriculado AS CHAR = 10;
@@ -262,57 +264,70 @@ namespace SME.GoogleClassroom.Dados
 				DECLARE @situacaoRematriculadoInt AS INT = 10;
 				DECLARE @situacaoSemContinuidadeInt AS INT = 13;
 
-				SELECT
-					DISTINCT
+				SELECT DISTINCT
 					a.cd_aluno AS CodigoAluno,
 					te.cd_turma_escola AS TurmaId,
 					@componenteCurricularId AS ComponenteCurricularId,
 					te.cd_escola AS UeCodigo
-				FROM
-					v_aluno_cotic aluno (NOLOCK)
-				INNER JOIN 
-					aluno a
+				FROM v_aluno_cotic aluno (NOLOCK)
+				INNER JOIN aluno a (NOLOCK)
 					ON aluno.cd_aluno = a.cd_aluno
-				INNER JOIN
-					v_matricula_cotic matr (NOLOCK) 
+				INNER JOIN v_matricula_cotic matr (NOLOCK)
 					ON aluno.cd_aluno = matr.cd_aluno
-				INNER JOIN 
-					matricula_turma_escola mte (NOLOCK) 
+				INNER JOIN matricula_turma_escola mte (NOLOCK)
 					ON matr.cd_matricula = mte.cd_matricula
-				INNER JOIN
-					turma_escola te (NOLOCK)
+				INNER JOIN turma_escola te (NOLOCK)
 					ON mte.cd_turma_escola = te.cd_turma_escola
-				INNER JOIN
-					escola esc (NOLOCK)
+				INNER JOIN escola esc (NOLOCK)
 					ON te.cd_escola = esc.cd_escola
-				WHERE
-					matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
-					AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
-					AND matr.an_letivo = @anoLetivo
-					AND te.an_letivo = @anoLetivo
-					AND te.cd_turma_escola = @turmaId";
+				WHERE matr.st_matricula IN (@situacaoAtivo, @situacaoPendenteRematricula, @situacaoRematriculado, @situacaoSemContinuidade)
+				  AND mte.cd_situacao_aluno IN (@situacaoAtivoInt, @situacaoPendenteRematriculaInt, @situacaoRematriculadoInt, @situacaoSemContinuidadeInt)
+				  AND matr.an_letivo = @anoLetivo
+				  AND te.an_letivo = @anoLetivo
+				  AND te.cd_turma_escola = @turmaId
+				  -- (B) filtro por componente: o componente precisa existir na grade da turma
+				  AND (
+						-- grade regular (512 = Regência Infantil, etapa 1)
+						EXISTS (SELECT 1
+								  FROM serie_turma_grade stg (NOLOCK)
+								 INNER JOIN escola_grade eg (NOLOCK) ON eg.cd_escola_grade = stg.cd_escola_grade
+								 INNER JOIN grade g (NOLOCK) ON g.cd_grade = eg.cd_grade
+								 INNER JOIN grade_componente_curricular gcc (NOLOCK) ON gcc.cd_grade = g.cd_grade
+								 INNER JOIN componente_curricular cc (NOLOCK) ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+								 INNER JOIN serie_ensino se (NOLOCK) ON se.cd_serie_ensino = g.cd_serie_ensino
+								 WHERE stg.cd_turma_escola = te.cd_turma_escola
+								   AND stg.dt_fim IS NULL
+								   AND (   (@componenteCurricularId = 512 AND se.cd_etapa_ensino = 1)
+										OR (se.cd_etapa_ensino <> 1 AND gcc.cd_componente_curricular = @componenteCurricularId)))
+						-- grade de programa
+					 OR EXISTS (SELECT 1
+								  FROM turma_escola_grade_programa tegp (NOLOCK)
+								 INNER JOIN escola_grade eg (NOLOCK) ON eg.cd_escola_grade = tegp.cd_escola_grade
+								 INNER JOIN grade_componente_curricular gcc (NOLOCK) ON gcc.cd_grade = eg.cd_grade
+								 INNER JOIN componente_curricular cc (NOLOCK) ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+								 WHERE tegp.cd_turma_escola = te.cd_turma_escola
+								   AND (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())
+								   AND gcc.cd_componente_curricular = @componenteCurricularId)
+				  )");
 
-			var sql = new StringBuilder(query);
+            // (A) solução compartilhada: substitui os 3 AdicionarCondicaoIn
+            sql.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "esc.tp_escola", "te.cd_escola", "te.cd_turma_escola");
+            sql.Append(";");
 
-			sql.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			sql.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-			sql.Append(";");
+            // (A) parâmetros da carga inicial vêm do helper, não mais da expansão das listas
+            var parametros = FiltroCargaInicialSql.ObterParametrosCargaInicial(parametrosCargaInicialDto);
+            parametros.AddDynamicParams(new
+            {
+                anoLetivo,
+                turmaId,
+                componenteCurricularId
+            });
 
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<AlunoCursoParaIncluirGoogleDto>(sql.ToString(), parametros, commandTimeout: 300);
+        }
 
-			return await conn.QueryAsync<AlunoCursoEol>(sql.ToString(),
-				new
-				{
-					turmaId,
-					componenteCurricularId,
-					anoLetivo,
-					parametrosCargaInicialDto.TiposUes,
-					parametrosCargaInicialDto.Ues,
-					parametrosCargaInicialDto.Turmas
-				});
-		}
-
-		public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia, Paginacao paginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        public async Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime dataReferencia, Paginacao paginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
 		{
 			using var conn = ObterConexao();
 
@@ -667,8 +682,22 @@ namespace SME.GoogleClassroom.Dados
 				parametrosCargaInicialDto.Turmas,
 			});
 		}
+        public async Task<IEnumerable<long>> ObterCodigosAlunosSincronizadosNoCursoAsync(long turmaId, long componenteCurricularId)
+        {
+            const string query = @"select u.id
+                             from cursos_usuarios cu
+                            inner join cursos c   on c.id = cu.curso_id
+                            inner join usuarios u on u.indice = cu.usuario_id
+                            where c.turma_id = @turmaId
+                              and c.componente_curricular_id = @componenteCurricularId
+                              and u.usuario_tipo = @usuarioTipo
+                              and not cu.excluido";
 
-		private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query, new { turmaId, componenteCurricularId, usuarioTipo = (int)UsuarioTipo.Aluno });
+        }
+
+        private static string MontaQueryGradesCursosParaInclusao(bool aplicarPaginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
 		{
 			var query = new StringBuilder();
             query.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);

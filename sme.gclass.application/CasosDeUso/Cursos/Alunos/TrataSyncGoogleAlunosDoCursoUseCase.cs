@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
-using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public TrataSyncGoogleAlunosDoCursoUseCase(IMediator mediator)
         {
-            this.mediator = mediator;
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
@@ -28,8 +28,10 @@ namespace SME.GoogleClassroom.Aplicacao
                 return true;
             }
 
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            var alunosDoCursoParaIncluir = await mediator.Send(new ObterAlunosDoCursoParaIncluirGoogleQuery(DateTime.Now.Year, cursoParaIncluirAlunos.TurmaId, cursoParaIncluirAlunos.ComponenteCurricularId, parametrosCargaInicialDto));            
+            var anoLetivo = DateTime.Today.Year;
+
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(anoLetivo));
+            var alunosDoCursoParaIncluir = await mediator.Send(new ObterAlunosDoCursoParaIncluirGoogleQuery(anoLetivo, cursoParaIncluirAlunos.TurmaId, cursoParaIncluirAlunos.ComponenteCurricularId, parametrosCargaInicialDto));
             if (!alunosDoCursoParaIncluir?.Any() ?? true) return true;
 
             foreach (var alunoDoCursoParaIncluir in alunosDoCursoParaIncluir)
@@ -63,12 +65,12 @@ namespace SME.GoogleClassroom.Aplicacao
             await mediator.Send(command);
         }
 
-        private async Task IncluirCursoDoAlunoComErroAsync(AlunoCursoEol cursoDoAlunoParaIncluirGoogle, string mensagem)
+        private async Task IncluirCursoDoAlunoComErroAsync(AlunoCursoParaIncluirGoogleDto alunoCurso, string mensagem)
         {
             var command = new IncluirCursoUsuarioErroCommand(
-                cursoDoAlunoParaIncluirGoogle.CodigoAluno,
-                cursoDoAlunoParaIncluirGoogle.TurmaId,
-                cursoDoAlunoParaIncluirGoogle.ComponenteCurricularId,
+                alunoCurso.CodigoAluno,
+                alunoCurso.TurmaId,
+                alunoCurso.ComponenteCurricularId,
                 ExecucaoTipo.AlunoCursoAdicionar,
                 ErroTipo.Negocio,
                 mensagem);
@@ -76,9 +78,9 @@ namespace SME.GoogleClassroom.Aplicacao
             await mediator.Send(command);
         }
 
-        private static string ObterMensagemDeErro(AlunoCursoEol cursoDoAlunoParaIncluirGoogle, Exception ex = null)
+        private static string ObterMensagemDeErro(AlunoCursoParaIncluirGoogleDto alunoCurso, Exception ex = null)
         {
-            var mensagem = $"Não foi possível inserir o curso [TurmaId:{cursoDoAlunoParaIncluirGoogle.TurmaId}, ComponenteCurricularId:{cursoDoAlunoParaIncluirGoogle.ComponenteCurricularId}] aluno RA{cursoDoAlunoParaIncluirGoogle.CodigoAluno} na fila para inclusão no Google Classroom.";
+            var mensagem = $"Não foi possível inserir o curso [TurmaId:{alunoCurso.TurmaId}, ComponenteCurricularId:{alunoCurso.ComponenteCurricularId}] aluno RA{alunoCurso.CodigoAluno} na fila para inclusão no Google Classroom.";
             if (ex is null) return mensagem;
             return $"{mensagem}. {ex.InnerException?.Message ?? ex.Message}. {ex.StackTrace}";
         }

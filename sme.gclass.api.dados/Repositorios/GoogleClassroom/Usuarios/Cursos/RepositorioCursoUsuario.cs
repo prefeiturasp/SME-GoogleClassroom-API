@@ -593,5 +593,20 @@ namespace SME.GoogleClassroom.Dados
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<long>> ObterCodigosAlunosSincronizadosNoCursoAsync(long turmaId, long componenteCurricularId)
+        {
+            const string query = @"select distinct u.id
+                                     from cursos_usuarios cu
+                                    inner join cursos c   on c.id = cu.curso_id
+                                    inner join usuarios u on u.indice = cu.usuario_id
+                                    where c.turma_id = @turmaId
+                                      and c.componente_curricular_id = @componenteCurricularId
+                                      and u.usuario_tipo = @tipo
+                                      and not cu.excluido";
+
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<long>(query, new { turmaId, componenteCurricularId, tipo = UsuarioTipo.Aluno });
+        }
     }
 }
