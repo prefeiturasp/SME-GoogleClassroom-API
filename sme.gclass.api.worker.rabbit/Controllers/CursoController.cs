@@ -393,10 +393,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, int anoLetivo, long? turmaId = null)
+        public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, [FromQuery] int? anoLetivo, [FromQuery] long? turmaId = null)
         {
-            await useCase.Executar(anoLetivo, turmaId);
-            return Ok();
+            var retorno = await useCase.Executar(anoLetivo, turmaId);
+            return Ok(retorno);
         }
     }
 }
