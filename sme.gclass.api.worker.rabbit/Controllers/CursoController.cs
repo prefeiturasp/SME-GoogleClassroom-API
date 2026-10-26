@@ -294,8 +294,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
         {
-            await useCase.Executar();
-            return Ok();
+            return Ok(await useCase.Executar());
         }
         
         
