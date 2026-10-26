@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -10,6 +10,7 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public ObterCursosExtintosPorPeriodoPaginadoQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao)
         {
+            ParametrosCargaInicialDto = parametrosCargaInicialDto;
             DataInicio = dataInicio;
             DataFim = dataFim;
             AnoLetivo = anoLetivo;
