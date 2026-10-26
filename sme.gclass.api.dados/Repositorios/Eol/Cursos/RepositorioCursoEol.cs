@@ -602,23 +602,21 @@ namespace SME.GoogleClassroom.Dados
 			var queryBuilder = new StringBuilder();
 
 			queryBuilder.Append(contador ?
-				"select count(*) " :
-				@"select distinct
-					cd_turma_escola as TurmaId ");
+                "select count(distinct te.cd_turma_escola) " :
+                @"select distinct
+					te.cd_turma_escola as TurmaId ");
 
-			queryBuilder.Append(@" from turma_escola te (NOLOCK)
+            queryBuilder.Append(@" from turma_escola te (NOLOCK)
 							inner join escola esc (NOLOCK) ON te.cd_escola = esc.cd_escola
-							where st_turma_escola = 'C' 								
-								and an_letivo = @anoLetivo ");
+							where te.st_turma_escola = 'C'
+								and te.an_letivo = @anoLetivo ");
 
-			queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			queryBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
+            queryBuilder.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "esc.tp_escola", "te.cd_escola", "te.cd_turma_escola");
 
-			if (!contador)
-				queryBuilder.Append(" order by cd_turma_escola ");
+            if (!contador)
+                queryBuilder.Append(" order by te.cd_turma_escola ");
 
-			if (paginacao)
+            if (paginacao)
 				queryBuilder.Append(" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY");
 
 			queryBuilder.Append(";");
@@ -626,34 +624,40 @@ namespace SME.GoogleClassroom.Dados
 			return queryBuilder.ToString();
 		}
 
-		public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, Paginacao paginacao, ParametrosCargaInicialDto parametrosCargaInicialDto)
-		{
-			var query = MontaQueryCursosParaArquivaPorAno(anoLetivo, true, false, parametrosCargaInicialDto);
-			query += MontaQueryCursosParaArquivaPorAno(anoLetivo, false, false, parametrosCargaInicialDto);
+        public async Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, Paginacao paginacao, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            var paginar = paginacao.QuantidadeRegistros > 0;
 
-			using var conn = ObterConexao();
-			using var multi = await conn.QueryMultipleAsync(query, new
-			{
-				anoLetivo,
-				paginacao.QuantidadeRegistrosIgnorados,
-				paginacao.QuantidadeRegistros,
-				parametrosCargaInicialDto.TiposUes,
-				parametrosCargaInicialDto.Ues,
-				parametrosCargaInicialDto.Turmas,
-			});
+            var query = new StringBuilder();
+            query.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);
+            query.Append(MontaQueryCursosParaArquivaPorAno(anoLetivo, paginar, false, parametrosCargaInicialDto));
+            query.Append(MontaQueryCursosParaArquivaPorAno(anoLetivo, false, true, parametrosCargaInicialDto));
 
-			var retorno = new PaginacaoResultadoDto<CursoArquivarEolDto>
-			{
-				Items = multi.Read<CursoArquivarEolDto>(),
-				TotalRegistros = multi.ReadFirst<int>()
-			};
+            var parametros = FiltroCargaInicialSql.ObterParametrosCargaInicial(parametrosCargaInicialDto);
+            parametros.AddDynamicParams(new
+            {
+                anoLetivo,
+                paginacao.QuantidadeRegistrosIgnorados,
+                paginacao.QuantidadeRegistros
+            });
 
-			retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            using var conn = ObterConexao();
+            using var multi = await conn.QueryMultipleAsync(query.ToString(), parametros, commandTimeout: 300);
 
-			return retorno;
-		}
+            var retorno = new PaginacaoResultadoDto<CursoArquivarEolDto>
+            {
+                Items = multi.Read<CursoArquivarEolDto>(),
+                TotalRegistros = multi.ReadFirst<int>()
+            };
 
-		public async Task<IEnumerable<CursoEolDto>> ObterTurmasConcluidasPorAnoLetivo(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, long? turmaId)
+            retorno.TotalPaginas = paginar
+                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
+                : 1;
+
+            return retorno;
+        }
+
+        public async Task<IEnumerable<CursoEolDto>> ObterTurmasConcluidasPorAnoLetivo(ParametrosCargaInicialDto parametrosCargaInicialDto, int anoLetivo, long? turmaId)
 		{
 			var query = @"	select 
 								cd_turma_escola as TurmaId
