@@ -71,8 +71,10 @@ export default defineConfig({
       })
 
       const envKeys = [
-        'USUARIO',
-        'SENHA',
+        'TOKEN',
+        'TOKEN_INVALIDO',
+        'CODIGO_DRE',
+        'SIGLA_TIPO_ESCOLA',
       ]
 
       const customVariable = Object.fromEntries(
