@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
-
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public interface IIniciarTratamentoErroCursoArquivadosTratarUseCase
+    public interface IIniciarTratamentoErroCursoArquivadosTratarUseCase : ITratarFilaErrosUseCase
     {
-        Task Executar();
     }
 }
