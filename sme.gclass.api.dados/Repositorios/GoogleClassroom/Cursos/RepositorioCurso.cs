@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Npgsql;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -242,6 +242,7 @@ namespace SME.GoogleClassroom.Dados
         {
             const string query = @"delete from cursos_usuarios where curso_id  = @cursoId;
                                    delete from cursos_arquivado where curso_id  = @cursoId; 
+                                   delete from curso_usuario_removido_gsa where curso_id  = @cursoId;
                                    delete from cursos where id  = @cursoId;";
 
             var parametros = new

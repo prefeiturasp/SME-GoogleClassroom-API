@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -74,11 +74,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// **Observação:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// **Importante: Utilizar a função de recriação do curso apenas no cenário em que o curso foi excluído fisicamente do Google Classroom, caso contrário poderá ocorrer
-        /// duplicidade de cursos nos registros.**
+        /// duplicidade de cursos nos registros. Para utilizar o filtro de sincronização ou a recriação do curso, deve-se informar obrigatoriamente o turmaId e o componenteCurricularId.**
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a execução.</response>
+        /// <response code="601">Houve uma falha de validação durante a execução.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleCursoUseCase iniciarSyncGoogleCursoUseCase, long? turmaId = null, long? componenteCurricularId = null, bool recriarCursoSeExistirNaBaseDeDados = false)
         {
             var retorno = await iniciarSyncGoogleCursoUseCase.Executar(turmaId, componenteCurricularId, recriarCursoSeExistirNaBaseDeDados);
