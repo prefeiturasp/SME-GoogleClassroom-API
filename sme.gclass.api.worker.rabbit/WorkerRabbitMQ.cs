@@ -144,7 +144,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesCarregar, new ComandoRabbit("Carrega atividades para importacao de notas", typeof(ICarregarAtividadesParaSincronizarNotasUseCase)));
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesTratar, new ComandoRabbit("Tratar carga de notas das atividades para importacao", typeof(ITratarImportacaoDeNotasDaAtividadeUseCase)));
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSync, new ComandoRabbit("Executar importação de notas da atividade", typeof(IExecutarImportacaoDeNotasDaAtividadeUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSyncErro, new ComandoRabbit("Gravar erros na importação das notas", typeof(IImportarNotasGsaProcessarErroUseCase)));
+
 
             // Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
@@ -502,8 +502,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaNotasAtividadesCarregar,
                     RotasRabbit.FilaGsaNotasAtividadesTratar,
-                    RotasRabbit.FilaGsaNotasAtividadesSync,
-                    RotasRabbit.FilaGsaNotasAtividadesSyncErro);
+                    RotasRabbit.FilaGsaNotasAtividadesSync);
+
             }
         }
     }
