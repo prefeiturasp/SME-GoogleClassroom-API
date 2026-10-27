@@ -1,4 +1,4 @@
-﻿using SME.GoogleClassroom.Dados.Help;
+using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -541,6 +541,21 @@ namespace SME.GoogleClassroom.Dados
 								 	where te.cd_turma_escola = @turmaId";
 
 			return await conn.QueryFirstOrDefaultAsync<bool>(query, new { turmaId });
+		}
+
+		public async Task<bool> ExisteComponenteCurricularPorId(long componenteCurricularId)
+		{
+			if (componenteCurricularId == 512)
+				return true;
+
+			using var conn = ObterConexao();
+
+			const string query = @"select 1
+								  	 from componente_curricular cc (NOLOCK)
+								 	where cc.cd_componente_curricular = @componenteCurricularId
+								 	  and cc.dt_cancelamento is null";
+
+			return await conn.QueryFirstOrDefaultAsync<bool>(query, new { componenteCurricularId });
 		}
 
 		public async Task<bool> ExisteTurmaAtivaPorId(long turmaId)
