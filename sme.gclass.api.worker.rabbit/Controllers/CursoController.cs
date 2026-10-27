@@ -97,12 +97,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a execução.</response>
+        /// <response code="601">Houve uma falha de validação durante a execução.</response>
         [HttpPost("erros/tratamentos")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> TratarErros([FromServices] IIniciarSyncGoogleCursoErrosUseCase iniciarSyncGoogleCursoErrosUseCase)
         {
-            await iniciarSyncGoogleCursoErrosUseCase.Executar();
-            return Ok();
+            var retorno = await iniciarSyncGoogleCursoErrosUseCase.Executar();
+            return Ok(retorno);
         }
 
         /// <summary>
