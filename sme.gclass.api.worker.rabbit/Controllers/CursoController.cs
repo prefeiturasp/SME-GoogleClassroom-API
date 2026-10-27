@@ -186,7 +186,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("gsa")]
-        [ProducesResponseType(typeof(CursoGsaDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ConsultaCursoGsaDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterCursoGsaGoogle([FromServices] IObterCursoGsaGoogleUseCase useCase,
