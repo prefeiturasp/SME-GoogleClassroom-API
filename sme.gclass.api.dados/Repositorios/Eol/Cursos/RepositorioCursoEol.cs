@@ -366,53 +366,31 @@ namespace SME.GoogleClassroom.Dados
 				DECLARE @tipoFuncaoPAEE AS INT = 6;
 				DECLARE @tipoFuncaoCIEJAASSISTPED AS INT = 42;
 				DECLARE @tipoFuncaoCIEJAASSISTCOORD AS INT = 43;
-				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44;
-				DECLARE @cdUe AS VARCHAR(20) = (SELECT cd_escola FROM turma_escola (NOLOCK) WHERE cd_turma_escola = @turmaId); ";
-		}
+				DECLARE @tipoFuncaoCIEJACOORD AS INT = 44; ";
+        }
 
-		public async Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
-		{
-			using var conn = ObterConexao();
+        public async Task<IEnumerable<FuncionarioCursoParaIncluirGoogleDto>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto)
+        {
+            var queryCargoFixo = new StringBuilder(ObterQueryBuscafuncionarioPorCargoFixo()).Append("), ");
+            var queryCargoSobreposto = new StringBuilder(ObterQueryBuscafuncionarioPorCargoSobreposto()).Append("), ");
+            var queryFuncao = new StringBuilder(ObterQueryBuscafuncionarioPorFuncao()).Append("), ");
 
-			var variaveis = ObterVariaveis();
+            var sql = new StringBuilder();
+            sql.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);
+            sql.Append(AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(ObterVariaveis(), queryCargoFixo, queryCargoSobreposto, queryFuncao));
+            sql.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "esc.tp_escola", "te.cd_escola", "te.cd_turma_escola");
+            sql.Append(";");
 
-			var queryBuscafuncionarioPorCargoFixo = ObterQueryBuscafuncionarioPorCargoFixo();
+            var parametros = FiltroCargaInicialSql.ObterParametrosCargaInicial(parametrosCargaInicialDto);
+            parametros.AddDynamicParams(new
+            {
+                anoLetivo,
+                turmaId,
+                componenteCurricularId
+            });
 
-			var queryBuscafuncionarioPorCargoSobreposto = ObterQueryBuscafuncionarioPorCargoSobreposto();
-
-			var queryBuscafuncionarioPorFuncao = ObterQueryBuscafuncionarioPorFuncao();
-
-			var queryBuscafuncionarioPorCargoFixoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoFixo);
-			var queryBuscafuncionarioPorCargoSobrepostoStringBuilder = new StringBuilder(queryBuscafuncionarioPorCargoSobreposto);
-			var queryBuscafuncionarioPorFuncaoStringBuilder = new StringBuilder(queryBuscafuncionarioPorFuncao);
-
-			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			queryBuscafuncionarioPorCargoFixoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-			queryBuscafuncionarioPorCargoFixoStringBuilder.Append("), ");
-
-			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-			queryBuscafuncionarioPorCargoSobrepostoStringBuilder.Append("), ");
-
-			queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.TiposUes, "esc.tp_escola", nameof(parametrosCargaInicialDto.TiposUes));
-			queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
-			queryBuscafuncionarioPorFuncaoStringBuilder.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
-			queryBuscafuncionarioPorFuncaoStringBuilder.Append("), ");
-
-			var query = AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(variaveis, queryBuscafuncionarioPorCargoFixoStringBuilder, queryBuscafuncionarioPorCargoSobrepostoStringBuilder, queryBuscafuncionarioPorFuncaoStringBuilder);
-
-			return await conn.QueryAsync<FuncionarioCursoEol>(query,
-				new
-				{
-					turmaId,
-					componenteCurricularId,
-					anoLetivo,
-					parametrosCargaInicialDto.TiposUes,
-					parametrosCargaInicialDto.Ues,
-					parametrosCargaInicialDto.Turmas
-				});
+            using var conn = ObterConexao();
+            return await conn.QueryAsync<FuncionarioCursoParaIncluirGoogleDto>(sql.ToString(), parametros, commandTimeout: 300);
 		}
 
 		private string AdicionarQueryFuncionarioCargoSobrepostoFuncaoEVariaveis(string variaveis, StringBuilder queryBuscafuncionarioPorCargoFixoStringBuilder, StringBuilder queryBuscafuncionarioPorCargoSobrepostoStringBuilder, StringBuilder queryBuscafuncionarioPorFuncaoStringBuilder)
@@ -444,16 +422,42 @@ namespace SME.GoogleClassroom.Dados
 					ON base.cd_cargo_base_servidor = funcao.cd_cargo_base_servidor
 				)
 
-				SELECT
+				SELECT DISTINCT
 					temp.Rf,
-					@turmaId AS TurmaId,
+					te.cd_turma_escola AS TurmaId,
 					@componenteCurricularId AS ComponenteCurricularId,
 					temp.CdUe AS UeCodigo
 				FROM
 					tempServidorCargos temp
+				INNER JOIN turma_escola te (NOLOCK)
+					ON te.cd_turma_escola = @turmaId
+				   AND te.cd_escola = temp.CdUe
+				INNER JOIN escola esc (NOLOCK)
+					ON esc.cd_escola = te.cd_escola
 				WHERE
 					temp.CdCagoFuncao IN (@cargoCP, @cargoAD, @cargoDiretor, @tipoFuncaoPAP, @tipoFuncaoPAEE, @tipoFuncaoCIEJAASSISTPED, @tipoFuncaoCIEJAASSISTCOORD, @tipoFuncaoCIEJACOORD)
-					AND temp.CdUe = @cdUe;";
+					AND te.an_letivo = @anoLetivo
+					AND (
+						EXISTS (SELECT 1
+								  FROM serie_turma_grade stg (NOLOCK)
+								 INNER JOIN escola_grade eg (NOLOCK) ON eg.cd_escola_grade = stg.cd_escola_grade
+								 INNER JOIN grade g (NOLOCK) ON g.cd_grade = eg.cd_grade
+								 INNER JOIN grade_componente_curricular gcc (NOLOCK) ON gcc.cd_grade = g.cd_grade
+								 INNER JOIN componente_curricular cc (NOLOCK) ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+								 INNER JOIN serie_ensino se (NOLOCK) ON se.cd_serie_ensino = g.cd_serie_ensino
+								 WHERE stg.cd_turma_escola = te.cd_turma_escola
+								   AND stg.dt_fim IS NULL
+								   AND (   (@componenteCurricularId = 512 AND se.cd_etapa_ensino = 1)
+										OR (se.cd_etapa_ensino <> 1 AND gcc.cd_componente_curricular = @componenteCurricularId)))
+					 OR EXISTS (SELECT 1
+								  FROM turma_escola_grade_programa tegp (NOLOCK)
+								 INNER JOIN escola_grade eg (NOLOCK) ON eg.cd_escola_grade = tegp.cd_escola_grade
+								 INNER JOIN grade_componente_curricular gcc (NOLOCK) ON gcc.cd_grade = eg.cd_grade
+								 INNER JOIN componente_curricular cc (NOLOCK) ON cc.cd_componente_curricular = gcc.cd_componente_curricular AND cc.dt_cancelamento IS NULL
+								 WHERE tegp.cd_turma_escola = te.cd_turma_escola
+								   AND (tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE())
+								   AND gcc.cd_componente_curricular = @componenteCurricularId)
+					) ";
 		}
 
 		private string ObterQueryBuscafuncionarioPorFuncao()

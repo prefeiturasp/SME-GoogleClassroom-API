@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,11 +17,11 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<IEnumerable<FuncionarioCursoEol>> Executar(long turmaId, long componenteCurricularId)
+        public async Task<IEnumerable<FuncionarioCursoParaIncluirGoogleDto>> Executar(long turmaId, long componenteCurricularId)
         {
-            var parametrosCargaInicialDto =
-                await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            return await mediator.Send(new ObterFuncionariosDoCursoParaIncluirGoogleQuery(DateTime.Now.Year, turmaId,
+            var anoLetivo = DateTime.Today.Year;
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(anoLetivo));
+            return await mediator.Send(new ObterFuncionariosDoCursoParaIncluirGoogleQuery(anoLetivo, turmaId,
                 componenteCurricularId, parametrosCargaInicialDto));
         }
     }
