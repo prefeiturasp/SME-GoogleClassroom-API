@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -20,9 +20,10 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (string.IsNullOrWhiteSpace(mensagemRabbit?.Mensagem?.ToString())) return true;
             var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroUsuarioErroDto>();
-            var usuarioErro = filtro.UsuarioErro;
-            var filtroCargaInicial = filtro.FiltroCargaInicial;
+            var usuarioErro = filtro?.UsuarioErro;
+            var filtroCargaInicial = filtro?.FiltroCargaInicial;
             if (usuarioErro is null) return true;
 
             try

@@ -1,8 +1,9 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,20 +24,20 @@ namespace SME.GoogleClassroom.Aplicacao
             if (mensagemRabbit.Mensagem is null)
                 throw new NegocioException("Não foi possível iniciar a sincronização de alunos. A mensagem enviada é inválida.");
 
-            var filtro = ObterFiltro(mensagemRabbit);
+            var filtro = ObterFiltro(mensagemRabbit) ?? new IniciarSyncGoogleAlunoDto();
             var codigoAlunoFiltro = filtro.CodigoAluno;
             var ultimaAtualizacao = default(DateTime?);
 
             if (codigoAlunoFiltro is null && !filtro.AnoLetivo.HasValue)
                 ultimaAtualizacao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.AlunoAdicionar));
-            else if (filtro.AnoLetivo.HasValue)
+            else if (filtro.AnoLetivo.HasValue && filtro.AnoLetivo.Value > 0)
                 ultimaAtualizacao = new DateTime(filtro.AnoLetivo.Value, 1, 1);
 
             if (filtro.Paginacao is null)
                 filtro.Paginacao = codigoAlunoFiltro is null ? new Paginacao(1, QUANTIDADE_ITENS_POR_PAGINA) : new Paginacao(0, 0);
 
             var totalPaginas = 1;
-            var parametrosCargaInicialDto = filtro.AnoLetivo != null ?
+            var parametrosCargaInicialDto = (filtro.AnoLetivo != null || filtro.TiposUes?.Any() == true || filtro.Ues?.Any() == true || filtro.Turmas?.Any() == true) ?
                 new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
@@ -58,7 +59,10 @@ namespace SME.GoogleClassroom.Aplicacao
                 {
                     try
                     {
-                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, parametrosCargaInicialDto.AnoLetivo, parametrosCargaInicialDto.TiposUes.ToList(), parametrosCargaInicialDto.Ues.ToList(), parametrosCargaInicialDto.Turmas.ToList());
+                        var tiposUes = parametrosCargaInicialDto?.TiposUes?.ToList() ?? new List<int>();
+                        var ues = parametrosCargaInicialDto?.Ues?.ToList() ?? new List<long>();
+                        var turmas = parametrosCargaInicialDto?.Turmas?.ToList() ?? new List<long>();
+                        var filtroAluno = new FiltroAlunoDto(alunoParaIncluirGoogleEol, parametrosCargaInicialDto?.AnoLetivo, tiposUes, ues, turmas);
 
                         var publicarAluno = await mediator
                             .Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
@@ -72,7 +76,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     }
                 });
 
-            if (codigoAlunoFiltro is null && filtro.Paginacao.Pagina <= totalPaginas)
+            if (codigoAlunoFiltro is null && filtro.Paginacao != null && filtro.Paginacao.Pagina <= totalPaginas)
             {
                 var dtoProximaPagina = new IniciarSyncGoogleAlunoDto(filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas, null);
                 dtoProximaPagina.Paginacao = new Paginacao(filtro.Paginacao.Pagina + 1, QUANTIDADE_ITENS_POR_PAGINA);

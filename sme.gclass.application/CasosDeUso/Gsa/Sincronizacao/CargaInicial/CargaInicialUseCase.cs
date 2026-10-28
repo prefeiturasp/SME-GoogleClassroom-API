@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -28,11 +28,14 @@ namespace SME.GoogleClassroom.Aplicacao
                 (filtro.TiposUes == null || !filtro.TiposUes.Any()))
             {
                 var parametros = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(filtro.AnoLetivo));
-                filtro = new FiltroCargaInicialDto(
-                    parametros.AnoLetivo ?? filtro.AnoLetivo,
-                    parametros.TiposUes,
-                    parametros.Ues,
-                    parametros.Turmas);
+                if (parametros != null)
+                {
+                    filtro = new FiltroCargaInicialDto(
+                        parametros.AnoLetivo ?? filtro.AnoLetivo,
+                        parametros.TiposUes,
+                        parametros.Ues,
+                        parametros.Turmas);
+                }
             }
 
             await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCargaInicial, filtro));

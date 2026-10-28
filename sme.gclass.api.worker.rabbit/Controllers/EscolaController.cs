@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Infra;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
     /// <summary>
-    /// Alunos
+    /// Escolas
     /// </summary>
     [ApiController]
     [ChaveIntegracaoGoogleClassroomApi]
@@ -22,13 +22,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// Retorna as escolas existentes.
         /// </summary>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
+        /// <response code="204">A consulta foi realizada, mas nenhuma escola foi encontrada.</response>
+        /// <response code="401">A chave de integração fornecida é inválida ou não foi informada.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<EscolaDTO>), 200)]
+        [ProducesResponseType(typeof(IReadOnlyList<EscolaDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        [LimparLixo]
         public async Task<IActionResult> ObterEscolas(
                                             [FromServices] IObterEscolasUseCase obterEscolasUseCase,
                                             [FromQuery] FiltroObterEscolasDto filtro)

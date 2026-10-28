@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var resposta = mensagemRabbit.Mensagem;
+            var resposta = mensagemRabbit?.Mensagem;
 
             var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, resposta));
             var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaFuncionarioSync, RotasRabbit.FilaFuncionarioSync, resposta));
@@ -42,14 +42,14 @@ namespace SME.GoogleClassroom.Aplicacao
 
             #region Cargas GSA
             // Mural de Avisos
-            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaMuralAvisosGsa == true)
             {
                 // Mural de Avisos
                 var filtroAvisosGsa = new FiltroCargaMuralAvisosCursoDto();
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaMuralAvisosCarregar, filtroAvisosGsa));
             }
             // Atividades
-            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaAtividadesGsa == true)
             {
                 var filtroGsa = new FiltroCargaGsaDto();
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaAtividadesCarregar, filtroGsa));
