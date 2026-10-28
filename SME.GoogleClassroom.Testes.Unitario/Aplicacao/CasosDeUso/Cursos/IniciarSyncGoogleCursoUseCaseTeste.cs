@@ -2,10 +2,8 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using SME.GoogleClassroom.Aplicacao;
-using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -33,7 +31,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
             var resultado = await useCase.Executar(null, null, false);
 
             Assert.True(resultado);
-            mediatorMock.Verify(m => m.Send(It.IsAny<ExisteTurmaPorIdQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediatorMock.Verify(m => m.Send(It.IsAny<ExisteTurmaPorCodigoQuery>(), It.IsAny<CancellationToken>()), Times.Never);
             mediatorMock.Verify(m => m.Send(It.IsAny<ExisteComponenteCurricularPorIdQuery>(), It.IsAny<CancellationToken>()), Times.Never);
             mediatorMock.Verify(m => m.Send(It.IsAny<ExcluirCursoCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -45,7 +43,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
             const long componenteCurricularId = 525;
 
             mediatorMock
-                .Setup(m => m.Send(It.Is<ExisteTurmaPorIdQuery>(q => q.TurmaId == turmaId), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<ExisteTurmaPorCodigoQuery>(q => q.TurmaId == turmaId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             mediatorMock
@@ -73,7 +71,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
             };
 
             mediatorMock
-                .Setup(m => m.Send(It.Is<ExisteTurmaPorIdQuery>(q => q.TurmaId == turmaId), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<ExisteTurmaPorCodigoQuery>(q => q.TurmaId == turmaId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             mediatorMock
@@ -123,7 +121,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
             const long componenteCurricularId = 525;
 
             mediatorMock
-                .Setup(m => m.Send(It.Is<ExisteTurmaPorIdQuery>(q => q.TurmaId == turmaIdInexistente), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<ExisteTurmaPorCodigoQuery>(q => q.TurmaId == turmaIdInexistente), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             var ex = await Assert.ThrowsAsync<NegocioException>(() => useCase.Executar(turmaIdInexistente, componenteCurricularId, true));
@@ -140,7 +138,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
             const long componenteInexistente = 9999999;
 
             mediatorMock
-                .Setup(m => m.Send(It.Is<ExisteTurmaPorIdQuery>(q => q.TurmaId == turmaId), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<ExisteTurmaPorCodigoQuery>(q => q.TurmaId == turmaId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             mediatorMock
@@ -180,13 +178,13 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
         public async Task QueryHandlers_DevemDelegarAoRepositorioCursoEol()
         {
             var repoMock = new Mock<IRepositorioCursoEol>();
-            repoMock.Setup(r => r.ExisteTurmaPorId(3019661)).ReturnsAsync(true);
+            repoMock.Setup(r => r.ExisteTurmaPorCodigo(3019661)).ReturnsAsync(true);
             repoMock.Setup(r => r.ExisteComponenteCurricularPorId(525)).ReturnsAsync(true);
 
-            var turmaHandler = new ExisteTurmaPorIdQueryHandler(repoMock.Object);
+            var turmaHandler = new ExisteTurmaPorCodigoQueryHandler(repoMock.Object);
             var componenteHandler = new ExisteComponenteCurricularPorIdQueryHandler(repoMock.Object);
 
-            Assert.True(await turmaHandler.Handle(new ExisteTurmaPorIdQuery(3019661), CancellationToken.None));
+            Assert.True(await turmaHandler.Handle(new ExisteTurmaPorCodigoQuery(3019661), CancellationToken.None));
             Assert.True(await componenteHandler.Handle(new ExisteComponenteCurricularPorIdQuery(525), CancellationToken.None));
         }
     }
