@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dados;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,8 @@ namespace SME.GoogleClassroom.Aplicacao.Commands.Cursos.AlterarCurso
             var turmaId = request.Curso.TurmaId;
             var componenteCurricularId = request.Curso.ComponenteCurricularId;
             var dataInclusao = request.Curso.DataInclusao;
-            var dataAtualizacao = request.Curso.DataAtualizacao;
+            var dataAtualizacao = DateTime.Now;
+            request.Curso.DataAtualizacao = dataAtualizacao;
             return await repositorio.AlterarAsync(id, email, nome, secao, turmaId, componenteCurricularId, dataInclusao, dataAtualizacao);
         }
     }

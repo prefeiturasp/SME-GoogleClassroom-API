@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using Google.Apis.Classroom.v1;
 using Google.Apis.Classroom.v1.Data;
 using MediatR;
@@ -43,7 +43,7 @@ namespace SME.GoogleClassroom.Aplicacao
                     return;
 
                 var professores = await servicoClassroom.Courses.Teachers.List(cursoId.ToString()).ExecuteAsync();
-                var professor = professores.Teachers.FirstOrDefault(p => p.UserId == ownerId);
+                var professor = professores.Teachers?.FirstOrDefault(p => p.UserId == ownerId);
                 if (professor == null)
                 {
                     await servicoClassroom.Courses.Teachers.Create(new Teacher { UserId = ownerId }, cursoId.ToString()).ExecuteAsync();
@@ -55,7 +55,8 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (GoogleApiException gEx)
             {
-               await mediator.Send(new SalvarLogViaRabbitCommand($"AtribuirDonoCursoGoogleCommandHandler - Não foi possível atribuir dono curso google", LogNivel.Critico, LogContexto.Gsa, gEx.Message, gEx.StackTrace));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"AtribuirDonoCursoGoogleCommandHandler - Não foi possível atribuir dono curso google", LogNivel.Critico, LogContexto.Gsa, gEx.Message, gEx.StackTrace));
+                throw;
             }
         }
     }
