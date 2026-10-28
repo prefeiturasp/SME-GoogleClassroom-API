@@ -37,7 +37,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private async Task ValidarExistenciaTurmaEComponenteAsync(long turmaId, long componenteCurricularId)
         {
-            var existeTurma = await mediator.Send(new ExisteTurmaPorIdQuery(turmaId));
+            var existeTurma = await mediator.Send(new ExisteTurmaPorCodigoQuery(turmaId));
             if (!existeTurma)
                 throw new NegocioException("A turma informada não existe.");
 

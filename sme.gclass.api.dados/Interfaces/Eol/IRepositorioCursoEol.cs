@@ -14,7 +14,6 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<IEnumerable<AlunoCursoEol>> ObterAlunosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<PaginacaoResultadoDto<GradeCursoEol>> ObterGradesDeCursosAsync(DateTime ultimaDataExecucao, Paginacao paginacao, long? turmaId, long? componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
         Task<IEnumerable<FuncionarioCursoEol>> ObterFuncionariosDoCursoParaIncluirAsync(int anoLetivo, long turmaId, long componenteCurricularId, ParametrosCargaInicialDto parametrosCargaInicialDto);
-        Task<bool> ExisteTurmaPorId(long turmaId);
         Task<bool> ExisteComponenteCurricularPorId(long componenteCurricularId);
         Task<bool> ExisteTurmaAtivaPorId(long turmaId);
         Task<bool> ExisteTurmaPorCodigo(long turmaId);
