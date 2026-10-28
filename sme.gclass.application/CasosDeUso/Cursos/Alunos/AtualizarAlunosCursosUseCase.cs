@@ -1,4 +1,5 @@
-﻿using SME.GoogleClassroom.Aplicacao.Interfaces;
+﻿using Sentry;
+using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Threading.Tasks;
@@ -51,7 +52,9 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
                 catch (Exception ex)
                 {
-                    throw new ArgumentException($"Erro ao enviar a atualização de alunos do curso: [ID:{cursoGoogle.Id}] - Nome:{cursoGoogle.Nome} -- Erro:{ex.Message} -- {ex.StackTrace}.");
+                    SentrySdk.CaptureException(new Exception(
+                        $"Erro ao enviar a atualização de alunos do curso: [ID:{cursoGoogle.Id}] - Nome:{cursoGoogle.Nome} -- Erro:{ex.Message}", ex));
+                    continue; // segue para o próximo curso
                 }
             }
 

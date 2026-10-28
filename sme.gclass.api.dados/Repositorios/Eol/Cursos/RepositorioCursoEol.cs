@@ -1369,9 +1369,9 @@ namespace SME.GoogleClassroom.Dados
 		{
 			var query = new StringBuilder();
 
-            query.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);
+			query.AdicionarTabelasFiltroCargaInicial(parametrosCargaInicialDto);
 
-            query.AppendLine("DECLARE @tmpListaCursosPaginada TABLE(Nome VARCHAR(1000),");
+			query.AppendLine("DECLARE @tmpListaCursosPaginada TABLE(Nome VARCHAR(1000),");
 			query.AppendLine("									    Secao VARCHAR(1000),");
 			query.AppendLine("									    ComponenteCurricularId INT,");
 			query.AppendLine("									    TurmaId INT,");
@@ -1443,22 +1443,22 @@ namespace SME.GoogleClassroom.Dados
 			query.AppendLine("			ON tgte.cd_territorio_saber = ts.cd_territorio_saber");
 			query.AppendLine("		LEFT JOIN tipo_experiencia_pedagogica tep(NOLOCK)");
 			query.AppendLine("			ON tgte.cd_experiencia_pedagogica = tep.cd_experiencia_pedagogica");
-            
-			query.AppendLine("WHERE te.an_letivo = @anoLetivo AND");
-            query.AppendLine("		CONVERT(DATE, te.dt_inicio_turma) > @dataReferencia AND");
-            query.AppendLine("		te.st_turma_escola IN ('O', 'A', 'C') AND");
-            query.AppendLine("		te.cd_tipo_turma NOT IN (4, 8) AND");
-            query.AppendLine("		(stg.dt_fim IS NULL OR stg.dt_fim >= GETDATE()) AND");
-            query.AppendLine("		aa.an_atribuicao = @anoLetivo AND");
-            query.AppendLine("		aa.dt_cancelamento IS NULL");
-            query.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "e.tp_escola", "e.cd_escola", "te.cd_turma_escola");
-            if (turmaId.HasValue)
-                query.AppendLine("		AND te.cd_turma_escola = @turmaId");
-            if (componenteCurricularId.HasValue && componenteCurricularId.Value != 512)
-                query.AppendLine("		AND cc.cd_componente_curricular = @componenteCurricularId");
-            query.AppendLine("GROUP BY ee.cd_etapa_ensino,");
 
-            query.AppendLine("		   tgte.cd_serie_grade,");
+			query.AppendLine("WHERE te.an_letivo = @anoLetivo AND");
+			query.AppendLine("		CONVERT(DATE, te.dt_inicio_turma) > @dataReferencia AND");
+			query.AppendLine("		te.st_turma_escola IN ('O', 'A', 'C') AND");
+			query.AppendLine("		te.cd_tipo_turma NOT IN (4, 8) AND");
+			query.AppendLine("		(stg.dt_fim IS NULL OR stg.dt_fim >= GETDATE()) AND");
+			query.AppendLine("		aa.an_atribuicao = @anoLetivo AND");
+			query.AppendLine("		aa.dt_cancelamento IS NULL");
+			query.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "e.tp_escola", "e.cd_escola", "te.cd_turma_escola");
+			if (turmaId.HasValue)
+				query.AppendLine("		AND te.cd_turma_escola = @turmaId");
+			if (componenteCurricularId.HasValue && componenteCurricularId.Value != 512)
+				query.AppendLine("		AND cc.cd_componente_curricular = @componenteCurricularId");
+			query.AppendLine("GROUP BY ee.cd_etapa_ensino,");
+
+			query.AppendLine("		   tgte.cd_serie_grade,");
 			query.AppendLine("		   ts.dc_territorio_saber,");
 			query.AppendLine("		   tep.dc_experiencia_pedagogica,");
 			query.AppendLine("		   cc.dc_componente_curricular,");
@@ -1522,17 +1522,17 @@ namespace SME.GoogleClassroom.Dados
 			query.AppendLine("		te.cd_tipo_turma NOT IN (4, 8) AND");
 			query.AppendLine("		(tegp.dt_fim IS NULL OR tegp.dt_fim >= GETDATE()) AND");
 			query.AppendLine("		aa.an_atribuicao = @anoLetivo AND");
-            query.AppendLine("		aa.dt_cancelamento IS NULL");
+			query.AppendLine("		aa.dt_cancelamento IS NULL");
 
-            query.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "e.tp_escola", "e.cd_escola", "te.cd_turma_escola");
-            
+			query.AdicionarCondicoesCargaInicial(parametrosCargaInicialDto, "e.tp_escola", "e.cd_escola", "te.cd_turma_escola");
+
 			if (turmaId.HasValue)
-                query.AppendLine("		AND te.cd_turma_escola = @turmaId");
+				query.AppendLine("		AND te.cd_turma_escola = @turmaId");
 
-            if (componenteCurricularId.HasValue && componenteCurricularId.Value != 512)
-                query.AppendLine("		AND cc.cd_componente_curricular = @componenteCurricularId");
+			if (componenteCurricularId.HasValue && componenteCurricularId.Value != 512)
+				query.AppendLine("		AND cc.cd_componente_curricular = @componenteCurricularId");
 
-            query.AppendLine("GROUP BY cc.dc_componente_curricular,");
+			query.AppendLine("GROUP BY cc.dc_componente_curricular,");
 			query.AppendLine("		   te.cd_tipo_turma,");
 			query.AppendLine("		   te.dc_turma_escola,");
 			query.AppendLine("		   te.cd_turma_escola,");
@@ -1556,14 +1556,23 @@ namespace SME.GoogleClassroom.Dados
 			query.AppendLine("	     dbo.proc_gerar_email_funcionario(NomePessoa, Rf) Email");
 			query.AppendLine("	FROM @tmpListaCursosPaginada");
 
-            if (aplicarPaginacao)
-                query.AppendLine("ORDER BY TurmaId, ComponenteCurricularId OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
-            else
-                query.AppendLine("ORDER BY TurmaId, ComponenteCurricularId;");
+			if (aplicarPaginacao)
+				query.AppendLine("ORDER BY TurmaId, ComponenteCurricularId OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+			else
+				query.AppendLine("ORDER BY TurmaId, ComponenteCurricularId;");
 
-            query.AppendLine("SELECT COUNT(*) FROM @tmpListaCursosPaginada;");
+			query.AppendLine("SELECT COUNT(*) FROM @tmpListaCursosPaginada;");
 
-            return query.ToString();
+			return query.ToString();
 		}
-	}
+        public async Task<int?> ObterAnoLetivoTurmaAsync(long turmaId)
+        {
+            const string query = @"SELECT an_letivo
+                             FROM turma_escola (NOLOCK)
+                            WHERE cd_turma_escola = @turmaId";
+
+            using var conn = ObterConexao();
+            return await conn.QueryFirstOrDefaultAsync<int?>(query, new { turmaId });
+        }
+    }
 }

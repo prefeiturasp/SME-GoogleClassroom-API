@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "sme.gclass.api.worker.rabbit\\SME.GoogleClassroom.Worker.Rabbit.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

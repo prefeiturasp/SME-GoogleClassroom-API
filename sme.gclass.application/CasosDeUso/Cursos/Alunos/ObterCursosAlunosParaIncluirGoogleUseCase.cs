@@ -3,6 +3,7 @@ using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Infra.Dtos.Curso;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -18,10 +19,12 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<IEnumerable<AlunoCursoParaIncluirGoogleDto>> Executar(long turmaId, long componenteCurricularId)
         {
-            var anoLetivo = DateTime.Today.Year;
+            var anoLetivo = await mediator.Send(new ObterAnoLetivoTurmaQuery(turmaId));
+            if (!anoLetivo.HasValue)
+                return Enumerable.Empty<AlunoCursoParaIncluirGoogleDto>();
 
-            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(anoLetivo));
-            return await mediator.Send(new ObterAlunosDoCursoParaIncluirGoogleQuery(anoLetivo, turmaId, componenteCurricularId, parametrosCargaInicialDto));
+            var parametrosCargaInicialDto = await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(anoLetivo.Value));
+            return await mediator.Send(new ObterAlunosDoCursoParaIncluirGoogleQuery(anoLetivo.Value, turmaId, componenteCurricularId, parametrosCargaInicialDto));
         }
     }
 }
