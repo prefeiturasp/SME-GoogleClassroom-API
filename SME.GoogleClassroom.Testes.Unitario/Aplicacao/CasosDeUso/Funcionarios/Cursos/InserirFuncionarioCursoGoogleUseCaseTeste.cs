@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using Moq;
 using Newtonsoft.Json;
@@ -133,11 +133,8 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             var funcionarioCursoJson = JsonConvert.SerializeObject(funcionarioCurso);
             var mensagem = new MensagemRabbit(funcionarioCursoJson);
 
-            // Act
-            var retorno = await inserirFuncionarioCursoGoogleUseCase.Executar(mensagem);
-
-            // Assert
-            Assert.True(retorno);
+            // Act & Assert
+            await Assert.ThrowsAsync<GoogleApiException>(() => inserirFuncionarioCursoGoogleUseCase.Executar(mensagem));
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral do Google Classroom.")]
@@ -168,8 +165,11 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             var funcionarioCursoJson = JsonConvert.SerializeObject(funcionarioCurso);
             var mensagem = new MensagemRabbit(funcionarioCursoJson);
 
+            // Act
+            var retorno = await inserirFuncionarioCursoGoogleUseCase.Executar(mensagem);
+
             // Assert
-            await Assert.ThrowsAsync<GoogleApiException>(() => inserirFuncionarioCursoGoogleUseCase.Executar(mensagem));
+            Assert.True(retorno);
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
