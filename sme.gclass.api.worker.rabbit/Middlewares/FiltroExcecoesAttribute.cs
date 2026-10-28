@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dominio;
@@ -18,27 +18,30 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Middlewares
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public override async void OnException(ExceptionContext context)
+        public override async Task OnExceptionAsync(ExceptionContext context)
         {
             switch (context.Exception)
             {
                 case NegocioException negocioException:
-                    await SalvaLog(LogNivel.Negocio, context.Exception.Message, context.Exception.StackTrace);
-                    context.Result = new ResultadoBaseResult(context.Exception.Message, negocioException.StatusCode);
+                    await SalvaLog(LogNivel.Negocio, context?.Exception?.Message, context?.Exception?.StackTrace);
+                    context.Result = new ResultadoBaseResult(context?.Exception?.Message, negocioException?.StatusCode ?? 500);
+                    context.ExceptionHandled = true;
                     break;
 
                 case ValidacaoException validacaoException:
-                    await SalvaLog(LogNivel.Negocio, context.Exception.Message, context.Exception.StackTrace);
-                    context.Result = new ResultadoBaseResult(new RetornoBaseDto(validacaoException.Erros));
+                    await SalvaLog(LogNivel.Negocio, context?.Exception?.Message, context?.Exception?.StackTrace);
+                    context.Result = new ResultadoBaseResult(new RetornoBaseDto(validacaoException?.Erros));
+                    context.ExceptionHandled = true;
                     break;
 
                 default:
-                    await SalvaLog(LogNivel.Critico, context.Exception.Message, context.Exception.StackTrace);
+                    await SalvaLog(LogNivel.Critico, context?.Exception?.Message, context?.Exception?.StackTrace);
                     context.Result = new ResultadoBaseResult("Ocorreu um erro interno. Favor contatar o suporte.", 500);
+                    context.ExceptionHandled = true;
                     break;
             }
 
-            base.OnException(context);
+            await base.OnExceptionAsync(context);
         }
 
         public Task SalvaLog(LogNivel nivel, string erro, string stackTrace)

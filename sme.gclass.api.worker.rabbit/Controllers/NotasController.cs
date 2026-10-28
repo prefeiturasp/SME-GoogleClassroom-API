@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSincronizacaoNotasUseCase useCase,
-            [FromQuery] FiltroNotasAtividadesSincronizacaoDto filtro)
+            [FromBody] FiltroNotasAtividadesSincronizacaoDto filtro)
         {
             await useCase.Executar(filtro);
 
@@ -63,15 +63,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <summary>
         /// Executa o tratamento dos erros de importação de notas GSA.        
         /// </summary>
-        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="200">O tratamento dos erros de importação de notas foi iniciado com sucesso.</response>
         [HttpPost("erros/tratamentos")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ProcessarErros([FromServices] IImportarNotasGsaProcessarErroUseCase useCase)
         {
             await useCase.Executar();
 
-            return Ok();
+            return Ok("O tratamento dos erros de importação de notas foi iniciado com sucesso.");
         }
     }
 }

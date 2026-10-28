@@ -23,7 +23,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
         }
 
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir um novo curso no Google Classroom.")]
-        private async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
+        public async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
         {
             // Arrange
             var mensagem = new MensagemRabbit(null);
@@ -33,7 +33,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento para cursos já inclusos.")]
-        private async Task Valida_Tratamento_De_Curso_Ja_Incluso_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Curso_Ja_Incluso_Deve_Retornar_True()
         {
             // Arrange
             var curso = new CursoEol("Curso teste", "Secao", 10, 10, "01010", "teste@edu.sme.prefeitura.sp.gov.br");
@@ -52,7 +52,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
         {
             // Arrange
             var curso = new CursoEol("Curso teste", "Secao", 10, 10, "01010", "teste@edu.sme.prefeitura.sp.gov.br");
@@ -73,7 +73,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Cursos
         }
 
         [Fact(DisplayName = "Valida a inclusão de um curso válido.")]
-        private async Task Valida_Inclusao_De_Curso_Valido_Deve_Retornar_True()
+        public async Task Valida_Inclusao_De_Curso_Valido_Deve_Retornar_True()
         {
             // Arrange
             var curso = new CursoEol("Curso teste", "Secao", 10, 10, "01010", "teste@edu.sme.prefeitura.sp.gov.br");
