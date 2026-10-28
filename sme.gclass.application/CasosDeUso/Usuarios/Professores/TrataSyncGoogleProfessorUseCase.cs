@@ -44,10 +44,24 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            if (professoresParaIncluirGoogle.TotalRegistros > 1)
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
 
             return true;
+        }
+
+        private async Task<DateTime> ObterDataUltimaExecucaoAsync()
+        {
+            try
+            {
+                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+                return dataUltimaExecucao == DateTime.MinValue
+                    ? new DateTime(DateTime.Today.Year, 1, 1)
+                    : dataUltimaExecucao;
+            }
+            catch (NegocioException)
+            {
+                return new DateTime(DateTime.Today.Year, 1, 1);
+            }
         }
 
         private async Task IncluirProfessorComErroAsync(ProfessorEol professorParaIncluirGoogle, string mensagem)

@@ -99,7 +99,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         private static bool DonoDoCursoEhGestor(UsuarioGoogleDto usuarioAtual)
         {
-            return usuarioAtual.UsuarioTipo == 3 ? true : false;
+            return usuarioAtual != null && usuarioAtual.UsuarioTipo == 3;
         }
 
         private async Task InserirProfessorCursoGoogleAsync(ProfessorGoogle professorGoogle, CursoGoogle cursoGoogle, bool existeProfessorCursoLocal)

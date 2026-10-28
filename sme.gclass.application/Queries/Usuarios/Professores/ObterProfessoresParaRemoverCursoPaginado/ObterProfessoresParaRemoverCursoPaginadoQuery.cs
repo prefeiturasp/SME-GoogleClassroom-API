@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -33,6 +33,18 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(a => a.DataFim)
                 .NotEmpty()
                 .WithMessage("A data de fim de vigência deve ser informada para consulta de atribuições de professores a remover");
+
+            RuleFor(x => x.Paginacao)
+                .NotEmpty()
+                .WithMessage("A paginação deve ser informada.");
+
+            RuleFor(x => x.Paginacao.QuantidadeRegistros)
+                .GreaterThan(0)
+                .WithMessage("O número da página e a quantidade de registro devem ser informados.");
+
+            RuleFor(x => x.Paginacao.Pagina)
+                .GreaterThan(0)
+                .WithMessage("O número da página e a quantidade de registro devem ser informados.");
         }
     }
 }
