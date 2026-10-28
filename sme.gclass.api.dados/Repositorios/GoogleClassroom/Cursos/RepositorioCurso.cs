@@ -185,12 +185,10 @@ namespace SME.GoogleClassroom.Dados
                                  c.data_atualizacao AS DataAtualizacao,
                                  c.Email       
                             from public.cursos c 
-                           where upper(email) = upper(@email) 
-                             and upper(nome) = upper(@nome)";
+                           where upper(nome) = upper(@nome)";
 
             var parametros = new
             {
-                email,
                 nome
             };
 
