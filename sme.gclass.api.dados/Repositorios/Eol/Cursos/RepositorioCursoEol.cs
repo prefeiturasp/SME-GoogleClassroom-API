@@ -532,7 +532,7 @@ namespace SME.GoogleClassroom.Dados
 					AND (ls.dt_fim IS NULL OR ls.dt_fim > GETDATE()) ";
 		}
 
-		public async Task<bool> ExisteTurmaPorId(long turmaId)
+		public async Task<bool> ExisteTurmaPorCodigo(long turmaId)
 		{
 			using var conn = ObterConexao();
 

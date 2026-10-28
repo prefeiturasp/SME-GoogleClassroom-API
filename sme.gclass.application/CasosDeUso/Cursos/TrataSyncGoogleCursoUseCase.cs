@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -25,7 +25,8 @@ namespace SME.GoogleClassroom.Aplicacao
 
             var filtro = ObterFiltro(mensagemRabbit);
 
-            var parametrosCargaInicialDto = filtro != null && filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
+            var parametrosCargaInicialDto = filtro != null && (filtro.AnoLetivo.HasValue || filtro.TiposUes?.Any() == true || filtro.Ues?.Any() == true || filtro.Turmas?.Any() == true) ? 
+                new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
 
             var dataReferencia = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.CursoAdicionar));
@@ -57,9 +58,10 @@ namespace SME.GoogleClassroom.Aplicacao
             else if (filtro == null || !filtro.TurmaId.HasValue)
             {
                 var mensagem = new IniciarSyncGoogleCursoDto(null, null, (filtro?.Pagina ?? 1) + 1);
-                mensagem.TiposUes = filtro.TiposUes;
-                mensagem.Ues = filtro.Ues;
-                mensagem.Turmas = filtro.Turmas;
+                mensagem.TiposUes = filtro?.TiposUes ?? new System.Collections.Generic.List<int>();
+                mensagem.Ues = filtro?.Ues ?? new System.Collections.Generic.List<long>();
+                mensagem.Turmas = filtro?.Turmas ?? new System.Collections.Generic.List<long>();
+                mensagem.AnoLetivo = filtro?.AnoLetivo;
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoSync, RotasRabbit.FilaCursoSync, mensagem));
             }
 

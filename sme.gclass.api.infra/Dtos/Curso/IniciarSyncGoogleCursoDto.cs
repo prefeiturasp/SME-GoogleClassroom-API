@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Infra
 {
@@ -12,11 +12,22 @@ namespace SME.GoogleClassroom.Infra
         public long? ComponenteCurricularId { get; set; }
         public int Pagina { get; set; }
 
+        public IniciarSyncGoogleCursoDto()
+        {
+            TiposUes = new List<int>();
+            Ues = new List<long>();
+            Turmas = new List<long>();
+            Pagina = 1;
+        }
+
         public IniciarSyncGoogleCursoDto(long? turmaId, long? componenteCurricularId, int pagina = 1)
         {
             TurmaId = turmaId;
             ComponenteCurricularId = componenteCurricularId;
             Pagina = pagina;
+            TiposUes = new List<int>();
+            Ues = new List<long>();
+            Turmas = new List<long>();
         }
 
         public bool Valido => TurmaId.HasValue || ComponenteCurricularId.HasValue;

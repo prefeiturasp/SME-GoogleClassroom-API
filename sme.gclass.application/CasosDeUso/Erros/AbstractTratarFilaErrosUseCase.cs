@@ -1,9 +1,10 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Registry;
 using RabbitMQ.Client;
+using Sentry;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Politicas;
 using System;
@@ -30,36 +31,59 @@ namespace SME.GoogleClassroom.Aplicacao
         public string FilaErro { get; }
         public string FilaProcesso { get; }
 
-        public async Task Executar()
+        public async Task<bool> Executar()
         {
             var factory = new ConnectionFactory
             {
-                HostName = _configuration.GetSection("ConfiguracaoRabbit:HostName").Value,
-                UserName = _configuration.GetSection("ConfiguracaoRabbit:UserName").Value,
-                Password = _configuration.GetSection("ConfiguracaoRabbit:Password").Value,
-                VirtualHost = _configuration.GetSection("ConfiguracaoRabbit:Virtualhost").Value
+                HostName = _configuration.GetSection("ConfiguracaoRabbit:HostName")?.Value,
+                UserName = _configuration.GetSection("ConfiguracaoRabbit:UserName")?.Value,
+                Password = _configuration.GetSection("ConfiguracaoRabbit:Password")?.Value,
+                VirtualHost = _configuration.GetSection("ConfiguracaoRabbit:Virtualhost")?.Value
             };
 
-            await _policy.ExecuteAsync(() => TratarMensagens(FilaErro, factory));
+            return await _policy.ExecuteAsync(() => TratarMensagens(FilaErro, factory));
         }
 
-        private async Task TratarMensagens(string fila, ConnectionFactory factory)
+        protected virtual async Task<IConnection> ObterConexaoRabbitAsync(ConnectionFactory factory)
+            => await factory.CreateConnectionAsync();
+
+        private async Task<bool> TratarMensagens(string fila, ConnectionFactory factory)
         {
-            await using var conexaoRabbit = await factory.CreateConnectionAsync();
+            await using var conexaoRabbit = await ObterConexaoRabbitAsync(factory);
             await using var channel = await conexaoRabbit.CreateChannelAsync();
 
             while (true)
             {
-                var mensagemFila = await channel.BasicGetAsync(fila, true);
+                var mensagemFila = await channel.BasicGetAsync(fila, false);
                 if (mensagemFila == null)
                     break;
 
-                var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
-                var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
-                var dto = mensagemRabbit.ObterObjetoMensagem<T>();
+                try
+                {
+                    var mensagem = Encoding.UTF8.GetString(mensagemFila.Body.ToArray());
+                    var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
+                    var dto = mensagemRabbit.ObterObjetoMensagem<T>();
 
-                await _mediator.Send(new PublicaFilaRabbitCommand(FilaProcesso, dto));
+                    var publicado = await _mediator.Send(new PublicaFilaRabbitCommand(FilaProcesso, dto));
+                    if (publicado)
+                    {
+                        await channel.BasicAckAsync(mensagemFila.DeliveryTag, false);
+                    }
+                    else
+                    {
+                        await channel.BasicNackAsync(mensagemFila.DeliveryTag, false, requeue: true);
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SentrySdk.CaptureException(ex);
+                    await channel.BasicNackAsync(mensagemFila.DeliveryTag, false, requeue: true);
+                    throw;
+                }
             }
+
+            return true;
         }
     }
 }

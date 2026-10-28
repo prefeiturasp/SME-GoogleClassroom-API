@@ -266,13 +266,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpPost("extintos/arquivar")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ArquivarTurmasExtintas([FromServices] ICarregarArquivamentoCursosExtintosManualUseCase useCase, [FromQuery] long? turmaId, DateTime? dataReferencia = null)
         {
-            await useCase.Executar(turmaId, dataReferencia);
-            return Ok();
+            var retorno = await useCase.Executar(turmaId, dataReferencia);
+            return Ok(retorno);
         }
 
         /// <summary>
@@ -287,10 +287,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> TratarErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosTratarUseCase useCase)
         {
-            await useCase.Executar();
-            return Ok();
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
         }
-        
+
         /// <summary>
         /// Reprocessar erros ao sincronizar arquivamento de cursos extintos
         /// </summary>
@@ -303,11 +303,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
         {
-            await useCase.Executar();
-            return Ok();
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
         }
-        
-        
+
+
         /// <summary>
         /// Obtem lista de cursos arquivados no Google Sala de Aula
         /// </summary>
@@ -405,8 +405,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, int anoLetivo, long? turmaId = null)
         {
-            await useCase.Executar(anoLetivo, turmaId);
-            return Ok();
+            var retorno = await useCase.Executar(anoLetivo, turmaId);
+            return Ok(retorno);
         }
     }
 }

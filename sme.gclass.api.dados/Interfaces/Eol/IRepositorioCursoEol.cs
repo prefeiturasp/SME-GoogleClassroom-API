@@ -17,6 +17,7 @@ namespace SME.GoogleClassroom.Dados.Interfaces
         Task<bool> ExisteTurmaPorId(long turmaId);
         Task<bool> ExisteComponenteCurricularPorId(long componenteCurricularId);
         Task<bool> ExisteTurmaAtivaPorId(long turmaId);
+        Task<bool> ExisteTurmaPorCodigo(long turmaId);
         Task<IEnumerable<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodo(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId);
         Task<PaginacaoResultadoDto<CursoExtintoEolDto>> ObterCursosExtintosPorPeriodoPaginado(ParametrosCargaInicialDto parametrosCargaInicialDto, DateTime dataInicio, DateTime dataFim, int anoLetivo, long? turmaId, Paginacao paginacao);
         Task<PaginacaoResultadoDto<CursoArquivarEolDto>> ObterCursosParaArquivarPorAnoPaginado(int anoLetivo, Paginacao paginacao, ParametrosCargaInicialDto parametrosCargaInicialDto);

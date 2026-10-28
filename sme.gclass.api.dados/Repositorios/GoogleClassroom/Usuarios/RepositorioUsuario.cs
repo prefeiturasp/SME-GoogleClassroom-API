@@ -147,6 +147,7 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = new StringBuilder(@"SELECT
                                                    u.indice,
+                                                   u.id AS Id,
                                                    u.id AS Rf,
                                                    u.nome AS Nome,
                                                    u.email AS Email,
@@ -170,6 +171,8 @@ namespace SME.GoogleClassroom.Dados
                 query.AppendLine($"AND u.email = @email");
                 queryCount.AppendLine($"AND u.email = @email");
             }
+
+            query.AppendLine(" ORDER BY u.nome, u.id ");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
@@ -834,10 +837,18 @@ namespace SME.GoogleClassroom.Dados
                                  u.data_atualizacao as dataatualizacao,
                                  u.google_classroom_id as GoogleClassroomId
                             FROM usuarios u
-                           where u.email = @email";
+                           where lower(u.email) = lower(@email)
+                           order by case
+                                      when u.usuario_tipo = 3 then 0
+                                      when u.usuario_tipo = 2 then 1
+                                      when u.usuario_tipo = 4 then 2
+                                      else 3
+                                    end,
+                                    coalesce(u.data_atualizacao, u.data_inclusao) desc,
+                                    u.id desc";
 
             using var conn = ObterConexao();
-            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new {email});
+            return await conn.QueryFirstOrDefaultAsync<UsuarioGoogleDto>(query, new { email = email?.Trim() });
         }
 
         public async Task<IEnumerable<UsuarioGoogleDto>> ObterUsuariosGooglePorCodigos(long[] usuarioCodigo, int[] tipos = null)

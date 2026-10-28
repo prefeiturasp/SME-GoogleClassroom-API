@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
@@ -6,7 +6,7 @@ using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class AtividadesQuery : IRequest<PaginacaoResultadoDto<AtividadeGsa>>
+    public class AtividadesQuery : IRequest<PaginacaoResultadoDto<AtividadeDto>>
     {
         public AtividadesQuery(Paginacao paginacao, DateTime dataReferencia, long? cursoId)
         {
@@ -20,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public long? CursoId { get; set; }
     }
 
-    public class AtividadesQueryValidator : AbstractValidator<ObterAvisoQuery>
+    public class AtividadesQueryValidator : AbstractValidator<AtividadesQuery>
     {
         public AtividadesQueryValidator()
         {

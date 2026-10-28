@@ -238,5 +238,125 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             // Assert
             Assert.True(retorno);
         }
+
+        [Fact(DisplayName = "Valida atribuição do professor como dono quando o dono atual for gestor.")]
+        public async Task Valida_Atribuicao_Dono_Quando_Dono_Atual_Eh_Gestor()
+        {
+            // Arrange
+            var professorCurso = new ProfessorCursoEol(1234567, 1010, 6, 5);
+            var professorGoogle = new ProfessorGoogle(1234567, "José da Silva", "josesilva.1234567@edu.sme.prefeitura.sp.gov.br", string.Empty) { GoogleClassroomId = "googleProf123" };
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "gestor.escola@edu.sme.prefeitura.sp.gov.br") { Id = 98765 };
+            var usuarioGestor = new UsuarioGoogleDto { UsuarioTipo = 3, Email = "gestor.escola@edu.sme.prefeitura.sp.gov.br" };
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(cursoGoogle);
+
+            mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            mediator.Setup(a => a.Send(It.IsAny<InserirProfessorCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<IncluirCursoUsuarioCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(10);
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterUsuarioPorEmailQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(usuarioGestor);
+
+            mediator.Setup(a => a.Send(It.IsAny<AtribuirDonoCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<AlterarCursoCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
+            var mensagem = new MensagemRabbit(professorCursoJson);
+
+            // Act
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
+
+            // Assert
+            Assert.True(retorno);
+            mediator.Verify(a => a.Send(It.Is<AtribuirDonoCursoGoogleCommand>(c => c.CursoId == cursoGoogle.Id && c.UsuarioId == "googleProf123"), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(a => a.Send(It.Is<AlterarCursoCommand>(c => c.Curso.Email == professorGoogle.Email), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "Valida que professor não é atribuído como dono quando dono atual for nulo.")]
+        public async Task Valida_Nao_Atribuicao_Dono_Quando_Dono_Atual_Eh_Nulo()
+        {
+            // Arrange
+            var professorCurso = new ProfessorCursoEol(1234567, 1010, 6, 5);
+            var professorGoogle = new ProfessorGoogle(1234567, "José da Silva", "josesilva.1234567@edu.sme.prefeitura.sp.gov.br", "googleProf123");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "desconhecido@edu.sme.prefeitura.sp.gov.br");
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(cursoGoogle);
+
+            mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            mediator.Setup(a => a.Send(It.IsAny<InserirProfessorCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<IncluirCursoUsuarioCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(10);
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterUsuarioPorEmailQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((UsuarioGoogleDto)null);
+
+            var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
+            var mensagem = new MensagemRabbit(professorCursoJson);
+
+            // Act
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
+
+            // Assert
+            Assert.True(retorno);
+            mediator.Verify(a => a.Send(It.IsAny<AtribuirDonoCursoGoogleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact(DisplayName = "Valida que professor não é atribuído como dono quando dono atual não for gestor.")]
+        public async Task Valida_Nao_Atribuicao_Dono_Quando_Dono_Atual_Nao_Eh_Gestor()
+        {
+            // Arrange
+            var professorCurso = new ProfessorCursoEol(1234567, 1010, 6, 5);
+            var professorGoogle = new ProfessorGoogle(1234567, "José da Silva", "josesilva.1234567@edu.sme.prefeitura.sp.gov.br", "googleProf123");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "outro.professor@edu.sme.prefeitura.sp.gov.br");
+            var usuarioProfessor = new UsuarioGoogleDto { UsuarioTipo = 2, Email = "outro.professor@edu.sme.prefeitura.sp.gov.br" };
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterProfessoresPorRfsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<ProfessorGoogle> { professorGoogle });
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterCursoPorTurmaComponenteCurricularQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(cursoGoogle);
+
+            mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            mediator.Setup(a => a.Send(It.IsAny<InserirProfessorCursoGoogleCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<IncluirCursoUsuarioCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(10);
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterUsuarioPorEmailQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(usuarioProfessor);
+
+            var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
+            var mensagem = new MensagemRabbit(professorCursoJson);
+
+            // Act
+            var retorno = await incluirProfessorCursoGoogleUseCase.Executar(mensagem);
+
+            // Assert
+            Assert.True(retorno);
+            mediator.Verify(a => a.Send(It.IsAny<AtribuirDonoCursoGoogleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
     }
 }

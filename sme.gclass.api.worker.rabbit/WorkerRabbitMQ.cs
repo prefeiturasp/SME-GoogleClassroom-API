@@ -1,4 +1,4 @@
-﻿using Elastic.Apm;
+using Elastic.Apm;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -167,6 +167,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private async Task TratarMensagem(BasicDeliverEventArgs ea)
         {
+            if (ea?.Body == null || ea.Body.IsEmpty)
+            {
+                if (ea != null)
+                    await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
+                return;
+            }
+
             var mensagem = Encoding.UTF8.GetString(ea.Body.Span);
             var rota = ea.RoutingKey;
 
@@ -177,14 +184,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 var mensagemRabbit = JsonConvert.DeserializeObject<MensagemRabbit>(mensagem);
                 var comandoRabbit = comandos[rota];
                 var tempoExecucao = Stopwatch.StartNew();
-                var transacao = telemetriaOptions.Apm ? Agent.Tracer.StartTransaction(rota, "WorkerRabbitGCA") : null;
+                var transacao = telemetriaOptions?.Apm == true ? Agent.Tracer.StartTransaction(rota, "WorkerRabbitGCA") : null;
 
                 try
                 {
                     using var scope = serviceScopeFactory.CreateScope();
                     var casoDeUso = scope.ServiceProvider.GetService(comandoRabbit.TipoCasoUso);
+                    if (casoDeUso is null)
+                        throw new NegocioException($"Caso de uso não encontrado para o comando {comandoRabbit.TipoCasoUso.Name}");
 
-                    metricReporter.RegistrarExecucao(casoDeUso.GetType().Name);
+                    metricReporter?.RegistrarExecucao(casoDeUso.GetType().Name);
 
                     await servicoTelemetria.RegistrarAsync(async () =>
                         await ObterMetodo(comandoRabbit.TipoCasoUso, "Executar")
@@ -199,21 +208,21 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 catch (NegocioException nex)
                 {
                     await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
-                    metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
+                    metricReporter?.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
                     await RegistrarErro(ea, mensagemRabbit, nex, LogNivel.Negocio);
                     transacao?.CaptureException(nex);
                 }
                 catch (ValidacaoException vex)
                 {
                     await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
-                    metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
+                    metricReporter?.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
                     await RegistrarErro(ea, mensagemRabbit, vex, LogNivel.Negocio);
                     transacao?.CaptureException(vex);
                 }
                 catch (Exception ex)
                 {
                     await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
-                    metricReporter.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
+                    metricReporter?.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
                     await RegistrarErro(ea, mensagemRabbit, ex, LogNivel.Critico);
                     transacao?.CaptureException(ex);
                 }
@@ -221,7 +230,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 {
                     transacao?.End();
                     tempoExecucao.Stop();
-                    metricReporter.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
+                    metricReporter?.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                 }
             }
             else
@@ -275,21 +284,28 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var factory = new ConnectionFactory
+            if (conexaoRabbit == null || !conexaoRabbit.IsOpen)
             {
-                HostName = configuracaoRabbitOptions.HostName,
-                UserName = configuracaoRabbitOptions.UserName,
-                Password = configuracaoRabbitOptions.Password,
-                VirtualHost = configuracaoRabbitOptions.Virtualhost,
-                RequestedHeartbeat = TimeSpan.FromSeconds(30),
-            };
+                var factory = new ConnectionFactory
+                {
+                    HostName = configuracaoRabbitOptions.HostName,
+                    UserName = configuracaoRabbitOptions.UserName,
+                    Password = configuracaoRabbitOptions.Password,
+                    VirtualHost = configuracaoRabbitOptions.Virtualhost,
+                    RequestedHeartbeat = TimeSpan.FromSeconds(30),
+                };
 
-            conexaoRabbit = await factory.CreateConnectionAsync(stoppingToken);
+                conexaoRabbit = await factory.CreateConnectionAsync(stoppingToken);
+            }
+
             conexaoRabbit.CallbackExceptionAsync += ConexaoRabbit_CallbackException;
             conexaoRabbit.ConnectionShutdownAsync += ConexaoRabbit_ConnectionShutdown;
 
             canalRabbit = await conexaoRabbit.CreateChannelAsync(cancellationToken: stoppingToken);
-            await canalRabbit.BasicQosAsync(0, consumoDeFilasOptions.LimiteDeMensagensPorExecucao, false, stoppingToken);
+            var limiteMensagens = consumoDeFilasOptions.LimiteDeMensagensPorExecucao > 0
+                ? consumoDeFilasOptions.LimiteDeMensagensPorExecucao
+                : (ushort)10;
+            await canalRabbit.BasicQosAsync(0, limiteMensagens, false, stoppingToken);
 
             await canalRabbit.ExchangeDeclareAsync(ExchangeRabbit.GoogleSync, "topic", true, false, cancellationToken: stoppingToken);
             await RegistrarFilasRabbitMQ.RegistrarFilas(canalRabbit, consumoDeFilasOptions);
@@ -349,8 +365,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private async Task ConsumirFilas(AsyncEventingBasicConsumer consumer, params string[] filas)
         {
+            if (filas == null) return;
             foreach (var fila in filas)
+            {
+                if (string.IsNullOrWhiteSpace(fila)) continue;
                 await canalRabbit.BasicConsumeAsync(fila, false, consumer);
+            }
         }
 
         private async Task ConfigurarConsumoDeFilasRabbit(AsyncEventingBasicConsumer consumer)
@@ -456,33 +476,33 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             await ConsumirFilas(consumer, RotasRabbit.FilaGsaGoogleSync);
 
-            if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaCursoGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaCursoCarregar);
 
-            if (consumoDeFilasOptions.Gsa.CargaUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaUsuarioGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaUsuarioCarregar);
 
-            if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaCursoUsuarioGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaCursoUsuarioCarregar);
 
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoGsa)
+            if (consumoDeFilasOptions.Gsa?.ProcessarCursoGsa == true)
             {
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaCursoIncluir,
                     RotasRabbit.FilaGsaCursoValidar);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.ProcessarUsuarioGsa == true)
             {
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaUsuarioIncluir,
                     RotasRabbit.FilaGsaUsuarioValidar);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioGsa)
+            if (consumoDeFilasOptions.Gsa?.ProcessarCursoUsuarioGsa == true)
                 await ConsumirFilas(consumer, RotasRabbit.FilaGsaCursoUsuarioIncluir);
 
-            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaMuralAvisosGsa == true)
             {
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaMuralAvisosCarregar,
@@ -490,7 +510,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     RotasRabbit.FilaGsaMuralAvisosTratar);
             }
 
-            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            if (consumoDeFilasOptions.Gsa?.CargaAtividadesGsa == true)
             {
                 // Atividades
                 await ConsumirFilas(consumer,

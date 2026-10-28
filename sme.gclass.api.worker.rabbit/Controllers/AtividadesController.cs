@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
@@ -36,7 +36,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<AtividadeGsa>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AtividadeDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAtividades([FromServices] IObterAtividadesUseCase obterAtividadesUseCase,
@@ -64,16 +64,27 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 
 
         /// <summary>
-        /// Executa manualmente a integração de atividades do GSA.
-        /// Insere o registro na base GCA e envia para o SGP a vincular com a aula.
+        /// Inicia a carga para sincronização manual de atividades do Google Classroom (GSA).
         /// </summary>
-        /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <remarks>
+        /// **Atenção:** Este endpoint apenas **inicia a carga** publicando a solicitação na fila assíncrona <c>googleclass.gsa.atividades.carregar</c>,
+        /// não executando a sincronização integral de atividades dentro da requisição HTTP.
+        ///
+        /// Todos os parâmetros no corpo da requisição são opcionais:
+        /// - **cursoId**: Identificador do curso no Google Classroom (opcional; se omitido, inicia para todos os cursos).
+        /// - **pagina**: Página de paginação para início da busca (opcional).
+        /// - **totalPaginas**: Total de páginas a processar (opcional).
+        /// </remarks>
+        /// <param name="useCase">Caso de uso responsável por publicar a carga na fila.</param>
+        /// <param name="filtro">Contrato de entrada com parâmetros opcionais para início da carga de atividades.</param>
+        /// <response code="200">A solicitação de carga para sincronização foi enfileirada com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado ao enfileirar a solicitação.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, long? cursoId = null, int? pagina = null, int? totalPaginas = null)
+        public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, [FromBody] IniciarSyncGoogleAtividadesDto filtro)
         {
-            await useCase.Executar(cursoId, pagina, totalPaginas);
+            await useCase.Executar(filtro);
             return Ok();
         }
     }

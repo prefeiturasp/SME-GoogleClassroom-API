@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
@@ -24,8 +24,7 @@ namespace SME.GoogleClassroom.Aplicacao.Queries.Cursos.ObterCursosArquivadosPorD
         {
             RuleFor(a => a.DataArquivamento)
                 .NotEmpty()
-                .WithMessage("A data de início deve ser informada para consulta de cursos arquivados");
-
+                .WithMessage("A data de arquivamento deve ser informada para consulta de cursos arquivados");
         }
     }
 }

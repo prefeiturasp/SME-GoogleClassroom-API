@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces.Eol;
 using SME.GoogleClassroom.Dominio;
@@ -56,50 +56,71 @@ namespace SME.GoogleClassroom.Aplicacao
                 .Select(s => s.UeCodigo).Distinct().ToArray();
             var uesEol = await repositorioEscolaEol.ObterUesPorCodigos(codigoUes);
 
-            var unidadesEol = await repositorioUnidade.ObterUnidadesPorCodigos(codigoDres);
+            var codigosUnidades = codigoDres
+                .Concat(codigoUes)
+                .Where(c => !string.IsNullOrEmpty(c))
+                .Distinct()
+                .ToArray();
+            var unidadesEol = await repositorioUnidade.ObterUnidadesPorCodigos(codigosUnidades);
 
             var retorno = new List<InscricaoRetornoDTO>();
             foreach (var inscricao in inscricoesConecta)
             {
                 var ue = uesEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.UeCodigo));
                 var dre = dresEol.FirstOrDefault(f => f.Codigo.Equals(inscricao.DreCodigo));
-                var unidade = unidadesEol.FirstOrDefault(t => t.Codigo.Equals(inscricao.DreCodigo));
+                var unidadeDre = unidadesEol.FirstOrDefault(t => t.Codigo.Equals(inscricao.DreCodigo));
+                var unidadeUe = unidadesEol.FirstOrDefault(t => t.Codigo.Equals(inscricao.UeCodigo));
 
                 if (ue.NaoEhNulo())
                 {
-                    inscricao.DreCodigo = ue?.DreCodigo;
-                    inscricao.DreNome = ue?.DreSigla;
-                    inscricao.UeNome = ue?.Nome;
+                    inscricao.DreCodigo = ue.DreCodigo;
+                    inscricao.DreNome = ue.DreSigla;
+                    inscricao.UeNome = ue.Nome;
                 }
-                else if (dre.NaoEhNulo())
+                else
                 {
-                    inscricao.DreNome = dre?.Sigla;
-                    inscricao.UeCodigo = dre?.Codigo;
-                    inscricao.UeNome = dre?.Nome;
-                }
-                else if (unidadesEol.NaoEhNulo())
-                {
-                    inscricao.DreCodigo = unidade?.Codigo;
-                    inscricao.DreNome = unidade?.Nome;
-                    inscricao.UeNome = unidade?.Nome;
+                    if (dre.NaoEhNulo())
+                    {
+                        inscricao.DreNome = dre.Sigla;
+                        if (inscricao.UeCodigo.Equals(dre.Codigo))
+                            inscricao.UeNome = dre.Nome;
+                    }
+                    else if (unidadeDre.NaoEhNulo())
+                    {
+                        inscricao.DreCodigo = unidadeDre.Codigo;
+                        inscricao.DreNome = unidadeDre.Nome;
+                    }
+
+                    if (string.IsNullOrEmpty(inscricao.UeNome))
+                    {
+                        if (unidadeUe.NaoEhNulo())
+                        {
+                            inscricao.UeNome = unidadeUe.Nome;
+                        }
+                        else if (dre.NaoEhNulo() && string.IsNullOrEmpty(inscricao.UeCodigo))
+                        {
+                            inscricao.UeCodigo = dre.Codigo;
+                            inscricao.UeNome = dre.Nome;
+                        }
+                    }
                 }
 
                 inscricao.Email = !string.IsNullOrEmpty(inscricao.Email) ? 
-                    inscricao.Email : 
+                    inscricao.Email.Trim() : 
                     await mediator.Send(new GerarEmailFuncionarioCommand(inscricao.Nome, inscricao.CodigoRf, inscricao.Cpf, inscricao.EhUsuarioCustistaUeParceira), cancellationToken);
 
                 retorno.Add(new InscricaoRetornoDTO
                 {
-                    CodigoRf = inscricao.CodigoRf,
-                    Cpf = inscricao.Cpf,
-                    Nome = inscricao.Nome,
-                    DreCodigo = inscricao.DreCodigo,
-                    DreNome = inscricao.DreNome,
-                    Email = inscricao.Email,
-                    UeCodigo = inscricao.UeCodigo,
-                    UeNome = inscricao.UeNome,
-                    CodigoCargo = inscricao.CodigoCargo,
-                    DescricaoCargo = inscricao.DescricaoCargo,
+                    CodigoRf = inscricao.CodigoRf?.Trim(),
+                    Cpf = inscricao.Cpf?.Trim(),
+                    Nome = inscricao.Nome?.Trim(),
+                    DreCodigo = inscricao.DreCodigo?.Trim(),
+                    DreNome = inscricao.DreNome?.Trim(),
+                    Email = inscricao.Email?.Trim(),
+                    UeCodigo = inscricao.UeCodigo?.Trim(),
+                    UeNome = inscricao.UeNome?.Trim(),
+                    CodigoCargo = inscricao.CodigoCargo?.Trim(),
+                    DescricaoCargo = inscricao.DescricaoCargo?.Trim(),
                     TipoVinculo = inscricao.TipoVinculo
                 });
             }
