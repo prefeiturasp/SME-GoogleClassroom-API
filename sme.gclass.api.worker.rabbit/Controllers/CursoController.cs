@@ -320,14 +320,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <summary>
         /// Retorna os professores removidos dos cursos no GSA.
         /// </summary>
+        /// <remarks>
+        /// **CursoId:** Identificador do curso no Google Classroom (opcional). Quando informado 0 ou omitido, retorna os professores removidos de todos os cursos.
+        /// </remarks>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("professores/removidos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), 200)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterProfessoresRemovidosCursosUseCase([FromServices] IObterProfessoresRemovidosCursosUseCase useCase,
+        public async Task<IActionResult> ObterProfessoresRemovidosCursos([FromServices] IObterProfessoresRemovidosCursosUseCase useCase,
             [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
