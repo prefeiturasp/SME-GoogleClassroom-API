@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using Moq;
 using Newtonsoft.Json;
@@ -6,6 +6,8 @@ using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,15 +43,29 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             alunoComEmailTratado.DefinirEmail(1);
+            var alunoGoogleJaCadastrado = new AlunoGoogle(1, "José da Silva", "email@dominio", "org") { Indice = 10, GoogleClassroomId = "999" };
 
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new[] { alunoGoogleJaCadastrado });
+
+            mediator.Setup(a => a.Send(It.IsAny<AtualizarAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            mediator.Setup(a => a.Send(It.IsAny<AtualizarUsuarioCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<AtualizarUsuarioGoogleClassroomIdCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            var filtroAluno = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            var filtroJson = JsonConvert.SerializeObject(filtroAluno);
+            var mensagem = new MensagemRabbit(filtroJson);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);
@@ -68,8 +84,8 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Enumerable.Empty<AlunoGoogle>());
 
             var googleDuplicidadeException = new GoogleApiException(string.Empty, GoogleApiExceptionMensagens.Erro409EntityAlreadyExists);
             googleDuplicidadeException.HttpStatusCode = HttpStatusCode.Conflict;
@@ -88,8 +104,9 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var filtroAluno = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            var filtroJson = JsonConvert.SerializeObject(filtroAluno);
+            var mensagem = new MensagemRabbit(filtroJson);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);
@@ -108,16 +125,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Enumerable.Empty<AlunoGoogle>());
 
             var googleDuplicidadeException = new GoogleApiException(string.Empty, "Erro no Google Classroom.");
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(googleDuplicidadeException);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var filtroAluno = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            var filtroJson = JsonConvert.SerializeObject(filtroAluno);
+            var mensagem = new MensagemRabbit(filtroJson);
 
             // Assert
             await Assert.ThrowsAsync<GoogleApiException>(() => incluirAlunoUseCase.Executar(mensagem));
@@ -133,16 +151,17 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Enumerable.Empty<AlunoGoogle>());
 
             var excecao = new NullReferenceException("Erro ao se comunicar Google Classroom.");
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(excecao);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var filtroAluno = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            var filtroJson = JsonConvert.SerializeObject(filtroAluno);
+            var mensagem = new MensagemRabbit(filtroJson);
 
             // Assert
             await Assert.ThrowsAsync<NullReferenceException>(() => incluirAlunoUseCase.Executar(mensagem));
@@ -158,8 +177,8 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<VerificarEmailExistenteAlunoQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(alunoComEmailTratado);
 
-            mediator.Setup(a => a.Send(It.IsAny<ExisteAlunoPorCodigoQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+            mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Enumerable.Empty<AlunoGoogle>());
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
@@ -170,8 +189,9 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var alunoJson = JsonConvert.SerializeObject(aluno);
-            var mensagem = new MensagemRabbit(alunoJson);
+            var filtroAluno = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            var filtroJson = JsonConvert.SerializeObject(filtroAluno);
+            var mensagem = new MensagemRabbit(filtroJson);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);

@@ -32,7 +32,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores
 
             mediatorMock
                 .Setup(m => m.Send(It.Is<ObterDataUltimaExecucaoPorTipoQuery>(q => q.ExecucaoTipo == ExecucaoTipo.ProfessorAdicionar), It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new NegocioException("Não foi possível obter a última data de execução do tipo informado!"));
+                .ReturnsAsync(dataEsperada);
 
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<ObterParametrosCargaIncialPorAnoQuery>(), It.IsAny<CancellationToken>()))
