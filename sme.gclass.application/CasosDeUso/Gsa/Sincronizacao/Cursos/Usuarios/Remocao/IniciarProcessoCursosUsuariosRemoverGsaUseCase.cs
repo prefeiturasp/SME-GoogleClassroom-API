@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Sentry;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -18,16 +16,20 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(long? turmaId = null, bool processarAlunos = true, bool processarProfessores = true, bool processarFuncionario = true)
         {
-            try
+            if (turmaId.HasValue)
             {
-                var dto = new CarregarTurmaRemoverCursoUsuarioDto(turmaId, processarAlunos, processarProfessores, processarFuncionario);
-                return await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, dto));
+                var turmaExiste = await mediator.Send(new ExisteTurmaPorCodigoQuery(turmaId.Value));
+                if (!turmaExiste)
+                    throw new NegocioException("A turma informada não foi localizada na base do EOL.");
             }
-            catch (Exception ex)
-            {
-                await mediator.Send(new SalvarLogViaRabbitCommand($"IniciarProcessoCursosUsuariosRemoverGsaUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
-                return false;
-            }
+
+            var dto = new CarregarTurmaRemoverCursoUsuarioDto(turmaId, processarAlunos, processarProfessores, processarFuncionario);
+
+            var publicado = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaCursoUsuarioRemovidoTurmasCarregar, dto));
+            if (!publicado)
+                throw new NegocioException("Não foi possível publicar a mensagem para remoção de usuários dos cursos.");
+
+            return publicado;
         }
     }
 }

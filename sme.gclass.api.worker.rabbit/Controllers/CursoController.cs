@@ -363,9 +363,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <summary>
         /// Inicia a sincronização para remoção funcionarios sem atribuição - GSA.
         /// </summary>
-        /// <response code="200">A consulta foi realizada com sucesso.</response>
-        /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
-        /// <response code="601">Houve uma falha de validação durante a consulta.</response>
+        /// <response code="200">O processo de remoção foi enfileirado com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado ou falha ao publicar na fila.</response>
+        /// <response code="601">A turma informada não foi localizada na base do EOL.</response>
         [HttpPost("funcionarios/remover")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
