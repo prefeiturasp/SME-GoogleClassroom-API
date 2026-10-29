@@ -20,5 +20,6 @@ namespace SME.GoogleClassroom.Dados
         Task<long> ExisteCursoPorNome(string nome);
         Task<CursoGoogle> ObterCursoPorEmailNome(string email, string nome);
         Task<IEnumerable<CursoGoogleDtoParaIntegracao>> ObterCursosPorIdsParaIntegracaoAsync(IEnumerable<long> ids);
+        Task<CursoGoogle> ObterCursoPorNome(string nome);
     }
 }

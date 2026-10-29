@@ -105,6 +105,24 @@ namespace SME.GoogleClassroom.Dados
             return await conn.ExecuteAsync(query, parametros);
         }
 
+        public async Task<CursoGoogle> ObterCursoPorNome(string nome)
+        {
+            var query = @"select c.id, 
+                         c.nome,
+                         c.secao,
+                         c.turma_id AS TurmaId,
+                         c.componente_curricular_id AS ComponenteCurricularId,
+                         c.data_inclusao AS DataInclusao,
+                         c.data_atualizacao AS DataAtualizacao,
+                         c.Email       
+                    from public.cursos c 
+                   where upper(c.nome) = upper(@nome)";
+
+            using var conn = ObterConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<CursoGoogle>(query, new { nome });
+        }
+
         public async Task<bool> AlterarAsync(long id, string email, string nome, string secao, long turmaId, long componenteCurricularId, DateTime dataInclusao, DateTime? dataAtualizacao)
         {
             var query = @" UPDATE public.cursos set 

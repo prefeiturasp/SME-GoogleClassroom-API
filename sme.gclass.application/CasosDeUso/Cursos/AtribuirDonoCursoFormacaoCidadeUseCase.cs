@@ -17,7 +17,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(string email, string nome)
         {
-            var curso = await mediator.Send(new ObterCursoPorEmailNomeQuery(email, nome));
+            var curso = await mediator.Send(new ObterCursoPorNomeQuery(nome));
             if (curso == null)
                 throw new NegocioException("Não foi possível alterar o dono do curso, pois o curso não existe na base do GSA");
             try
