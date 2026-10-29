@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
@@ -73,7 +74,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleAtividadesUseCase useCase, long? cursoId = null, int? pagina = null, int? totalPaginas = null)
         {
-            await useCase.Executar(cursoId, pagina, totalPaginas);
+            var paginaNormalizada = pagina.HasValue ? Math.Max(1, pagina.Value) : (int?)null;
+            var totalPaginasNormalizado = totalPaginas.HasValue ? Math.Max(1, totalPaginas.Value) : (int?)null;
+
+            await useCase.Executar(cursoId, paginaNormalizada, totalPaginasNormalizado);
             return Ok();
         }
     }

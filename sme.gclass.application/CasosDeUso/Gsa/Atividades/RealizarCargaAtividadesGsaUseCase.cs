@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -30,12 +30,11 @@ namespace SME.GoogleClassroom.Aplicacao
             if (!filtro.CursoId.HasValue && ultimaExecucao.Date.Equals(DateTime.Today.Date))
                 return true;
 
-            filtro.Pagina = filtro.Pagina ?? 1;
-
-            int pagina = filtro.Pagina.HasValue ? filtro.Pagina.Value : 0;
+            int valorPagina = Math.Max(filtro.Pagina ?? 1, 1);
+            filtro.Pagina = valorPagina;
 
             var retorno = await mediator
-                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, pagina, 100));
+                .Send(new ObterCursoGsaPorAnoQuery(anoAtual, filtro.CursoId, valorPagina, 100));
 
             var totalPaginas = filtro.TotalPaginas;
 
@@ -44,9 +43,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
             if (!filtro.CursoId.HasValue)
             {
-                if (filtro.Pagina > totalPaginas)
+                if (totalPaginas.HasValue && filtro.Pagina > totalPaginas)
                     await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.AtividadesCarregar));
-                else
+                else if (totalPaginas.HasValue)
                     await PublicarMensagemProximaPagina(filtro.Pagina.Value + 1, totalPaginas.Value);
             }
 
