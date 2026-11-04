@@ -75,6 +75,10 @@ export default defineConfig({
         'TOKEN_INVALIDO',
         'CODIGO_DRE',
         'SIGLA_TIPO_ESCOLA',
+        'TURMA_ID',
+        'COMPONENTE_CURRICULAR_ID',
+        'DATA_AULA',
+        'ANO',
       ]
 
       const customVariable = Object.fromEntries(
