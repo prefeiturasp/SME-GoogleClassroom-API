@@ -79,6 +79,7 @@ export default defineConfig({
         'COMPONENTE_CURRICULAR_ID',
         'DATA_AULA',
         'ANO',
+        'ULTIMA_EXECUCAO',
       ]
 
       const customVariable = Object.fromEntries(
