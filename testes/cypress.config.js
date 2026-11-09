@@ -80,6 +80,8 @@ export default defineConfig({
         'DATA_AULA',
         'ANO',
         'ULTIMA_EXECUCAO',
+        'RF',
+        'ANO_LETIVO'
       ]
 
       const customVariable = Object.fromEntries(
