@@ -81,7 +81,11 @@ export default defineConfig({
         'ANO',
         'ULTIMA_EXECUCAO',
         'RF',
-        'ANO_LETIVO'
+        'ANO_LETIVO',
+        'TIPO_USUARIO_ID',
+        'USUARIO_ID',
+        'NOME_USUARIO',
+        'EMAIL_USUARIO'
       ]
 
       const customVariable = Object.fromEntries(
