@@ -36,7 +36,7 @@ Quando('envio uma requisição POST em frequencias', function () {
   }).as('response')
 })
 
-Então('realizar o lançamento de frequência com status 200', function () {
+Então('realiza o lançamento de frequência com status 200', function () {
   cy.get('@response').then((response) => {
     expect(response.status).to.eq(200)
   })
