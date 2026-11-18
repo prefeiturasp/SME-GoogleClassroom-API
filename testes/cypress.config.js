@@ -85,7 +85,11 @@ export default defineConfig({
         'TIPO_USUARIO_ID',
         'USUARIO_ID',
         'NOME_USUARIO',
-        'EMAIL_USUARIO'
+        'EMAIL_USUARIO',
+        'AULA_ID',
+        'CODIGO_ALUNO',
+        'TIPO_FREQUENCIA',
+        'NUMERO_AULA'
       ]
 
       const customVariable = Object.fromEntries(
