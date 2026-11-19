@@ -1,11 +1,11 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosCadastradosQuery : IRequest<PaginacaoResultadoDto<AlunoGoogle>>
+    public class ObterAlunosCadastradosQuery : IRequest<PaginacaoResultadoDto<AlunoCadastradoDto>>
     {
         public ObterAlunosCadastradosQuery(Paginacao paginacao, long? codigoEol, string email)
         {

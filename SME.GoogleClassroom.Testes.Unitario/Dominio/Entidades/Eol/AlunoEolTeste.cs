@@ -19,7 +19,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Dominio.Entidades.Eol
         }
 
         [Theory(DisplayName = "Valida a geração de e-mail válido de aluno."), MemberData(nameof(DadosParaValidacaoDeEmailValido))]
-        private void Valida_Geracao_Email_Valido_Passando_O_Resultado_Esperado(string nome, DateTime dataNascimento, string emailEsperado)
+        public void Valida_Geracao_Email_Valido_Passando_O_Resultado_Esperado(string nome, DateTime dataNascimento, string emailEsperado)
         {
             // Arange
             var aluno = new AlunoEol(1, nome, string.Empty, string.Empty, dataNascimento);
@@ -29,7 +29,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Dominio.Entidades.Eol
         }
 
         [Theory(DisplayName = "Valida a geração de e-mail inválido de aluno."), MemberData(nameof(DadosParaValidacaoDeEmailInvalido))]
-        private void Valida_Geracao_Email_Invalido_Passando_O_Resultado_Esperado(string nome, DateTime dataNascimento, string emailEsperado)
+        public void Valida_Geracao_Email_Invalido_Passando_O_Resultado_Esperado(string nome, DateTime dataNascimento, string emailEsperado)
         {
             // Arrange
             var aluno = new AlunoEol(1, nome, string.Empty, string.Empty, dataNascimento);
@@ -39,7 +39,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Dominio.Entidades.Eol
         }
 
         [Theory(DisplayName = ""), MemberData(nameof(DadosParaValidacaoDeEmailValidoPorTentativa))]
-        private void Valida_Geracao_Email_Alternativo_Para_Tratamento_De_Duplicidade_Passando_O_Resultado_Esperado(int tentativa, string nome, DateTime dataNascimento, string emailEsperado)
+        public void Valida_Geracao_Email_Alternativo_Para_Tratamento_De_Duplicidade_Passando_O_Resultado_Esperado(int tentativa, string nome, DateTime dataNascimento, string emailEsperado)
         {
             // Arrange
             var aluno = new AlunoEol(1, nome, string.Empty, string.Empty, dataNascimento);

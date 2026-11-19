@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -48,7 +48,7 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                await mediator.Send(new SalvarLogViaRabbitCommand($"CarregarAtividadesParaSincronizarNotasUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
+                await mediator.Send(new SalvarLogViaRabbitCommand($"CarregarAtividadesParaSincronizarNotasUseCase", LogNivel.Critico, LogContexto.Gsa, ex?.InnerException?.Message ?? ex?.Message, ex?.StackTrace));
             }
 
             return true;

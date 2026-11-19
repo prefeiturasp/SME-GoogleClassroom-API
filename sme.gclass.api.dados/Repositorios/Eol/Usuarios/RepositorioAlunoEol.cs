@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SME.GoogleClassroom.Dados.Help;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -23,19 +23,34 @@ namespace SME.GoogleClassroom.Dados
 
             var query = MontaQueryAlunosParaInclusao(paginacao, dataReferencia, codigoEol, parametrosCargaInicialDto);
 
+            var parametros = new
+            {
+                anoLetivo,
+                pagina = paginacao?.Pagina ?? 0,
+				quantidadeRegistrosIgnorados = paginacao?.QuantidadeRegistrosIgnorados ?? 0,
+                quantidadeRegistros = paginacao?.QuantidadeRegistros ?? 0,
+                codigoEol,
+                TiposUes = parametrosCargaInicialDto.TiposUes,
+                parametrosCargaInicialDto.Ues,
+                parametrosCargaInicialDto.Turmas,
+            };
+
             using var conn = ObterConexao();
 
-            using var multi = await conn.QueryMultipleAsync(query,
-                new
+            // Sem paginação: lê apenas o primeiro result set e obtém o total em memória.
+            if (DeveRetornarTodosRegistros(paginacao))
+            {
+                var alunos = (await conn.QueryAsync<AlunoEol>(query, parametros, commandTimeout: 600)).AsList();
+
+                return new PaginacaoResultadoDto<AlunoEol>
                 {
-                    anoLetivo,
-                    pagina = paginacao.Pagina,
-					quantidadeRegistros = paginacao.QuantidadeRegistros,
-                    codigoEol,
-                    TiposUes = parametrosCargaInicialDto.TiposUes,
-					parametrosCargaInicialDto.Ues,
-					parametrosCargaInicialDto.Turmas,
-				}, commandTimeout: 120);
+                    Items = alunos,
+                    TotalRegistros = alunos.Count,
+                    TotalPaginas = 1
+                };
+            }
+
+            using var multi = await conn.QueryMultipleAsync(query, parametros, commandTimeout: 120);
 
             var retorno = new PaginacaoResultadoDto<AlunoEol>
             {
@@ -43,9 +58,12 @@ namespace SME.GoogleClassroom.Dados
                 TotalRegistros = multi.ReadFirst<int>()
             };
 
-            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0 ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros) : 1;
+            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
             return retorno;
         }
+
+        private static bool DeveRetornarTodosRegistros(Paginacao paginacao)
+            => paginacao is null || paginacao.Pagina <= 0 || paginacao.QuantidadeRegistros <= 0;
 
         public async Task<AlunoEol> ObterAlunoParaTratamentoDeErroAsync(long codigoEol, int anoLetivo, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
@@ -68,10 +86,10 @@ namespace SME.GoogleClassroom.Dados
             using var conn = ObterConexao();
 
 			const string queryBuscaMatriculas = @"
-								DECLARE @situacaoAtivo AS CHAR = 1;
-								DECLARE @situacaoPendenteRematricula AS CHAR = 6;
-								DECLARE @situacaoRematriculado AS CHAR = 10;
-								DECLARE @situacaoSemContinuidade AS CHAR = 13;
+								DECLARE @situacaoAtivo AS VARCHAR(2) = 1;
+								DECLARE @situacaoPendenteRematricula AS VARCHAR(2) = 6;
+								DECLARE @situacaoRematriculado AS VARCHAR(2) = 10;
+								DECLARE @situacaoSemContinuidade AS VARCHAR(2) = 13;
 
 								DECLARE @situacaoAtivoInt AS INT = 1;
 								DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
@@ -83,6 +101,7 @@ namespace SME.GoogleClassroom.Dados
 									DROP TABLE #tempAlunosMatriculasRegularesAtivas;
 								SELECT
 									a.cd_aluno,
+                                    a.dt_nascimento_aluno,
 									te.cd_turma_escola
 								INTO #tempAlunosMatriculasRegularesAtivas
 								FROM
@@ -118,6 +137,7 @@ namespace SME.GoogleClassroom.Dados
 								SELECT
 									DISTINCT
 									temp.cd_aluno AS CodigoAluno,
+									temp.dt_nascimento_aluno AS DataNascimento,
 									CASE
 										WHEN etapa_ensino.cd_etapa_ensino = 1 THEN 512
 									ELSE
@@ -175,6 +195,7 @@ namespace SME.GoogleClassroom.Dados
 									DROP TABLE #tempAlunosMatriculasProgramaAtivas;
 								SELECT
 									a.cd_aluno,
+									a.dt_nascimento_aluno,
 									te.cd_turma_escola
 								INTO #tempAlunosMatriculasProgramaAtivas
 								FROM
@@ -230,6 +251,7 @@ namespace SME.GoogleClassroom.Dados
 								SELECT
 									DISTINCT
 									temp.cd_aluno AS CodigoAluno,
+                                    temp.dt_nascimento_aluno as DataNascimento,
 									pcc.cd_componente_curricular AS ComponenteCurricularId,
 									te.cd_turma_escola TurmaId,
 									te.cd_escola AS UeCodigo
@@ -383,7 +405,7 @@ namespace SME.GoogleClassroom.Dados
 			});
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
+        public async Task<PaginacaoResultadoDto<AlunoRemocaoDto>> ObterAlunosQueSeraoRemovidosPorAnoLetivoETurma(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {
             using var conn = ObterConexao();
 
@@ -440,8 +462,10 @@ namespace SME.GoogleClassroom.Dados
 			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.Ues, "te.cd_escola", nameof(parametrosCargaInicialDto.Ues));
 			queryFrom.AdicionarCondicaoIn(parametrosCargaInicialDto.Turmas, "te.cd_turma_escola", nameof(parametrosCargaInicialDto.Turmas));
 
-			var queryPaginacao = @"order by mte.dt_situacao_aluno desc
-								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+			var queryPaginacao = paginacao.QuantidadeRegistros > 0
+				? @"order by mte.dt_situacao_aluno desc
+				   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;"
+				: @"order by mte.dt_situacao_aluno desc;";
 
             var query = new StringBuilder(querySelectDados);
             query.Append(queryFrom);
@@ -456,12 +480,15 @@ namespace SME.GoogleClassroom.Dados
 					quantidadeRegistros = paginacao.QuantidadeRegistros,
 					anoLetivo,
 					dataReferencia,
-					turmaId
+					turmaId,
+					TiposUes = parametrosCargaInicialDto.TiposUes,
+					parametrosCargaInicialDto.Ues,
+					parametrosCargaInicialDto.Turmas
 				}, commandTimeout: 6000);
 
-            var retorno = new PaginacaoResultadoDto<AlunoEol>
+            var retorno = new PaginacaoResultadoDto<AlunoRemocaoDto>
             {
-                Items = multi.Read<AlunoEol>(),
+                Items = multi.Read<AlunoRemocaoDto>(),
                 TotalRegistros = multi.ReadFirst<int>()
             };
 
@@ -504,7 +531,10 @@ namespace SME.GoogleClassroom.Dados
 						 nm_organizacao,
 						 email_alterado,
 						 AlunoRegular,
-						 AlunoPrograma
+						 AlunoPrograma,
+						 cd_turma_escola,
+						 cd_situacao_aluno,
+						 dt_situacao_aluno
 					INTO #tempAlunosMatriculasAtivasFinal
 					FROM
 						(SELECT DISTINCT
@@ -514,7 +544,10 @@ namespace SME.GoogleClassroom.Dados
 						 nm_organizacao,
 						 email_alterado,
 						 AlunoRegular,
-						 AlunoPrograma FROM #tempAlunosAtivos) AS Regulares
+						 AlunoPrograma,
+						 cd_turma_escola,
+						 cd_situacao_aluno,
+						 dt_situacao_aluno FROM #tempAlunosAtivos) AS Regulares
 					UNION
 						(SELECT DISTINCT
 						 cd_aluno_classroom,
@@ -523,7 +556,10 @@ namespace SME.GoogleClassroom.Dados
 						 nm_organizacao,
 						 email_alterado,
 						 AlunoRegular,
-						 AlunoPrograma
+						 AlunoPrograma,
+						 cd_turma_escola,
+						 cd_situacao_aluno,
+						 dt_situacao_aluno
 						FROM #tempAlunosProgramaAtivos WHERE NOT cd_aluno_eol IN (SELECT DISTINCT cd_aluno_eol FROM #tempAlunosAtivos));
 
 					SELECT
@@ -531,7 +567,10 @@ namespace SME.GoogleClassroom.Dados
 						aluno.nm_aluno NomePessoa,
 						aluno.nm_social_aluno NomeSocial,
 						nm_organizacao OrganizationPath,
-						aluno.dt_nascimento_aluno DataNascimento
+						aluno.dt_nascimento_aluno DataNascimento,
+						cd_turma_escola TurmaId,
+						cd_situacao_aluno SituacaoMatricula,
+						dt_situacao_aluno DataSituacao
 					FROM
 						#tempAlunosMatriculasAtivasFinal temp
 					INNER JOIN
@@ -539,7 +578,7 @@ namespace SME.GoogleClassroom.Dados
 						ON temp.cd_aluno_eol = aluno.cd_aluno
 					ORDER BY
 						cd_aluno_eol
-					{(paginacao.Pagina > 0 ? @"OFFSET (@pagina - 1) * @quantidadeRegistros ROWS
+					{(paginacao != null && paginacao.QuantidadeRegistros > 0 ? @"OFFSET @quantidadeRegistrosIgnorados ROWS
 					FETCH NEXT @quantidadeRegistros ROWS ONLY;" : ";")}
 
 					-- Totalizacao
@@ -563,7 +602,10 @@ namespace SME.GoogleClassroom.Dados
 						CASE WHEN esc.tp_escola = 23 THEN '/Alunos/PROFISSIONAL' ELSE '/Alunos/PROGRAMA' END AS nm_organizacao,
 						0 AS email_alterado,
 						0 AS AlunoRegular,
-						1 AS AlunoPrograma
+						1 AS AlunoPrograma,
+						te.cd_turma_escola,
+						mte.cd_situacao_aluno,
+						mte.dt_situacao_aluno
 					INTO #tempAlunosProgramaAtivos
 					FROM
 						#tempAlunosMatriculasProgramaAtivas temp
@@ -658,7 +700,10 @@ namespace SME.GoogleClassroom.Dados
 						[dbo].[proc_gerar_unidade_organizacional_aluno](se.cd_modalidade_ensino, se.cd_etapa_ensino, ce.cd_ciclo_ensino,esc.tp_escola) AS nm_organizacao,
 						0 AS email_alterado,
 						1 AS AlunoRegular,
-						0 AS AlunoPrograma
+						0 AS AlunoPrograma,
+						te.cd_turma_escola,
+						mte.cd_situacao_aluno,
+						mte.dt_situacao_aluno
 					INTO #tempAlunosAtivos
 					FROM
 						#tempAlunosMatriculasAtivas temp
@@ -707,10 +752,10 @@ namespace SME.GoogleClassroom.Dados
 		private static StringBuilder QueryBuscaMatriculaRegular(DateTime? dataReferecia, long? codigoEol, ParametrosCargaInicialDto parametrosCargaInicialDto)
         {
             string query =
-                $@"DECLARE @situacaoAtivo AS CHAR = 1;
-					DECLARE @situacaoPendenteRematricula AS CHAR = 6;
-					DECLARE @situacaoRematriculado AS CHAR = 10;
-					DECLARE @situacaoSemContinuidade AS CHAR = 13;
+                $@"DECLARE @situacaoAtivo AS VARCHAR(2) = 1;
+					DECLARE @situacaoPendenteRematricula AS VARCHAR(2) = 6;
+					DECLARE @situacaoRematriculado AS VARCHAR(2) = 10;
+					DECLARE @situacaoSemContinuidade AS VARCHAR(2) = 13;
 
 					DECLARE @situacaoAtivoInt AS INT = 1;
 					DECLARE @situacaoPendenteRematriculaInt AS INT = 6;
@@ -815,11 +860,11 @@ namespace SME.GoogleClassroom.Dados
                 throw ex;
             }
         }
-        public async Task<PaginacaoResultadoDto<AlunoEol>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
+        public async Task<PaginacaoResultadoDto<AlunoInativoDto>> ObterAlunosQueSeraoInativosPorAnoLetivo(Paginacao paginacao, int anoLetivo, DateTime dataReferencia)
         {
             var querySelectDados = @" SELECT 					
 										DISTINCT a.cd_aluno AS Codigo,
-										a.nm_aluno AS NomePessoa,
+										a.nm_aluno AS Nome,
 										a.nm_social_aluno AS NomeSocial,
 										a.dt_nascimento_aluno AS DataNascimento,
 										te.cd_turma_escola AS TurmaId,
@@ -859,8 +904,10 @@ namespace SME.GoogleClassroom.Dados
 											     and m2.cd_situacao_aluno IN(1,6,10,13) )
 										");
 
-            var queryPaginacao = @"order by a.cd_aluno
-								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;";
+            var queryPaginacao = paginacao.QuantidadeRegistros > 0
+                ? @"order by a.cd_aluno
+								   offset @quantidadeRegistrosIgnorados rows fetch next @quantidadeRegistros rows only;"
+                : @"order by a.cd_aluno;";
 
             var query = new StringBuilder(querySelectDados);
             query.Append(queryFrom);
@@ -878,9 +925,9 @@ namespace SME.GoogleClassroom.Dados
                     dataReferencia
                 }, commandTimeout: 6000);
 
-            var retorno = new PaginacaoResultadoDto<AlunoEol>
+            var retorno = new PaginacaoResultadoDto<AlunoInativoDto>
             {
-                Items = multi.Read<AlunoEol>(),
+                Items = multi.Read<AlunoInativoDto>(),
                 TotalRegistros = multi.ReadFirst<int>()
             };
 

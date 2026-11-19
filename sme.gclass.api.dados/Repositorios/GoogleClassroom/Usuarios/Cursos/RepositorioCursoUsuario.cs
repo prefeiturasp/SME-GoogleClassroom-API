@@ -200,48 +200,62 @@ namespace SME.GoogleClassroom.Dados
 
         public async Task<PaginacaoResultadoDto<AlunoCursosCadastradosDto>> ObterAlunosCursosAsync(Paginacao paginacao, long? codigoAluno, long? turmaId, long? componenteCurricularId)
         {
-            var query = new StringBuilder(@"DROP TABLE IF EXISTS alunoTemp;
-                                            DROP TABLE IF EXISTS alunoTempPaginado;
-                                            select distinct
-                                                   u.indice,
-                                                   u.id AS codigoAluno,
-                                                   u.nome AS nome,
-                                                   u.email AS email
-                                              into temporary table alunoTemp
-                                              from usuarios u
-                                             inner join cursos_usuarios cu on cu.usuario_id = u.indice
-                                             inner join cursos c on c.id = cu.curso_id
-                                             where u.usuario_tipo = @tipo
-                                               and not cu.excluido ");
+            var query = new StringBuilder(@"WITH alunoTempPaginado AS (
+                                                SELECT DISTINCT
+                                                       u.indice,
+                                                       u.id AS codigoAluno,
+                                                       u.nome AS nome,
+                                                       u.email AS email
+                                                  FROM usuarios u
+                                                 INNER JOIN cursos_usuarios cu ON cu.usuario_id = u.indice
+                                                 INNER JOIN cursos c ON c.id = cu.curso_id
+                                                 WHERE u.usuario_tipo = @tipo
+                                                   AND NOT cu.excluido ");
+
+            var queryCount = new StringBuilder(@"SELECT count(distinct u.indice)
+                                                   FROM usuarios u
+                                                  INNER JOIN cursos_usuarios cu ON cu.usuario_id = u.indice
+                                                  INNER JOIN cursos c ON c.id = cu.curso_id
+                                                  WHERE u.usuario_tipo = @tipo
+                                                    AND NOT cu.excluido ");
+
             if (codigoAluno.HasValue && codigoAluno > 0)
+            {
                 query.AppendLine("and u.id = @codigoAluno ");
+                queryCount.AppendLine("and u.id = @codigoAluno ");
+            }
 
             if (turmaId.HasValue && turmaId > 0)
+            {
                 query.AppendLine("and c.turma_id = @turmaId ");
+                queryCount.AppendLine("and c.turma_id = @turmaId ");
+            }
 
             if (componenteCurricularId.HasValue && componenteCurricularId > 0)
+            {
                 query.AppendLine("and c.componente_curricular_id = @componenteCurricularId ");
+                queryCount.AppendLine("and c.componente_curricular_id = @componenteCurricularId ");
+            }
 
-            query.AppendLine(";");
-
-            query.AppendLine("select * into temporary alunoTempPaginado from alunoTemp");
+            query.AppendLine("ORDER BY u.id ");
 
             if (paginacao.QuantidadeRegistros > 0)
-                query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY;");
+                query.AppendLine("OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");
 
-            query.AppendLine(@"select t1.codigoAluno,
-   		                              t1.nome,
-   		                              t1.email,
-   	                                  c.id,
-                                      c.id as cursoId,
-   		                              c.nome,
-   		                              c.secao,
-   		                              c.turma_id as turmaId,
-   		                              c.componente_curricular_id as componenteCurricularId
-                                 from cursos c
-                                inner join cursos_usuarios cu on cu.curso_id = c.id
-                                inner join alunoTempPaginado t1 on t1.indice = cu.usuario_id
-                                    and not cu.excluido");
+            query.AppendLine(@")
+                               SELECT t1.codigoAluno,
+                                      t1.nome,
+                                      t1.email,
+                                      c.id,
+                                      c.id AS cursoId,
+                                      c.nome,
+                                      c.secao,
+                                      c.turma_id AS turmaId,
+                                      c.componente_curricular_id AS componenteCurricularId
+                                 FROM cursos c
+                                INNER JOIN cursos_usuarios cu ON cu.curso_id = c.id
+                                INNER JOIN alunoTempPaginado t1 ON t1.indice = cu.usuario_id
+                                WHERE NOT cu.excluido ");
 
             if (codigoAluno.HasValue && codigoAluno > 0)
                 query.AppendLine("and t1.codigoAluno = @codigoAluno ");
@@ -252,9 +266,10 @@ namespace SME.GoogleClassroom.Dados
             if (componenteCurricularId.HasValue && componenteCurricularId > 0)
                 query.AppendLine("and c.componente_curricular_id = @componenteCurricularId ");
 
-            query.AppendLine(";");
+            query.AppendLine("ORDER BY t1.codigoAluno, c.id;");
 
-            query.AppendLine("select count(*) from alunoTemp");
+            query.AppendLine(queryCount.ToString());
+            query.AppendLine(";");
 
             var retorno = new PaginacaoResultadoDto<AlunoCursosCadastradosDto>();
 
@@ -274,25 +289,29 @@ namespace SME.GoogleClassroom.Dados
 
             var dic = new Dictionary<long, AlunoCursosCadastradosDto>();
 
-            multiResult.Read<AlunoCursosCadastradosDto, CursoDto, AlunoCursosCadastradosDto>(
+            multiResult.Read<AlunoCursosCadastradosDto, CursoCadastradoDto, AlunoCursosCadastradosDto>(
                 (aluno, curso) =>
                 {
                     if (!dic.TryGetValue(aluno.CodigoAluno, out var alunoResultado))
                     {
-                        aluno.Cursos.Add(curso);
+                        if (curso != null && curso.CursoId > 0)
+                            aluno.Cursos.Add(curso);
                         dic.Add(aluno.CodigoAluno, aluno);
                         return aluno;
                     }
 
-                    alunoResultado.Cursos.Add(curso);
+                    if (curso != null && curso.CursoId > 0)
+                        alunoResultado.Cursos.Add(curso);
 
                     return alunoResultado;
-                }
-                );
+                },
+                splitOn: "cursoId");
 
             retorno.Items = dic.Values;
             retorno.TotalRegistros = multiResult.ReadFirst<int>();
-            retorno.TotalPaginas = (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros);
+            retorno.TotalPaginas = paginacao.QuantidadeRegistros > 0
+                ? (int)Math.Ceiling((double)retorno.TotalRegistros / paginacao.QuantidadeRegistros)
+                : 1;
 
             return retorno;
         }

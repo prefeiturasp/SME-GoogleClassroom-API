@@ -1,7 +1,6 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Interfaces.Cache;
-using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Text.Json;
@@ -10,10 +9,7 @@ using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQueryHandler
-        : IRequestHandler<
-            ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery,
-            PaginacaoResultadoDto<AlunoEol>>
+    public class ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQueryHandler : IRequestHandler<ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery, PaginacaoResultadoDto<AlunoRemocaoDto>>
     {
         private readonly IRepositorioAlunoEol repositorioAlunoEol;
         private readonly IRepositorioCache repositorioCache;
@@ -29,9 +25,7 @@ namespace SME.GoogleClassroom.Aplicacao
                 ?? throw new ArgumentNullException(nameof(repositorioCache));
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoEol>> Handle(
-            ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery request,
-            CancellationToken cancellationToken)
+        public async Task<PaginacaoResultadoDto<AlunoRemocaoDto>> Handle(ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery request, CancellationToken cancellationToken)
         {
             var parametrosDaChave = JsonSerializer.Serialize(new
             {

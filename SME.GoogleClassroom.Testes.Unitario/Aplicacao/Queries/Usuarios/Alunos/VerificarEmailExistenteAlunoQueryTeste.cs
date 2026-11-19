@@ -25,7 +25,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.Queries.Usuarios.Alunos
         }
 
         [Fact(DisplayName = "Valida o tratamento de e-mail duplicado para aluno até a útlima tentativa.")]
-        private async Task Valida_Tratamento_De_Duplicidade_De_Email_Ate_A_Ultima_Tentativa_Deve_Retornar_O_Email_Alterado()
+        public async Task Valida_Tratamento_De_Duplicidade_De_Email_Ate_A_Ultima_Tentativa_Deve_Retornar_O_Email_Alterado()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
@@ -58,7 +58,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.Queries.Usuarios.Alunos
         }
 
         [Fact(DisplayName = "Valida o tratamento de e-mail duplicado para aluno até a útlima tentativa.")]
-        private async Task Valida_Tratamento_De_Duplicidade_De_Email_Nao_Encontrando_Email_Valido_Deve_Disparar_Excecao()
+        public async Task Valida_Tratamento_De_Duplicidade_De_Email_Nao_Encontrando_Email_Valido_Deve_Disparar_Excecao()
         {
             // Arrange
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));

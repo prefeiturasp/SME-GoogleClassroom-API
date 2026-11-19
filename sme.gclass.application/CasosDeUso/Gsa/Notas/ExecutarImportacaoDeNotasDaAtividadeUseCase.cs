@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -45,8 +45,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 return await EnviaParaSGP(notaSgpDto);
             }
-            catch(Exception)
+            catch (Exception ex)
             {
+                await mediator.Send(new SalvarLogViaRabbitCommand("ExecutarImportacaoDeNotasDaAtividadeUseCase", LogNivel.Critico, LogContexto.Gsa, ex?.InnerException?.Message ?? ex?.Message, ex?.StackTrace));
                 await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaGsaNotasAtividadesSyncErro, importacaoDto));
                 return false;
             }

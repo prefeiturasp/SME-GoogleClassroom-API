@@ -1,4 +1,4 @@
-﻿using SME.GoogleClassroom.Dominio;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace SME.GoogleClassroom.Dados
 {
     public interface IRepositorioUsuario
     {
-        Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email);
+        Task<PaginacaoResultadoDto<AlunoCadastradoDto>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email);
 
         Task<bool> ExisteAlunoPorCodigo(long codigo);
 

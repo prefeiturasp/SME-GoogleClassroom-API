@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using Moq;
 using Newtonsoft.Json;
@@ -12,7 +12,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-
 
 namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.Cursos
 {
@@ -28,7 +27,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o envio de JSON vazio para incluir o professor no curso no Google Classroom.")]
-        private async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
+        public async Task Valida_Mensagem_Vazia_E_Deve_Disparar_NegocioException()
         {
             // Arrange
             var mensagem = new MensagemRabbit(null);
@@ -38,7 +37,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o tratamento para professores que ainda não foram inclusos.")]
-        private async Task Valida_Tratamento_De_Professor_Nao_Incluso_Deve_Retornar_False()
+        public async Task Valida_Tratamento_De_Professor_Nao_Incluso_Deve_Retornar_False()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -57,7 +56,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o tratamento para cursos que ainda não foram inclusos.")]
-        private async Task Valida_Tratamento_De_Curso_Nao_Incluso_Deve_Retornar_False()
+        public async Task Valida_Tratamento_De_Curso_Nao_Incluso_Deve_Retornar_False()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -81,7 +80,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o tratamento para professores já inclusos no curso.")]
-        private async Task Valida_Tratamento_De_Professor_Ja_Incluso_No_Curso_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Professor_Ja_Incluso_No_Curso_Deve_Retornar_True()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -97,6 +96,9 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<ExisteProfessorCursoGoogleQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
+            mediator.Setup(a => a.Send(It.IsAny<ObterUsuarioPorEmailQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new UsuarioGoogleDto { UsuarioTipo = 1 });
+
             var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
             var mensagem = new MensagemRabbit(professorCursoJson);
 
@@ -108,7 +110,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o tratamento de duplicidade no Google Classroom.")]
-        private async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
+        public async Task Valida_Tratamento_De_Duplicidade_No_Google_Deve_Retornar_True()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -132,6 +134,9 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
             mediator.Setup(a => a.Send(It.IsAny<IncluirCursoUsuarioCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(10);
 
+            mediator.Setup(a => a.Send(It.IsAny<ObterUsuarioPorEmailQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new UsuarioGoogleDto { UsuarioTipo = 1 });
+
             var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
             var mensagem = new MensagemRabbit(professorCursoJson);
 
@@ -143,7 +148,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral do Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Do_Google_Deve_Devolver_A_GoogleApiExption_Disparada()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -175,7 +180,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida o tratamento de exceções em geral ao se comunicar com o Google Classroom.")]
-        private async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
+        public async Task Valida_Tratamento_De_Excecoes_Ao_Comunicar_Com_Google_Deve_Devolver_A_Excecao_Disparada()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -207,7 +212,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
         }
 
         [Fact(DisplayName = "Valida a inclusão de um professor no curso válido.")]
-        private async Task Valida_Inclusao_De_Professor_No_Curso_Valido_Deve_Retornar_True()
+        public async Task Valida_Inclusao_De_Professor_No_Curso_Valido_Deve_Retornar_True()
         {
             // Arrange
             var professorCurso = new ProfessorCursoEol(1234567, 1010, 6);
@@ -228,6 +233,9 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Professores.C
 
             mediator.Setup(a => a.Send(It.IsAny<IncluirCursoUsuarioCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(10);
+
+            mediator.Setup(a => a.Send(It.IsAny<ObterUsuarioPorEmailQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new UsuarioGoogleDto { UsuarioTipo = 1 });
 
             var professorCursoJson = JsonConvert.SerializeObject(professorCurso);
             var mensagem = new MensagemRabbit(professorCursoJson);

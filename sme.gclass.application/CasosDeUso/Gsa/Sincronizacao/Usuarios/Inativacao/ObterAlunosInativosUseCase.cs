@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -20,6 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 
             var usuarioTipo = (UsuarioTipo)filtro.UsuarioTipo;
+
             return await mediator.Send(new ObterUsuariosInativosPorTipoQuery(paginacao, usuarioTipo));
         }
     }

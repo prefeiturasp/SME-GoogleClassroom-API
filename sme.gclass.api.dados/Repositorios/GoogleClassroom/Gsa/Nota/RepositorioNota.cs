@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SME.GoogleClassroom.Dados.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -83,9 +83,13 @@ namespace SME.GoogleClassroom.Dados
 
             using var conn = ObterConexao();
 
+            var dataReferenciaInicio = dataReferencia.Date;
+            var dataReferenciaFim = dataReferencia.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+
             var parametros = new
             {
-                dataReferencia,
+                dataReferenciaInicio,
+                dataReferenciaFim,
                 atividadeId
             };
 
@@ -109,24 +113,25 @@ namespace SME.GoogleClassroom.Dados
 		                                    a.data_inclusao as dataAvaliacao,
 		                                    a.titulo,
                                             n.atividade_id AS AtividadeId,
-                                            n.usuario_classroom_id AS UsuarioClassroomId,
-                                            u.Indice as CodigoAluno,
+                                            n.usuario_classroom_id AS UsuarioId,
+                                            u.id as CodigoAluno,
                                             n.nota,
                                             n.status,
-                                            c.nome as cursoNome,
-                                            c.secao cursoSecao,
+                                            coalesce(c.nome, cg.nome) as cursoNome,
+                                            coalesce(c.secao, cg.secao) as cursoSecao,
                                             n.data_importacao AS DataImportacao, 
                                             n.data_inclusao AS DataInclusao, 
                                             n.data_alteracao AS DataAlteracao ");
 
             queryCompleta.AppendLine("FROM notas n ");
-            queryCompleta.AppendLine(@"INNER JOIN atividades a on a.id = n.atividade_id
-                                       INNER JOIN cursos c on c.id = a.curso_id ");
+            queryCompleta.AppendLine(@"LEFT JOIN atividades a on a.id = n.atividade_id
+                                       LEFT JOIN cursos_gsa cg on cg.id = a.curso_gsa_id
+                                       LEFT JOIN cursos c on c.id = a.curso_gsa_id ");
 
             if (!ehParaPaginacao)
                 queryCompleta.AppendLine(" LEFT JOIN usuarios u on u.google_classroom_id = n.usuario_classroom_id");
 
-            queryCompleta.AppendLine("WHERE n.data_importacao::DATE = @dataReferencia ");
+            queryCompleta.AppendLine("WHERE n.data_importacao >= @dataReferenciaInicio AND n.data_importacao <= @dataReferenciaFim ");
 
 
             if (atividadeId.HasValue)

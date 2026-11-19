@@ -144,7 +144,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesCarregar, new ComandoRabbit("Carrega atividades para importacao de notas", typeof(ICarregarAtividadesParaSincronizarNotasUseCase)));
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesTratar, new ComandoRabbit("Tratar carga de notas das atividades para importacao", typeof(ITratarImportacaoDeNotasDaAtividadeUseCase)));
             comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSync, new ComandoRabbit("Executar importação de notas da atividade", typeof(IExecutarImportacaoDeNotasDaAtividadeUseCase)));
-            comandos.Add(RotasRabbit.FilaGsaNotasAtividadesSyncErro, new ComandoRabbit("Gravar erros na importação das notas", typeof(IImportarNotasGsaProcessarErroUseCase)));
+
 
             // Carga Inicial
             comandos.Add(RotasRabbit.FilaGsaCargaInicial, new ComandoRabbit("Carga inicial executada manualmente", typeof(ITrataSyncManualGoogleGeralUseCase)));
@@ -207,22 +207,28 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
                 catch (NegocioException nex)
                 {
-                    await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
-                    metricReporter?.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(NegocioException));
+
+                    if (canalRabbit != null) await canalRabbit.BasicRejectAsync(ea?.DeliveryTag ?? 0, false);
+                    metricReporter.RegistrarErro(comandoRabbit?.TipoCasoUso?.Name, nameof(NegocioException));
+
                     await RegistrarErro(ea, mensagemRabbit, nex, LogNivel.Negocio);
                     transacao?.CaptureException(nex);
                 }
                 catch (ValidacaoException vex)
                 {
-                    await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
-                    metricReporter?.RegistrarErro(comandoRabbit.TipoCasoUso.Name, nameof(ValidacaoException));
+
+                    if (canalRabbit != null) await canalRabbit.BasicRejectAsync(ea?.DeliveryTag ?? 0, false);
+                    metricReporter.RegistrarErro(comandoRabbit?.TipoCasoUso?.Name, nameof(ValidacaoException));
+
                     await RegistrarErro(ea, mensagemRabbit, vex, LogNivel.Negocio);
                     transacao?.CaptureException(vex);
                 }
                 catch (Exception ex)
                 {
-                    await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
-                    metricReporter?.RegistrarErro(comandoRabbit.TipoCasoUso.Name, ex.GetType().Name);
+
+                    if (canalRabbit != null) await canalRabbit.BasicRejectAsync(ea?.DeliveryTag ?? 0, false);
+                    metricReporter.RegistrarErro(comandoRabbit?.TipoCasoUso?.Name, ex?.GetType()?.Name);
+
                     await RegistrarErro(ea, mensagemRabbit, ex, LogNivel.Critico);
                     transacao?.CaptureException(ex);
                 }
@@ -230,6 +236,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 {
                     transacao?.End();
                     tempoExecucao.Stop();
+
                     metricReporter?.RegistrarTempoDeExecucao(comandoRabbit.TipoCasoUso.Name, tempoExecucao.Elapsed);
                 }
             }
@@ -239,13 +246,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private async Task RegistrarErro(BasicDeliverEventArgs ea, MensagemRabbit mensagemRabbit, Exception ex, LogNivel nivel)
         {
-            var mensagem = $"ERRO - {ea.RoutingKey} - {ex.Message}";
+            var mensagem = $"ERRO - {ea?.RoutingKey} - {ex?.InnerException?.Message ?? ex?.Message}";
 
-            await mediator.Send(new SalvarLogViaRabbitCommand(mensagem, nivel, LogContexto.WorkerRabbit, $"{mensagemRabbit?.Mensagem}", rastreamento: ex.StackTrace));
+            await mediator.Send(new SalvarLogViaRabbitCommand(mensagem, nivel, LogContexto.WorkerRabbit, $"{mensagemRabbit?.Mensagem}", rastreamento: ex?.InnerException?.StackTrace ?? ex?.StackTrace));
         }
 
         private Task RegistrarErro(string erro, Exception ex)
-            => mediator.Send(new SalvarLogViaRabbitCommand(erro, LogNivel.Critico, LogContexto.WorkerRabbit, rastreamento: ex.StackTrace));
+            => mediator.Send(new SalvarLogViaRabbitCommand(erro, LogNivel.Critico, LogContexto.WorkerRabbit, rastreamento: ex?.InnerException?.StackTrace ?? ex?.StackTrace));
 
         private MethodInfo ObterMetodo(Type objType, string method)
         {
@@ -320,8 +327,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 }
                 catch (Exception ex)
                 {
-                    await RegistrarErro($"Erro ao tratar mensagem - {ea.RoutingKey} - {ex.Message}", ex);
-                    await canalRabbit.BasicRejectAsync(ea.DeliveryTag, false);
+                    await RegistrarErro($"Erro ao tratar mensagem - {ea?.RoutingKey} - {ex?.InnerException?.Message ?? ex?.Message}", ex);
+                    if (canalRabbit != null) await canalRabbit.BasicRejectAsync(ea?.DeliveryTag ?? 0, false);
                 }
             };
 
@@ -336,7 +343,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private async Task ConexaoRabbit_ConnectionShutdown(object sender, ShutdownEventArgs e)
         {
-            if (e.Initiator == ShutdownInitiator.Application)
+            if (e?.Initiator == ShutdownInitiator.Application)
                 return;
 
             if (canalRabbit != null && canalRabbit.IsOpen)
@@ -522,8 +529,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 await ConsumirFilas(consumer,
                     RotasRabbit.FilaGsaNotasAtividadesCarregar,
                     RotasRabbit.FilaGsaNotasAtividadesTratar,
-                    RotasRabbit.FilaGsaNotasAtividadesSync,
-                    RotasRabbit.FilaGsaNotasAtividadesSyncErro);
+                    RotasRabbit.FilaGsaNotasAtividadesSync);
+
             }
         }
     }

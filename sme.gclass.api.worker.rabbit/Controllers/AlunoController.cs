@@ -1,4 +1,3 @@
-﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
@@ -9,9 +8,6 @@ using SME.GoogleClassroom.Worker.Rabbit.Filters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using System.Linq;
-using MediatR;
-using SME.GoogleClassroom.Aplicacao.Queries.SME.Pedagogico.Service.Queries;
 
 namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
 {
@@ -42,7 +38,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("novos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoEol>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoParaCadastrarDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAlunosCadastrar([FromServices] IObterAlunosParaCadastrarUseCase obterAlunosParaCadastrarUseCase,
@@ -59,7 +55,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoGoogle>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoCadastradoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosAlunos([FromServices] IObterAlunosCadastradosUseCase obterAlunosCadastradosUseCase,
@@ -108,7 +104,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("cursos/novos")]
-        [ProducesResponseType(typeof(IEnumerable<AlunoCursoEol>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CursoAlunoParaCadastrarDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAlunosCursosGoogle([FromServices] IObterAlunosCursosParaCadastrarGoogleUseCase useCase,
@@ -157,7 +153,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("alunos-cursos-removidos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoEol>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosAlunosRemovidos([FromServices] IObterAlunosCursosUsuariosRemovidosUseCase useCase,
@@ -174,7 +170,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("alunos-remocao")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoGsa>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoRemocaoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosAlunosQueSeraoRemovidos([FromServices] IObterAlunosQueSeraoRemovidosUseCase useCase,
@@ -191,7 +187,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("alunos-inativados")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioInativo>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<UsuarioInativoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterTodosAlunosInativos([FromServices] IObterAlunosInativosUseCase useCase,
@@ -208,7 +204,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("alunos-inativos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoEol>), 200)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<AlunoInativoDto>), 200)]
         [ProducesResponseType(typeof(RetornoBaseDto), 500)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterAlunosQueSeraoInativados([FromServices] IObterAlunosQueSeraoInativadosUseCase useCase,

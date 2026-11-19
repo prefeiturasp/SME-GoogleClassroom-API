@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -19,23 +20,29 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Handle(LancarFrequenciaCommand request, CancellationToken cancellationToken)
         {
             if (request.FrequenciaSalvarAulaAlunos == null)
-                return false;
+                throw new NegocioException("Não foi possível realizar o lançamento da frequência.");
 
             var frequenciaSalvarAulaAlunos = request.FrequenciaSalvarAulaAlunos;
             
             var frequencia = new FrequenciaDto(frequenciaSalvarAulaAlunos.AulaId);
 
-            foreach(var frequenciaAluno in frequenciaSalvarAulaAlunos.Alunos)
+            if (frequenciaSalvarAulaAlunos.Alunos != null)
             {
-                frequencia.ListaFrequencia.Add(new RegistroFrequenciaAlunoDto()
+                foreach (var frequenciaAluno in frequenciaSalvarAulaAlunos.Alunos)
                 {
-                    CodigoAluno = frequenciaAluno.CodigoAluno,
-                    Aulas = frequenciaAluno.Frequencias.ToList()
-                });
+                    frequencia.ListaFrequencia.Add(new RegistroFrequenciaAlunoDto()
+                    {
+                        CodigoAluno = frequenciaAluno.CodigoAluno,
+                        Aulas = frequenciaAluno.Frequencias?.ToList()
+                    });
+                }
             }
 
-            await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSync, frequencia,frequenciaSalvarAulaAlunos.UsuarioLogado, string.Empty, frequenciaSalvarAulaAlunos.PerfilUsuario));
-            return true;
+            var publicado = await mediator.Send(new PublicaFilaRabbitSgpCommand(RotasRabbitSgp.RotaFrequenciaLancamentoAulaSync, frequencia, frequenciaSalvarAulaAlunos.UsuarioLogado, string.Empty, frequenciaSalvarAulaAlunos.PerfilUsuario));
+            if (!publicado)
+                throw new NegocioException("Não foi possível realizar o lançamento da frequência.");
+
+            return publicado;
         }
     }
 }

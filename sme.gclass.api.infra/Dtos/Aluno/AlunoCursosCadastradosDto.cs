@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace SME.GoogleClassroom.Infra
 {
@@ -6,12 +6,12 @@ namespace SME.GoogleClassroom.Infra
     {
         public AlunoCursosCadastradosDto()
         {
-            Cursos = new List<CursoDto>();
+            Cursos = new List<CursoCadastradoDto>();
         }
 
         public long CodigoAluno { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
-        public ICollection<CursoDto> Cursos { get; set; }
+        public ICollection<CursoCadastradoDto> Cursos { get; set; }
     }
 }

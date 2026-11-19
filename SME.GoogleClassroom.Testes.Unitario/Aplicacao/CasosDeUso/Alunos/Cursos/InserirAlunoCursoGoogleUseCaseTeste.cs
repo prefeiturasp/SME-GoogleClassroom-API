@@ -84,7 +84,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
@@ -111,7 +111,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
@@ -146,7 +146,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
@@ -178,7 +178,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });
@@ -210,7 +210,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos.Cursos
             // Arrange
             var alunoCurso = new AlunoCursoEol(1234567, 1010, 6);
             var alunoGoogle = new AlunoGoogle(1234567, "José da Silva", "josesilva.06061990@edu.sme.prefeitura.sp.gov.br", string.Empty);
-            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br");
+            var cursoGoogle = new CursoGoogle("Curso Google", "Seção", 1010, 6, "criadorDoCurso.784512@edu.sme.prefeitura.sp.gov.br") { Id = 1010 };
 
             mediator.Setup(a => a.Send(It.IsAny<ObterAlunosPorCodigosQuery>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(new List<AlunoGoogle> { alunoGoogle });

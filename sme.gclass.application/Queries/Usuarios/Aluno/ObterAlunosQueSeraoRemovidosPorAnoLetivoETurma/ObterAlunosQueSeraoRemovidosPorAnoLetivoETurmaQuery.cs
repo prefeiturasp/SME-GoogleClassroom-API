@@ -1,14 +1,11 @@
-﻿using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery : IRequest<PaginacaoResultadoDto<AlunoEol>>
+    public class ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery : IRequest<PaginacaoResultadoDto<AlunoRemocaoDto>>
     {
         public ObterAlunosQueSeraoRemovidosPorAnoLetivoETurmaQuery(ParametrosCargaInicialDto parametrosCargaInicialDto, Paginacao paginacao, int anoLetivo, long turmaId, DateTime dataReferencia, bool ehDataReferenciaPrincipal)
         {

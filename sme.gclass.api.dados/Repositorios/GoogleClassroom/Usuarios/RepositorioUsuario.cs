@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -17,19 +17,23 @@ namespace SME.GoogleClassroom.Dados
         {
         }
 
-        public async Task<PaginacaoResultadoDto<AlunoGoogle>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
+        public async Task<PaginacaoResultadoDto<AlunoCadastradoDto>> ObterAlunosAsync(Paginacao paginacao, long? codigoEol, string email)
         {
             var query = new StringBuilder(@"SELECT
                                                    u.indice,
+                                                   u.id AS Id,
                                                    u.id AS Codigo,
                                                    u.nome AS Nome,
                                                    u.email AS Email,
-                                                   u.organization_path as organizationpath,
-                                                   u.data_inclusao as datainclusao,
-                                                   u.data_atualizacao as dataatualizacao,
-                                                   u.google_classroom_id as GoogleClassroomId
+                                                   u.cpf AS Cpf,
+                                                   u.usuario_tipo AS UsuarioTipo,
+                                                   u.organization_path as OrganizationPath,
+                                                   u.data_inclusao as DataInclusao,
+                                                   u.data_atualizacao as DataAtualizacao,
+                                                   u.google_classroom_id as GoogleClassroomId,
+                                                   u.existe_google as ExisteGoogle
                                               FROM usuarios u
-                                             WHERE u.usuario_tipo = @tipo ");
+                                              WHERE u.usuario_tipo = @tipo ");
 
             var queryCount = new StringBuilder("SELECT count(*) from usuarios u WHERE u.usuario_tipo = @tipo ");
 
@@ -51,7 +55,7 @@ namespace SME.GoogleClassroom.Dados
             query.AppendLine(";");
             query.AppendLine(queryCount.ToString());
 
-            var retorno = new PaginacaoResultadoDto<AlunoGoogle>();
+            var retorno = new PaginacaoResultadoDto<AlunoCadastradoDto>();
 
             var parametros = new
             {
@@ -66,7 +70,7 @@ namespace SME.GoogleClassroom.Dados
 
             using var alunos = await conn.QueryMultipleAsync(query.ToString(), parametros);
 
-            retorno.Items = alunos.Read<AlunoGoogle>();
+            retorno.Items = alunos.Read<AlunoCadastradoDto>();
             retorno.TotalRegistros = alunos.ReadFirst<int>();
             retorno.TotalPaginas = (int) Math.Ceiling((double) retorno.TotalRegistros / paginacao.QuantidadeRegistros);
 

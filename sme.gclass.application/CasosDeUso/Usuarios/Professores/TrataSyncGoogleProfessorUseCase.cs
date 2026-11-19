@@ -1,11 +1,9 @@
 using MediatR;
 using Newtonsoft.Json;
-using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -22,7 +20,7 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var filtro = ObterParametrosFiltro(mensagem);
-            var ultimaAtualizacao = filtro != null && filtro.AnoLetivo > 0 ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+            var ultimaAtualizacao = filtro != null && filtro.AnoLetivo > 0 ? new DateTime(filtro.AnoLetivo, 1, 1) : await ObterDataUltimaExecucaoAsync();
             var paginacao = new Paginacao(0, 0);
             var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo > 0 ? filtro.AnoLetivo : (int?)null) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
