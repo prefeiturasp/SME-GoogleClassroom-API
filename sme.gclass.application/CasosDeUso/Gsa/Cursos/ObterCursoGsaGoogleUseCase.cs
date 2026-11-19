@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator;
         }
 
-        public async Task<CursoGsaDto> Executar(long turmaId, long componenteCurricularId)
+        public async Task<ConsultaCursoGsaDto> Executar(long turmaId, long componenteCurricularId)
         {
             var curso = await mediator.Send(new ObterCursoPorTurmaComponenteCurricularQuery(turmaId, componenteCurricularId));
             if (curso is null)

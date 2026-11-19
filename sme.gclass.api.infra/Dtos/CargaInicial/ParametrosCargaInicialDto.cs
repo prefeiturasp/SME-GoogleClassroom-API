@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,27 +28,30 @@ namespace SME.GoogleClassroom.Infra
 
         public void AdicionaTiposUe(string tiposUe)
         {
+            if (string.IsNullOrWhiteSpace(tiposUe)) return;
             tiposUe
-                .Split(',')
-                .Select(int.Parse)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => int.Parse(s.Trim()))
                 .ToList()
                 .ForEach(tipo => TiposUes.Add(tipo));
         }
 
         public void AdicionaUes(string ues)
         {
+            if (string.IsNullOrWhiteSpace(ues)) return;
             ues
-                .Split(',')
-                .Select(long.Parse)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => long.Parse(s.Trim()))
                 .ToList()
                 .ForEach(ue => Ues.Add(ue));
         }
 
         public void AdicionaTurmas(string turmas)
         {
+            if (string.IsNullOrWhiteSpace(turmas)) return;
             turmas
-                .Split(',')
-                .Select(long.Parse)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => long.Parse(s.Trim()))
                 .ToList()
                 .ForEach(turma => Turmas.Add(turma));
         }

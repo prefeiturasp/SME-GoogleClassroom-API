@@ -48,6 +48,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             var aluno = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             var alunoComEmailTratado = new AlunoEol(1, "José da Silva", string.Empty, string.Empty, new DateTime(1990, 9, 10));
             alunoComEmailTratado.DefinirEmail(1);
+            var alunoGoogleJaCadastrado = new AlunoGoogle(1, "José da Silva", "email@dominio", "org") { Indice = 10, GoogleClassroomId = "999" };
 
             var alunoJaCadastrado = new AlunoGoogle(1, "José da Silva", "jose.silva@sme.prefeitura.sp.gov.br", "/Alunos")
             {
@@ -73,7 +74,10 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
             mediator.Setup(a => a.Send(It.IsAny<PublicaFilaRabbitCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            var mensagem = CriarMensagemRabbit(aluno);
+
+            var filtroAluno = new FiltroAlunoDto(aluno, 2021, new List<int>(), new List<long>(), new List<long>());
+            var filtroJson = JsonConvert.SerializeObject(filtroAluno);
+            var mensagem = new MensagemRabbit(filtroJson);
 
             // Act
             var retorno = await incluirAlunoUseCase.Executar(mensagem);
@@ -138,6 +142,7 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Alunos
 
             mediator.Setup(a => a.Send(It.IsAny<InserirAlunoGoogleCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(googleDuplicidadeException);
+
 
             var mensagem = CriarMensagemRabbit(aluno);
 

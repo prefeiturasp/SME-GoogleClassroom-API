@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SME.GoogleClassroom.Infra
@@ -14,14 +14,17 @@ namespace SME.GoogleClassroom.Infra
 
         public FiltroCargaInicialDto()
         {
+            TiposUes = new List<int>();
+            Ues = new List<long>();
+            Turmas = new List<long>();
         }
 
         public FiltroCargaInicialDto(int anoLetivo, IList<int> tiposUes, IList<long> ues, IList<long> turmas)
         {
             AnoLetivo = anoLetivo;
-            TiposUes = new List<int>(tiposUes);
-            Ues = new List<long>(ues);
-            Turmas = new List<long>(turmas);
+            TiposUes = tiposUes != null ? new List<int>(tiposUes) : new List<int>();
+            Ues = ues != null ? new List<long>(ues) : new List<long>();
+            Turmas = turmas != null ? new List<long>(turmas) : new List<long>();
         }
     }
 }

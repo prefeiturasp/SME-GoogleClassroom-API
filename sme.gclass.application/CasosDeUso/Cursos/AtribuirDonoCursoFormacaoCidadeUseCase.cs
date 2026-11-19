@@ -1,4 +1,4 @@
-﻿using Google;
+using Google;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -22,9 +22,10 @@ namespace SME.GoogleClassroom.Aplicacao
                 throw new NegocioException("Não foi possível alterar o dono do curso, pois o curso não existe na base do GSA");
             try
             {
-                var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(email));
+                var usuario = await ObterUsuarioGoogleAsync(email);
                 var retornoGoogle = await mediator.Send(new AtribuirDonoCursoGoogleCommand(curso.Id, usuario.Id));
-                if (retornoGoogle) { 
+                if (retornoGoogle)
+                {
                     curso.Email = email;
                     await mediator.Send(new AlterarCursoCommand(curso));
                 }
@@ -33,10 +34,30 @@ namespace SME.GoogleClassroom.Aplicacao
             catch (GoogleApiException gEx)
             {
                 if (gEx.RegistroNaoEncontrado()) throw new NegocioException("Usuário não existe no Google Classroom");
-                else if(gEx.AcessoNaoAutorizado()) throw new NegocioException("Usuário sem acesso ao Google Classroom");
+                else if (gEx.AcessoNaoAutorizado()) throw new NegocioException("Usuário sem acesso ao Google Classroom");
                 else if (gEx.EmailContaServicoInvalido()) throw new NegocioException("Email informado é inválido");
                 else
                     throw new NegocioException(gEx.Message);
+            }
+        }
+
+        private async Task<UsuarioGoogleClassroomDto> ObterUsuarioGoogleAsync(string email)
+        {
+            try
+            {
+                var usuario = await mediator.Send(new ObterUsuarioGoogleQuery(email));
+                if (usuario == null)
+                    throw new NegocioException("Usuário não existe no Google Classroom");
+
+                return usuario;
+            }
+            catch (GoogleApiException gEx)
+            {
+                if (gEx.RegistroNaoEncontrado() || gEx.AcessoNaoAutorizado())
+                    throw new NegocioException("Usuário não existe no Google Classroom");
+                if (gEx.EmailContaServicoInvalido())
+                    throw new NegocioException("Email informado é inválido");
+                throw new NegocioException(gEx.Message);
             }
         }
     }

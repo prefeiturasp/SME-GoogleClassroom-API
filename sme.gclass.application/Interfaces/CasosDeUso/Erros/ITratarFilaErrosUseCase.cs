@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
     public interface ITratarFilaErrosUseCase
     {
-        Task Executar();
+        Task<bool> Executar();
     }
 }

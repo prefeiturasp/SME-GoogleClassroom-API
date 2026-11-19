@@ -29,13 +29,19 @@ namespace SME.GoogleClassroom.Dados
                                               inner join usuarios u on u.indice = ucr.usuario_id 
                                              WHERE ucr.usuario_tipo = any(@usuarioTipos) ");
 
-            var queryCount = new StringBuilder("SELECT count(*) from curso_usuario_removido_gsa ucr WHERE ucr.usuario_tipo = any(@usuarioTipos) ");
+            var queryCount = new StringBuilder(@"SELECT count(*) 
+                                                   FROM curso_usuario_removido_gsa ucr 
+                                                  inner join cursos c on c.id = ucr.curso_id 
+                                                  inner join usuarios u on u.indice = ucr.usuario_id 
+                                                  WHERE ucr.usuario_tipo = any(@usuarioTipos) ");
 
             if (cursoId > 0)
             {
                 query.AppendLine("AND ucr.curso_id = @cursoId");
                 queryCount.AppendLine("AND ucr.curso_id = @cursoId");
             }
+
+            query.AppendLine("ORDER BY ucr.removido_em DESC, ucr.id");
 
             if (paginacao.QuantidadeRegistros > 0)
                 query.AppendLine($" OFFSET @quantidadeRegistrosIgnorados ROWS FETCH NEXT @quantidadeRegistros ROWS ONLY ");

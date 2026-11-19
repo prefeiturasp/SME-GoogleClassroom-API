@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Dominio;
@@ -19,9 +19,10 @@ namespace SME.GoogleClassroom.Aplicacao
         
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (string.IsNullOrWhiteSpace(mensagemRabbit?.Mensagem?.ToString())) return true;
             var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroCursoErroDto>();
-            var cursoParaIncluir = filtro.CursoErro;
-            var filtroCargaInicial = filtro.FiltroCargaInicial;
+            var cursoParaIncluir = filtro?.CursoErro;
+            var filtroCargaInicial = filtro?.FiltroCargaInicial;
             if (cursoParaIncluir is null) return true;
 
             try
@@ -37,11 +38,11 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 var publicarCurso = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaCursoIncluir, RotasRabbit.FilaCursoIncluir, cursoEol));
                 if (!publicarCurso)
-                    await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                    await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"msg rabbit: {mensagemRabbit?.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
             }
             catch (Exception ex)
             {
-                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
+                await mediator.Send(new InserirCursoErroCommand(cursoParaIncluir.TurmaId, cursoParaIncluir.ComponenteCurricularId, $"ex.: {ex.Message} <-> msg rabbit: {mensagemRabbit?.Mensagem}", null, ExecucaoTipo.CursoAdicionar, ErroTipo.Interno));
                 await mediator.Send(new SalvarLogViaRabbitCommand($"RealizarTratamentoCursoErroUseCase", LogNivel.Critico, LogContexto.Gsa, ex.Message, ex.StackTrace));
             }
 

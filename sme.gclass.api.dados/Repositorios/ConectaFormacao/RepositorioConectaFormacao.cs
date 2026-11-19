@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SME.GoogleClassroom.Infra;
 using SME.GoogleClassroom.Infra.Dtos.ConectaFormacao;
@@ -132,7 +132,8 @@ namespace SME.GoogleClassroom.Dados
         {
             var query = @"select id as CodigoIE, nome as NomeIE
                           from area_promotora
-                          where not excluido";
+                          where not excluido
+                          order by nome";
 
             using (var conn = ObterConexao())
             {

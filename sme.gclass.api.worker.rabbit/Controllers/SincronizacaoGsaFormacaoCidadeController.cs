@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Infra;
@@ -108,8 +108,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit.Controllers
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ProcessarExclusaoCursosGoogle([FromQuery] string cursosIds, [FromServices] IIniciarSincronizacaoGsaFormacaoCidadeTurmasExcluirUseCase useCase)
         {
-            await useCase.Executar(cursosIds);
-            return Ok();
+            var resultado = await useCase.Executar(cursosIds);
+            return Ok(resultado);
         }
     }
 }

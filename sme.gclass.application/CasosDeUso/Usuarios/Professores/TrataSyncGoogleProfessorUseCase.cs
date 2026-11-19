@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -22,9 +22,9 @@ namespace SME.GoogleClassroom.Aplicacao
         public async Task<bool> Executar(MensagemRabbit mensagem)
         {
             var filtro = ObterParametrosFiltro(mensagem);
-            var ultimaAtualizacao = filtro != null ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+            var ultimaAtualizacao = filtro != null && filtro.AnoLetivo > 0 ? new DateTime(filtro.AnoLetivo, 1, 1) : await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
             var paginacao = new Paginacao(0, 0);
-            var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
+            var parametrosCargaInicialDto = filtro != null ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo > 0 ? filtro.AnoLetivo : (int?)null) :
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
             var professoresParaIncluirGoogle = await mediator.Send(new ObterProfessoresParaIncluirGoogleQuery(ultimaAtualizacao, paginacao, string.Empty, parametrosCargaInicialDto));
 
@@ -44,10 +44,24 @@ namespace SME.GoogleClassroom.Aplicacao
                 }
             }
 
-            if (professoresParaIncluirGoogle.TotalRegistros > 1)
-                await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
+            await mediator.Send(new AtualizaExecucaoControleCommand(ExecucaoTipo.ProfessorAdicionar, DateTime.Today));
 
             return true;
+        }
+
+        private async Task<DateTime> ObterDataUltimaExecucaoAsync()
+        {
+            try
+            {
+                var dataUltimaExecucao = await mediator.Send(new ObterDataUltimaExecucaoPorTipoQuery(ExecucaoTipo.ProfessorAdicionar));
+                return dataUltimaExecucao == DateTime.MinValue
+                    ? new DateTime(DateTime.Today.Year, 1, 1)
+                    : dataUltimaExecucao;
+            }
+            catch (NegocioException)
+            {
+                return new DateTime(DateTime.Today.Year, 1, 1);
+            }
         }
 
         private async Task IncluirProfessorComErroAsync(ProfessorEol professorParaIncluirGoogle, string mensagem)

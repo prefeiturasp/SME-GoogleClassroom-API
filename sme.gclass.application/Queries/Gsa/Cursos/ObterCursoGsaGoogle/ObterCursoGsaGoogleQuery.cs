@@ -1,10 +1,10 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Infra;
 
 namespace SME.GoogleClassroom.Aplicacao
 {
-    public class ObterCursoGsaGoogleQuery : IRequest<CursoGsaDto>
+    public class ObterCursoGsaGoogleQuery : IRequest<ConsultaCursoGsaDto>
     {
         public string CursoId { get; set; }
 

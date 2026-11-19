@@ -9,10 +9,15 @@ using SME.GoogleClassroom.Aplicacao.Sga.FuncionariosProfessores;
 using SME.GoogleClassroom.Dados;
 using SME.GoogleClassroom.Dados.Escola;
 using SME.GoogleClassroom.Dados.Interfaces;
+using SME.GoogleClassroom.Dados.Interfaces.Cache;
 using SME.GoogleClassroom.Dados.Interfaces.Eol;
+using SME.GoogleClassroom.Dados.Repositorios.Cache;
 using SME.GoogleClassroom.Dados.Repositorios.Eol.Unidade;
 using SME.GoogleClassroom.Dados.Turmas;
 using SME.GoogleClassroom.Infra;
+using SME.GoogleClassroom.Infra.EnvironmentVariables;
+using StackExchange.Redis;
+using System;
 
 namespace SME.GoogleClassroom.IoC
 {
@@ -27,6 +32,7 @@ namespace SME.GoogleClassroom.IoC
 
             RegistrarRepositorios(services);
             RegistrarCasosDeUso(services);
+            RegistrarCache(services, configuration);
         }
 
         private static void RegistrarRepositorios(IServiceCollection services)
@@ -89,6 +95,9 @@ namespace SME.GoogleClassroom.IoC
             
             //Conecta formação
             services.TryAddScoped<IRepositorioConectaFormacao, RepositorioConectaFormacao>();
+
+            // Cache KeyDB
+            services.TryAddScoped<IRepositorioCache, RepositorioCache>();
         }
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
@@ -266,7 +275,6 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IObterEscolasUseCase, ObterEscolasUseCase>();
         }
 
-
         private static void RegistrarCasosDeUsoGsa(IServiceCollection services)
         {
             services.TryAddScoped<IObterCursoGsaGoogleUseCase, ObterCursoGsaGoogleUseCase>();
@@ -345,6 +353,26 @@ namespace SME.GoogleClassroom.IoC
             services.TryAddScoped<IListagemInscricoesConfirmadasUseCase, ListagemInscricoesConfirmadasUseCase>();
             services.TryAddScoped<IListagemDetalhamentoFormacaoUseCase, ListagemDetalhamentoFormacaoUseCase>();
             services.TryAddScoped<IListagemDeAreaPromotoraUseCase, ListagemDeAreaPromotoraUseCase>();
+        }
+
+        private static void RegistrarCache(IServiceCollection services, IConfiguration configuration)
+        {
+            var options = configuration
+                .GetSection(RedisOptions.Secao)
+                .Get<RedisOptions>();
+
+            if (options == null || string.IsNullOrWhiteSpace(options.Endpoint))
+                throw new InvalidOperationException(
+                    "A configuração RedisOptions:Endpoint não foi informada.");
+
+            var redisConfiguration = ConfigurationOptions.Parse(options.Endpoint);
+            redisConfiguration.Proxy = options.Proxy;
+            redisConfiguration.SyncTimeout = options.SyncTimeout;
+            redisConfiguration.AbortOnConnectFail = false;
+
+            services.AddSingleton(options);
+            services.AddSingleton<IConnectionMultiplexer>(
+                _ => ConnectionMultiplexer.Connect(redisConfiguration));
         }
     }
 }

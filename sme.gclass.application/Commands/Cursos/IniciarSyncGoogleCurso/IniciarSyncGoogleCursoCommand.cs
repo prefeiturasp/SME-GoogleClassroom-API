@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 
 namespace SME.GoogleClassroom.Aplicacao
@@ -23,7 +23,11 @@ namespace SME.GoogleClassroom.Aplicacao
             {
                 RuleFor(x => x.TurmaId)
                     .NotEmpty()
-                    .WithMessage("Para utilizar o filtro de sincronização deve-se informar a turma e o componente curricular.");                
+                    .WithMessage("Para utilizar o filtro de sincronização deve-se informar a turma e o componente curricular.");
+
+                RuleFor(x => x.ComponenteCurricularId)
+                    .NotEmpty()
+                    .WithMessage("Para utilizar o filtro de sincronização deve-se informar a turma e o componente curricular.");
             });
         }
     }

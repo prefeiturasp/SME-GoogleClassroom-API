@@ -133,7 +133,6 @@ namespace SME.GoogleClassroom.Testes.Unitario.Aplicacao.CasosDeUso.Funcionarios.
             var funcionarioCursoJson = JsonConvert.SerializeObject(funcionarioCurso);
             var mensagem = new MensagemRabbit(funcionarioCursoJson);
 
-            // Assert
             await Assert.ThrowsAsync<GoogleApiException>(() => inserirFuncionarioCursoGoogleUseCase.Executar(mensagem));
         }
 

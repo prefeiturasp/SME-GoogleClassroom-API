@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace SME.GoogleClassroom.Aplicacao.Interfaces
 {
     public interface IIniciarProcessoArquivarCursosPorAnoUseCase
     {
-        Task Executar(int ano, long? turmaId = null);
+        Task<bool> Executar(int? anoLetivo, long? turmaId = null);
     }
 }

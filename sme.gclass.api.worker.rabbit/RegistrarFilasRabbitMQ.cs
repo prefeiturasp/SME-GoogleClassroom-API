@@ -1,4 +1,4 @@
-﻿using RabbitMQ.Client;
+using RabbitMQ.Client;
 using SME.GoogleClassroom.Infra;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +16,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                 { "x-queue-mode", "lazy" }
             };
 
+            if (consumoDeFilasOptions == null)
+                return;
+
             if (consumoDeFilasOptions.ConsumirFilasSync)
                 await RegistrarFilasSync(canalRabbit);
 
@@ -27,8 +30,12 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static async Task DeclararEVincularFilas(IChannel canalRabbit, params string[] filas)
         {
+            if (filas == null) return;
+
             foreach (var fila in filas)
             {
+                if (string.IsNullOrWhiteSpace(fila)) continue;
+
                 await canalRabbit.QueueDeclareAsync(fila, true, false, false, argumentos);
                 await canalRabbit.QueueBindAsync(fila, ExchangeRabbit.GoogleSync, fila);
             }
@@ -220,7 +227,9 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         {
             await DeclararEVincularFilas(canalRabbit,
                 RotasRabbit.FilaGsaGoogleSync,
-                RotasRabbit.FilaGsaCargaInicial);
+                RotasRabbit.FilaGsaCargaInicial,
+                RotasRabbit.FilaGsaAtividadesIncluir,
+                RotasRabbit.FilaGsaAtividadesIncluirErro);
 
             await RegistrarFilasDeCargasGsa(canalRabbit, consumoDeFilasOptions);
             await RegistrarFilasDeProcessamentoGsa(canalRabbit, consumoDeFilasOptions);
@@ -228,7 +237,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static async Task RegistrarFilasDeCargasGsa(IChannel canalRabbit, ConsumoDeFilasOptions consumoDeFilasOptions)
         {
-            if (consumoDeFilasOptions.Gsa.CargaMuralAvisosGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaMuralAvisosGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit,
                     RotasRabbit.FilaGsaMuralAvisosCarregar,
@@ -237,7 +246,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     RotasRabbit.FilaGsaMuralAvisosIncluirErro);
             }
 
-            if (consumoDeFilasOptions.Gsa.CargaAtividadesGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaAtividadesGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit,
                     RotasRabbit.FilaGsaAtividadesCarregar,
@@ -252,19 +261,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     RotasRabbit.FilaGsaNotasAtividadesSyncErro);
             }
 
-            if (consumoDeFilasOptions.Gsa.CargaCursoGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaCursoGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit, RotasRabbit.FilaGsaCursoCarregar);
             }
 
-            if (consumoDeFilasOptions.Gsa.CargaUsuarioGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaUsuarioGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit,
                     RotasRabbit.FilaGsaUsuarioCarregar,
                     RotasRabbit.FilaGsaUsuarioCarregarErro);
             }
 
-            if (consumoDeFilasOptions.Gsa.CargaCursoUsuarioGsa)
+            if (consumoDeFilasOptions?.Gsa?.CargaCursoUsuarioGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit, RotasRabbit.FilaGsaCursoUsuarioCarregar);
             }
@@ -272,14 +281,14 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
         private static async Task RegistrarFilasDeProcessamentoGsa(IChannel canalRabbit, ConsumoDeFilasOptions consumoDeFilasOptions)
         {
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoGsa)
+            if (consumoDeFilasOptions?.Gsa?.ProcessarCursoGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit,
                     RotasRabbit.FilaGsaCursoIncluir,
                     RotasRabbit.FilaGsaCursoValidar);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarUsuarioGsa)
+            if (consumoDeFilasOptions?.Gsa?.ProcessarUsuarioGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit,
                     RotasRabbit.FilaGsaUsuarioIncluir,
@@ -287,7 +296,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
                     RotasRabbit.FilaGsaUsuarioValidar);
             }
 
-            if (consumoDeFilasOptions.Gsa.ProcessarCursoUsuarioGsa)
+            if (consumoDeFilasOptions?.Gsa?.ProcessarCursoUsuarioGsa == true)
             {
                 await DeclararEVincularFilas(canalRabbit, RotasRabbit.FilaGsaCursoUsuarioIncluir);
             }

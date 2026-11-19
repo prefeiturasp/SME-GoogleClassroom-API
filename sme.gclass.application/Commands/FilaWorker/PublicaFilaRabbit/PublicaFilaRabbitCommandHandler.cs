@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using Sentry;
@@ -47,7 +47,8 @@ namespace SME.GoogleClassroom.Aplicacao
             }
             catch (Exception ex)
             {
-                return false;
+                SentrySdk.CaptureException(ex);
+                throw;
             }
         }
     }

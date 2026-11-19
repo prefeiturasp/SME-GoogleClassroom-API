@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SME.GoogleClassroom.Aplicacao;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -74,11 +74,15 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// **Observação:** Visando a melhoria de performance, a sincronização dos cursos acontece de forma assíncrona e descentralizada,
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// **Importante: Utilizar a função de recriação do curso apenas no cenário em que o curso foi excluído fisicamente do Google Classroom, caso contrário poderá ocorrer
-        /// duplicidade de cursos nos registros.**
+        /// duplicidade de cursos nos registros. Para utilizar o filtro de sincronização ou a recriação do curso, deve-se informar obrigatoriamente o turmaId e o componenteCurricularId.**
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a execução.</response>
+        /// <response code="601">Houve uma falha de validação durante a execução.</response>
         [HttpPost("sincronizacao")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> IniciarSincronizacao([FromServices] IIniciarSyncGoogleCursoUseCase iniciarSyncGoogleCursoUseCase, long? turmaId = null, long? componenteCurricularId = null, bool recriarCursoSeExistirNaBaseDeDados = false)
         {
             var retorno = await iniciarSyncGoogleCursoUseCase.Executar(turmaId, componenteCurricularId, recriarCursoSeExistirNaBaseDeDados);
@@ -93,12 +97,16 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// não sendo possível assim acompanhar em tempo real sua evolução.
         /// </remarks>
         /// <response code="200">O início da sincronização ocorreu com sucesso.</response>
+        /// <response code="500">Ocorreu um erro inesperado durante a execução.</response>
+        /// <response code="601">Houve uma falha de validação durante a execução.</response>
         [HttpPost("erros/tratamentos")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> TratarErros([FromServices] IIniciarSyncGoogleCursoErrosUseCase iniciarSyncGoogleCursoErrosUseCase)
         {
-            await iniciarSyncGoogleCursoErrosUseCase.Executar();
-            return Ok();
+            var retorno = await iniciarSyncGoogleCursoErrosUseCase.Executar();
+            return Ok(retorno);
         }
 
         /// <summary>
@@ -178,7 +186,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("gsa")]
-        [ProducesResponseType(typeof(CursoGsaDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ConsultaCursoGsaDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ObterCursoGsaGoogle([FromServices] IObterCursoGsaGoogleUseCase useCase,
@@ -258,13 +266,13 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpPost("extintos/arquivar")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> ArquivarTurmasExtintas([FromServices] ICarregarArquivamentoCursosExtintosManualUseCase useCase, [FromQuery] long? turmaId, DateTime? dataReferencia = null)
         {
-            await useCase.Executar(turmaId, dataReferencia);
-            return Ok();
+            var retorno = await useCase.Executar(turmaId, dataReferencia);
+            return Ok(retorno);
         }
 
         /// <summary>
@@ -279,10 +287,10 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> TratarErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosTratarUseCase useCase)
         {
-            await useCase.Executar();
-            return Ok();
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
         }
-        
+
         /// <summary>
         /// Reprocessar erros ao sincronizar arquivamento de cursos extintos
         /// </summary>
@@ -295,11 +303,11 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> SyncErrosCursosArquivados([FromServices] IIniciarTratamentoErroCursoArquivadosSyncUseCase useCase)
         {
-            await useCase.Executar();
-            return Ok();
+            var retorno = await useCase.Executar();
+            return Ok(retorno);
         }
-        
-        
+
+
         /// <summary>
         /// Obtem lista de cursos arquivados no Google Sala de Aula
         /// </summary>
@@ -320,14 +328,17 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         /// <summary>
         /// Retorna os professores removidos dos cursos no GSA.
         /// </summary>
+        /// <remarks>
+        /// **CursoId:** Identificador do curso no Google Classroom (opcional). Quando informado 0 ou omitido, retorna os professores removidos de todos os cursos.
+        /// </remarks>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("professores/removidos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), 200)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterProfessoresRemovidosCursosUseCase([FromServices] IObterProfessoresRemovidosCursosUseCase useCase,
+        public async Task<IActionResult> ObterProfessoresRemovidosCursos([FromServices] IObterProfessoresRemovidosCursosUseCase useCase,
             [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
@@ -335,16 +346,19 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         }
 
         /// <summary>
-        /// Retorna os professores removidos dos cursos no GSA.
+        /// Retorna os funcionários removidos dos cursos no GSA.
         /// </summary>
+        /// <remarks>
+        /// **CursoId:** Identificador do curso no Google Classroom (opcional). Quando informado 0 ou omitido, retorna os funcionários removidos de todos os cursos.
+        /// </remarks>
         /// <response code="200">A consulta foi realizada com sucesso.</response>
         /// <response code="500">Ocorreu um erro inesperado durante a consulta.</response>
         /// <response code="601">Houve uma falha de validação durante a consulta.</response>
         [HttpGet("funcionarios/removidos")]
-        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), 200)]
-        [ProducesResponseType(typeof(RetornoBaseDto), 500)]
+        [ProducesResponseType(typeof(PaginacaoResultadoDto<CursoUsuarioRemovidoConsultaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RetornoBaseDto), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
-        public async Task<IActionResult> ObterFuncionariosRemovidosCursosUseCase([FromServices] IObterFuncionariosRemovidosCursosUseCase useCase,
+        public async Task<IActionResult> ObterFuncionariosRemovidosCursos([FromServices] IObterFuncionariosRemovidosCursosUseCase useCase,
             [FromQuery] FiltroObterUsuariosRemovidosCursosDto filtro)
         {
             var retorno = await useCase.Executar(filtro);
@@ -397,8 +411,8 @@ namespace SME.GoogleClassroom.Worker.Rabbit
         [ProducesResponseType(typeof(RetornoBaseDto), 601)]
         public async Task<IActionResult> IniciarProcessoArquivarCursosPorAno([FromServices] IIniciarProcessoArquivarCursosPorAnoUseCase useCase, int anoLetivo, long? turmaId = null)
         {
-            await useCase.Executar(anoLetivo, turmaId);
-            return Ok();
+            var retorno = await useCase.Executar(anoLetivo, turmaId);
+            return Ok(retorno);
         }
     }
 }

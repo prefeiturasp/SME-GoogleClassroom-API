@@ -1,4 +1,4 @@
-﻿using Elastic.Apm.NetCoreAll;
+using Elastic.Apm.NetCoreAll;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.ApplicationInsights;
@@ -108,6 +108,7 @@ namespace SME.GoogleClassroom.Worker.Rabbit
 
             var consumoDeFilasOptions = new ConsumoDeFilasOptions();
             Configuration.GetSection(nameof(ConsumoDeFilasOptions)).Bind(consumoDeFilasOptions, c => c.BindNonPublicProperties = true);
+            consumoDeFilasOptions.Gsa ??= new ConsumoDeFilasGsa();
 
             var gsaSyncOptions = new GsaSyncOptions();
             Configuration.GetSection(nameof(GsaSyncOptions)).Bind(gsaSyncOptions, c => c.BindNonPublicProperties = true);

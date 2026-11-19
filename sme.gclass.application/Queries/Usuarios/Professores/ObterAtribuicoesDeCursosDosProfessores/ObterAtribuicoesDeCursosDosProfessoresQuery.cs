@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
@@ -43,6 +43,14 @@ namespace SME.GoogleClassroom.Aplicacao
             RuleFor(x => x.Paginacao)
                 .NotEmpty()
                 .WithMessage("A página e a quantidade de registros devem ser informados.");
+
+            RuleFor(x => x.Paginacao.QuantidadeRegistros)
+                .GreaterThan(0)
+                .WithMessage("O número da página e a quantidade de registro devem ser informados.");
+
+            RuleFor(x => x.Paginacao.Pagina)
+                .GreaterThan(0)
+                .WithMessage("O número da página e a quantidade de registro devem ser informados.");
 
             RuleFor(x => x.TurmaId)
                 .NotEmpty()

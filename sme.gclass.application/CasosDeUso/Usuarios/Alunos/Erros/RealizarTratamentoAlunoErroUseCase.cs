@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -20,8 +20,9 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
+            if (string.IsNullOrWhiteSpace(mensagemRabbit?.Mensagem?.ToString())) return true;
             var filtro = JsonConvert.DeserializeObject<FiltroAlunoErroDto>(mensagemRabbit.Mensagem.ToString());
-            var usuarioErro = filtro.UsuarioErro;
+            var usuarioErro = filtro?.UsuarioErro;
             if (usuarioErro is null) return true;
 
             try
@@ -29,13 +30,13 @@ namespace SME.GoogleClassroom.Aplicacao
                 if (usuarioErro.UsuarioTipo != UsuarioTipo.Aluno)
                     return false;
                 
-                var parametrosCargaInicialDto = filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
+                var parametrosCargaInicialDto = filtro?.AnoLetivo.HasValue == true ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo) :
                     await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
                 var alunoEol = await mediator.Send(new ObterAlunoParaTratamentoDeErroQuery(usuarioErro.UsuarioId.GetValueOrDefault(), parametrosCargaInicialDto));
                 if (alunoEol is null)
                     return false;
 
-                var filtroAluno = new FiltroAlunoDto(alunoEol, filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas);
+                var filtroAluno = new FiltroAlunoDto(alunoEol, filtro?.AnoLetivo, filtro?.TiposUes, filtro?.Ues, filtro?.Turmas);
                 var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoIncluir, RotasRabbit.FilaAlunoIncluir, filtroAluno));
                 if (!publicarFuncionario)
                 {

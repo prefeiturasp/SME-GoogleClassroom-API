@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SME.GoogleClassroom.Dominio;
 using SME.GoogleClassroom.Infra;
 using System;
@@ -167,10 +167,18 @@ namespace SME.GoogleClassroom.Dados
             await conn.ExecuteAsync(query);
         }
 
+        public async Task<bool> ExcluirCursoGsaAsync(long cursoId)
+        {
+            const string query = @"DELETE FROM public.cursos_gsa WHERE id = @cursoId";
+            using var conn = ObterConexao();
+            return await conn.ExecuteAsync(query, new { cursoId }) > 0;
+        }
+
         public async Task<IEnumerable<CursoGsaId>> ObterCursosGsaPorAno(int anoLetivo, long? cursoId, int pagina = 0, int quantidadeRegistrosPagina = 100)
         {
-            int qtdeRegistrosIgnorados = quantidadeRegistrosPagina * (pagina - 1);
-            int qtdeRegistros = quantidadeRegistrosPagina;
+            var paginaNormalizada = pagina <= 0 ? 1 : pagina;
+            var qtdeRegistros = quantidadeRegistrosPagina <= 0 ? 100 : quantidadeRegistrosPagina;
+            int qtdeRegistrosIgnorados = qtdeRegistros * (paginaNormalizada - 1);
 
             var sqlQuery = new StringBuilder();
             sqlQuery.AppendLine("select c.id as CursoId,");
@@ -182,6 +190,7 @@ namespace SME.GoogleClassroom.Dados
             if (cursoId.HasValue)
                 sqlQuery.AppendLine("and c.id = @cursoId");
 
+            sqlQuery.AppendLine("order by c.id");
             sqlQuery.AppendLine("offset @qtdeRegistrosIgnorados rows fetch next @qtdeRegistros rows only;");
 
             using (var conn = ObterConexao())

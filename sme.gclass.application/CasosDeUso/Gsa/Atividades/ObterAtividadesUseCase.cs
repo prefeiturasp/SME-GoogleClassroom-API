@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using MediatR;
 using SME.GoogleClassroom.Dominio;
@@ -15,7 +15,7 @@ namespace SME.GoogleClassroom.Aplicacao
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<PaginacaoResultadoDto<AtividadeGsa>> Executar(FiltroAtividadesDto filtro)
+        public async Task<PaginacaoResultadoDto<AtividadeDto>> Executar(FiltroAtividadesDto filtro)
         {
             var paginacao = new Paginacao(filtro.PaginaNumero, filtro.RegistrosQuantidade);
 

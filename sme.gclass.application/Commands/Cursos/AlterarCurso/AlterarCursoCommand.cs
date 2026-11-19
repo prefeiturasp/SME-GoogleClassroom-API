@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using SME.GoogleClassroom.Dominio;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,9 @@ namespace SME.GoogleClassroom.Aplicacao
     {
         public AlterarCursoCommand(CursoGoogle curso)
         {
+            if (curso != null)
+                curso.DataAtualizacao = DateTime.Now;
+
             Curso = curso;
         }
 

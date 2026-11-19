@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Newtonsoft.Json;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
@@ -21,16 +21,16 @@ namespace SME.GoogleClassroom.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit mensagemRabbit)
         {
-            var filtro = mensagemRabbit.ObterObjetoMensagem<FiltroAlunoCursoDto>();
-            var alunoParaIncluirCursos = filtro.AlunoGoogle;
+            var filtro = mensagemRabbit?.Mensagem != null ? mensagemRabbit.ObterObjetoMensagem<FiltroAlunoCursoDto>() : null;
+            var alunoParaIncluirCursos = filtro?.AlunoGoogle;
             if (alunoParaIncluirCursos is null)
             {
                 await IncluirCursoDoAlunoComErroAsync(alunoParaIncluirCursos, "Não foi possível iniciar a inclusão de cursos professores no Google Classroom. O professor não foi informado corretamente.");
                 return true;
             }
-            var parametrosCargaInicialDto = filtro.AnoLetivo.HasValue ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo.Value) : 
+            var parametrosCargaInicialDto = filtro?.AnoLetivo.HasValue == true ? new ParametrosCargaInicialDto(filtro.TiposUes, filtro.Ues, filtro.Turmas, filtro.AnoLetivo.Value) : 
                 await mediator.Send(new ObterParametrosCargaIncialPorAnoQuery(DateTime.Today.Year));
-            var anoLetivo = filtro.AnoLetivo ?? DateTime.Now.Year;
+            var anoLetivo = filtro?.AnoLetivo ?? DateTime.Now.Year;
             var cursosDoAlunoParaIncluir = await mediator.Send(new ObterCursosDoAlunoParaIncluirGoogleQuery(alunoParaIncluirCursos.Codigo, anoLetivo, parametrosCargaInicialDto));
 
             if (!cursosDoAlunoParaIncluir?.Any() ?? true) return true;
@@ -57,7 +57,7 @@ namespace SME.GoogleClassroom.Aplicacao
         private async Task IncluirCursoDoAlunoComErroAsync(AlunoGoogle alunoGoogle, string mensagem)
         {
             var command = new IncluirCursoUsuarioErroCommand(
-                alunoGoogle.Codigo,
+                alunoGoogle?.Codigo ?? 0,
                 ExecucaoTipo.ProfessorCursoAdicionar,
                 ErroTipo.Negocio,
                 mensagem);

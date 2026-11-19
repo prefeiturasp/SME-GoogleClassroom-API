@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Sentry;
 using SME.GoogleClassroom.Aplicacao.Interfaces;
 using SME.GoogleClassroom.Dominio;
@@ -30,7 +30,7 @@ namespace SME.GoogleClassroom.Aplicacao
 
                 foreach (var usuarioErro in usuarioErros)
                 {
-                    var filtroAluno = new FiltroAlunoErroDto(usuarioErro, filtro.AnoLetivo, filtro.TiposUes, filtro.Ues, filtro.Turmas);
+                    var filtroAluno = new FiltroAlunoErroDto(usuarioErro, filtro?.AnoLetivo, filtro?.TiposUes, filtro?.Ues, filtro?.Turmas);
                     
                     var publicarFuncionario = await mediator.Send(new PublicaFilaRabbitCommand(RotasRabbit.FilaAlunoErroTratar, RotasRabbit.FilaAlunoErroTratar, filtroAluno));
                     if (!publicarFuncionario)
